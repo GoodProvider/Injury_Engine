@@ -49,3 +49,23 @@ Paused game time does not stop Papyrus. Not an issue for the Show-only overlay, 
 ## Health ratio must cover the full deficit, or the wounded level goes negative (2026-10-04)
 
 `Deficit()` is damage **plus missing healing** per part, so its maximum is 6 × (20 + 11) = 186, not 6 × 20. With `/ 120`, a deficit of 180 gave `wounded:-35`; the regen take-back pushed health to -21.5 (bleedout), and when health came back (bleedout recovery jumped it to full) the whole deficit converted in one 0.2 s tick: "pain gone" and "fully healed" at once. `Ratio()` now divides by `kPartCount * kMaxDeficit`, and `ConvertHealth` clamps the wounded level to `kHealthFloor`.
+
+## CommonLibSSE-NG v11: `GetActiveEffectList()` is nullptr on VR (2026-10-05)
+
+v11 (`62a1936`) made `MagicTarget::GetActiveEffectList()` non-virtual in cross-runtime builds (SE+AE+VR, our default); it returns nullptr on VR, still compiles, and fails silently. Walk active effects with `MagicTarget::VisitActiveEffects` (the engine's own walk, correct on every runtime).
+
+## Injury data lives in `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json`; the DLL reads them at kDataLoaded (2026-10-06)
+
+`InjuryConfig::Load` looks next to the DLL (`<dll dir>/SkyrimNet_Whipped/injuries/`, falling back to `Data/SKSE/Plugins/SkyrimNet_Whipped/injuries/` under the working directory), so under MO2 the folder must be in the mod's `SKSE/Plugins/`. A JSON file that fails to parse is skipped and named in `SkyrimNet_Whipped.log` (`injuries: <file> skipped: ...`); a missing `whipping.json` disables whipping, a missing `generic.json` stops unclassifiable damage being tracked. Source indices follow load order (whipping first, then by file name) and are session-local: the co-save stores source **ids**, never indices. `injuries/guide.md` is not loaded. Edits need a game restart. `manifest.yaml` (dashboard schema) still has to mirror the `defaults` block of `whipping.json`.
+
+## Real damage replaces whip damage; the damage hooks need in-game verification (2026-10-06)
+
+Whip points hold health down by `deficit × 0.9 × max / 186`; real points are worth `max / 120` health each (6 parts × 20 = 100% of max). A real hit while whip points remain is cut by `min(damage, whip hold)` **inside the hook** (the original is called with the reduced amount), the same health worth of whip points is removed and real points added, so health only drops once all whip wounds are replaced and the 10% floor never blocks real damage. Unverified assumptions, check the first `[hook] ...` lines in `SkyrimNet_Whipped.log`: (1) `Actor::HandleHealthDamage` (vfunc 0x104; the VR slot is not verified, so the hook is skipped on VR) receives the damage as a positive amount (the code uses `fabs` and keeps the sign); (2) melee damage reaches `HandleHealthDamage`, everything else `ActorValueOwner::ModActorValue(kDamage, Health)` (vfunc 6); (3) a nested `ModActorValue` call inside `HandleHealthDamage` is ignored through a thread-local scope, so a damage that reaches both is not counted twice; (4) `TESHitEvent` may fire after the damage, so `Classifier::Classify` falls back to the attacker's equipped weapon, then to unarmed (people bludgeoning, creatures mauling), then `generic`. Damage the engine does itself (`TakeHealth`, regen take-back) is wrapped in `InternalScope` and never classified.
+
+## Papyrus: `key` is reserved, native strings come back case-folded risk (2026-10-06)
+
+A Papyrus parameter named `key` fails to compile ("key is not a variable"); use `setting` or similar. Strings returned by natives are `BSFixedString` and Papyrus interns strings case-insensitively (the reason `kind` / `source` travel as numbers); narration text from `HitText` / `HealText` is long and unique enough that this has not shown up, but if a sentence ever comes back with odd casing, return it through a different channel (e.g. `std::string` registered as a plain string).
+
+## CommonLibSSE-NG vtable slot comments are hex (2026-10-06)
+
+`// 104` next to `Actor::HandleHealthDamage` in `RE/A/Actor.h` means slot `0x104` (260). Hooking decimal `104` (`0x68`, `Unk_68`, called every movement update) crashed the game a second after loading a save, inside our thunk (`Classifier::Classify` read the bogus "attacker" argument), with a call stack through actor movement / `bhkCharacterProxy` and no `[hook]` log line. Always write vtable indices in hex (`0x104`, `0x6`, `0x1`), exactly as the CommonLib comment shows.

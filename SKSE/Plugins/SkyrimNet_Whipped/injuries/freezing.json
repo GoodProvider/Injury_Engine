@@ -1,0 +1,164 @@
+{
+  "id": "freezing",
+  "title": "Frostbite",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Frostbite",
+    "feels_intro": "How {name}'s frostbite feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: pale, numb-looking skin with a rime of frost on {his} lashes and hair.",
+        "{name}'s face: waxy, bluish-white patches of frostbite on {his} cheeks, nose and ears.",
+        "{name}'s face: dead-white, hard, frozen skin; ice crusts {his} lips and eyelids."
+      ],
+      "body": [
+        "{name}'s back: pale skin, stiff with cold, a rime of frost on {his} clothing.",
+        "{name}'s back: waxy, bluish-white patches of frostbite show where {his} clothing is stiff with ice.",
+        "{name}'s back: hard, frozen skin, ice crystals glittering on a stiff, frozen back."
+      ],
+      "arm": [
+        "{name}'s {part}: pale, numb skin with frost on the sleeve.",
+        "{name}'s {part}: bluish-white frostbitten skin; the fingers are stiff.",
+        "{name}'s {part}: hard, frozen, dead-white skin; ice crusts the fingers."
+      ],
+      "leg": [
+        "{name}'s {part}: pale, numb skin with frost on {his} clothing.",
+        "{name}'s {part}: bluish-white frostbitten patches; the leg is stiff.",
+        "{name}'s {part}: hard, frozen, dead-white flesh; ice crusts {his} boot and the leg barely moves."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face is numb and prickling, {his} breath puffing white. {name} is shivering and wary.",
+        "{name}'s face aches with a deep, biting cold and {his} teeth chatter. {name} is shaken and slurs slightly.",
+        "{name}'s face has gone numb and wooden and the cold is crushing. {name} is drowsy, disoriented and terrified."
+      ],
+      "body": [
+        "{name}'s back is chilled and stiff, and {he} shivers hard. {name} hunches against the cold.",
+        "{name}'s back aches with bone-deep cold and every movement cracks. {name} is shuddering and miserable.",
+        "{name}'s back is numb, wooden and heavy with cold. {name} is drowsy, barely able to move and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} is numb and stiff, the fingers clumsy. {name} rubs it and shivers.",
+        "{name}'s {part} aches with a deep, biting cold. {name} can barely close {his} fingers.",
+        "{name}'s {part} is numb and dead. {name} cannot feel or move it and is frightened."
+      ],
+      "leg": [
+        "{name}'s {part} is numb and stiff, the steps clumsy. {name} shivers and stamps it.",
+        "{name}'s {part} aches with a deep, biting cold. {name} walks stiff-legged, stumbling.",
+        "{name}'s {part} is numb and dead weight. {name} cannot feel it and falls or must be supported."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is frozen",
+      "verb_many": " are frozen",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}'s frost",
+      "by_none": "",
+      "levels": [
+        ", a shock of biting cold. Frost bites at {his} skin, and {he} gasps and shivers.",
+        " over skin that is already numb with cold. The frost bites deeper, and {he} gasps as {his} skin stiffens.",
+        ", and the cold sinks deep into the frostbitten flesh. {he} chokes on a cry as {his} skin hardens and {his} movements slow.",
+        ", and it is too much. The cold crushes {him}; {he} goes blue and still, {his} breath rasping and {his} limbs refusing to answer."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The frostbite on {name}'s {part} has thawed into a raw, aching red.",
+        "light": "The frostbite on {name}'s {part} has faded to a tender, peeling pink.",
+        "healed": "The frostbite on {name}'s {part} has healed, with feeling returned."
+      },
+      "source_healed": "All of {name}'s frostbite has healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

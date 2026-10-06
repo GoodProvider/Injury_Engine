@@ -1,0 +1,164 @@
+{
+  "id": "bludgeoning",
+  "title": "Bruises and Breaks",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Bruises and Breaks",
+    "feels_intro": "How {name}'s bruises and breaks feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a red, swelling bruise rises on {his} cheek or brow.",
+        "{name}'s face: a dark purple bruise and a split lip; one eye is swelling shut.",
+        "{name}'s face: a battered, badly swollen mess; broken skin, a crooked nose and an eye swollen shut."
+      ],
+      "body": [
+        "{name}'s back: a dull red bruise spreads across {his} ribs.",
+        "{name}'s back: dark purple bruising across the ribs and spine; every breath looks painful.",
+        "{name}'s back: huge black-purple bruises; {his} ribs look broken and {his} posture is twisted."
+      ],
+      "arm": [
+        "{name}'s {part}: a red, swelling bruise.",
+        "{name}'s {part}: a dark, swollen bruise; the arm is held awkwardly.",
+        "{name}'s {part}: a crushed, swollen limb, bruised black and held at a wrong angle."
+      ],
+      "leg": [
+        "{name}'s {part}: a red, swelling bruise on the thigh or calf.",
+        "{name}'s {part}: a dark, swollen bruise; the leg is favored.",
+        "{name}'s {part}: a crushed, swollen leg bruised black; it looks broken and will not take weight."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face aches dully, and {his} head rings. {name} is irritated and a little dazed.",
+        "{name}'s face throbs with a deep ache and {his} vision swims on one side. {name} is angry and unsteady.",
+        "{name}'s face is a pounding, sickening pain and {his} head spins. {name} is dazed, slurring and close to blacking out."
+      ],
+      "body": [
+        "{name}'s back aches, and twisting hurts a little. {name} is stiff and grumbling.",
+        "{name}'s back throbs and every breath tugs at {his} ribs. {name} moves stiffly and breathes carefully.",
+        "{name}'s back is grinding agony and each breath is a stab. {name} is gasping and cannot straighten."
+      ],
+      "arm": [
+        "{name}'s {part} aches and is tender to any touch. {name} protects it.",
+        "{name}'s {part} throbs deeply and is weak. {name} cradles it and avoids using it.",
+        "{name}'s {part} is shrieking, grinding pain and will not move. {name} is in shock and holds it still."
+      ],
+      "leg": [
+        "{name}'s {part} aches and is tender. {name} walks with a slight limp.",
+        "{name}'s {part} throbs with every step. {name} limps heavily, wincing.",
+        "{name}'s {part} is grinding agony and will not take weight. {name} falls or needs support to move."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is battered",
+      "verb_many": " are battered",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", a heavy, thudding impact. The shock rattles through {his} bones and drives the air out of {him}.",
+        " into a bruise that is already tender. The blow lands on the sore spot, and {he} grunts as the pain flares dull and deep.",
+        ", and the blow crunches into already battered flesh. The pain is huge and nauseating, and {he} staggers.",
+        ", and it is too much. The impact shatters something; {he} crumples, pale and gasping, {his} vision tunneling."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The swelling on {name}'s {part} has gone down to a deep, purple bruise.",
+        "light": "The bruise on {name}'s {part} has faded to yellow-green.",
+        "healed": "The bruise on {name}'s {part} has healed without a mark."
+      },
+      "source_healed": "All of {name}'s bruises and breaks have healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

@@ -2,7 +2,7 @@ Scriptname SkyrimNet_Whipped_Actions extends Quest
 
 ; LLM action "Whip_Target": the speaker walks to the target and lashes them with the padded whip.
 ; Registered from Papyrus (not YAML) so eligibility can check the speaker's inventory
-; when whip.action.require_whip is on.
+; when whip.action.require_whip is on. Texts: SKSE/Plugins/SkyrimNet_Whipped/injuries/whipping.json.
 
 SkyrimNet_Whipped_Main Property main Auto
 
@@ -22,8 +22,9 @@ Function Setup()
         strikes += "|" + i
         i += 1
     endwhile
+    ; description from injuries/whipping.json action.description ({target} and {strikes} are SkyrimNet placeholders)
     SkyrimNetApi.RegisterAction(ACTION_NAME, \
-            "Whip {target} with the padded whip, lashing them {strikes} times to punish or discipline them. Each lash leaves a raw, bleeding welt.", \
+            SkyrimNet_Whipped_Engine.Text(main.SOURCE_WHIP, "action.description"), \
             "SkyrimNet_Whipped_Actions", "Whip_IsEligible", \
             "SkyrimNet_Whipped_Actions", "Whip_Execute", \
             "", "PAPYRUS", 1, \
@@ -66,8 +67,8 @@ Function Whip_Execute(Actor speaker, string contextJson, string paramsJson) glob
     Bool given = false
     if speaker.GetItemCount(whip) < 1
         if whip_main.require_whip
-            SkyrimNetApi.RegisterEvent("whip_lash", speaker.GetDisplayName() + " reaches for a whip to punish " \
-                + target.GetDisplayName() + ", but has none.", speaker, target)
+            SkyrimNetApi.RegisterEvent("whip_lash", SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0), \
+                speaker, target)
             return
         endif
         speaker.AddItem(whip, 1, true)
@@ -92,7 +93,7 @@ Function Whip_Execute(Actor speaker, string contextJson, string paramsJson) glob
         Debug.SendAnimationEvent(speaker, "attackStart")
         Utility.Wait(0.45)
         int code = whip_main.Lash(speaker, target, false)
-        if code >= 0 && (worst < 0 || code % 4 >= worst % 4)
+        if code >= 0 && (worst < 0 || code % 10 >= worst % 10)
             worst = code
         endif
         done += 1
@@ -116,18 +117,10 @@ Function Whip_Execute(Actor speaker, string contextJson, string paramsJson) glob
     endif
 EndFunction
 
-; "<speaker> whips <target> once/twice/several times/again and again with the padded whip." plus the
-; hardest-hitting lash's narration. No digits: the actor would repeat them.
+; injuries/whipping.json narration.summary ("<speaker> whips <target> once/twice/several times/again and again ...")
+; plus the hardest-hitting lash's narration. No digits: the actor would repeat them.
 Function NarrateSummary(SkyrimNet_Whipped_Main whip_main, Actor speaker, Actor target, int done, int worst) global
-    String times = "several times"
-    if done == 1
-        times = "once"
-    elseif done == 2
-        times = "twice"
-    elseif done > 4
-        times = "again and again"
-    endif
-    String msg = speaker.GetDisplayName() + " whips " + target.GetDisplayName() + " " + times + " with the padded whip."
+    String msg = SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "narration.summary.text", speaker, target, done)
     if worst >= 0
         msg += " " + whip_main.LashText(speaker, target, worst)
     endif

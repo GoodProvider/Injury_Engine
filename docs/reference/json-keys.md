@@ -6,43 +6,39 @@ Canonical rules for JSON that this mod emits for prompts and the overlay.
 
 Use **bare lowercase** keys only (`parts`, `stage`, `caster_is_target`). Do not invent Title Case or leading-`_` keys. Values shown to the LLM are words, never numbers — numeric fields are only for templates to turn into words ([../authors/prompts.md](../authors/prompts.md#no-numbers)).
 
-## Decorator `skyrimnet_whipped_welts(uuid)`
+## Decorator `skyrimnet_whipped_injuries(uuid)`
 
-`Main.Welts_Decorator` → native `GetStateJson` → `DamageHealing_Engine::StateJson`. One entry per hit part:
+`Main.Injuries_Decorator` -> native `GetStateJson` -> `InjuryEngine::StateJson`. One entry per source that has injuries; the text is already resolved from `injuries/<source>.json` for this actor (name, pronouns, part):
 
 ```json
-{"parts":[{"part":"left arm","region":"arm","stage":"medium","text":8,"damage":5,"healing":0}]}
+{"sources":[{"id":"whipping","looks_heading":"### Whip Wounds","feels_intro":"How Nina's whip wounds feel...","feels_outro":"Answer must be creative...",
+  "parts":[{"part":"left arm","region":"arm","stage":"medium","look":"Nina's left arm: ...","feel":"Nina's left arm throbs..."}]}]}
 ```
 
 | Key | Meaning |
 |-----|---------|
-| `part` | body part name |
-| `region` | region name (shares text tables) |
-| `stage` | stage word (`light`, `medium`, `severe`, `recovering`, …) |
-| `text` | `region * 6 + stage` — index into the prompt text tables in `0420_whip_welts` / `0420_whip_pain` |
-| `damage` / `healing` | raw points (templates only) |
+| `sources[].id` | source id (file name without `.json`) |
+| `looks_heading`, `feels_intro`, `feels_outro` | headings / framing text from the source's `text` block |
+| `parts[].part` / `region` | body part name / region (head, body, arm, leg) |
+| `parts[].stage` | stage word of that source (`light`, `medium`, `severe`; whipping also `recovering`, `mostly_healed`, `healed`) |
+| `parts[].look` / `feel` | the finished sentences for the character bio / final instructions |
 
-## `heal` (healing narration)
+## Injury files `injuries/<source>.json`
 
-Built in `Main.HealText` / `SourceHealText`, rendered by `Main.RenderHealPrompt` as `ParseString(<helpers/healing raw source>, "heal", json)`. Documented at the top of [`helpers/healing.prompt`](../../SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/prompts/helpers/healing.prompt):
+Keys and placeholders are documented for authors in `SKSE/Plugins/SkyrimNet_Whipped/injuries/guide.md`; code reads them by dotted path (`InjuryConfig::Str`, natives `Text` / `TextCount` / `Number`). Same bare-lowercase rule; values shown to the LLM contain no digits.
 
-| Key | Values |
-|-----|--------|
-| `kind` | int: 0 start, 1 pain gone, 2 fully healed, 3 stopped, 4 stages |
-| `parts` | (kind 4 only) `[{part, stage}]`; stage 1 closed (severe→medium), 0 faded (medium→light), 3 scabbed (light→recovering), 4 scarred, 5 healed |
-| `name`, `female` | target name, gender |
-| `caster`, `caster_is_target` | caster name (`""` if none) |
-| `source` | int: 0 none (regen / game time), 1 spell, 2 staff, 3 potion, 4 other magic |
-| `percent` | healing progress; the template turns it into words |
+## Natives returning text
 
-Strings go through `Main.JsonString` (escapes `"` and `\`).
+`HitText`, `HealText`, `SourceHealText`, `ActionText` render the JSON templates in C++ (placeholders `{name}`, `{he}`, `{him}`, `{his}`, `{part}`, `{parts}`, ... listed in `guide.md`). Codes passed in: hit code `fresh * 1000000 + source * 10000 + part mask * 10 + level`; heal codes `source * 64 + part * 8 + stage`, `10000 + source` (source healed on every part), `20000 + part` (part has no injury left); sync events `kind * 10000 + healing source * 1000 + percent` (kind 0 start, 1 pain gone, 2 fully healed, 3 stopped; healing source 0 none, 1 spell, 2 staff, 3 potion, 4 other).
 
 ## Overlay (`whipUpdate`)
 
-`DamageHealing_Engine::OverlayJson`, pushed by `Overlay::Notify` when it changes:
+`InjuryEngine::OverlayJson`, pushed by `Overlay::Notify` when it changes:
 
 ```json
-{"actors":[{"id":20,"name":"Nina","parts":[[3,0],[0,11],...]}]}
+{"title":"Whip Damage","max":120,"healed":11,"medium":4,"severe":11,"mostly_healed":4,
+ "colors":{"light":"#e8837a","replaced":"#3d0606"},
+ "actors":[{"id":20,"name":"Nina","replaced":6,"parts":[[3,0],[0,11]]}]}
 ```
 
-`parts` is six `[damage, healing]` pairs in bar order head, body, right arm, left arm, right leg, left leg. An unhit part is `[0, 11]` (healed). Only loaded, living tracked actors are listed.
+`parts` is six `[damage, healing]` pairs in bar order (`overlay.order` of `whipping.json`: head, body, right arm, left arm, right leg, left leg); the example is cut short. An unhit part is `[0, 11]` (healed). `replaced` = whip damage points already replaced by real damage. Only loaded, living actors that still have whip damage or healing are listed (an actor whose whip damage is fully replaced drops out).

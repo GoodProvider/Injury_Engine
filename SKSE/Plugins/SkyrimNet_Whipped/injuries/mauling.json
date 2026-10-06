@@ -1,0 +1,164 @@
+{
+  "id": "mauling",
+  "title": "Bites and Claw Wounds",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Bites and Claw Wounds",
+    "feels_intro": "How {name}'s bite and claw wounds feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: shallow claw scratches or a nip across {his} cheek, bleeding lightly.",
+        "{name}'s face: deep claw furrows and bite marks torn across {his} cheek and jaw.",
+        "{name}'s face: savagely torn, flayed flesh across the face, blood streaming from bite and claw wounds."
+      ],
+      "body": [
+        "{name}'s back: shallow claw scratches, torn clothing and light bleeding.",
+        "{name}'s back: deep claw furrows and bite marks, clothing in tatters and soaked in blood.",
+        "{name}'s back: savagely torn flesh, deep bites and raking claw wounds, blood streaming."
+      ],
+      "arm": [
+        "{name}'s {part}: shallow scratches and a nip, bleeding lightly.",
+        "{name}'s {part}: deep bite marks and claw furrows, torn and bleeding.",
+        "{name}'s {part}: savagely mangled flesh torn to the bone, streaming blood."
+      ],
+      "leg": [
+        "{name}'s {part}: shallow scratches and a nip, bleeding lightly.",
+        "{name}'s {part}: deep bite marks and claw furrows, torn trousers and blood in {his} boot.",
+        "{name}'s {part}: savagely mangled flesh torn to the bone; the leg gives way under any weight."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings and smarts from the scratches. {name} is jumpy and keeps glancing behind {him}.",
+        "{name}'s face burns and throbs from the torn flesh. {name} is frightened, breathing hard and flinching.",
+        "{name}'s face is blinding, terrifying agony. {name} is in shock, sobbing or gasping and barely able to talk."
+      ],
+      "body": [
+        "{name}'s back stings from the scratches. {name} is tense, checking over {his} shoulder.",
+        "{name}'s back burns and throbs with every breath. {name} is frightened and moves stiffly.",
+        "{name}'s back is tearing agony. {name} is in shock, gasping and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} stings and smarts. {name} guards it and watches the dark.",
+        "{name}'s {part} burns and throbs, weak where it was bitten. {name} cradles it.",
+        "{name}'s {part} is shrieking agony and will not work. {name} is in shock and holds it away."
+      ],
+      "leg": [
+        "{name}'s {part} stings and smarts. {name} keeps looking about and is quick to flinch.",
+        "{name}'s {part} burns and throbs, weak where it was bitten. {name} limps, frightened.",
+        "{name}'s {part} is shrieking agony and will not take weight. {name} falls or needs support."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is mauled",
+      "verb_many": " are mauled",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", a sudden rake and snap. Teeth and claws catch {his} skin and {he} yelps and recoils.",
+        " into flesh that is already torn. The teeth find the open wound again and {he} shrieks as the pain flares.",
+        ", and the jaws clamp down on the raw wound. The pain is huge and nauseating and {he} cries out as {he} is shaken.",
+        ", and it is too much. The savaging tears {him} open; {he} goes limp and ashen, {his} cries thinning to a gasp."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The torn flesh on {name}'s {part} has closed into deep, angry bite and claw marks.",
+        "light": "The bite and claw marks on {name}'s {part} have healed into sore, pink scratches.",
+        "healed": "The bites and claws on {name}'s {part} have healed, leaving pale scars."
+      },
+      "source_healed": "All of {name}'s bite and claw wounds have healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

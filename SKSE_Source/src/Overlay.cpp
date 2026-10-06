@@ -1,6 +1,6 @@
 #include "Overlay.h"
 
-#include "DamageHealing_Engine.h"
+#include "InjuryEngine.h"
 #include "PrismaUI_API.h"
 
 #include <atomic>
@@ -137,7 +137,7 @@ namespace Overlay
         if (!g_enabled.load() || !Ready()) {
             return;
         }
-        std::string json = DamageHealing_Engine::OverlayJson();
+        std::string json = InjuryEngine::OverlayJson();
         {
             std::lock_guard lock(g_lock);
             if (json == g_lastPush) {

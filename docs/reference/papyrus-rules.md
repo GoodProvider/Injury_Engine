@@ -37,7 +37,7 @@ The same holds for natives in `SkyrimNet_Whipped_Engine.psc`: a changed signatur
 Each script has a global `Trace(func, msg, notification=False)` that writes `[ScriptName] func: msg` with `Debug.Trace` (Papyrus log). Prefix temporary debug messages with `"---"` (or tag them `; DEBUG-WHIP`) so they are easy to find and remove:
 
 ```papyrus
-Trace("RenderHealPrompt", "--- render failed json:" + json)
+Trace("NarrateHealing", "--- no text for codes:" + codes)
 ```
 
 Logs:

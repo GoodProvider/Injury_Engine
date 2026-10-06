@@ -2,7 +2,7 @@
 
 // Whipping overlay: a PrismaUI view (Data/PrismaUI/views/SkyrimNet_Whipped/overlay.html) with
 // per-part damage/healing bars for loaded tracked actors. Never focused (no cursor, no input).
-// C++ pushes DamageHealing_Engine::OverlayJson() whenever it changes; the page decides which
+// C++ pushes InjuryEngine::OverlayJson() whenever it changes; the page decides which
 // panels show (changed recently) and fades idle ones.
 namespace Overlay
 {

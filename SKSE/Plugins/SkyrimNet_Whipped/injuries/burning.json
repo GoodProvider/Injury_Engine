@@ -1,0 +1,164 @@
+{
+  "id": "burning",
+  "title": "Burns",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Burns",
+    "feels_intro": "How {name}'s burns feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: reddened, tight skin like a bad sunburn; the eyebrows are singed.",
+        "{name}'s face: blistering burns, weeping and shiny; the hair is scorched.",
+        "{name}'s face: charred, blackened skin split and raw; the burns are terrible."
+      ],
+      "body": [
+        "{name}'s back: reddened, tight skin like a sunburn, the clothing scorched.",
+        "{name}'s back: blistered, weeping burns; the clothing is melted into the skin in places.",
+        "{name}'s back: blackened, charred burns across the back, raw and cracked, with a smell of burnt flesh."
+      ],
+      "arm": [
+        "{name}'s {part}: red, tight skin like a sunburn.",
+        "{name}'s {part}: blistered, weeping burns.",
+        "{name}'s {part}: charred, blackened skin split open; the limb is raw."
+      ],
+      "leg": [
+        "{name}'s {part}: red, tight skin like a sunburn.",
+        "{name}'s {part}: blistered, weeping burns, the clothing scorched away.",
+        "{name}'s {part}: charred, blackened skin, split and raw; the leg is badly burned."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings and prickles like a sunburn. {name} is jumpy and wary of heat.",
+        "{name}'s face burns and the blisters throb. {name} is angry and afraid and keeps flinching away from flame.",
+        "{name}'s face is searing, screaming agony. {name} is panicked, half blind and barely coherent."
+      ],
+      "body": [
+        "{name}'s back stings like a hard sunburn, and clothing chafes. {name} keeps shrugging away from fabric.",
+        "{name}'s back burns and the blisters tear when {he} moves. {name} is stiff and furious.",
+        "{name}'s back is white-hot agony. {name} cannot bear any touch and is shaking, close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} stings like a sunburn. {name} holds it away from clothing.",
+        "{name}'s {part} burns, and the blisters throb. {name} cradles it and cannot grip.",
+        "{name}'s {part} is searing agony. {name} cannot bear to move it or let anything touch it."
+      ],
+      "leg": [
+        "{name}'s {part} stings like a sunburn. {name} walks stiffly, away from rubbing cloth.",
+        "{name}'s {part} burns and the blisters throb with each step. {name} limps and grimaces.",
+        "{name}'s {part} is searing agony. {name} cannot bear weight and needs support to move."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is burned",
+      "verb_many": " are burned",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}'s fire",
+      "by_none": "",
+      "levels": [
+        ", a sudden scorch of heat. The flame licks across {his} skin and {he} jerks away with a hiss of pain.",
+        " over skin that is already scalded. The fire bites into the raw burn and {he} shrieks as the pain flares.",
+        ", and the flames eat into the burn. The pain is huge and nauseating, the smell of scorched flesh sharp, and {he} staggers.",
+        ", and it is too much. The fire engulfs {him}; {he} screams, {his} skin blackening, and {his} strength drains away."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The burns on {name}'s {part} have dried into a raw, tight red.",
+        "light": "The burns on {name}'s {part} have faded to a sore, peeling pink.",
+        "healed": "The burns on {name}'s {part} have healed, leaving shiny, new skin."
+      },
+      "source_healed": "All of {name}'s burns have healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

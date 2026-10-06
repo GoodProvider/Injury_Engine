@@ -1,0 +1,164 @@
+{
+  "id": "generic",
+  "title": "Wounds",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Wounds",
+    "feels_intro": "How {name}'s wounds feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a light bruise or scratch.",
+        "{name}'s face: a nasty, bleeding wound, swollen and discolored.",
+        "{name}'s face: a severe injury, bleeding heavily and badly swollen."
+      ],
+      "body": [
+        "{name}'s back: a light bruise or scratch.",
+        "{name}'s back: a nasty, bleeding wound, stiff and discolored.",
+        "{name}'s back: a severe injury, bleeding heavily; {he} can barely stay upright."
+      ],
+      "arm": [
+        "{name}'s {part}: a light bruise or scratch.",
+        "{name}'s {part}: a nasty, bleeding wound, swollen and sore.",
+        "{name}'s {part}: a severe injury; the arm is badly hurt and almost useless."
+      ],
+      "leg": [
+        "{name}'s {part}: a light bruise or scratch.",
+        "{name}'s {part}: a nasty, bleeding wound, swollen and sore.",
+        "{name}'s {part}: a severe injury; the leg barely takes weight."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings and aches a little. {name} is a bit shaken.",
+        "{name}'s face throbs and aches. {name} is hurting and angry.",
+        "{name}'s face is agony. {name} is dazed, frightened and barely coherent."
+      ],
+      "body": [
+        "{name}'s back aches a little. {name} is stiff and tense.",
+        "{name}'s back throbs with each breath. {name} moves stiffly, wincing.",
+        "{name}'s back is agony. {name} is gasping and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} aches a little and is tender. {name} protects it.",
+        "{name}'s {part} throbs and is weak. {name} cradles it.",
+        "{name}'s {part} is agony and barely works. {name} is in shock and holds it still."
+      ],
+      "leg": [
+        "{name}'s {part} aches a little. {name} walks with a slight limp.",
+        "{name}'s {part} throbs with every step. {name} limps and winces.",
+        "{name}'s {part} is agony and will not take weight. {name} falls or needs support."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is hurt",
+      "verb_many": " are hurt",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", a sudden stab of pain. It catches {him} by surprise and {he} flinches and grunts.",
+        " on a spot that is already sore. The pain flares, and {he} cries out.",
+        ", and it lands hard on the wound. The pain is huge and nauseating, and {he} staggers.",
+        ", and it is too much. The pain crashes through {him}; {he} goes pale and {his} legs begin to give."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The wound on {name}'s {part} has closed up into a deep, sore bruise.",
+        "light": "The wound on {name}'s {part} has faded to a tender mark.",
+        "healed": "The wound on {name}'s {part} has healed."
+      },
+      "source_healed": "All of {name}'s wounds have healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

@@ -10,28 +10,21 @@ Contracts: [../reference/json-keys.md](../reference/json-keys.md).
 SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/
   manifest.json            (id must equal the folder name)
   prompts/
-    helpers/
-      healing.prompt
     submodules/
       character_bio/
-        0420_whip_welts.prompt
+        0420_injury_looks.prompt
       user_final_instructions/
-        0420_whip_pain.prompt
+        0420_injury_feels.prompt
 ```
 
 | File | Role |
 |------|------|
-| `character_bio/0420_whip_welts.prompt` | What each wounded part looks like to an observer |
-| `user_final_instructions/0420_whip_pain.prompt` | How the speaker's own wounds feel |
-| `helpers/healing.prompt` | Healing narration sentence, rendered by Papyrus (`Main.RenderHealPrompt`) |
+| `character_bio/0420_injury_looks.prompt` | What each wounded part looks like to an observer, for every injury source |
+| `user_final_instructions/0420_injury_feels.prompt` | How the speaker's own wounds feel, for every injury source |
 
-## Wound prompts
+## Injury text lives in JSON, not in prompts
 
-Both submodules call the decorator `skyrimnet_whipped_welts(uuid)` and index their text tables by each part's `text` field (`region * 6 + stage`). Changing the region or stage order in `DamageHealing_Engine.cpp` breaks both tables — update them together.
-
-## Healing helper
-
-Papyrus builds the `heal` JSON. `RenderTemplate("helpers/healing", "", "")` only loads the file: its logic sits in a `{% raw %}` block and comes back unrendered. `ParseString(source, "heal", json)` then renders it with `heal` parsed as JSON (`RenderTemplate` binds its variable as a plain string, so `heal.*` would be undefined). SkyrimNet's inja has no `lower()` and no string `+`, and it parses `[...]` literals as JSON, so `join([heal.name, "'s"], "")` breaks the whole render: write joined phrases inline (`{% if pron %}{{ his }}{% else %}{{ heal.name }}'s{% endif %}`). Send numeric codes for anything Papyrus would send as a string literal. An empty, error-looking or unrendered (`{{` / `{%`) result falls back to the Papyrus sentence. Keys are documented at the top of the file and in [json-keys.md](../reference/json-keys.md#heal-healing-narration). Hit narration (`Main.LashBatchText`) is built in Papyrus, not a prompt.
+The two prompts are generic: they loop over `skyrimnet_whipped_injuries(uuid)` (`sources[]`, each with `looks_heading`, `feels_intro`, `feels_outro` and `parts[]` with ready-to-print `look` / `feel` strings, already resolved for the actor's name, pronouns and part). The wording, the stage tables and all narration (hit text, healing text, healing-source text, Whip_Target summary) are in `SKSE/Plugins/SkyrimNet_Whipped/injuries/<source>.json` and rendered by `SkyrimNet_Whipped.dll`; the JSON schema and writing rules are in `SKSE/Plugins/SkyrimNet_Whipped/injuries/guide.md`. Add a new injury type by adding a JSON file; the prompts need no change. Narration is no longer rendered through `RenderTemplate` / `ParseString`, so the inja limits noted in [KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md) apply only to these two small prompts.
 
 ## No numbers
 
@@ -41,5 +34,5 @@ LLM-facing text — prompts, DirectNarration, events — uses descriptive stages
 
 - [ ] Keys bare lowercase
 - [ ] No digits / percentages reach the LLM
-- [ ] Text tables still match the `text` index
-- [ ] Narration-enabled smoke test in game (check `Papyrus.0.log` for `RenderHealPrompt` failures)
+- [ ] Every `looks` / `feels` region array in the JSON has one entry per stage of that source
+- [ ] Narration-enabled smoke test in game (check `Papyrus.0.log` DirectNarration lines and `SkyrimNet_Whipped.log` `injuries:` lines)

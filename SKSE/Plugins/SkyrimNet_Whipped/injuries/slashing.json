@@ -1,0 +1,164 @@
+{
+  "id": "slashing",
+  "title": "Slash Wounds",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Slash Wounds",
+    "feels_intro": "How {name}'s slash wounds feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a shallow red cut runs across {his} cheek or brow, beaded with blood.",
+        "{name}'s face: a deep gash gapes along {his} cheek, bleeding steadily down {his} jaw.",
+        "{name}'s face: a ragged, bone-deep slash splits {his} face open; blood sheets over {his} features and one eye is lost in it."
+      ],
+      "body": [
+        "{name}'s back: a thin red line of a cut, weeping a little blood through {his} clothing.",
+        "{name}'s back: a long, open gash soaks {his} clothing with blood.",
+        "{name}'s back: a deep, ragged slash cuts through muscle; blood runs freely and {his} clothing is sodden with it."
+      ],
+      "arm": [
+        "{name}'s {part}: a shallow cut, welling blood in a thin red line.",
+        "{name}'s {part}: a deep gash laid open along the muscle, blood running to the fingertips.",
+        "{name}'s {part}: the slash cuts to the bone; the arm hangs heavy and dripping."
+      ],
+      "leg": [
+        "{name}'s {part}: a shallow cut across the thigh or calf, blood seeping into {his} clothing.",
+        "{name}'s {part}: a deep gash, blood running down into {his} boot.",
+        "{name}'s {part}: a ragged slash through the muscle; the leg is slick with blood and barely holds weight."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings sharply where the blade cut, and {he} keeps blinking away blood. {name} is wary and alert.",
+        "{name}'s face throbs under the open gash, {his} cheek hot and tight. {name} is rattled and angry, talking through a stiff jaw.",
+        "{name}'s face is a screaming, sickening pain; {he} is dizzy and sick with the blood loss. {name} is terrified and barely coherent."
+      ],
+      "body": [
+        "{name}'s back stings every time {he} moves, a thin burning line. {name} is edgy and keeps shifting away from touch.",
+        "{name}'s back burns and pulls with every breath. {name} is gritting {his} teeth and moving stiffly to keep the wound closed.",
+        "{name}'s back is tearing, white-hot agony; {he} is lightheaded and shaking. {name} is close to collapse and cannot straighten up."
+      ],
+      "arm": [
+        "{name}'s {part} stings sharply, and {he} flexes the fingers to check it still works.",
+        "{name}'s {part} burns deep and bleeds when {he} grips anything. {name} is angry and cradles it.",
+        "{name}'s {part} is agony and barely answers; {he} cannot grip. {name} is in shock, staring at the wound."
+      ],
+      "leg": [
+        "{name}'s {part} stings with each step. {name} is annoyed, with a small hitch in {his} stride.",
+        "{name}'s {part} burns and bleeds with every step. {name} limps and grimaces, favoring it.",
+        "{name}'s {part} is shrieking pain; {he} can hardly stand on it. {name} is panicked and needs support to move."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is slashed",
+      "verb_many": " are slashed",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", a clean, hot line of pain. The edge bites and opens the skin, and {he} sucks in a sharp breath as the blood wells.",
+        " across flesh that is already cut. The blade finds the open wound again, and {he} cries out as the pain flares white-hot.",
+        ", and the blade bites deep into the wound. The pain is huge and nauseating, and {his} composure breaks as the blood pours.",
+        ", and it is too much. The blow cuts through muscle and tendon; {he} goes pale, {his} vision tunnels and {his} legs begin to give."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The gash on {name}'s {part} has closed into a raw, stitched-shut-looking cut.",
+        "light": "The cut on {name}'s {part} has knit into a thin pink line.",
+        "healed": "The cut on {name}'s {part} has healed, leaving a faint pale scar."
+      },
+      "source_healed": "All of {name}'s slash wounds have healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

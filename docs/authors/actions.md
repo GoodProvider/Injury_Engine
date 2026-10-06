@@ -6,7 +6,7 @@ See also: [prompts.md](prompts.md), [../developers/papyrus.md](../developers/pap
 
 ## Registration
 
-`Whip_Target` is registered from Papyrus (`SkyrimNet_Whipped_Actions.Setup` → `SkyrimNetApi.RegisterAction`), **not** from action YAML, so eligibility can check the NPC's inventory. There is no `actions/` folder in the plugin tree.
+`Whip_Target` is registered from Papyrus (`SkyrimNet_Whipped_Actions.Setup` → `SkyrimNetApi.RegisterAction`), **not** from action YAML, so eligibility can check the NPC's inventory. There is no `actions/` folder in the plugin tree. The action description, the "has no whip" event and the summary narration are in `SKSE/Plugins/SkyrimNet_Whipped/injuries/whipping.json` (`action.*`, `narration.summary`); keep the `{target}` and `{strikes}` placeholders in the description.
 
 | Part | Function |
 |------|----------|

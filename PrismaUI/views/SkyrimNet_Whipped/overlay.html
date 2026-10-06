@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SkyrimNet Whipped Overlay</title>
     <!--
-        Whipping overlay (C++ Overlay.cpp). Shown without Focus: no cursor, no input, game keeps running.
-        C++ pushes whipUpdate({actors:[{id, name, parts:[[damage, healing] x6]}]}) whenever the engine state
-        changes; parts are head, body, right arm, left arm, right leg, left leg. Damage 0..20, healing 0..11
-        (11 = healed). whipReset() drops everything (new game / load / overlay turned off).
-        One bar per tracked, not fully healed actor, most recently hit first. Hurting: width = total damage
-        over the whole body (6 x 20), colored by the average damage of the damaged parts. Healing (no damage
-        left): width = healing progress of the parts still healing, colored by their average healing.
-        The whole overlay fades IDLE_MS after the last change and comes back, with every bar, on the next one.
-        Actors missing from the push are fully healed (or dead / unloaded): their bar empties and fades.
+        Whip damage overlay (C++ Overlay.cpp). Shown without Focus: no cursor, no input, game keeps running.
+        C++ pushes whipUpdate({title, max, healed, medium, severe, mostly_healed, colors,
+                               actors:[{id, name, replaced, parts:[[damage, healing] x6]}]})
+        whenever the engine state changes (numbers and colors come from injuries/whipping.json); parts are head, body,
+        right arm, left arm, right leg, left leg. whipReset() drops everything (new game / load / overlay turned off).
+        Layout: #WhippedPanel holds the title ("Whip Damage", white) above .actor-whipped-damage-bars, one bar per
+        whipped actor, most recently hit first. Hurting: width = total whip damage over the whole body, colored by the
+        average damage of the damaged parts. Real damage replaces whip damage: `replaced` points grow as a darker red
+        segment from the left while the whip fill shrinks. Healing (no damage left): width = healing progress of the
+        parts still healing, colored by their average healing. Bars show only the actor's name.
+        An actor whose whip damage is fully replaced (or healed, dead, unloaded) is dropped; with no bars the panel is
+        hidden. The whole overlay fades IDLE_MS after the last change and comes back on the next one.
     -->
     <style>
         *, *::before, *::after { box-sizing: border-box; }
@@ -27,6 +30,7 @@
             --severe: #7a0c0c;
             --recovering: #f2c94c;
             --mostly-healed: #f7e08a;
+            --replaced: #3d0606;
         }
         html, body {
             margin: 0;
@@ -45,13 +49,19 @@
             position: absolute;
             top: 12%;
             right: 3%;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
             opacity: 0;
             transition: opacity 0.6s ease;
         }
         #overlay.shown { opacity: 1; }
+        #WhippedPanel { display: none; flex-direction: column; gap: 6px; }
+        #WhippedPanel.active { display: flex; }
+        .panel-title {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+        .actor-whipped-damage-bars { display: flex; flex-direction: column; gap: 6px; }
         .bar {
             position: relative;
             width: var(--bar-width);
@@ -63,14 +73,14 @@
             transition: opacity 0.6s ease;
         }
         .bar.fading { opacity: 0; }
-        .fill {
+        .replaced, .fill {
             position: absolute;
-            left: 0;
             top: 0;
             bottom: 0;
-            width: 0;
-            transition: width 0.4s ease, background-color 0.4s linear;
+            transition: width 0.4s ease, left 0.4s ease, background-color 0.4s linear;
         }
+        .replaced { left: 0; width: 0; background-color: var(--replaced); }
+        .fill { left: 0; width: 0; }
         .fill.light { background-color: var(--light); }
         .fill.medium { background-color: var(--medium); }
         .fill.severe { background-color: var(--severe); }
@@ -97,24 +107,35 @@
     </style>
 </head>
 <body>
-    <div id="overlay"></div>
+    <div id="overlay">
+        <div id="WhippedPanel">
+            <div class="panel-title">Whip Damage</div>
+            <div class="actor-whipped-damage-bars"></div>
+        </div>
+    </div>
     <script>
-        const MAX_DAMAGE = 20;
         const PART_COUNT = 6;
-        const HEALED = 11;
         const IDLE_MS = 3000;     // overlay fades this long after the last change
         const GONE_MS = 1500;     // fully healed: empty bar shown this long before its fade
         const FLASH_MS = 1000;    // healing bar flashes this long when a healing actor is hit
         const FADE_MS = 600;
-        const NO_PARTS = Array.from({ length: PART_COUNT }, () => [0, HEALED]);
+        // Replaced by the numbers in every push (injuries/whipping.json), these only cover the first frame.
+        const cfg = { max: 120, healed: 11, medium: 4, severe: 11, mostlyHealed: 4 };
 
-        const root = document.getElementById('overlay');
-        const actors = new Map();  // id -> {bar, fill, label, name, parts, sum, lastHit, gone, flashUntil, flashTimer}
+        const overlay = document.getElementById('overlay');
+        const panel = document.getElementById('WhippedPanel');
+        const title = panel.querySelector('.panel-title');
+        const root = panel.querySelector('.actor-whipped-damage-bars');
+        const actors = new Map();  // id -> {bar, fill, replacedBar, label, name, parts, replaced, sum, lastHit, gone, flashUntil, flashTimer}
         let lastChange = 0;
 
+        const noParts = () => Array.from({ length: PART_COUNT }, () => [0, cfg.healed]);
+
+        function maxDamage() { return cfg.max / PART_COUNT; }
+
         function damageStage(damage) {
-            if (damage >= 11) return 'severe';
-            if (damage >= 4) return 'medium';
+            if (damage >= cfg.severe) return 'severe';
+            if (damage >= cfg.medium) return 'medium';
             return 'light';
         }
 
@@ -123,45 +144,51 @@
             let damage = 0, damaged = 0, healing = 0, unhealed = 0;
             for (const [d, h] of parts) {
                 if (d > 0) {
-                    damage += Math.min(d, MAX_DAMAGE);
+                    damage += Math.min(d, maxDamage());
                     damaged++;
-                } else if (h < HEALED) {
+                } else if (h < cfg.healed) {
                     healing += Math.max(h, 0);
                     unhealed++;
                 }
             }
             if (damaged) {
-                return { state: 'hurting', width: damage / (MAX_DAMAGE * PART_COUNT) * 100,
+                return { state: 'hurting', width: damage / cfg.max * 100,
                     cls: damageStage(damage / damaged), damage };
             }
             if (unhealed) {
-                return { state: 'healing', width: healing / (HEALED * unhealed) * 100,
-                    cls: healing / unhealed >= 4 ? 'mostly-healed' : 'recovering', damage: 0 };
+                return { state: 'healing', width: healing / (cfg.healed * unhealed) * 100,
+                    cls: healing / unhealed >= cfg.mostlyHealed ? 'mostly-healed' : 'recovering', damage: 0 };
             }
             return { state: 'healed', width: 0, cls: '', damage: 0 };
         }
 
         function paint(a, sum) {
+            // The replaced segment sits at the left, the whip fill follows it; the total width stays the same.
+            const replaced = sum.state === 'hurting' ? Math.min(a.replaced / cfg.max * 100, 100) : 0;
+            a.replacedBar.style.width = replaced + '%';
             a.fill.className = 'fill ' + sum.cls;
+            a.fill.style.left = replaced + '%';
             a.fill.style.width = sum.width + '%';
-            if (sum.state !== 'healed') {
-                a.label.textContent = `${a.name} (${sum.state})`;
-            }
+            a.label.textContent = a.name;
         }
 
         function create(id) {
             const bar = document.createElement('div');
             bar.className = 'bar';
+            const replacedBar = document.createElement('div');
+            replacedBar.className = 'replaced';
             const fill = document.createElement('div');
             fill.className = 'fill';
             const label = document.createElement('div');
             label.className = 'label';
+            bar.appendChild(replacedBar);
             bar.appendChild(fill);
             bar.appendChild(label);
             root.appendChild(bar);
+            const parts = noParts();
             const a = {
-                bar, fill, label, name: '',
-                parts: NO_PARTS, sum: summarize(NO_PARTS),
+                bar, fill, replacedBar, label, name: '',
+                parts, replaced: 0, sum: summarize(parts),
                 lastHit: 0, gone: 0, flashUntil: 0, flashTimer: 0,
             };
             actors.set(id, a);
@@ -180,12 +207,13 @@
             }, FLASH_MS);
         }
 
-        // Returns true when the actor's parts changed.
-        function apply(a, parts, now) {
-            if (JSON.stringify(parts) === JSON.stringify(a.parts)) return false;
+        // Returns true when the actor's parts or replaced count changed.
+        function apply(a, parts, replaced, now) {
+            if (replaced === a.replaced && JSON.stringify(parts) === JSON.stringify(a.parts)) return false;
             const prev = a.sum;
             const sum = summarize(parts);
             a.parts = parts.map((p) => [p[0], p[1]]);
+            a.replaced = replaced;
             a.sum = sum;
             if (sum.damage > prev.damage) a.lastHit = now;
             if (prev.state === 'healing' && sum.state === 'hurting') {
@@ -196,24 +224,41 @@
             return true;
         }
 
-        // Fully healed (or dead / unloaded): empty bar, then fade and drop it.
-        function retire(id, a, now) {
+        function drop(id, a) {
+            if (actors.get(id) !== a) return;
+            clearTimeout(a.flashTimer);
+            a.bar.remove();
+            actors.delete(id);
+        }
+
+        // Fully healed, replaced by real damage, dead or unloaded: fade the bar and drop it. A healed actor shows an
+        // empty bar for GONE_MS first; one whose whip damage was replaced goes at once.
+        function retire(id, a, now, immediate) {
             if (a.gone) return;
             a.gone = now;
             setTimeout(() => {
                 if (actors.get(id) !== a) return;
                 a.bar.classList.add('fading');
-                setTimeout(() => {
-                    if (actors.get(id) !== a) return;
-                    clearTimeout(a.flashTimer);
-                    a.bar.remove();
-                    actors.delete(id);
-                }, FADE_MS);
-            }, GONE_MS);
+                setTimeout(() => drop(id, a), FADE_MS);
+            }, immediate ? 0 : GONE_MS);
+        }
+
+        function configure(state) {
+            if (typeof state.max === 'number') cfg.max = state.max;
+            if (typeof state.healed === 'number') cfg.healed = state.healed;
+            if (typeof state.medium === 'number') cfg.medium = state.medium;
+            if (typeof state.severe === 'number') cfg.severe = state.severe;
+            if (typeof state.mostly_healed === 'number') cfg.mostlyHealed = state.mostly_healed;
+            if (state.title) title.textContent = state.title;
+            const style = document.documentElement.style;
+            for (const [name, value] of Object.entries(state.colors || {})) {
+                style.setProperty('--' + name.replace(/_/g, '-'), value);
+            }
         }
 
         function whipUpdate(state) {
             const now = Date.now();
+            configure(state || {});
             const seen = new Set();
             for (const s of (state && state.actors) || []) {
                 const id = String(s.id);
@@ -221,20 +266,19 @@
                 let a = actors.get(id);
                 if (a && a.gone) {
                     // Back before its bar was dropped: start fresh.
-                    clearTimeout(a.flashTimer);
-                    a.bar.remove();
-                    actors.delete(id);
+                    drop(id, a);
                     a = null;
                 }
                 a = a || create(id);
                 a.name = s.name || '';
-                if (apply(a, s.parts || NO_PARTS, now)) lastChange = now;
-                if (a.sum.state === 'healed') retire(id, a, now);
+                if (apply(a, s.parts || noParts(), s.replaced || 0, now)) lastChange = now;
+                if (a.sum.state === 'healed') retire(id, a, now, false);
             }
             for (const [id, a] of actors) {
                 if (seen.has(id) || a.gone) continue;
-                if (apply(a, NO_PARTS, now)) lastChange = now;
-                retire(id, a, now);
+                const replacedAway = a.sum.state === 'hurting' && a.replaced > 0;
+                if (apply(a, noParts(), 0, now)) lastChange = now;
+                retire(id, a, now, replacedAway);
             }
             render();
         }
@@ -246,7 +290,8 @@
             }
             actors.clear();
             lastChange = 0;
-            root.classList.remove('shown');
+            overlay.classList.remove('shown');
+            panel.classList.remove('active');
         }
 
         function render() {
@@ -255,7 +300,9 @@
             if (order.some((a, i) => root.children[i] !== a.bar)) {
                 for (const a of order) root.appendChild(a.bar);
             }
-            root.classList.toggle('shown', actors.size > 0 && Date.now() - lastChange < IDLE_MS);
+            // The panel (title + bars) exists only while some actor has whip damage to show.
+            panel.classList.toggle('active', actors.size > 0);
+            overlay.classList.toggle('shown', actors.size > 0 && Date.now() - lastChange < IDLE_MS);
         }
 
         setInterval(render, 250);

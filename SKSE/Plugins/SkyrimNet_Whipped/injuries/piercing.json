@@ -1,0 +1,164 @@
+{
+  "id": "piercing",
+  "title": "Stab Wounds",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Stab Wounds",
+    "feels_intro": "How {name}'s stab wounds feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a small puncture beads blood near {his} cheek or temple.",
+        "{name}'s face: a deep puncture has bled down {his} cheek; the skin around it is already swelling.",
+        "{name}'s face: a savage puncture through the cheek or brow; blood floods from it and {his} face is deathly pale."
+      ],
+      "body": [
+        "{name}'s back: a small puncture wound weeps a thin line of blood.",
+        "{name}'s back: a deep stab wound, steady dark blood soaking {his} clothing around it.",
+        "{name}'s back: a deep stab wound into the torso; blood pulses from it and {his} breathing is wet and shallow."
+      ],
+      "arm": [
+        "{name}'s {part}: a small puncture, oozing blood.",
+        "{name}'s {part}: a deep stab wound through the muscle, blood running steadily.",
+        "{name}'s {part}: the arm is skewered through; blood pours and the limb hangs useless."
+      ],
+      "leg": [
+        "{name}'s {part}: a small puncture in the thigh or calf, oozing blood.",
+        "{name}'s {part}: a deep stab wound, blood running down into {his} boot.",
+        "{name}'s {part}: a deep, bleeding puncture through the muscle; the leg buckles under any weight."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face has a sharp, pinpoint sting. {name} is wary and touches it, flinching at the blood.",
+        "{name}'s face throbs hot around the puncture. {name} is shaken and angry, holding {his} head very still.",
+        "{name}'s face is blinding pain and pressure; {he} is sick and dizzy. {name} is terrified and can hardly speak."
+      ],
+      "body": [
+        "{name}'s back has a sharp, deep sting that catches on every breath. {name} is tense and watchful.",
+        "{name}'s back throbs deep inside and every breath stabs. {name} breathes shallowly and moves stiffly.",
+        "{name}'s back is a deep, spreading agony and breath is short and wet. {name} is frightened and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} has a sharp, pinpoint sting. {name} protects it and flexes the hand to test it.",
+        "{name}'s {part} throbs hard around the stab and goes weak when gripping. {name} cradles it.",
+        "{name}'s {part} is deep, burning agony and will not respond. {name} is in shock and cannot grip anything."
+      ],
+      "leg": [
+        "{name}'s {part} has a sharp sting with each step. {name} is wary, testing the weight.",
+        "{name}'s {part} throbs deep and gives a sharp stab when loaded. {name} limps and winces.",
+        "{name}'s {part} is excruciating; it buckles when {he} tries to stand. {name} is panicked and needs help to move."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is stabbed",
+      "verb_many": " are stabbed",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", a sudden sharp stab. The point punches in and out, and {he} gasps as the pain blooms hot around it.",
+        " into a puncture that is already bleeding. The point drives deeper, and the pain flares, sharp and nauseating.",
+        ", and the point drives deep into the wound. The pain is huge and wet and {he} chokes on a cry as blood runs.",
+        ", and it is too much. The stab is crushing and cold; {he} goes ashen, {his} breath rattles and {his} knees give."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The stab wound on {name}'s {part} has closed over into a deep, bruised puncture.",
+        "light": "The puncture on {name}'s {part} has shrunk to a sore red dot.",
+        "healed": "The puncture on {name}'s {part} has healed, leaving a small pale scar."
+      },
+      "source_healed": "All of {name}'s stab wounds have healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

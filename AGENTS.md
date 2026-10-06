@@ -4,7 +4,7 @@ Agent guidance for SkyrimNet_Whipped (padded whip for SkyrimNet).
 
 ## What this is
 
-Standalone padded whip for SkyrimNet. Each lash wounds a random body part; `SkyrimNet_Whipped.dll` tracks damage and healing per part (co-saved), Papyrus narrates hits and healing, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
+Standalone padded whip for SkyrimNet. Each lash wounds a random body part; `SkyrimNet_Whipped.dll` (`InjuryEngine`) tracks injury per source (whipping plus classified slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / generic damage) per part (co-saved), reads all wound data and text from `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json`, Papyrus narrates hits and healing, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
 
 ## Key paths
 
@@ -16,6 +16,7 @@ Standalone padded whip for SkyrimNet. Each lash wounds a random body part; `Skyr
 | `SKSE_Source/` | C++ SKSE plugin → `SKSE/Plugins/SkyrimNet_Whipped.dll` |
 | `Scripts/Source/SkyrimNet_Whipped_Engine.psc` | Papyrus natives of the DLL |
 | `Spriggit/SkyrimNet_Whipped/` | ESP source of truth (`SkyrimNet_Whipped.esp` is built) |
+| `SKSE/Plugins/SkyrimNet_Whipped/injuries/` | Injury data + text per source (`whipping.json`, `slashing.json`, ...; schema in `guide.md`) |
 | `SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/` | Beta 25 LLM plugin (prompts; folder name = `manifest.json` `id`) |
 | `SKSE/Plugins/SkyrimNet/config/plugins/SkyrimNet_Whipped/manifest.yaml` | Dashboard settings schema (`Plugin_SkyrimNet_Whipped`, `whip.*`) |
 | `PrismaUI/views/SkyrimNet_Whipped/overlay.html` | Whipping overlay page |

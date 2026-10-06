@@ -1,0 +1,164 @@
+{
+  "id": "shocking",
+  "title": "Electrical Burns",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "healing_max": 11,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11,
+    "mostly_healed": 4
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Electrical Burns",
+    "feels_intro": "How {name}'s electrical burns feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a faint red, branching mark, with singed hair standing on end.",
+        "{name}'s face: red, branching burn marks across the cheek and temple, the skin blistered.",
+        "{name}'s face: deep, black-edged burn marks branching across {his} face, the skin split and smoking."
+      ],
+      "body": [
+        "{name}'s back: a faint red, branching mark through the clothing.",
+        "{name}'s back: red, branching burn marks, blistered and scorched through the clothing.",
+        "{name}'s back: deep, black-edged burn marks branching across {his} back; the clothing smolders."
+      ],
+      "arm": [
+        "{name}'s {part}: a faint red, branching mark; the hand twitches.",
+        "{name}'s {part}: red, branching burn marks, blistered; the fingers curl and tremble.",
+        "{name}'s {part}: deep, black-edged burn marks; the arm trembles and the hand is clenched like a claw."
+      ],
+      "leg": [
+        "{name}'s {part}: a faint red, branching mark; the muscle twitches.",
+        "{name}'s {part}: red, branching burn marks, blistered; the muscle trembles.",
+        "{name}'s {part}: deep, black-edged burn marks; the leg trembles and spasms."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face tingles and buzzes and {his} ears ring. {name} is jumpy and blinks hard.",
+        "{name}'s face burns and twitches, {his} teeth aching from the current. {name} is shaken and stammering.",
+        "{name}'s face is white-hot agony and numb in patches, {his} vision flashing. {name} is dazed and barely coherent."
+      ],
+      "body": [
+        "{name}'s back tingles and buzzes, the muscles twitching. {name} is jumpy and tense.",
+        "{name}'s back burns and clenches in spasms. {name} is stiff and shaky and breathes in jerks.",
+        "{name}'s back is white-hot agony and the muscles will not stop convulsing. {name} is dazed and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} tingles and buzzes, the fingers twitching. {name} shakes it out.",
+        "{name}'s {part} burns and spasms, the grip failing. {name} cradles it, trembling.",
+        "{name}'s {part} is white-hot agony and numb in patches; the hand will not open. {name} is shocked and speechless."
+      ],
+      "leg": [
+        "{name}'s {part} tingles and buzzes, the muscle twitching. {name} shakes it out as {he} walks.",
+        "{name}'s {part} burns and spasms with every step. {name} stumbles and limps.",
+        "{name}'s {part} is white-hot agony and will not hold weight, jerking in spasms. {name} collapses or needs support."
+      ]
+    }
+  },
+  "narration": {
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is shocked",
+      "verb_many": " are shocked",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}'s lightning",
+      "by_none": "",
+      "levels": [
+        ", a sudden crack of current. The jolt throws {his} muscles into a spasm, and {he} jerks with a yelp.",
+        " through muscles that are already jangling. The current arcs through the burn, and {he} convulses as the pain flares.",
+        ", and the lightning arcs through the burns. The pain is blinding and {he} locks up in a spasm, hair standing on end and breath gone.",
+        ", and it is too much. The current floods {him}; {he} convulses, smoking, then goes slack, {his} heart stuttering."
+      ]
+    },
+    "heal": {
+      "stage": {
+        "medium": "The burn marks on {name}'s {part} have faded to angry, branching red lines.",
+        "light": "The marks on {name}'s {part} have faded to faint pink traces.",
+        "healed": "The marks on {name}'s {part} have healed, leaving only a faint branching scar."
+      },
+      "source_healed": "All of {name}'s electrical burns have healed.",
+      "part_healed": "Every injury on {name}'s {part} has healed."
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    }
+  }
+}

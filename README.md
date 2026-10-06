@@ -36,7 +36,7 @@ Install `SkyrimNet_Whipped <version>.7z` with your mod manager (it is a FOMOD wi
 
 ## How wounds are tracked
 
-The engine owns decals: they can vanish on a cell change or reload, and scripts can't query them. So `SkyrimNet_Whipped.dll` (DamageHealing_Engine, saved in the SKSE co-save) tracks each actor's six body parts:
+The engine owns decals: they can vanish on a cell change or reload, and scripts can't query them. So `SkyrimNet_Whipped.dll` (InjuryEngine, saved in the SKSE co-save) tracks each actor's six body parts, per injury source (whip wounds plus classified real damage, see below):
 
 | Damage | Stage | | Healing (damage 0) | Stage |
 |---|---|---|---|---|
@@ -44,7 +44,15 @@ The engine owns decals: they can vanish on a cell change or reload, and scripts 
 | 4–10 | medium | | 4–10 | mostly healed |
 | 11+ | severe | | 11 | healed (scar) |
 
-Each lash adds 1 damage to a random part; a part that is already healing reopens at damage 4. Every `hours_per_point` game hours a part loses 1 damage, then gains 1 healing; health restored by spells, potions or regeneration heals random parts one point at a time. Each part that heals to its next stage is narrated like a hit (first one always, later ones batched behind the cooldown or kept as short-lived events); only "fully healed" is always a Direct Narration. An actor is forgotten once every hit part is healed. Decorator `skyrimnet_whipped_welts(uuid)` returns `{"parts":[{"part":"left arm","region":"arm","stage":"medium","text":8,"damage":5,"healing":0}]}`.
+Each lash adds 1 damage to a random part; a part that is already healing reopens at damage 4. Every `hours_per_point` game hours a part loses 1 damage, then gains 1 healing; health restored by spells, potions or regeneration heals random parts one point at a time. Each part that heals to its next stage is narrated like a hit (first one always, later ones batched behind the cooldown or kept as short-lived events); only "fully healed" is always a Direct Narration. An actor is forgotten once every hit part is healed. Decorator `skyrimnet_whipped_injuries(uuid)` returns the injuries of every source with their descriptions already written for that actor.
+
+### Other injuries
+
+Ordinary damage is tracked too, classified by what hit the actor: slashing (swords, axes), piercing (daggers, arrows), bludgeoning (maces, hammers, staves, fists), burning, freezing and shocking (fire, frost and shock spells), mauling (creatures) and generic (anything else). Each health point lost becomes damage on a random body part (all parts at maximum = no health left) with the same light / medium / severe stages, and health regained heals random injuries one point at a time; a type, a body part and the whole body are each reported as they finish healing. Real damage first replaces whip damage: while an actor still carries whip wounds the hit does not lower health, and the overlay shows the replaced part as a darker red bar; once all whip wounds are replaced, further damage is normal and can kill. Whip wounds themselves keep their special rules (damage, then healing over time, never below 10% health).
+
+### Editing the injury text and numbers
+
+Everything the LLM reads about injuries, the Whip_Target text, the overlay title and colors and the setting defaults are in `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json` (one file per source). `injuries/guide.md` is a ready-made instruction sheet you can give to a chat assistant to improve or extend them.
 
 ## Building
 

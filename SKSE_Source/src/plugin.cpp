@@ -1,6 +1,8 @@
 #include <spdlog/sinks/basic_file_sink.h>
 
-#include "DamageHealing_Engine.h"
+#include "Classifier.h"
+#include "InjuryConfig.h"
+#include "InjuryEngine.h"
 #include "Overlay.h"
 
 bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm);
@@ -27,28 +29,30 @@ namespace
 
     void CoSave_OnSave(SKSE::SerializationInterface* intfc)
     {
-        DamageHealing_Engine::Save(intfc);
+        InjuryEngine::Save(intfc);
     }
 
     void CoSave_OnLoad(SKSE::SerializationInterface* intfc)
     {
         std::uint32_t type = 0, version = 0, length = 0;
         while (intfc->GetNextRecordInfo(type, version, length)) {
-            if (type == DamageHealing_Engine::kRecord) {
-                DamageHealing_Engine::Load(intfc, version, length);
+            if (type == InjuryEngine::kRecord) {
+                InjuryEngine::Load(intfc, version, length);
             }
         }
     }
 
     void CoSave_OnRevert(SKSE::SerializationInterface*)
     {
-        DamageHealing_Engine::Revert();
+        InjuryEngine::Revert();
     }
 
     void OnMessage(SKSE::MessagingInterface::Message* msg)
     {
         switch (msg->type) {
         case SKSE::MessagingInterface::kDataLoaded:
+            InjuryConfig::Load();
+            Classifier::Init();
             Overlay::Init();
             break;
         case SKSE::MessagingInterface::kNewGame:
