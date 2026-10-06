@@ -1,4 +1,7 @@
-# SkyrimNet Whipped
+# SkyrimNet W.H.I.P.P.E.D.
+
+![image of person whipping, healing, and injured](images/SkyrimNet_Whipped.jpg)
+Whipped Healing Injury: Pleasure & Pain Experience Details
 
 A standalone padded whip for [SkyrimNet](https://github.com/MinLL/SkyrimNet-GamePlugin). Each lash wounds a random body part (face, back, left/right arm, left/right leg). The hit is narrated to the LLM, and while the wounds heal, every character who looks at the victim knows what they look like and the victim knows how they feel.
 
