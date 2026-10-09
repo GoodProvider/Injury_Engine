@@ -8,34 +8,64 @@ You are improving the injury data of SkyrimNet_Whipped in a chat. Edit only the 
 
 One file = one injury **source**. `SkyrimNet_Whipped.dll` loads every `injuries/*.json` at game start
 (`InjuryConfig`), tracks damage per source per body part (`InjuryEngine`), and uses the files for all text the LLM
-sees (character bio, "how it feels", hit narration, healing narration), the Whip_Target action text and the
-whip overlay. Restart the game to see edits. Look in `SkyrimNet_Whipped.log` (`injuries: ...` lines) for load errors:
+sees (character bio, "how it feels", hit narration, healing narration), the Torture_Target action text and the
+torture overlay. Restart the game to see edits. Look in `SkyrimNet_Whipped.log` (`injuries: ...` lines) for load errors:
 a file that fails to parse is skipped and named there.
 
 | File | Source | Fed by |
 |------|--------|--------|
-| `whipping.json` | model `whip`: damage then healing over game time, requires a SkyrimNet_Whipped whip | Whip_Target action, real Padded Whip hits |
+| `whipping.json` | model `torture`: damage then healing over game time, requires a SkyrimNet_Whipped whip; also holds the body block, setting defaults, overlay and Torture_Target description | Torture_Target `whip`, real Padded Whip hits |
+| `pinching`, `slapping`, `pulling` | model `torture` | Torture_Target `pinch` / `slap` / `pull`, `External_Torture` |
+| `punching` | model `torture` | Torture_Target `punch`, unarmed NPC / player hits while the attacker is out of combat |
+| `fire`, `frost`, `shock` | model `torture` | the spells Flames / Frostbite / Sparks (torture) (SkyrimNet_Whipped.esp; vanilla spells are real damage) |
 | `slashing`, `piercing`, `bludgeoning` | model `health`: physical weapon hits | blades / daggers, arrows / bolts, maces / hammers / staves / fists |
 | `burning`, `freezing`, `shocking` | model `health`: spell and enchantment damage | magic effects by resist type (fire, frost, shock) |
 | `mauling` | model `health` | unarmed attacks by creatures (non-NPC attackers) |
+| `falling` | model `both`: torture "Falls and Scrapes" + health "Fall Injuries" (source `falling_real`) | torture: `External_Injure(..., "falling", ..., torture = True)` (SkyrimNet_Leashed ragdoll pulls); health: landing damage (no hit, no attacker, still falling) |
+| `leash_dragging` | model `torture`; **shipped by SkyrimNet_Leashed**, not this mod (see "Injury types from other mods") | SkyrimNet_Leashed, each second a knocked-down actor is dragged |
 | `generic` | model `health` | anything that cannot be classified; also the fallback for a class with no file; also supplies the common heal wording |
+| `sexual_parts.json` | **not a source** | optional parts (setting "Include sexual body parts"): part names, size and hit chance, plus their `looks` / `feels` text per source id (see below) |
 | `sexual` | (not written yet) | will require the victim to be in SexLab; do not create it unless asked |
 
 A new injury type = a new `<id>.json` copied from a `health` file (not from `whipping.json`) plus a mapping in
-`Classifier.cpp` (C++), which you cannot do here. Tell the user what hit class should map to it.
+`Classifier.cpp` (C++), which you cannot do here. Tell the user what hit class should map to it. A type that only
+scripts call (a `torture` file used through `External_Injure` / `External_Torture`) needs no C++.
+
+### Injury types from other mods
+
+Another mod can add its own types: it ships `SKSE/Plugins/SkyrimNet_Whipped/injuries/<id>.json` in its own archive,
+and the mod manager merges that folder with this one at runtime (nothing to register). Then it calls
+`SkyrimNet_Whipped_Main.External_Injure(attacker, victim, text, "<id>", count, part, narrate, torture)` (see
+`docs/developers/papyrus.md`), usually only when `SkyrimNet_Whipped.esp` is loaded. Rules for such a file:
+
+- The file name is the `id`, and the id must be unique across mods (prefix it with the mod, e.g. `leash_dragging`):
+  two mods shipping the same file name overwrite each other in the mod manager.
+- The body block must match `whipping.json` exactly (copy it).
+- Use `model` `torture` to call it with `torture = True` (`health` / `both` for real damage, `torture = False`).
+- `sexual_parts.json` has no text for it: set the five sexual parts to `0` in `part_weights` (torture types).
+- At most 32 sources load in total (a `both` file counts twice); the log names any that are skipped.
+- Uninstalling the other mod is safe: on the next load its wounds are dropped from the save with a warning.
 
 ## How damage becomes injury (so you can judge the wording)
 
 - Body: 6 parts (face, left arm, right arm, back, left leg, right leg). Regions: head, body, arm, leg.
+- **Sexual parts** (only with the dashboard setting "Include sexual body parts", off by default): nipples, pussy (women
+  only), penis (men only), lips, ass hole, regions `nipple`, `vulva`, `penis`, `lips`, `anus`. They are small: each has
+  its own `max` (fewer damage points) and `weight` (chance of being picked; the six main parts weigh one each). Their
+  medium / severe thresholds scale down with `max`, so they still go light, medium, severe.
 - **Stages** (damage per part, 20 max): light 1-3, medium 4-10, severe 11-20. All health sources use the same scale;
-  100% of max health lost = every part at 20.
-- **whip** source: each lash adds a point to a random part; wounds hold health down (never below 10%), then heal over game
-  time: damage drains, then healing rises through recovering, mostly healed, healed (scar).
-- **health** sources: the health an attack takes becomes damage points, tagged with the classified source, on random parts
-  (a part at max is skipped). Healing (potions, spells, rest) removes points at random across all sources; each source
+  100% of max health lost = every part an actor has at its max.
+- **torture** sources: each hit adds a point of that type to one part (picked by the type's `part_weights`); a healing
+  wound of that type that is hit again reopens at medium. Each type is tracked separately per part, but a part counts
+  only its **worst** type: that alone holds health down (never below 10%) and shows on the overlay. Wounds heal over game
+  time, and every point of healing lowers **every** type on the part by one (slap light, pinch severe, fire light: all
+  heal together). Damage drains, then healing rises through recovering, mostly healed, healed (scar).
+- **health** sources: the health an attack takes becomes damage points, tagged with the classified source, all on one random part
+  (whipped parts first) until that part is full, then on another. Healing (potions, spells, rest) removes points at random across all sources; each source
   and each part is reported as it heals.
-- **Real damage replaces whip damage** first (health is not lowered by that part), so a whipped actor only dies after the
-  whip wounds are all replaced; the overlay shows replaced points as a darker bar.
+- **Real damage replaces torture damage** first, on the same part the attack lands on (health is not lowered by that part): the
+  part's worst type drops by one per point and every other type above it is clamped down to it, so a tortured actor only dies
+  after the torture is all replaced; the overlay shows replaced points as a darker bar.
 
 ## File format
 
@@ -44,28 +74,53 @@ Plain JSON (comments are tolerated by the parser but keep it valid JSON anyway).
 ```
 id                 file name without .json (also the source id used in code)
 title              human name
-model              "whip" | "health"
-requires           "whip" | "sexlab" | ""   (metadata; enforced in code)
+model              "torture" | "health" | "both"   ("whip" is still read as "torture")
+                   "both": one torture and one health source from one file. Shared keys (id, body block) at the top,
+                   everything else in a "torture": {...} and a "health": {...} block, each merged over the shared
+                   keys (title, stages, part_weights, action, text, narration per half). The health half's source id
+                   is "<id>_real" (logs, co-save, sexual_parts.json falls back to <id>); callers pass <id> plus a
+                   torture flag. Example: falling.json.
+requires           "whip" | "sexlab" | ""   (metadata only; stored, not enforced)
 damage_max, healing_max, thresholds, health_link, regions, parts
                    BODY BLOCK: must be identical in every file (only the first loaded file is read, whipping first).
                    Do not change numbers or part order without asking the user; the overlay and decorators depend on it.
-stages             damage stage names, first 3 = light, medium, severe. whip adds recovering, mostly_healed, healed.
+stages             damage stage names, first 3 = light, medium, severe. torture adds recovering, mostly_healed, healed.
+part_weights       (torture, optional) {"part name": weight}: chance of the type landing there; 0 = never; missing parts keep
+                   the body's weight (main parts one, sexual parts their sexual_parts.json weight)
+hook.hit_share     (torture, optional, default 0.05) share of max health that hooked spell damage needs for one torture
+                   hit (fire / frost / shock ticks); a punch is always one hit
+action.verb, action.animation   (torture) log verb; animation event the NPC plays per Torture_Target strike ("" = none)
 defaults           (whipping only) default values for dashboard settings; manifest.yaml must mirror them
 overlay            (whipping only) title, bar order, colors (hex) incl. "replaced"
-action             (whipping only) Whip_Target description ({target} and {strikes} are literal SkyrimNet placeholders, keep them),
+action             (whipping) Torture_Target description ({target}, {type} and {strikes} are literal SkyrimNet placeholders, keep them),
                    no_whip line, impact_nodes list
 text.looks_heading / looks   what each wounded part looks like  -> character bio ("### Whip Wounds" list)
 text.feels_intro / feels / feels_outro   how it feels  -> final instructions
 narration.list     how part names are joined ("face, back and left arm")
 narration.hit      hit narration: lead + verb + times + by, then levels[0..3] by the worst part's state before the hit
                    (0 undamaged, 1 light, 2 medium, 3 severe)
-narration.summary  (whipping) Whip_Target summary line
-narration.heal     stage (text when a part reaches that stage while healing), source_healed, part_healed
+narration.summary  (torture) Torture_Target summary line
+narration.heal     stage (text when a part reaches that stage while healing), source_healed, part_healed,
+                   passive (generic, else whipping, is read): wraps healing with no healing source (game time,
+                   natural regen, and heal_events pain_gone.none / full.none), {text} is the healing sentence(s);
+                   it should say this is ordinary healing nobody would remark on (it is recorded silently)
 narration.heal_events   (whipping and generic) spell / staff / potion healing: start, pain_gone, full, stopped
 ```
 
 `text.looks.<region>` and `text.feels.<region>` are arrays indexed by stage, one entry per stage name in `stages`
-(whipping 6, health sources 3). Regions: `head` (the face), `body` (the back), `arm`, `leg`.
+(torture 6, health sources 3). Regions: `head` (the face), `body` (the back), `arm`, `leg`.
+
+### sexual_parts.json
+
+```
+parts              exactly 5 entries in this order: nipples, pussy, penis, lips, ass hole
+                   {name, region, max (damage points, at least 3), weight (hit chance; main parts are 1)}
+text.<source id>   {looks: {region: [...]}, feels: {region: [...]}} merged into that source's text.looks / text.feels;
+                   one entry per stage of that source (whipping 6, others 3). A source with no entry here has no text
+                   for these parts (empty sentence). A new source file needs a block here too.
+```
+
+The writing rules below apply; keep the prose about the wound and the pain, not about sex.
 
 ### Placeholders
 
@@ -88,7 +143,7 @@ Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{b
 4. Keep entries self-contained: each one is shown alone for its part. Avoid relying on another part's text.
 5. Match gender-neutral pronoun placeholders; never hard-code he / she.
 6. Do not mention game mechanics, "damage points", "stage" or file names in prose.
-7. Whip-specific wording (welts, lash, whip) stays in `whipping.json`; other files must not mention whips.
+7. Type-specific wording stays in its own file: welts, lash, whip only in `whipping.json`; other files must not mention whips.
 8. Add content, do not delete keys: the engine reads every key above; a missing text is an empty sentence.
 
 ## Workflow for a chat session
@@ -96,6 +151,7 @@ Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{b
 1. Read the file(s) you will change and, for wording consistency, `whipping.json` (richest) and `generic.json`.
 2. Propose changes in plain language first when the user's request is open-ended, then edit.
 3. After editing, validate: `python -c "import json,sys;[json.load(open(f,encoding='utf-8')) for f in sys.argv[1:]]" injuries/*.json`
-   and check every `looks` / `feels` region array has exactly one entry per stage (6 for whipping, 3 for others).
+   and check every `looks` / `feels` region array has exactly one entry per stage (6 for whipping, 3 for others),
+   including the per-source blocks in `sexual_parts.json`.
 4. Report what changed per file and anything that needs a code change (new class, new placeholder, body numbers).
 5. Do not touch the body block, `id`, `model`, or `requires` unless the user explicitly asks.
