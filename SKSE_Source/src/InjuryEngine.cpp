@@ -612,7 +612,7 @@ namespace InjuryEngine
             if (!target) {
                 return;
             }
-            // The engine's own walk: GetActiveEffectList() is nullptr on VR since CommonLibSSE-NG v11.
+            // The engine's own walk: on VR GetActiveEffectList() is only a temporary snapshot.
             using Flag = RE::ActiveEffect::Flag;
             target->VisitActiveEffects([&](RE::ActiveEffect* ae) {
                 if (ae && !ae->flags.any(Flag::kInactive, Flag::kDispelled) && IsHealing(ae->GetBaseObject(), ae->magnitude)) {

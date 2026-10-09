@@ -6,20 +6,14 @@ project(SkyrimNet_Whipped VERSION 0.1.0 LANGUAGES CXX)
 # This repo is the MO2 mod folder, so the .dll is copied straight into ../SKSE/Plugins.
 set(OUTPUT_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
-# CommonLibSSE-NG is shared with the sibling SkyrimNet_SexLab checkout (no duplicate submodule).
-set(CommonLibPath "${CMAKE_CURRENT_SOURCE_DIR}/../../SkyrimNet_SexLab/SKSE_Source/lib/CommonLibSSE-NG" CACHE PATH "CommonLibSSE-NG source")
-set(CommonLibName "CommonLibSSE")
-
-set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
-
 set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)
 
-if(NOT IS_DIRECTORY "${CommonLibPath}")
-    message(FATAL_ERROR "CommonLibSSE-NG not found at ${CommonLibPath}; set -DCommonLibPath=...")
-endif()
-add_subdirectory(${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
-include("${CommonLibPath}/cmake/CommonLibSSE.cmake")
+# CommonLibSSE: MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port vcpkg-ports/commonlibsse-ng-fork
+# (same pin as SkyrimNet_SexLab). Its config also brings add_commonlibsse_plugin().
+find_package(CommonLibSSE CONFIG REQUIRED)
+# CommonLibSSE's exported link interface names Microsoft::DirectXTK, so it has to be found here.
+find_package(directxtk CONFIG REQUIRED)
 
 file(GLOB SOURCES
     "src/*.cpp"
@@ -53,9 +47,6 @@ if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES VS_USER_PROPS "${PROJECT_NAME}.props")
 
     set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    if(TARGET ${CommonLibName})
-        set_property(TARGET ${CommonLibName} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    endif()
     target_link_options(${PROJECT_NAME} PRIVATE /INCREMENTAL:NO /OPT:REF /OPT:ICF)
 endif()
 

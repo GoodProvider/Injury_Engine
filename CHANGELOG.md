@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Build against MinLL/CommonLibVR 4.39.5 (MIT, SE 1.7.99 / 1.7.104) through the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` (copy of SkyrimNet_SexLab's) instead of SexLab's alandtse/CommonLibSSE-NG v11.0.0 checkout (GPL-3.0). `find_package(CommonLibSSE)`; the colorglass registry and `-DCommonLibPath` are gone. No plugin code changes.
+- `LICENSE` added (MIT); README gains a License section.
+
 ## [0.1.0](https://github.com/GoodProvider/SkyrimNet_Whip/releases/tag/0.1.0) — initial release
 
 ### Whip / action

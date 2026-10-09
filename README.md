@@ -56,7 +56,7 @@ Everything the LLM reads about injuries, the Whip_Target text, the overlay title
 
 ## Building
 
-- SKSE plugin: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE-NG from `../SkyrimNet_SexLab/SKSE_Source/lib/`, override with `-DCommonLibPath=`). The .dll is copied to `SKSE/Plugins/`.
+- SKSE plugin: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it, ~6 min). The .dll is copied to `SKSE/Plugins/`.
 - Scripts: `pyro skyrimse.ppj` (VS Code task "compile: pyro").
 - ESP: `make esp` builds `SkyrimNet_Whipped.esp` from `Spriggit/SkyrimNet_Whipped/`. After editing in xEdit, run `make serialize`.
 - Release: `make release` → `versions/SkyrimNet_Whipped <version>.7z` (FOMOD + core). Procedure: [release-guide.md](release-guide.md).
@@ -65,3 +65,7 @@ Everything the LLM reads about injuries, the Whip_Target text, the overlay title
 ## Credits
 
 Whip mesh, textures, decal and sounds: PAH Diary Of Mine.
+
+## License
+
+MIT, see [LICENSE](LICENSE). The SKSE plugin statically links [MinLL/CommonLibVR](https://github.com/MinLL/CommonLibVR) 4.39.5 (MIT) and [OpenVR](https://github.com/ValveSoftware/openvr) (BSD-3-Clause).

@@ -50,9 +50,13 @@ Paused game time does not stop Papyrus. Not an issue for the Show-only overlay, 
 
 `Deficit()` is damage **plus missing healing** per part, so its maximum is 6 × (20 + 11) = 186, not 6 × 20. With `/ 120`, a deficit of 180 gave `wounded:-35`; the regen take-back pushed health to -21.5 (bleedout), and when health came back (bleedout recovery jumped it to full) the whole deficit converted in one 0.2 s tick: "pain gone" and "fully healed" at once. `Ratio()` now divides by `kPartCount * kMaxDeficit`, and `ConvertHealth` clamps the wounded level to `kHealthFloor`.
 
-## CommonLibSSE-NG v11: `GetActiveEffectList()` is nullptr on VR (2026-10-05)
+## CommonLibSSE: `GetActiveEffectList()` is unreliable on VR; use `VisitActiveEffects` (2026-10-05, updated 2026-10-09)
 
-v11 (`62a1936`) made `MagicTarget::GetActiveEffectList()` non-virtual in cross-runtime builds (SE+AE+VR, our default); it returns nullptr on VR, still compiles, and fails silently. Walk active effects with `MagicTarget::VisitActiveEffects` (the engine's own walk, correct on every runtime).
+In cross-runtime builds (SE+AE+VR, our default) `MagicTarget::GetActiveEffectList()` is non-virtual. On alandtse v11 (`62a1936`) it returned nullptr on VR, still compiled, and failed silently; on MinLL 4.39.5 VR gets a thread-local snapshot that is only valid until the next call. Walk active effects with `MagicTarget::VisitActiveEffects` (the engine's own walk, correct on every runtime).
+
+## CommonLibSSE moved to MIT MinLL/CommonLibVR 4.39.5 via overlay port (2026-10-09)
+
+`SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` pins `MinLL/CommonLibVR` 4.39.5 (`550cc4f`, MIT; branched from v4.39.3, the last MIT CommonLibVR, upstream is GPL-3.0 from v5.0.0) and adds SE 1.7.99 / 1.7.104. It is a copy of `../SkyrimNet_SexLab/extern/vcpkg-ports/commonlibsse-ng-fork` (also used by Leashed and DOM); bump all copies together. Before this the plugin `add_subdirectory`'d SexLab's alandtse v11.0.0 (GPL-3.0, not compatible with the Skyrim EULA). The portfile fetches ValveSoftware/openvr into `extern/openvr` (the GitHub tarball leaves the submodule empty) and builds with `SKSE_SUPPORT_XBYAK=off` (we only use `write_vfunc`, no trampoline). `CMakeLists.txt` uses `find_package(CommonLibSSE CONFIG REQUIRED)` plus `find_package(directxtk)` (named in CommonLib's link interface). After switching, delete `SKSE_Source/build/release` (its cache still holds `CommonLibPath`). Plugin source needed no API changes.
 
 ## Injury data lives in `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json`; the DLL reads them at kDataLoaded (2026-10-06)
 
@@ -66,6 +70,6 @@ Whip points hold health down by `deficit × 0.9 × max / 186`; real points are w
 
 A Papyrus parameter named `key` fails to compile ("key is not a variable"); use `setting` or similar. Strings returned by natives are `BSFixedString` and Papyrus interns strings case-insensitively (the reason `kind` / `source` travel as numbers); narration text from `HitText` / `HealText` is long and unique enough that this has not shown up, but if a sentence ever comes back with odd casing, return it through a different channel (e.g. `std::string` registered as a plain string).
 
-## CommonLibSSE-NG vtable slot comments are hex (2026-10-06)
+## CommonLibSSE vtable slot comments are hex (2026-10-06)
 
 `// 104` next to `Actor::HandleHealthDamage` in `RE/A/Actor.h` means slot `0x104` (260). Hooking decimal `104` (`0x68`, `Unk_68`, called every movement update) crashed the game a second after loading a save, inside our thunk (`Classifier::Classify` read the bogus "attacker" argument), with a call stack through actor movement / `bhkCharacterProxy` and no `[hook]` log line. Always write vtable indices in hex (`0x104`, `0x6`, `0x1`), exactly as the CommonLib comment shows.

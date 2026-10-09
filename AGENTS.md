@@ -65,7 +65,7 @@ Relative paths for other machines: [docs/reference/papyrus-rules.md](docs/refere
 ## Compile
 
 - Papyrus: `pyro skyrimse.ppj` (VS Code task **`compile: pyro`** when present).
-- SKSE: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE-NG from `../SkyrimNet_SexLab/SKSE_Source/lib/`). See [docs/developers/overlay.md](docs/developers/overlay.md).
+- SKSE: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it, ~6 min). See [docs/developers/overlay.md](docs/developers/overlay.md).
 - ESP: `make esp` (Spriggit → `.esp`); `make serialize` after xEdit edits.
 - Release: `make release` (version check, `info.json`, FOMOD, dll, esp, pack) → `versions/SkyrimNet_Whipped <version>.7z`. See [release-guide.md](release-guide.md).
 

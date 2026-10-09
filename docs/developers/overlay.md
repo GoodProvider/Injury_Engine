@@ -22,7 +22,7 @@ Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/js
 
 ## Build
 
-`make dll` → `cmake --preset release && cmake --build --preset build-release` in `SKSE_Source/`. Needs `VCPKG_ROOT`. CommonLibSSE-NG (v11.0.0) comes from `../SkyrimNet_SexLab/SKSE_Source/lib/` (override with `-DCommonLibPath=`). Do not edit `SKSE_Source/build/` or vendored `lib/`.
+`make dll` → `cmake --preset release && cmake --build --preset build-release` in `SKSE_Source/`. Needs `VCPKG_ROOT`. CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` (`vcpkg-configuration.json` `overlay-ports`, `find_package(CommonLibSSE)`); a clean configure builds it, ~6 min. Do not edit `SKSE_Source/build/` or vendored `lib/`.
 
 ## Natives
 
