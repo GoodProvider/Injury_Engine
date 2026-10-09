@@ -12,6 +12,37 @@ namespace
         return result;
     }
 
+    std::int32_t HitPart(RE::StaticFunctionTag*, RE::Actor* actor, RE::BSFixedString sourceId, std::int32_t part)
+    {
+        const auto result = InjuryEngine::HitPart(actor, sourceId.c_str(), part);
+        Overlay::Notify();
+        return result;
+    }
+
+    std::int32_t RealHit(RE::StaticFunctionTag*, RE::Actor* actor, RE::Actor* attacker, RE::BSFixedString sourceId, std::int32_t points)
+    {
+        const auto result = InjuryEngine::RealHit(actor, attacker, sourceId.c_str(), points);
+        Overlay::Notify();
+        return result;
+    }
+
+    bool HasHealth(RE::StaticFunctionTag*, RE::BSFixedString sourceId)
+    {
+        return InjuryConfig::IndexOf(sourceId.c_str(), false) >= 0;
+    }
+
+    std::int32_t HealPart(RE::StaticFunctionTag*, RE::Actor* actor, std::int32_t part, float health)
+    {
+        const auto result = InjuryEngine::HealPart(actor, part, health);
+        Overlay::Notify();
+        return result;
+    }
+
+    std::int32_t PartIndex(RE::StaticFunctionTag*, RE::BSFixedString name)
+    {
+        return InjuryEngine::PartIndex(name.c_str());
+    }
+
     bool HasOpenWounds(RE::StaticFunctionTag*, RE::Actor* actor)
     {
         return InjuryEngine::HasOpenWounds(actor);
@@ -83,15 +114,21 @@ namespace
         return InjuryEngine::SourceCount();
     }
 
+    // True for a torture type (model "torture": whipping, pinching, ...), false for real damage or unknown ids.
+    bool IsTorture(RE::StaticFunctionTag*, RE::BSFixedString sourceId)
+    {
+        return InjuryConfig::IsTorture(InjuryConfig::IndexOf(sourceId.c_str()));
+    }
+
     RE::BSFixedString GetStateJson(RE::StaticFunctionTag*, RE::Actor* actor)
     {
         return InjuryEngine::StateJson(actor);
     }
 
     RE::BSFixedString HitText(RE::StaticFunctionTag*, RE::BSFixedString sourceId, RE::Actor* attacker, RE::Actor* victim,
-        std::int32_t mask, std::int32_t level, std::int32_t count)
+        std::int32_t mask, std::int32_t level, std::int32_t count, bool noCause)
     {
-        return InjuryEngine::HitText(sourceId.c_str(), attacker, victim, mask, level, count);
+        return InjuryEngine::HitText(sourceId.c_str(), attacker, victim, mask, level, count, noCause);
     }
 
     RE::BSFixedString HealText(RE::StaticFunctionTag*, RE::Actor* victim, std::vector<std::int32_t> codes)
@@ -142,6 +179,23 @@ namespace
         Overlay::SetEnabled(enabled);
     }
 
+    void SetIncludeSexualParts(RE::StaticFunctionTag*, bool enabled)
+    {
+        InjuryEngine::SetIncludeSexualParts(enabled);
+        Overlay::Notify();
+    }
+
+    // "Verbose logging": debug lines in SkyrimNet_Whipped.log (SKSE::log::debug is dropped at info level).
+    void SetVerboseLogging(RE::StaticFunctionTag*, bool enabled)
+    {
+        const auto level = enabled ? spdlog::level::debug : spdlog::level::info;
+        if (auto logger = spdlog::default_logger(); logger && logger->level() != level) {
+            logger->set_level(level);
+            logger->flush_on(level);
+            SKSE::log::info("verbose logging {}", enabled ? "on" : "off");
+        }
+    }
+
     void Forget(RE::StaticFunctionTag*, RE::Actor* actor)
     {
         InjuryEngine::Forget(actor);
@@ -153,6 +207,11 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
 {
     constexpr std::string_view s = "SkyrimNet_Whipped_Engine";
     a_vm->RegisterFunction("Hit", s, Hit);
+    a_vm->RegisterFunction("HitPart", s, HitPart);
+    a_vm->RegisterFunction("RealHit", s, RealHit);
+    a_vm->RegisterFunction("HasHealth", s, HasHealth);
+    a_vm->RegisterFunction("HealPart", s, HealPart);
+    a_vm->RegisterFunction("PartIndex", s, PartIndex);
     a_vm->RegisterFunction("HasOpenWounds", s, HasOpenWounds);
     a_vm->RegisterFunction("TakeHealedActors", s, TakeHealedActors);
     a_vm->RegisterFunction("TakeHealed", s, TakeHealed);
@@ -166,6 +225,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("PartName", s, PartName);
     a_vm->RegisterFunction("SourceId", s, SourceId);
     a_vm->RegisterFunction("SourceCount", s, SourceCount);
+    a_vm->RegisterFunction("IsTorture", s, IsTorture);
     a_vm->RegisterFunction("GetStateJson", s, GetStateJson);
     a_vm->RegisterFunction("HitText", s, HitText);
     a_vm->RegisterFunction("HealText", s, HealText);
@@ -177,6 +237,8 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("SetHoursPerPoint", s, SetHoursPerPoint);
     a_vm->RegisterFunction("SetRegenRate", s, SetRegenRate);
     a_vm->RegisterFunction("SetOverlayEnabled", s, SetOverlayEnabled);
+    a_vm->RegisterFunction("SetIncludeSexualParts", s, SetIncludeSexualParts);
+    a_vm->RegisterFunction("SetVerboseLogging", s, SetVerboseLogging);
     a_vm->RegisterFunction("Forget", s, Forget);
     return true;
 }

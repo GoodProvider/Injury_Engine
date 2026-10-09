@@ -11,10 +11,16 @@ Weapon Property PaddedWhip Auto
 ImpactDataSet Property ImpactSet Auto
 GlobalVariable Property require_whip_global Auto
 Spell Property HealingHands Auto
+; Flames / Frostbite / Sparks (torture): fire / frost / shock torture wounds instead of real damage
+Spell Property TortureFlames Auto
+Spell Property TortureFrostbite Auto
+Spell Property TortureSparks Auto
 
 String Property PLUGIN_CONFIG = "Plugin_SkyrimNet_Whipped" AutoReadOnly
 String Property SOURCE_WHIP = "whipping" AutoReadOnly
 String Property KEY_LAST_NARRATION = "skyrimnet_whipped.last_narration" AutoReadOnly
+; Real time of the victim's last torture hit (any torture type), for the torture narration window / interval
+String Property KEY_LAST_TORTURE = "skyrimnet_whipped.last_torture" AutoReadOnly
 String Property KEY_IN_ACTION = "skyrimnet_whipped.in_action" AutoReadOnly
 ; Hits since the victim's last narration, per source (key + "." + source id): part bitmask, worst hit level, count
 String Property KEY_PENDING_PARTS = "skyrimnet_whipped.pending_parts" AutoReadOnly
@@ -30,15 +36,19 @@ Float Property UNITS_PER_METER = 70.0 AutoReadOnly
 
 ; Plugin config (dashboard), refreshed by ApplyPluginConfig. Defaults come from injuries/whipping.json "defaults".
 Bool Property require_whip = True Auto Hidden
-Bool Property give_whip_to_player = True Auto Hidden
+Bool Property give_gear = True Auto Hidden
 Int Property max_strikes = 10 Auto Hidden
 Float Property hours_per_point = 1.0 Auto Hidden
 Bool Property give_healing_hands = True Auto Hidden
 Float Property regen_rate = 10.0 Auto Hidden
 Bool Property narration_enabled = True Auto Hidden
 Float Property narration_cooldown = 8.0 Auto Hidden
+Float Property torture_narration_window_size = 30.0 Auto Hidden
+Float Property torture_narration_interval = 6.0 Auto Hidden
 Float Property narration_max_distance = 15.0 Auto Hidden
 Float Property event_ttl = 30.0 Auto Hidden
+Bool Property include_sexual_parts = False Auto Hidden
+Bool Property verbose_logging = False Auto Hidden
 
 Bool Property dll_ok = False Auto Hidden
 
@@ -46,6 +56,14 @@ Function Trace(String func, String msg, Bool notification=False) global
     Debug.Trace("[SkyrimNet_Whipped_Main] " + func + ": " + msg)
     if notification
         Debug.Notification(msg)
+    endif
+EndFunction
+
+; "Verbose logging" only. Papyrus builds the arguments even when this returns early, so wrap calls whose
+; message is costly (natives, distance, loops) in "if verbose_logging".
+Function Verbose(String func, String msg)
+    if verbose_logging
+        Trace(func, "[v] " + msg)
     endif
 EndFunction
 
@@ -81,16 +99,7 @@ Function Setup()
     endif
     ApplyPluginConfig()
 
-    Actor player = Game.GetPlayer()
-    int have = player.GetItemCount(PaddedWhip)
-    if !give_whip_to_player
-        Trace("Setup", "give_whip_to_player is off; player has " + have + " whip(s)")
-    elseif have > 0
-        Trace("Setup", "player already has " + have + " whip(s); not giving another")
-    else
-        player.AddItem(PaddedWhip, 1, true)
-        Trace("Setup", "gave " + PaddedWhip.GetName() + " to player (now " + player.GetItemCount(PaddedWhip) + ")")
-    endif
+    GiveGear()
     GiveHealingHands()
 
     if dll_ok
@@ -121,8 +130,38 @@ EndFunction
 
 Event OnPluginConfigSaved(string eventName, string strArg, float numArg, Form sender)
     ApplyPluginConfig()
+    GiveGear()
     GiveHealingHands()
 EndEvent
+
+; "Add gear to player": the padded whip and the torture spells, each only if the player lacks it.
+; Turning the setting off never takes anything away.
+Function GiveGear()
+    Actor player = Game.GetPlayer()
+    int have = player.GetItemCount(PaddedWhip)
+    if !give_gear
+        Trace("GiveGear", "give_gear is off; player has " + have + " whip(s)")
+        return
+    endif
+    if have > 0
+        Trace("GiveGear", "player already has " + have + " whip(s); not giving another")
+    else
+        player.AddItem(PaddedWhip, 1, true)
+        Trace("GiveGear", "gave " + PaddedWhip.GetName() + " to player (now " + player.GetItemCount(PaddedWhip) + ")")
+    endif
+    GiveSpell(player, TortureFlames)
+    GiveSpell(player, TortureFrostbite)
+    GiveSpell(player, TortureSparks)
+EndFunction
+
+Function GiveSpell(Actor player, Spell sp)
+    if sp == None
+        Trace("GiveSpell", "ERROR: torture spell property is None")
+    elseif !player.HasSpell(sp)
+        player.AddSpell(sp, false)
+        Trace("GiveSpell", "gave " + sp.GetName() + " to player")
+    endif
+EndFunction
 
 ; Turning the setting off never removes the spell (the player may have learned it).
 Function GiveHealingHands()
@@ -147,29 +186,38 @@ EndFunction
 
 Function ApplyPluginConfig()
     require_whip = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.action.require_whip", DefaultBool("require_whip"))
-    give_whip_to_player = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.action.give_to_player", DefaultBool("give_to_player"))
+    give_gear = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.action.give_to_player", DefaultBool("give_to_player"))
     max_strikes = SkyrimNetApi.GetConfigInt(PLUGIN_CONFIG, "whip.action.max_strikes", DefaultNumber("max_strikes", 10.0) as int)
     hours_per_point = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.healing.hours_per_point", DefaultNumber("hours_per_point", 1.0))
     give_healing_hands = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.healing.give_healing_hands", DefaultBool("give_healing_hands"))
     regen_rate = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.healing.regen_rate", DefaultNumber("regen_rate", 10.0))
     narration_enabled = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.narration.enabled", DefaultBool("narration_enabled"))
     narration_cooldown = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.cooldown", DefaultNumber("narration_cooldown", 8.0))
+    torture_narration_window_size = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_narration_window_size", DefaultNumber("torture_narration_window_size", 30.0))
+    torture_narration_interval = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_narration_interval", DefaultNumber("torture_narration_interval", 6.0))
     narration_max_distance = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.max_distance", DefaultNumber("narration_max_distance", 15.0))
     event_ttl = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.event_ttl", DefaultNumber("event_ttl", 30.0))
+    include_sexual_parts = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.body.include_sexual_parts", DefaultNumber("include_sexual_parts", 0.0) > 0.5)
     Bool show_overlay = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.overlay.enabled", DefaultBool("overlay_enabled"))
+    verbose_logging = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.debug.verbose_logging", false)
     if max_strikes < 1
         max_strikes = 1
     endif
+    if torture_narration_interval > torture_narration_window_size
+        torture_narration_interval = torture_narration_window_size
+    endif
     SkyrimNet_Whipped_Engine.SetHoursPerPoint(hours_per_point)
     SkyrimNet_Whipped_Engine.SetRegenRate(regen_rate)
+    SkyrimNet_Whipped_Engine.SetIncludeSexualParts(include_sexual_parts)
     SkyrimNet_Whipped_Engine.SetOverlayEnabled(show_overlay)
+    SkyrimNet_Whipped_Engine.SetVerboseLogging(verbose_logging)
     RegisterForSingleUpdateGameTime(hours_per_point) ; healing poll follows the heal rate
     if require_whip_global
         require_whip_global.SetValue(require_whip as Float)
     endif
-    Trace("ApplyPluginConfig", "require_whip:" + require_whip + " give_whip_to_player:" + give_whip_to_player + " max_strikes:" + max_strikes + " hours_per_point:" + hours_per_point \
+    Trace("ApplyPluginConfig", "require_whip:" + require_whip + " give_gear:" + give_gear + " max_strikes:" + max_strikes + " hours_per_point:" + hours_per_point \
         + " give_healing_hands:" + give_healing_hands + " regen_rate:" + regen_rate \
-        + " narration:" + narration_enabled + " cooldown:" + narration_cooldown + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " overlay:" + show_overlay)
+        + " narration:" + narration_enabled + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " torture_interval:" + torture_narration_interval + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
 EndFunction
 
 ;----------------------------------------------------------------------------------------------------
@@ -200,6 +248,10 @@ Int Function Lash(Actor attacker, Actor victim, Bool narrate=True)
         endif
     endif
     ; The flesh impact (IPCT) carries the hit sound.
+    if verbose_logging
+        Verbose("Lash", NameOf(attacker) + " -> " + victim.GetDisplayName() + " node:" + node + " dir:" + dx + "," + dy \
+            + " distance:" + DistanceText(attacker, victim))
+    endif
     victim.PlayImpactEffect(ImpactSet, node, dx, dy, 0.0, 128.0)
     return OnLash(attacker, victim, narrate)
 EndFunction
@@ -210,9 +262,18 @@ Int Function OnLash(Actor attacker, Actor victim, Bool narrate=True)
     if victim == None || victim.IsDead()
         return -1
     endif
+    float health_before = 0.0
+    if verbose_logging
+        health_before = victim.GetActorValue("Health")
+    endif
     int code = SkyrimNet_Whipped_Engine.Hit(victim, SOURCE_WHIP)
     if code < 0
+        Verbose("OnLash", "Hit returned " + code + " for " + victim.GetDisplayName())
         return code
+    endif
+    if verbose_logging
+        Verbose("OnLash", victim.GetDisplayName() + " code:" + code + " health " + health_before + " -> " + victim.GetActorValue("Health") \
+            + " / " + victim.GetBaseActorValue("Health") + " narrate:" + narrate)
     endif
     Trace("OnLash", NameOf(attacker) + " -> " + victim.GetDisplayName() + " part:" + PartsOf(code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
     if narrate
@@ -225,15 +286,15 @@ EndFunction
 
 ; Hit code fields (see SkyrimNet_Whipped_Engine).
 Bool Function FreshOf(int code) global
-    return code / 1000000 > 0
+    return code / 100000000 > 0
 EndFunction
 
 String Function SourceOfCode(int code) global
-    return SkyrimNet_Whipped_Engine.SourceId((code / 10000) % 100)
+    return SkyrimNet_Whipped_Engine.SourceId((code / 1000000) % 100)
 EndFunction
 
 int Function MaskOf(int code) global
-    return (code % 10000) / 10
+    return (code % 1000000) / 10
 EndFunction
 
 int Function LevelOf(int code) global
@@ -248,16 +309,37 @@ String Function BatchKey(String base, String source) global
     return base + "." + source
 EndFunction
 
-; Hits are batched per victim and source (BatchKey(KEY_PENDING_*, source)):
+; Real-damage hits are a short-lived event each: never narrated, no batch, no cooldown change.
+; Torture hits (whipping, slapping, ...) are batched per victim and type (BatchKey(KEY_PENDING_*, source)):
 ;   - fresh (no open wounds before this hit): always narrated; an event when narration is off or too far
-;   - later hits: when the speech queue is empty and the cooldown has passed, one narration of every
-;     part hit since the last narration at the worst level; otherwise a short-lived event per hit
+;   - later hits, by the time since the victim's last torture hit (KEY_LAST_TORTURE):
+;     - over torture_narration_window_size: a new session; the batch restarts and this hit is narrated
+;     - between torture_narration_interval and the window: one narration of every part hit since the
+;       last narration at the worst level
+;     - under the interval: a short-lived event per hit, kept in the batch
+;     A narration is optional: when narration is off, too far or the speech queue is not empty it becomes a
+;     short-lived event (the batch is kept, except for a new session).
 Function NarrateInjury(Actor attacker, Actor victim, int code)
-    String source = SourceOfCode(code)
-    Bool fresh = FreshOf(code)
-    int part_mask = MaskOf(code)
-    int level = LevelOf(code)
-    if fresh
+    NarrateHits(attacker, victim, SourceOfCode(code), FreshOf(code), MaskOf(code), LevelOf(code), 1, "")
+EndFunction
+
+; NarrateInjury for hits hits of source at once (mask: parts hit, level: the worst; fresh: no open wounds before
+; the first). cause ("" = none) leads every narration or event sent and replaces our narration.hit.by_* text.
+Function NarrateHits(Actor attacker, Actor victim, String source, Bool fresh, int part_mask, int level, int hits, String cause)
+    Bool noCause = cause != ""
+    String lead = CauseText(cause)
+    if !SkyrimNet_Whipped_Engine.IsTorture(source)
+        String hit = lead + SkyrimNet_Whipped_Engine.HitText(source, attacker, victim, part_mask, level, hits, noCause)
+        if hit != ""
+            Trace("NarrateInjury", source + " short-lived event: " + hit)
+            SkyrimNetApi.RegisterShortLivedEvent("injury_hit_" + source + "_" + victim.GetFormID() + "_" + NowMs(), "injury_hit",                 hit, "", (event_ttl * 1000.0) as int, attacker, victim)
+        endif
+        return
+    endif
+    float since = SinceLastTorture(victim)
+    StorageUtil.SetFloatValue(victim, KEY_LAST_TORTURE, Utility.GetCurrentRealTime())
+    Bool new_session = since > torture_narration_window_size
+    if fresh || new_session
         ClearBatch(victim, source)
     endif
     int mask = Math.LogicalOr(StorageUtil.GetIntValue(victim, BatchKey(KEY_PENDING_PARTS, source), 0), part_mask)
@@ -265,35 +347,56 @@ Function NarrateInjury(Actor attacker, Actor victim, int code)
     if level > worst
         worst = level
     endif
-    int count = StorageUtil.GetIntValue(victim, BatchKey(KEY_PENDING_COUNT, source), 0) + 1
+    int count = StorageUtil.GetIntValue(victim, BatchKey(KEY_PENDING_COUNT, source), 0) + hits
     StorageUtil.SetIntValue(victim, BatchKey(KEY_PENDING_PARTS, source), mask)
     StorageUtil.SetIntValue(victim, BatchKey(KEY_PENDING_LEVEL, source), worst)
     StorageUtil.SetIntValue(victim, BatchKey(KEY_PENDING_COUNT, source), count)
 
-    String event_type = "injury_hit"
+    String event_type = "torture_hit"
     if source == SOURCE_WHIP
         event_type = "whip_lash"
     endif
     Bool narrate = narration_enabled && !TooFar(victim)
-    if fresh || (narrate && NarrationAllowed(victim))
-        String msg = SkyrimNet_Whipped_Engine.HitText(source, attacker, victim, mask, worst, count)
+    if verbose_logging
+        Verbose("NarrateInjury", source + " " + victim.GetDisplayName() + " fresh:" + fresh + " mask:" + mask + " worst:" + worst             + " count:" + count + " since_torture:" + since + " interval:" + torture_narration_interval             + " window:" + torture_narration_window_size + " " + GateText(victim))
+    endif
+    ; the speech queue gates every narration except the fresh one
+    Bool narrate_now = narrate && (fresh || (since >= torture_narration_interval && SkyrimNetApi.GetSpeechQueueSize() == 0))
+    if fresh || narrate_now || new_session
+        String msg = lead + SkyrimNet_Whipped_Engine.HitText(source, attacker, victim, mask, worst, count, noCause)
         ClearBatch(victim, source)
         StorageUtil.SetFloatValue(victim, KEY_LAST_NARRATION, Utility.GetCurrentRealTime())
         if msg == ""
             return
         endif
-        if narrate
-            Trace("NarrateInjury", source + " narration fresh:" + fresh + " hits:" + count)
+        if narrate_now
+            Trace("NarrateInjury", source + " narration fresh:" + fresh + " new_session:" + new_session + " hits:" + count)
             DirectNarrate(msg, attacker, victim)
         else
-            Trace("NarrateInjury", source + " event fresh:" + fresh)
-            SkyrimNetApi.RegisterEvent(event_type, msg, attacker, victim)
+            Trace("NarrateInjury", source + " event fresh:" + fresh + " new_session:" + new_session)
+            SkyrimNetApi.RegisterShortLivedEvent(event_type + "_" + source + "_" + victim.GetFormID() + "_" + NowMs(), event_type,                 msg, "", (event_ttl * 1000.0) as int, attacker, victim)
         endif
         return
     endif
     Trace("NarrateInjury", source + " short-lived event, pending hits:" + count)
-    SkyrimNetApi.RegisterShortLivedEvent(event_type + "_" + source + "_" + victim.GetFormID() + "_" + count, event_type, \
-        SkyrimNet_Whipped_Engine.HitText(source, attacker, victim, part_mask, level, 1), "", (event_ttl * 1000.0) as int, attacker, victim)
+    SkyrimNetApi.RegisterShortLivedEvent(event_type + "_" + source + "_" + victim.GetFormID() + "_" + count, event_type,         lead + SkyrimNet_Whipped_Engine.HitText(source, attacker, victim, part_mask, level, hits, noCause), "", (event_ttl * 1000.0) as int, attacker, victim)
+EndFunction
+
+; A caller's cause as the start of a narration: "" stays "", otherwise it ends in a sentence stop and a space.
+String Function CauseText(String cause) global
+    if cause == ""
+        return ""
+    endif
+    String last = StringUtil.Substring(cause, StringUtil.GetLength(cause) - 1, 1)
+    if last != "." && last != "!" && last != "?"
+        cause += "."
+    endif
+    return cause + " "
+EndFunction
+
+; Real time in ms, to make short-lived event ids unique.
+int Function NowMs() global
+    return (Utility.GetCurrentRealTime() * 1000.0) as int
 EndFunction
 
 Function ClearBatch(Actor victim, String source)
@@ -306,7 +409,18 @@ Bool Function TooFar(Actor akActor)
     return !akActor.Is3DLoaded() || Game.GetPlayer().GetDistance(akActor) > narration_max_distance * UNITS_PER_METER
 EndFunction
 
-; Speech queue empty and the victim's narration cooldown has passed.
+; Seconds since the victim's last torture hit; never hit (or a stale time from an earlier session) is long ago.
+float Function SinceLastTorture(Actor victim)
+    float now = Utility.GetCurrentRealTime()
+    float last = StorageUtil.GetFloatValue(victim, KEY_LAST_TORTURE, -1.0)
+    if last < 0.0 || last > now
+        return 100000.0
+    endif
+    return now - last
+EndFunction
+
+; Speech queue empty and the victim's narration cooldown has passed (healing; torture hits use the
+; torture narration window / interval, see NarrateInjury).
 Bool Function NarrationAllowed(Actor victim)
     if SkyrimNetApi.GetSpeechQueueSize() > 0
         return false
@@ -317,11 +431,29 @@ Bool Function NarrationAllowed(Actor victim)
     return !(last <= now && (now - last) < narration_cooldown)
 EndFunction
 
+; Verbose log: why narration is or is not allowed for this actor.
+String Function GateText(Actor victim)
+    float now = Utility.GetCurrentRealTime()
+    float last = StorageUtil.GetFloatValue(victim, KEY_LAST_NARRATION, -1000.0)
+    return "narration:" + narration_enabled + " loaded:" + victim.Is3DLoaded() \
+        + " distance_m:" + (Game.GetPlayer().GetDistance(victim) / UNITS_PER_METER) + "/" + narration_max_distance \
+        + " queue:" + SkyrimNetApi.GetSpeechQueueSize() + " since_last:" + (now - last) + "/" + narration_cooldown \
+        + " too_far:" + TooFar(victim) + " allowed:" + NarrationAllowed(victim)
+EndFunction
+
+; Verbose log: attacker to victim distance in meters.
+String Function DistanceText(Actor attacker, Actor victim)
+    if attacker == None
+        return "no attacker"
+    endif
+    return (victim.GetDistance(attacker) / UNITS_PER_METER) + "m"
+EndFunction
+
 ; Part names for a bitmask, e.g. "face, back and left arm" (for the Papyrus log only; narration text comes from the DLL).
 String Function PartsText(int mask) global
     String text = ""
     int i = 0
-    while i < 6
+    while i < 11
         if Math.LogicalAnd(mask, Math.LeftShift(1, i)) != 0
             if text != ""
                 text += ","
@@ -333,9 +465,36 @@ String Function PartsText(int mask) global
     return text
 EndFunction
 
-; One whip hit by hit code. Used by the Whip_Target summary.
+; One torture hit by hit code (the type is in the code). Used by the Torture_Target summary.
 String Function LashText(Actor attacker, Actor victim, int code)
-    return SkyrimNet_Whipped_Engine.HitText(SOURCE_WHIP, attacker, victim, MaskOf(code), LevelOf(code), 1)
+    return SkyrimNet_Whipped_Engine.HitText(SourceOfCode(code), attacker, victim, MaskOf(code), LevelOf(code), 1)
+EndFunction
+
+; One scripted torture hit of type source (injuries/<source>.json, model "torture"). Whipping is a Lash
+; (decal + sound); other types play the type's action.animation event when it has one. Returns the hit code, or -1.
+Int Function Torture(Actor attacker, Actor victim, String source, Bool narrate=True)
+    if source == SOURCE_WHIP
+        return Lash(attacker, victim, narrate)
+    endif
+    if victim == None || victim.IsDead() || !SkyrimNet_Whipped_Engine.IsTorture(source)
+        return -1
+    endif
+    String anim = SkyrimNet_Whipped_Engine.Text(source, "action.animation")
+    if anim != "" && attacker != None
+        Debug.SendAnimationEvent(attacker, anim)
+    endif
+    int code = SkyrimNet_Whipped_Engine.Hit(victim, source)
+    if code < 0
+        Verbose("Torture", source + " Hit returned " + code + " for " + victim.GetDisplayName())
+        return code
+    endif
+    Trace("Torture", NameOf(attacker) + " -> " + victim.GetDisplayName() + " " + source + " part:" + PartsOf(code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
+    if narrate
+        NarrateInjury(attacker, victim, code)
+    endif
+    ClearHealBatch(victim)
+    StartSync()
+    return code
 EndFunction
 
 ;----------------------------------------------------------------------------------------------------
@@ -347,7 +506,9 @@ Event OnUpdateGameTime()
         return
     endif
     NarrateHealedActors()
-    if SkyrimNet_Whipped_Engine.TrackedCount() > 0
+    int tracked = SkyrimNet_Whipped_Engine.TrackedCount()
+    Verbose("OnUpdateGameTime", "tracked:" + tracked + " next in " + hours_per_point + " game hours")
+    if tracked > 0
         StartSync() ; flush fully-healed events queued while applying time
     endif
     RegisterForSingleUpdateGameTime(hours_per_point)
@@ -362,7 +523,9 @@ Function NarrateHealedActors()
     endwhile
 EndFunction
 
-; Heals are batched per victim (KEY_HEAL_*), mirroring NarrateInjury:
+; Passive heals (game time, natural regen; code >= HEAL_PASSIVE) are silent: one short-lived event per take,
+; text marked as ordinary healing, nobody is made to speak and the batch below is untouched.
+; Heals from a healing source are batched per victim (KEY_HEAL_*), mirroring NarrateInjury:
 ;   - fresh (no heal narrated since the last hit): always narrated; an event when narration is off or too far
 ;   - later heals: when the speech queue is empty and the cooldown has passed, one narration of everything
 ;     healed since the last narration (latest stage per part); otherwise a short-lived event per take
@@ -370,12 +533,50 @@ Function NarrateHealing(Actor victim)
     if victim == None
         return
     endif
-    int[] codes = SkyrimNet_Whipped_Engine.TakeHealed(victim)
-    if codes.Length == 0 || victim.IsDead()
+    int[] taken = SkyrimNet_Whipped_Engine.TakeHealed(victim)
+    if verbose_logging
+        Verbose("NarrateHealing", victim.GetDisplayName() + " taken:" + taken + " dead:" + victim.IsDead())
+    endif
+    if taken.Length == 0 || victim.IsDead()
         return
     endif
-    Bool fresh = StorageUtil.GetIntValue(victim, KEY_HEAL_NARRATED, 0) == 0
+    int passive_count = 0
     int i = 0
+    while i < taken.Length
+        if taken[i] >= HEAL_PASSIVE
+            passive_count += 1
+        endif
+        i += 1
+    endwhile
+    int[] passive = Utility.CreateIntArray(passive_count)
+    int[] codes = Utility.CreateIntArray(taken.Length - passive_count)
+    int p = 0
+    int a = 0
+    i = 0
+    while i < taken.Length
+        if taken[i] >= HEAL_PASSIVE
+            passive[p] = taken[i]
+            p += 1
+        else
+            codes[a] = taken[i]
+            a += 1
+        endif
+        i += 1
+    endwhile
+    if passive_count > 0
+        String quiet = SkyrimNet_Whipped_Engine.HealText(victim, passive)
+        if quiet != ""
+            Trace("NarrateHealing", victim.GetDisplayName() + " passive event: " + quiet)
+            SkyrimNetApi.RegisterShortLivedEvent("whip_heal_passive_" + victim.GetFormID() + "_" + NowMs(), "whip_heal", \
+                quiet, "", (event_ttl * 1000.0) as int, victim, None)
+        endif
+    endif
+    if codes.Length == 0
+        return
+    endif
+
+    Bool fresh = StorageUtil.GetIntValue(victim, KEY_HEAL_NARRATED, 0) == 0
+    i = 0
     while i < codes.Length
         StorageUtil.IntListAdd(victim, KEY_HEAL_PENDING, codes[i])
         i += 1
@@ -384,6 +585,9 @@ Function NarrateHealing(Actor victim)
     StorageUtil.SetIntValue(victim, KEY_HEAL_COUNT, count)
 
     Bool narrate = narration_enabled && !TooFar(victim)
+    if verbose_logging
+        Verbose("NarrateHealing", victim.GetDisplayName() + " fresh:" + fresh + " takes:" + count + " " + GateText(victim))
+    endif
     if fresh || (narrate && NarrationAllowed(victim))
         String msg = SkyrimNet_Whipped_Engine.HealText(victim, StorageUtil.IntListToArray(victim, KEY_HEAL_PENDING))
         StorageUtil.IntListClear(victim, KEY_HEAL_PENDING)
@@ -398,7 +602,8 @@ Function NarrateHealing(Actor victim)
             DirectNarrate(msg, victim, None)
         else
             Trace("NarrateHealing", victim.GetDisplayName() + " event fresh:" + fresh + ": " + msg)
-            SkyrimNetApi.RegisterEvent("whip_heal", msg, victim, None)
+            SkyrimNetApi.RegisterShortLivedEvent("whip_heal_" + victim.GetFormID() + "_" + NowMs(), "whip_heal", \
+                msg, "", (event_ttl * 1000.0) as int, victim, None)
         endif
         return
     endif
@@ -427,6 +632,8 @@ Int Property HEAL_START = 0 AutoReadOnly
 Int Property HEAL_PAIN_GONE = 1 AutoReadOnly
 Int Property HEAL_FULL = 2 AutoReadOnly
 Int Property HEAL_STOPPED = 3 AutoReadOnly
+Int Property HEAL_SOURCE_NONE = 0 AutoReadOnly ; SyncHealth source: no healing source (natural healing)
+Int Property HEAL_PASSIVE = 100000 AutoReadOnly ; added to TakeHealed codes healed without a source
 
 Float Property SYNC_INTERVAL = 0.2 AutoReadOnly
 
@@ -438,6 +645,7 @@ Function StartSync()
 EndFunction
 
 Event OnInjury(string eventName, string strArg, float numArg, Form sender)
+    Verbose("OnInjury", "real hit queued, starting sync")
     StartSync()
 EndEvent
 
@@ -457,6 +665,8 @@ Event OnUpdate()
     NarrateHealedActors() ; parts healed by health conversion this tick
     if SkyrimNet_Whipped_Engine.TrackedCount() > 0
         RegisterForSingleUpdate(SYNC_INTERVAL)
+    else
+        Verbose("OnUpdate", "nothing tracked, sync loop stops")
     endif
 EndEvent
 
@@ -480,7 +690,8 @@ Function NarrateRealHits()
     endwhile
 EndFunction
 
-; Fully healed (the last healing narration) is always a DirectNarration while narration is on;
+; Natural healing (no source: pain gone / fully healed) is always a silent short-lived event, text marked as ordinary healing.
+; With a source, fully healed (the last healing narration) is always a DirectNarration while narration is on;
 ; start, pain gone and stopped go through the usual gate, otherwise an event.
 ; The healed actor speaks, toward the caster when there is one.
 Function NarrateSourceHeal(int kind, int source, int percent, Actor caster, Actor target)
@@ -498,13 +709,22 @@ Function NarrateSourceHeal(int kind, int source, int percent, Actor caster, Acto
     if kind == HEAL_FULL
         ClearHealBatch(target) ; this narration covers the parts still pending
     endif
-    if narration_enabled && (kind == HEAL_FULL || (!TooFar(target) && NarrationAllowed(target)))
+    if verbose_logging
+        Verbose("NarrateSourceHeal", target.GetDisplayName() + " kind:" + kind + " source:" + source + " percent:" + percent \
+            + " caster:" + NameOf(caster) + " " + GateText(target))
+    endif
+    if source == HEAL_SOURCE_NONE
+        Trace("NarrateSourceHeal", "passive event kind:" + kind + ": " + msg)
+        SkyrimNetApi.RegisterShortLivedEvent("whip_heal_passive_" + target.GetFormID() + "_" + kind + "_" + NowMs(), "whip_heal", \
+            msg, "", (event_ttl * 1000.0) as int, target, toward)
+    elseif narration_enabled && (kind == HEAL_FULL || (!TooFar(target) && NarrationAllowed(target)))
         Trace("NarrateSourceHeal", "narration kind:" + kind + ": " + msg)
         StorageUtil.SetFloatValue(target, KEY_LAST_NARRATION, Utility.GetCurrentRealTime())
         DirectNarrate(msg, target, toward)
     else
         Trace("NarrateSourceHeal", "event: " + msg)
-        SkyrimNetApi.RegisterEvent("whip_heal", msg, target, toward)
+        SkyrimNetApi.RegisterShortLivedEvent("whip_heal_" + target.GetFormID() + "_" + kind + "_" + NowMs(), "whip_heal", \
+            msg, "", (event_ttl * 1000.0) as int, target, toward)
     endif
 EndFunction
 
@@ -524,4 +744,211 @@ String Function Injuries_Decorator(Actor akActor) global
         return "{\"sources\":[]}"
     endif
     return SkyrimNet_Whipped_Engine.GetStateJson(akActor)
+EndFunction
+
+;----------------------------------------------------------------------------------------------------
+; External API (soft dependency, e.g. SkyrimNet_SexLab Force / Aid). Call the globals; no quest lookup needed.
+;----------------------------------------------------------------------------------------------------
+
+; Preferred damage API. Always applies damage_amount hits of damage_type (injuries/<type>.json; a torture type,
+; or real damage for a health-only type) on body_part (part name or region, "" = random; ignored for real damage).
+; narrate True: the usual torture narration rules (NarrateInjury: a narration or a short-lived event), with cause
+;   ("Bob yanks Nina off her feet") leading the text in place of our own "as Bob ..." / "by the fall".
+;   Real damage is narrated as any real hit; cause alone becomes a short-lived event.
+; narrate False: silent (no narration, no event).
+; Returns the last hit code (torture) or the source index (real damage), or -1.
+Int Function External_Damage(Actor attacker, Actor victim, String cause = "", String body_part = "", String damage_type = "whipping", Int damage_amount = 1, Bool narrate = True) global
+    SkyrimNet_Whipped_Main main = Get()
+    if main == None || victim == None || victim.IsDead()
+        return -1
+    endif
+    if damage_amount < 1
+        damage_amount = 1
+    endif
+    if SkyrimNet_Whipped_Engine.IsTorture(damage_type)
+        return main.Damage(attacker, victim, cause, damage_type, damage_amount, body_part, narrate)
+    endif
+    if !SkyrimNet_Whipped_Engine.HasHealth(damage_type)
+        Trace("External_Damage", "unknown injury type: " + damage_type)
+        return -1
+    endif
+    int source = SkyrimNet_Whipped_Engine.RealHit(victim, attacker, damage_type, damage_amount)
+    Trace("External_Damage", NameOf(attacker) + " -> " + NameOf(victim) + " " + damage_type + " real points:" + damage_amount + " source:" + source)
+    if narrate && cause != ""
+        SkyrimNetApi.RegisterShortLivedEvent("injury_hit_" + damage_type + "_" + victim.GetFormID() + "_" + NowMs(), "injury_hit",             cause, "", (main.event_ttl * 1000.0) as int, attacker, victim)
+    endif
+    return source
+EndFunction
+
+; Older API; use External_Damage.
+; count whip hits on part (part name or region, "" = random; see SkyrimNet_Whipped_Engine.PartIndex).
+; narrate: one DirectNarration of text plus the injury text (text alone while narration is off), so the
+; caller's line is never lost. Returns the last hit code, or -1.
+Int Function External_Strike(Actor attacker, Actor victim, String text, Int count = 1, String part = "", Bool narrate = True) global
+    SkyrimNet_Whipped_Main main = Get()
+    if main == None || victim == None || victim.IsDead()
+        return -1
+    endif
+    return main.Strike(attacker, victim, text, count, part, narrate, main.SOURCE_WHIP)
+EndFunction
+
+; Older API; use External_Damage.
+; External_Strike for any torture type: "whipping", "pinching", "slapping", "pulling", "punching", "fire", "frost",
+; "shock", "falling", or a torture file another mod adds (see SkyrimNet_Whipped_Engine.IsTorture).
+; Returns the last hit code, or -1 (also for an unknown type).
+Int Function External_Torture(Actor attacker, Actor victim, String text, String type, Int count = 1, String part = "", Bool narrate = True) global
+    return External_Injure(attacker, victim, text, type, count, part, narrate, True)
+EndFunction
+
+; Older API; use External_Damage.
+; Any injury type by file id (injuries/<type>.json, including files other mods add).
+; torture True: count torture hits (External_Torture); the type needs a torture model ("torture" or "both").
+;   Returns the last hit code, or -1.
+; torture False: count real damage points (can kill); the type needs a health model ("health" or "both", e.g.
+;   "falling"). part is ignored (real damage picks its part like an attack). The hit is narrated like any real hit
+;   (NarrateRealHits); narrate only sends text, if any. Returns the source index, or -1.
+Int Function External_Injure(Actor attacker, Actor victim, String text, String type, Int count = 1, String part = "", Bool narrate = True, Bool torture = True) global
+    SkyrimNet_Whipped_Main main = Get()
+    if main == None || victim == None || victim.IsDead()
+        return -1
+    endif
+    if torture
+        if !SkyrimNet_Whipped_Engine.IsTorture(type)
+            Trace("External_Injure", "not a torture type: " + type)
+            return -1
+        endif
+        return main.Strike(attacker, victim, text, count, part, narrate, type)
+    endif
+    if !SkyrimNet_Whipped_Engine.HasHealth(type)
+        Trace("External_Injure", "no health model: " + type)
+        return -1
+    endif
+    if count < 1
+        count = 1
+    endif
+    int source = SkyrimNet_Whipped_Engine.RealHit(victim, attacker, type, count)
+    Trace("External_Injure", NameOf(attacker) + " -> " + NameOf(victim) + " " + type + " real points:" + count + " source:" + source)
+    if narrate && text != ""
+        DirectNarrate(text, attacker, victim)
+    endif
+    return source
+EndFunction
+
+; A heal of health points worth on part ("" = any). The heal narration follows through the usual sync;
+; narrate sends text now. Returns whip points healed, or -1.
+Int Function External_Heal(Actor caster, Actor target, String text, Float health, String part = "", Bool narrate = True) global
+    SkyrimNet_Whipped_Main main = Get()
+    if main == None || target == None
+        return -1
+    endif
+    int healed = SkyrimNet_Whipped_Engine.HealPart(target, SkyrimNet_Whipped_Engine.PartIndex(part), health)
+    Trace("External_Heal", NameOf(caster) + " -> " + NameOf(target) + " part:" + part + " health:" + health + " points:" + healed)
+    if narrate && text != ""
+        DirectNarrate(text, caster, target)
+    endif
+    main.StartSync()
+    return healed
+EndFunction
+
+Bool Function External_SexualParts() global
+    SkyrimNet_Whipped_Main main = Get()
+    return main != None && main.include_sexual_parts
+EndFunction
+
+; Writes whip.body.include_sexual_parts and applies it now.
+Function External_SetSexualParts(Bool enabled) global
+    SkyrimNet_Whipped_Main main = Get()
+    if main == None
+        return
+    endif
+    String value = "false"
+    if enabled
+        value = "true"
+    endif
+    Bool ok = SkyrimNetApi.PatchConfig(main.PLUGIN_CONFIG, "{\"whip\":{\"body\":{\"include_sexual_parts\":" + value + "}}}")
+    main.include_sexual_parts = enabled
+    SkyrimNet_Whipped_Engine.SetIncludeSexualParts(enabled)
+    Trace("External_SetSexualParts", "enabled:" + enabled + " patched:" + ok)
+EndFunction
+
+; External_Damage for a torture type: count hits on part, then NarrateHits with cause (narrate) or nothing.
+Int Function Damage(Actor attacker, Actor victim, String cause, String source, Int count, String part, Bool narrate)
+    int index = SkyrimNet_Whipped_Engine.PartIndex(part)
+    int mask = 0
+    int worst = 0
+    int code = -1
+    Bool fresh = False
+    int hits = 0
+    int i = 0
+    while i < count
+        code = SkyrimNet_Whipped_Engine.HitPart(victim, source, index)
+        if code >= 0
+            if hits == 0
+                fresh = FreshOf(code)
+            endif
+            hits += 1
+            mask = Math.LogicalOr(mask, MaskOf(code))
+            if LevelOf(code) > worst
+                worst = LevelOf(code)
+            endif
+        endif
+        i += 1
+    endwhile
+    Trace("Damage", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " parts:" + PartsText(mask)         + " level:" + worst + " narrate:" + narrate + " cause:" + cause)
+    if hits == 0
+        return code
+    endif
+    if narrate
+        NarrateHits(attacker, victim, source, fresh, mask, worst, hits, cause)
+    endif
+    ClearHealBatch(victim)
+    StartSync()
+    return code
+EndFunction
+
+Int Function Strike(Actor attacker, Actor victim, String text, Int count, String part, Bool narrate, String source)
+    int index = SkyrimNet_Whipped_Engine.PartIndex(part)
+    if count < 1
+        count = 1
+    endif
+    int mask = 0
+    int worst = 0
+    int code = -1
+    int i = 0
+    while i < count
+        code = SkyrimNet_Whipped_Engine.HitPart(victim, source, index)
+        if code >= 0
+            mask = Math.LogicalOr(mask, MaskOf(code))
+            if LevelOf(code) > worst
+                worst = LevelOf(code)
+            endif
+        endif
+        i += 1
+    endwhile
+    Trace("Strike", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " parts:" + PartsText(mask) + " level:" + worst)
+    if code < 0
+        if narrate && text != ""
+            DirectNarrate(text, attacker, victim)
+        endif
+        return code
+    endif
+    if narrate
+        String msg = text
+        if narration_enabled
+            String injury = SkyrimNet_Whipped_Engine.HitText(source, attacker, victim, mask, worst, count)
+            if injury != ""
+                if msg != ""
+                    msg += " "
+                endif
+                msg += injury
+            endif
+        endif
+        if msg != ""
+            DirectNarrate(msg, attacker, victim)
+        endif
+        StorageUtil.SetFloatValue(victim, KEY_LAST_NARRATION, Utility.GetCurrentRealTime())
+    endif
+    ClearHealBatch(victim)
+    StartSync()
+    return code
 EndFunction

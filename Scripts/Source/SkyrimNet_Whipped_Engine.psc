@@ -2,18 +2,39 @@ Scriptname SkyrimNet_Whipped_Engine Hidden
 
 ; Natives from SkyrimNet_Whipped.dll (SKSE_Source/src/Papyrus_Engine.cpp).
 ; InjuryEngine: per-actor injury per source (whipping, slashing, ...) for six body parts
-; (0 face, 1 left arm, 2 right arm, 3 back, 4 left leg, 5 right leg). All data and text come from
+; (0 face, 1 left arm, 2 right arm, 3 back, 4 left leg, 5 right leg), plus with "include sexual parts"
+; 6 nipples, 7 pussy, 8 penis, 9 lips, 10 ass hole (small: fewer points, hit less often). All data and text come from
 ; SKSE/Plugins/SkyrimNet_Whipped/injuries/<source>.json (see injuries/guide.md); sources are named by id.
 ; Whip wounds hold health down (90% of max health at full damage); real damage replaces them first;
 ; healing above the wounded level converts back into points in SyncHealth.
 
-; Hit code: fresh * 1000000 + source * 10000 + part mask * 10 + level
+; Hit code: fresh * 100000000 + source * 1000000 + part mask * 10 + level
 ;   fresh: the victim had no open wounds before (1/0); source: index (SourceId); part mask: bit per part;
 ;   level: worst part state before the hit (0 undamaged, 1 light, 2 medium, 3 severe).
 
-; Whip hit (source id of a model "whip" file, i.e. "whipping") on a random part; takes the matching health
+; Torture hit (source id of a model "torture" file: "whipping", "slapping", ...) on a random part (the type's
+; part_weights); takes the health the part's new maximum holds down
 ; (never below 10% of max health). Returns a hit code, or -1 for None/dead actors and unknown sources.
 Int Function Hit(Actor akActor, String sourceId) global native
+
+; Hit on one part (PartIndex). -1, a part outside the active set (sexual parts off) or one the actor's sex lacks: random.
+Int Function HitPart(Actor akActor, String sourceId, Int part) global native
+
+; Scripted real damage: points damage points of the health source with file id sourceId (a model "health" file, or
+; the health half of a "both" file such as "falling"), applied like a hooked hit: torture wounds absorb their share,
+; the rest is taken from health (can kill), and the hit is queued for NarrateRealHits. The part is picked as for an
+; attack. Returns the source index, or -1 for None/dead actors and unknown sources.
+Int Function RealHit(Actor akActor, Actor attacker, String sourceId, Int points) global native
+
+; True when sourceId (a file id) has a health model: a "health" file or a "both" file.
+Bool Function HasHealth(String sourceId) global native
+
+; A caller's heal (spell, potion): health becomes whip points healed on part first (-1: random), then any part;
+; health rises by the points healed. Returns points healed (0 nothing open, -1 bad args). Heal codes queue as usual.
+Int Function HealPart(Actor akActor, Int part, Float health) global native
+
+; Part index by part name ("left arm", "ass hole") or region ("head" -> face); -1 when unknown or "".
+Int Function PartIndex(String name) global native
 
 ; True if any damage is left (any source).
 Bool Function HasOpenWounds(Actor akActor) global native
@@ -23,9 +44,10 @@ Bool Function HasOpenWounds(Actor akActor) global native
 Actor[] Function TakeHealedActors() global native
 
 ; Heal codes for the actor, cleared on take (pass them to HealText):
-;   source * 64 + part * 8 + stage   a part reached a new stage (0 light .. 4 mostly healed, 5 healed)
+;   source * 128 + part * 8 + stage  a part reached a new stage (0 light .. 4 mostly healed, 5 healed)
 ;   10000 + source                   a source has healed on every part it touched
 ;   20000 + part                     a part has no injury left from any source
+; plus 100000 when no healing source contributed (game time, natural regen): passive, narrated silently.
 Int[] Function TakeHealed(Actor akActor) global native
 
 ; Real (non-whip) hits not yet narrated, as hit codes. HitVictims / HitAttackers are parallel to the last result
@@ -50,18 +72,24 @@ Int Function TrackedCount() global native
 ; Narration noun for a part ("face", "left arm", ...); "" when the .dll is missing.
 String Function PartName(Int part) global native
 
-; Source id by index ("" out of range) and the number of injuries/*.json loaded (0 = none found).
+; Source id by index ("" out of range) and the number of sources loaded (0 = none found). A "both" file loads as
+; two sources: the torture half under its id, the health half as "<id>_real".
 String Function SourceId(Int source) global native
 Int Function SourceCount() global native
+; True for a torture type (whipping, pinching, slapping, pulling, punching, fire, frost, shock, falling, and any
+; torture file another mod adds).
+Bool Function IsTorture(String sourceId) global native
 
 ; Decorator data with text resolved for this actor (empty sources when no injury):
 ; {"sources":[{"id","looks_heading","feels_intro","feels_outro","parts":[{"part","region","stage","look","feel"}]}]}
 String Function GetStateJson(Actor akActor) global native
 
-; Narration text rendered from the JSON files.
-String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count) global native
+; Narration text rendered from the JSON files. noCause leaves out narration.hit.by_* (the caller's cause leads instead).
+String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false) global native
+; All codes passive: wrapped as ordinary healing (narration.heal.passive).
 String Function HealText(Actor victim, Int[] codes) global native
 ; kind / source as in SyncHealth; percent is turned into words (no numbers in narration).
+; Source none (pain gone / fully healed by natural healing): wrapped as ordinary healing.
 String Function SourceHealText(Int kind, Int source, Int percent, Actor caster, Actor target) global native
 ; Renders the string at a dotted path ("narration.summary.text", "action.no_whip") with {speaker}, {target} and
 ; {times} (words for count, from narration.summary.times).
@@ -80,5 +108,11 @@ Function SetRegenRate(Float percent) global native
 
 ; "Show whipping overlay": PrismaUI bars for whipped actors.
 Function SetOverlayEnabled(Bool enabled) global native
+
+; "Include sexual body parts": new hits, prompts and the overlay use parts 6..10 too.
+Function SetIncludeSexualParts(Bool enabled) global native
+
+; "Verbose logging": debug lines in SkyrimNet_Whipped.log.
+Function SetVerboseLogging(Bool enabled) global native
 
 Function Forget(Actor akActor) global native
