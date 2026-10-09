@@ -2,7 +2,7 @@
 name: release
 description: >-
   Align SkyrimNet_Whipped release docs and version metadata for next_version.
-  Use when preparing a release, writing CHANGELOG.md or CHANGELOG-user.md,
+  Use when preparing a release, writing CHANGELOG.md, CHANGELOG-developer.md or CHANGELOG-player.md,
   bumping the version, updating release-checkpoint.xml, or documenting the
   delta since the last tag. Does not tag, publish, or run make release unless asked.
 ---
@@ -32,7 +32,7 @@ Facts (version sources, freshness matrix, packaging): [release-guide.md](../../.
 1. Establish the delta (scripts, prompts, action, settings, DLL/overlay, ESP via `Spriggit/`, docs). Report preflight only: are `Scripts/*.pex`, the DLL and the ESP newer than their sources?
 2. Ask if version, ship set, or deliberate omissions are unclear; do not draft until answered.
 3. Write `CHANGELOG.md` (themes and title format in the guide).
-4. Write `CHANGELOG-user.md` (releases URL first line, SkyrimNet requirement, 5–12 plain bullets).
+4. Write `CHANGELOG-developer.md` (releases URL first line, SkyrimNet requirement, 5–12 plain bullets) and `CHANGELOG-player.md` (only player-facing bullets from `CHANGELOG.md`, each 100 characters or less).
 5. Align docs per the freshness matrix.
 6. If bumping, change all sources in the guide's table together, then re-run `check-version.py`.
 7. Update `release-checkpoint.xml` (`updated`, `base_tag`, `next_version`, `version_status`).

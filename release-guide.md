@@ -11,7 +11,7 @@ Agents: use the project `release` skill (`.claude/skills/release/SKILL.md`). Ses
 | Agent | Changelogs, freshness-matrix docs, version bump in all sources, checkpoint | `pyro`, `make release`, git tag, GitHub Release, feature work |
 | Maintainer | Compile, package, tag, publish | Inventing changelog bullets the tree does not support |
 
-**Agent done-when:** `CHANGELOG.md` and `CHANGELOG-user.md` cover `next_version`; freshness-matrix files match the delta; `check-version.py` passes; checkpoint is current. Packaging is not part of done.
+**Agent done-when:** `CHANGELOG.md`, `CHANGELOG-developer.md` and `CHANGELOG-player.md` cover `next_version`; freshness-matrix files match the delta; `check-version.py` passes; checkpoint is current. Packaging is not part of done.
 
 ## Version sources
 
@@ -55,9 +55,13 @@ Ground truth is the git delta since `base_tag` (none before 0.1.0) plus working-
 
 H3 themes, only when non-empty: Whip / action, Wounds / healing, Narration / prompts, Papyrus, SKSE / overlay, Install / settings, Docs. Prefer concrete identifiers (`whip.*` keys, prompt files, StorageUtil keys, form names).
 
-### `CHANGELOG-user.md`
+### `CHANGELOG-developer.md`
 
 First line = releases URL for `next_version`. Then the SkyrimNet requirement and 5–12 plain-English bullets, none missing from `CHANGELOG.md`.
+
+### `CHANGELOG-player.md`
+
+Bullets only: the player-facing items of `CHANGELOG.md` (no build, license, docs or internals), each 100 characters or less, none missing from `CHANGELOG.md`. Shipped in the 7z (staged into `core/`) and used as the GitHub Release body.
 
 ## Noise (do not changelog)
 
@@ -67,6 +71,6 @@ First line = releases URL for `next_version`. Then the SkyrimNet requirement and
 
 Prereqs: `Scripts/*.pex` current (`pyro skyrimse.ppj`); `VCPKG_ROOT` set; `Spriggit/` JSON is the ESP source of truth; `7z`, `python3`, `powershell` on PATH.
 
-`make release` = `check-version.py` → `info.json` → `FOMOD/*.xml` from `FOMOD_source/` → `make dll` → `make esp` → stage `core/` (Scripts, SKSE, meshes, textures, Sound, PrismaUI, `SkyrimNet_Whipped.esp`) → `7z a "versions/SkyrimNet_Whipped ${VERSION}.7z" FOMOD core` → remove `core/`. The FOMOD installs `core` unconditionally (no options); PrismaUI is a documented requirement, not an installer step.
+`make release` = `check-version.py` → `info.json` → `FOMOD/*.xml` from `FOMOD_source/` → `make dll` → `make esp` → stage `core/` (Scripts, SKSE, meshes, textures, Sound, PrismaUI, `SkyrimNet_Whipped.esp`, `CHANGELOG-player.md`) → `7z a "versions/SkyrimNet_Whipped ${VERSION}.7z" FOMOD core` → remove `core/`. The FOMOD installs `core` unconditionally (no options); PrismaUI is a documented requirement, not an installer step.
 
-Ship order: bump version sources → changelogs → commit → `pyro` → `make release` → inspect `7z l` output → git tag `VERSION` → GitHub Release (attach the 7z, body = `CHANGELOG-user.md`).
+Ship order: bump version sources → changelogs → commit → `pyro` → `make release` → inspect `7z l` output → git tag `VERSION` → GitHub Release (attach the 7z, body = `CHANGELOG-player.md`).

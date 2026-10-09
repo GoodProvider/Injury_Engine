@@ -14,7 +14,8 @@
       <artifact role="release skill">.claude/skills/release/SKILL.md</artifact>
       <artifact role="agent policy">AGENTS.md</artifact>
       <artifact role="changelog">CHANGELOG.md</artifact>
-      <artifact role="player changelog">CHANGELOG-user.md</artifact>
+      <artifact role="developer changelog">CHANGELOG-developer.md</artifact>
+      <artifact role="player changelog">CHANGELOG-player.md</artifact>
       <artifact role="front door">README.md</artifact>
     </related_artifacts>
   </metadata>
@@ -23,7 +24,8 @@
     <file>AGENTS.md</file>
     <file>CLAUDE.md</file>
     <file>CHANGELOG.md</file>
-    <file>CHANGELOG-user.md</file>
+    <file>CHANGELOG-developer.md</file>
+    <file>CHANGELOG-player.md</file>
     <file>docs/authors/actions.md</file>
     <file>docs/authors/prompts.md</file>
     <file>docs/developers/papyrus.md</file>

@@ -1,0 +1,9 @@
+- Craft a padded whip at the forge; every real hit with it lashes the target.
+- Each lash wounds a random body part and shows a welt decal on the skin.
+- Wounds heal over game time, with healing spells and potions, and by natural regeneration.
+- Health stays held down while you are wounded.
+- NPCs react: hits and healing are narrated to the LLM, and everyone sees the victim's wounds.
+- The new Whip_Target action lets an NPC walk up and whip someone, if it carries the whip.
+- A whipping overlay shows a bar per wounded actor and fades out by itself.
+- Settings in the SkyrimNet dashboard: narration, strikes, healing speed, Healing Hands, overlay.
+- Requires SkyrimNet 0.25.0, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
