@@ -43,6 +43,9 @@ Bool Function HasOpenWounds(Actor akActor) global native
 ; since the last TakeHealed.
 Actor[] Function TakeHealedActors() global native
 
+; Actors with heal codes already queued (does not apply game time).
+Actor[] Function TakeQueuedHealActors() global native
+
 ; Heal codes for the actor, cleared on take (pass them to HealText):
 ;   source * 128 + part * 8 + stage  a part reached a new stage (0 light .. 4 mostly healed, 5 healed)
 ;   10000 + source                   a source has healed on every part it touched
@@ -55,6 +58,10 @@ Int[] Function TakeHealed(Actor akActor) global native
 Int[] Function TakeHits() global native
 Actor[] Function HitVictims() global native
 Actor[] Function HitAttackers() global native
+
+; Pending sync events (heal start / pain gone / ...) not yet taken; does not run health conversion.
+; kind * 10000 + source * 1000 + percent. SyncActors / SyncCasters are parallel to the last result.
+Int[] Function TakeSyncEvents() global native
 
 ; Converts healing on loaded tracked actors into points (all of it while a healing source is active or the
 ; actor has no whip wounds, otherwise natural regen at the regen rate). Returns the queued events as

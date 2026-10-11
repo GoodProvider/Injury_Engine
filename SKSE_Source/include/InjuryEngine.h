@@ -84,6 +84,8 @@ namespace InjuryEngine
 
     // Applies time to every tracked actor; returns those with parts that healed to a new stage since the last TakeHealed.
     std::vector<RE::Actor*> TakeHealedActors();
+    // Actors with heal codes already queued (does not apply game time).
+    std::vector<RE::Actor*> TakeQueuedHealActors();
     std::vector<std::int32_t> TakeHealed(RE::Actor* actor);
 
     // Real hits not yet narrated: hit codes; HitVictims / HitAttackers are parallel to the last TakeHits result.
@@ -95,6 +97,10 @@ namespace InjuryEngine
 
     // Called from the MagicTarget::AddTarget hook for every effect applied to an actor.
     void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect);
+
+    // Pending sync events (heal start / pain gone / ...) not yet taken; does not run health conversion.
+    // kind * 10000 + source * 1000 + percent. SyncActors/SyncCasters are parallel to the last result.
+    std::vector<std::int32_t> TakeSyncEvents();
 
     // Converts healing on loaded tracked actors into points and returns the queued events as
     // kind * 10000 + source * 1000 + percent. SyncActors/SyncCasters are parallel to the last result.

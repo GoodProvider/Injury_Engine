@@ -30,10 +30,9 @@ One summary narration follows (DirectNarration, or event `torture_hit`).
 | Type | When |
 |------|------|
 | `whip_lash` | `Torture_Target` with `require_whip` on and the NPC has no whip (`whip_lash_no_whip_<speaker>`; repeat overwrites) |
-| `torture_hit` | Torture not sent as DirectNarration: hits between scene lines, narration off, or speech queue busy. One short-lived event per torturer→victim pair (`torture_hit_<attacker>_to_<victim>`, attacker `0` when none); each register overwrites and refreshes TTL (like SkyrimNet `combat_hit`) |
-| `injury_hit` | Real-damage hit (always an event) |
-| `whip_heal` | Healing not narrated (start / pain gone / stopped with the gate closed, fresh part heal with narration off or too far) |
-| `whip_heal_<formid>_<n>` (short-lived, type `whip_heal`) | Parts healed while the gate is closed; batched into the next heal narration |
+| `torture_hit` | Every torture hit registers immediately (including the first, method switches, and out of sight). Id `torturing_<method>_<torturer>_to_<victim>` (`method` = injury file id, e.g. `whipping`, `shock`; missing torturer `0`). Re-register overwrites and refreshes TTL. Combined scene lines when narration is off or the speech queue is busy use the same id. |
+| `injury_hit` | Every real-damage hit registers immediately. Id `health_<method>_<attacker>_to_<victim>`. |
+| `whip_heal` | Every heal registers immediately (part heals, passive, heal start / pain gone / stopped). Id `healing_<method>_<caster>_to_<victim>` (`method` = wound source id, `part`, or heal-sync source `spell` / `staff` / `potion` / `other` / `none`). Session fallbacks when narration is off or the queue is busy use the same id. |
 
 ## Rules
 

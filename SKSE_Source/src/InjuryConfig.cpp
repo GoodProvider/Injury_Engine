@@ -402,6 +402,12 @@ namespace InjuryConfig
         std::stable_sort(g_rules.begin(), g_rules.end(), [](const ClassifyRule& a, const ClassifyRule& b) {
             return a.priority > b.priority;
         });
+        if (g_rules.empty()) {
+            SKSE::log::warn("injuries: no classify rules in {}: torture spells and real damage are not tracked (stale copy in MO2 overwrite?)",
+                dir.string());
+        } else {
+            SKSE::log::info("injuries: {} classify rules", g_rules.size());
+        }
         if (WhipIndex() < 0) {
             SKSE::log::warn("injuries: whipping.json missing or invalid: whipping disabled, body / overlay / setting defaults fall back");
         }

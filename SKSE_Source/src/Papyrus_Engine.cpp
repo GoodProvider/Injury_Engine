@@ -59,6 +59,11 @@ namespace
         return result;
     }
 
+    std::vector<RE::Actor*> TakeQueuedHealActors(RE::StaticFunctionTag*)
+    {
+        return InjuryEngine::TakeQueuedHealActors();
+    }
+
     std::vector<std::int32_t> TakeHealed(RE::StaticFunctionTag*, RE::Actor* actor)
     {
         return InjuryEngine::TakeHealed(actor);
@@ -79,6 +84,11 @@ namespace
     std::vector<RE::Actor*> HitAttackers(RE::StaticFunctionTag*)
     {
         return InjuryEngine::HitAttackers();
+    }
+
+    std::vector<std::int32_t> TakeSyncEvents(RE::StaticFunctionTag*)
+    {
+        return InjuryEngine::TakeSyncEvents();
     }
 
     std::vector<std::int32_t> SyncHealth(RE::StaticFunctionTag*)
@@ -305,10 +315,12 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("PartIndex", s, PartIndex);
     a_vm->RegisterFunction("HasOpenWounds", s, HasOpenWounds);
     a_vm->RegisterFunction("TakeHealedActors", s, TakeHealedActors);
+    a_vm->RegisterFunction("TakeQueuedHealActors", s, TakeQueuedHealActors);
     a_vm->RegisterFunction("TakeHealed", s, TakeHealed);
     a_vm->RegisterFunction("TakeHits", s, TakeHits);
     a_vm->RegisterFunction("HitVictims", s, HitVictims);
     a_vm->RegisterFunction("HitAttackers", s, HitAttackers);
+    a_vm->RegisterFunction("TakeSyncEvents", s, TakeSyncEvents);
     a_vm->RegisterFunction("SyncHealth", s, SyncHealth);
     a_vm->RegisterFunction("SyncActors", s, SyncActors);
     a_vm->RegisterFunction("SyncCasters", s, SyncCasters);

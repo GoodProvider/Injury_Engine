@@ -63,8 +63,11 @@ Natives behind them: `Engine.RealHit(actor, attacker, source, points)` / `Engine
 |-----|------|
 | `skyrimnet_whipped.in_action` | Set during `Torture_Target` so the enchantment hit is not counted twice |
 | `skyrimnet_whipped.pending_parts` / `_level` / `_count` | Hits since the last narration (part bitmask, worst level, count) |
-| `skyrimnet_whipped.heal_pending` (IntList) / `heal_count` | Part heals (`part * 8 + stage`) since the last heal narration, takes count |
-| `skyrimnet_whipped.heal_narrated` | A heal was narrated since the last lash (unset = next heal is fresh) |
+| `skyrimnet_whipped.heal_pending` (IntList) | Heal codes since the last heal-session line |
+| `skyrimnet_whipped.hs_*` (lists on the Main quest) | Heal session per healed actor: target, caster, last activity, last line, pending pain-gone text, end text, ended |
+| Session exclusivity | One activity per victim: opening a heal session (`HealOpen`) or a real (non-torture) hit (`NarrateRealHits`) calls `ClearTortureScene` (drops the victim's `sc_*` pairs, no line or memory); a torture or real hit calls `ClearHealBatch`. |
+| Short-lived event ids | `InjuryShortEventId(kind, method, torturer, victim)`: `torturing` / `health` / `healing` + injury or heal-sync method + form ids (`0` when the actor is missing). Re-register overwrites TTL. |
+| `OnInjury` / sync loop | `SkyrimNet_Whipped_Injury` runs `DrainInjuryQueues` then `StartSync`. `StartSync` sets `sync_pending` and calls `RegisterForSingleUpdate(0.2)` only when no update is already pending (a second `RegisterForSingleUpdate` replaces the timer and delayed hooked hits). Natives `TakeQueuedHealActors` and `TakeSyncEvents` drain C++ queues without applying game time or running `SyncHealth` conversion. |
 | `skyrimnet_whipped.last_narration` | Real time of the last narration (cooldown) |
 | `skyrimnet_whipped.last_torture` | Real time of the last torture hit (torture narration window / interval) |
 

@@ -2,6 +2,18 @@
 
 Quirks and lessons for SkyrimNet_Whipped. Read before changes; append a dated entry (newest first) after a session that found something non-obvious. Entries marked *(from SkyrimNet_SexLab)* were learned there and apply here too.
 
+## Injury JSON shadowed by a stale copy in MO2 overwrite (2026-10-11)
+
+MO2 overwrite wins over the mod folder, so an old `overwrite/SKSE/Plugins/SkyrimNet_Whipped/injuries/` (left by a tool run under MO2) silently replaces the repo JSON. Seen with files from before `classify` existed: whipping still worked (it needs no classify rule), but Sparks (torture) did plain damage with no hit or narration. Symptoms in `SkyrimNet_Whipped.log`: `generic.json missing` although generic.json is listed as loaded, no `Classifier: torture MGEF ...` lines, and now `injuries: no classify rules in ...`. Fix: move the folder out of overwrite.
+
+## Torture spells: classify MGEF before resist health (2026-10-11)
+
+`(torture)` spells list the torture MGEF first and a vanilla resist effect second. `Classifier::Init` resolves `effect_file` / `effect_id` to a runtime form id (`LookupForm`, else ESL `0xFE000000 | (smallFileCompileIndex << 12) | localId`). `MatchMagic` prefers that torture MGEF over resist-only health rules (`shocking`, …); vanilla Flames / Frostbite / Sparks stay health. `OnTortureDamage` lands one point on the first tick of `fire` / `frost` / `shock` beams without waiting for `hit_share`. `Main.NarrateHits` sends `SceneSend("start", …)` immediately on the first registered hit of any torture source (method change uses `start` again, not `switch`).
+
+## DirectNarration reenters Papyrus during SceneTick (2026-10-11)
+
+`SkyrimNetApi.DirectNarration` can run other scripts (eligibility checks, and so on) before it returns. If `SceneTick` marks torture pairs as started only after `SceneSend`, a nested `OnUpdate` still sees `SC_PENDING` and sends the same `start` line twice. Claim state before `SceneSend` (`SC_RUNNING` for starts, clear `KEY_SC_SWITCH` for method changes) and ignore a nested `SceneTick` with `scene_tick_active`.
+
 ## Concentration torture beams use HandleHealthDamage per tick (2026-10-11)
 
 Sparks / Flames / Frostbite `(torture)` are concentration spells with a projectile; each tick can arrive in `Actor::HandleHealthDamage`, not only in `ModActorValue`. Those ticks must **not** set `physicalMelee` (they accumulate against `hook.hit_share` like other spell torture). When the hit form is a projectile or otherwise fails `ClassifyForm`, `Classifier` must prefer the live `(torture)` effect from `g_torture` over guessing unarmed `punching` on an out-of-combat NPC with empty hands.
@@ -101,3 +113,11 @@ The case-folding risk above happened in the other direction: SkyrimNet_SexLab pa
 ## Torture scene phase strings arrive as Start / End (2026-10-11)
 
 `Main.SceneTick` passes `"start"` and `"end"` into `Engine.SceneText`; Papyrus re-interns them as `"Start"` and `"End"` (same pool as `Start` / `SPELL` in the note above). `"again"` is unchanged. `InjuryEngine::SceneText` folds the phase to lowercase before comparing or building `session.json` paths (`hit.start`, `inline.end`, …). Without that, the first combined torture line was only the attacker name plus `narration.hit.levels` (e.g. `Bob , the small flame passed slowly…`).
+
+## Sessions are exclusive per victim (2026-10-11)
+
+A torture scene and a heal session used to run side by side, so the scene's `again` / `end` lines ("the whipping stops") followed the heal `start` line. Now a different activity silently closes the open session: `HealOpen` and non-torture `NarrateRealHits` call `ClearTortureScene`; torture and real hits call `ClearHealBatch`. `TakeHits` also carries classifier torture (punching, fire, frost, shock), so `NarrateRealHits` checks `IsTorture` before clearing the scene.
+
+## RegisterForSingleUpdate replaces a pending update (2026-10-11)
+
+Each hooked hit called `StartSync` → `RegisterForSingleUpdate(0.2)`, which resets the timer. A concentration torture beam postponed `OnUpdate` until the hits paused, so short-lived `torture_hit` events lagged seconds behind damage. `StartSync` now sets `sync_pending` and skips scheduling when an update is already waiting; `OnInjury` drains `TakeHits`, `TakeQueuedHealActors`, and `TakeSyncEvents` immediately so short-lived events land in the same frame as the hook.

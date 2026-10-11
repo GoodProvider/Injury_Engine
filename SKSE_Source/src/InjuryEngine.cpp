@@ -25,6 +25,42 @@ namespace InjuryEngine
         constexpr int kStageSourceHealed = 6;  // HealItem only: the source has healed on every part
         constexpr int kStagePartHealed = 7;    // HealItem only: the part has no injury left
         constexpr double kSourceLinger = 1.0;  // real seconds a healing source stays active after last seen
+        constexpr double kTortureBatchGap = 3.0;  // real seconds idle before the next tick is a new (attacker, victim, source) batch
+
+        struct TortureBatchKey
+        {
+            RE::FormID victim = 0;
+            RE::FormID attacker = 0;
+            int source = 0;
+
+            bool operator==(const TortureBatchKey&) const = default;
+        };
+
+        struct TortureBatchKeyHash
+        {
+            std::size_t operator()(const TortureBatchKey& key) const
+            {
+                return std::hash<RE::FormID>{}(key.victim) ^ (std::hash<RE::FormID>{}(key.attacker) << 1) ^
+                       (static_cast<std::size_t>(key.source) << 2);
+            }
+        };
+
+        double NowRealSeconds()
+        {
+            using namespace std::chrono;
+            return duration<double>(steady_clock::now().time_since_epoch()).count();
+        }
+
+        // Sparks / Flames / Frostbite (torture) only; vanilla elemental spells stay health damage.
+        bool IsElementalTortureSpell(int source)
+        {
+            const auto* conf = InjuryConfig::Find(source);
+            if (!conf || !conf->IsTorture()) {
+                return false;
+            }
+            return InjuryConfig::IEquals(conf->id, "fire") || InjuryConfig::IEquals(conf->id, "frost") ||
+                   InjuryConfig::IEquals(conf->id, "shock");
+        }
 
         // Torture model: one deficit per (torture type, part) = damage + missing healing points, so
         // healingMax+1 .. healingMax+partMax is damage (light, medium, severe), 1 .. healingMax is healing
@@ -104,6 +140,7 @@ namespace InjuryEngine
         // Hooked torture damage (spell ticks) not yet a hit, per actor and source. Kept when the actor is
         // forgotten, so small ticks on an unwounded actor still add up.
         std::unordered_map<RE::FormID, std::array<float, kMaxSources>> g_tortureCarry;
+        std::unordered_map<TortureBatchKey, double, TortureBatchKeyHash> g_tortureBatchLast;  // last tick real time per batch
         std::vector<Event> g_events;                        // not yet taken by SyncHealth
         std::vector<HitEntry> g_hits;                       // real hits not yet taken by Papyrus
         std::vector<RE::Actor*> g_syncActors;
@@ -869,6 +906,27 @@ namespace InjuryEngine
             }
         }
 
+        std::vector<std::int32_t> DrainPendingEvents()
+        {
+            std::vector<std::int32_t> codes;
+            g_syncActors.clear();
+            g_syncCasters.clear();
+            for (const auto& e : g_events) {
+                auto* actor = RE::TESForm::LookupByID<RE::Actor>(e.actor);
+                if (!actor) {
+                    continue;
+                }
+                auto* caster = e.caster.get().get();
+                SKSE::log::debug("sync event {:08X} kind:{} source:{} percent:{} caster:{:08X}", e.actor, e.kind, e.source, e.percent,
+                    caster ? caster->GetFormID() : 0);
+                codes.push_back(e.kind * 10000 + e.source * 1000 + e.percent);
+                g_syncActors.push_back(actor);
+                g_syncCasters.push_back(caster);
+            }
+            g_events.clear();
+            return codes;
+        }
+
         // ---- text --------------------------------------------------------------------------------------
 
         std::string NameOf(RE::Actor* actor)
@@ -1198,16 +1256,40 @@ namespace InjuryEngine
             {
                 std::lock_guard lock(g_lock);
                 const RE::FormID id = victim->GetFormID();
+                const TortureBatchKey batchKey{ id, attacker ? attacker->GetFormID() : 0, source };
+                const double nowReal = NowRealSeconds();
+                bool newBatch = true;
+                if (const auto batchIt = g_tortureBatchLast.find(batchKey); batchIt != g_tortureBatchLast.end()) {
+                    newBatch = nowReal - batchIt->second > kTortureBatchGap;
+                }
+                g_tortureBatchLast[batchKey] = nowReal;
+                if (g_tortureBatchLast.size() > 512) {
+                    g_tortureBatchLast.clear();
+                    g_tortureBatchLast[batchKey] = nowReal;
+                }
+
                 int hits = 1;
                 if (!physicalMelee) {
                     float& carry = g_tortureCarry[id][source];
-                    carry += amount;
                     const float share = conf.hitShare * maxHealth;
-                    hits = static_cast<int>(carry / share);
-                    carry -= hits * share;
-                    hits = std::min(hits, 8);
-                    if (hits == 0) {
-                        return 0.0f;
+                    const float carryBefore = carry;
+                    carry += amount;
+                    if (IsElementalTortureSpell(source) && carryBefore <= 0.0f) {
+                        carry = 0.0f;
+                        hits = 1;
+                    } else if (carryBefore <= 0.0f && carry < share) {
+                        // First tick of a beam below hit_share still lands one wound so narration can start.
+                        carry = 0.0f;
+                        hits = 1;
+                    } else {
+                        hits = static_cast<int>(carry / share);
+                        carry -= static_cast<float>(hits) * share;
+                        hits = std::min(hits, 8);
+                        if (hits == 0 && newBatch) {
+                            hits = 1;
+                        } else if (hits == 0) {
+                            return 0.0f;
+                        }
                     }
                 }
                 const double now = NowHours();
@@ -1406,6 +1488,9 @@ namespace InjuryEngine
             }
             SKSE::log::info("heal part {:08X} part:{} health:{:.1f} points:{}", id, part, health, healedPoints);
         }
+        if (healedPoints > 0) {
+            NotifyPapyrus();
+        }
         return healedPoints;
     }
 
@@ -1454,6 +1539,22 @@ namespace InjuryEngine
                 Current(actor, now);  // applies time; may queue heals and forget the actor
             }
         }
+        std::vector<RE::Actor*> result;
+        for (auto it = g_healed.begin(); it != g_healed.end();) {
+            auto* actor = RE::TESForm::LookupByID<RE::Actor>(it->first);
+            if (!actor || it->second.empty()) {
+                it = g_healed.erase(it);
+                continue;
+            }
+            result.push_back(actor);
+            ++it;
+        }
+        return result;
+    }
+
+    std::vector<RE::Actor*> TakeQueuedHealActors()
+    {
+        std::lock_guard lock(g_lock);
         std::vector<RE::Actor*> result;
         for (auto it = g_healed.begin(); it != g_healed.end();) {
             auto* actor = RE::TESForm::LookupByID<RE::Actor>(it->first);
@@ -1549,6 +1650,13 @@ namespace InjuryEngine
         SKSE::log::debug("healing effect on {:08X} item:{:08X} caster:{:08X} magnitude:{:.1f}", it->first, item ? item->GetFormID() : 0,
             caster ? caster->GetFormID() : 0, effect->effectItem.magnitude);
         Seen(it->first, it->second, caster ? caster->As<RE::Actor>() : nullptr, item, NowSeconds());
+        NotifyPapyrus();
+    }
+
+    std::vector<std::int32_t> TakeSyncEvents()
+    {
+        std::lock_guard lock(g_lock);
+        return DrainPendingEvents();
     }
 
     std::vector<std::int32_t> SyncHealth()
@@ -1601,23 +1709,7 @@ namespace InjuryEngine
             }
         }
 
-        std::vector<std::int32_t> codes;
-        g_syncActors.clear();
-        g_syncCasters.clear();
-        for (const auto& e : g_events) {
-            auto* actor = RE::TESForm::LookupByID<RE::Actor>(e.actor);
-            if (!actor) {
-                continue;
-            }
-            auto* caster = e.caster.get().get();
-            SKSE::log::debug("sync event {:08X} kind:{} source:{} percent:{} caster:{:08X}", e.actor, e.kind, e.source, e.percent,
-                caster ? caster->GetFormID() : 0);
-            codes.push_back(e.kind * 10000 + e.source * 1000 + e.percent);
-            g_syncActors.push_back(actor);
-            g_syncCasters.push_back(caster);
-        }
-        g_events.clear();
-        return codes;
+        return DrainPendingEvents();
     }
 
     std::vector<RE::Actor*> SyncActors()
@@ -2243,6 +2335,7 @@ namespace InjuryEngine
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();
+        g_tortureBatchLast.clear();
         g_events.clear();
         g_hits.clear();
         std::uint32_t count = 0;
@@ -2283,6 +2376,7 @@ namespace InjuryEngine
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();
+        g_tortureBatchLast.clear();
         g_events.clear();
         g_hits.clear();
         g_syncActors.clear();

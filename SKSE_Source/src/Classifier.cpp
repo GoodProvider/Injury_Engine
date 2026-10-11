@@ -7,6 +7,7 @@
 #include <mutex>
 #include <optional>
 #include <string_view>
+#include <string>
 #include <unordered_map>
 
 namespace Classifier
@@ -41,6 +42,8 @@ namespace Classifier
         // victim -> latest "(torture)" effect, from AddTarget and hit events. Damage hooks read this instead of walking
         // the active-effect list: they run inside the engine's own effect update, where a nested walk crashes.
         std::unordered_map<RE::FormID, TortureSeen> g_torture;
+        // classify effect_file / effect_id -> runtime MGEF form id (ESL light masters need explicit resolution)
+        std::unordered_map<std::string, RE::FormID> g_classifyEffectForms;
 
         double NowSeconds()
         {
@@ -98,6 +101,115 @@ namespace Classifier
             }
             auto* data = RE::TESDataHandler::GetSingleton();
             return data ? data->LookupForm(id, file) : nullptr;
+        }
+
+        std::string EffectRuleKey(const InjuryConfig::ClassifyRule& rule)
+        {
+            return rule.effectFile + ":" + std::to_string(rule.effectId & 0x00FFFFFFu);
+        }
+
+        RE::FormID ResolveClassifyEffectForm(std::string_view file, std::uint32_t localId)
+        {
+            if (file.empty() || localId == 0) {
+                return 0;
+            }
+            const auto local = localId & 0x00FFFFFFu;
+            auto* data = RE::TESDataHandler::GetSingleton();
+            if (!data) {
+                return 0;
+            }
+            if (auto* form = data->LookupForm(local, file)) {
+                return form->GetFormID();
+            }
+            const RE::TESFile* mod = data->LookupLoadedLightModByName(file);
+            if (!mod) {
+                mod = data->LookupLoadedModByName(file);
+            }
+            if (!mod) {
+                return 0;
+            }
+            if (mod->IsLight()) {
+                return 0xFE000000u | (static_cast<RE::FormID>(mod->GetSmallFileCompileIndex()) << 12) | (local & 0xFFFu);
+            }
+            return mod->GetFormID(local);
+        }
+
+        void CacheClassifyEffectForms()
+        {
+            g_classifyEffectForms.clear();
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (!rule.hasEffect) {
+                    continue;
+                }
+                const auto key = EffectRuleKey(rule);
+                if (g_classifyEffectForms.contains(key)) {
+                    continue;
+                }
+                const RE::FormID id = ResolveClassifyEffectForm(rule.effectFile, rule.effectId);
+                if (!id) {
+                    SKSE::log::warn("injuries: classify effect {} 0x{:X} not resolved", rule.effectFile, rule.effectId);
+                    continue;
+                }
+                g_classifyEffectForms.emplace(key, id);
+                if (const auto* conf = InjuryConfig::Find(rule.source); conf && conf->IsTorture()) {
+                    SKSE::log::info("Classifier: torture MGEF {} 0x{:X} -> {:08X} ({})", rule.effectFile, rule.effectId, id,
+                        conf->id);
+                }
+            }
+        }
+
+        bool EffectMatchesRule(const RE::EffectSetting* mgef, const InjuryConfig::ClassifyRule& rule)
+        {
+            if (!rule.hasEffect || !mgef) {
+                return false;
+            }
+            if (LookupForm(rule.effectFile, rule.effectId) == mgef) {
+                return true;
+            }
+            if (const auto it = g_classifyEffectForms.find(EffectRuleKey(rule)); it != g_classifyEffectForms.end()) {
+                return mgef->GetFormID() == it->second;
+            }
+            return false;
+        }
+
+        int TortureSourceOf(const RE::EffectSetting* mgef)
+        {
+            if (!mgef) {
+                return -2;
+            }
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (!rule.hasEffect) {
+                    continue;
+                }
+                if (!EffectMatchesRule(mgef, rule)) {
+                    continue;
+                }
+                if (const auto* conf = InjuryConfig::Find(rule.source); conf && conf->IsTorture()) {
+                    return rule.source;
+                }
+            }
+            return -2;
+        }
+
+        int ResistHealthSourceOf(const RE::EffectSetting* mgef)
+        {
+            if (!mgef) {
+                return -2;
+            }
+            if (TortureSourceOf(mgef) >= 0) {
+                return -2;
+            }
+            const auto resist = ResistName(mgef);
+            if (resist.empty()) {
+                return -2;
+            }
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (rule.hasEffect || rule.resist != resist) {
+                    continue;
+                }
+                return rule.source;
+            }
+            return InjuryConfig::GenericIndex();
         }
 
         bool Npc(RE::Actor* actor)
@@ -179,65 +291,39 @@ namespace Classifier
             return {};
         }
 
-        // Torture source of a "(torture)" effect form, else the health source of its resist, else -2.
+        // Torture "(torture)" MGEF first, else health resist match, else -2.
         int EffectSource(const RE::EffectSetting* mgef)
         {
-            if (!mgef) {
-                return -2;
+            if (const int torture = TortureSourceOf(mgef); torture >= 0) {
+                return torture;
             }
-            for (const auto& rule : InjuryConfig::ClassifyRules()) {
-                if (!rule.hasEffect) {
-                    continue;
-                }
-                if (LookupForm(rule.effectFile, rule.effectId) == mgef) {
-                    return rule.source;
-                }
-            }
-            const auto resist = ResistName(mgef);
-            if (resist.empty()) {
-                return -2;
-            }
-            for (const auto& rule : InjuryConfig::ClassifyRules()) {
-                if (rule.hasEffect || rule.resist != resist) {
-                    continue;
-                }
-                return rule.source;
-            }
-            // An element we know, and no file claimed it: the fallback source, same as a missing class file.
-            return InjuryConfig::GenericIndex();
+            return ResistHealthSourceOf(mgef);
         }
 
         Match MatchMagic(const RE::MagicItem* item)
         {
+            Match deferred{};
             for (const auto* effect : item->effects) {
                 if (!effect || !effect->baseEffect) {
                     continue;
                 }
-                if (ResistName(effect->baseEffect).empty() && EffectSource(effect->baseEffect) < 0) {
-                    continue;
+                const auto* mgef = effect->baseEffect;
+                if (const int torture = TortureSourceOf(mgef); torture >= 0) {
+                    return { torture, false };
                 }
-                const int source = EffectSource(effect->baseEffect);
-                if (source != -2) {
-                    return { source, false };
+                if (deferred.source == -2) {
+                    const int health = ResistHealthSourceOf(mgef);
+                    if (health != -2) {
+                        deferred = { health, false };
+                    }
                 }
             }
-            return {};
+            return deferred;
         }
 
         int TortureIndexOf(const RE::EffectSetting* mgef)
         {
-            if (!mgef) {
-                return -2;
-            }
-            for (const auto& rule : InjuryConfig::ClassifyRules()) {
-                if (!rule.hasEffect) {
-                    continue;
-                }
-                if (LookupForm(rule.effectFile, rule.effectId) == mgef) {
-                    return rule.source >= 0 ? rule.source : -2;
-                }
-            }
-            return -2;
+            return TortureSourceOf(mgef);
         }
 
         void NoteTortureLocked(RE::FormID victimId, int index)
@@ -329,6 +415,7 @@ namespace Classifier
 
     void Init()
     {
+        CacheClassifyEffectForms();
         for (const auto& rule : InjuryConfig::ClassifyRules()) {
             for (const auto& name : rule.weaponTypes) {
                 if (!WeaponTypeOf(name)) {
@@ -350,7 +437,13 @@ namespace Classifier
         }
         if (const int index = TortureIndexOf(effect->baseEffect); index >= 0) {
             std::lock_guard lock(g_lock);
-            NoteTortureLocked(victim->GetFormID(), index);
+            const RE::FormID victimId = victim->GetFormID();
+            const auto it = g_torture.find(victimId);
+            const bool announce = it == g_torture.end() || NowSeconds() - it->second.when > kTortureWindow || it->second.index != index;
+            NoteTortureLocked(victimId, index);
+            if (announce) {
+                SKSE::log::info("torture effect: victim {:08X} source {}", victimId, IdOf(index));
+            }
         }
     }
 
