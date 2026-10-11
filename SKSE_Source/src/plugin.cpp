@@ -20,11 +20,17 @@ namespace
         }
         auto path = *dir / "SkyrimNet_Whipped.log";
         auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path.string(), true);
-        auto logger = std::make_shared<spdlog::logger>("log", std::move(sink));
+        auto logger = std::make_shared<spdlog::logger>("log", sink);
         logger->set_level(spdlog::level::info);
         logger->flush_on(spdlog::level::info);
         spdlog::set_default_logger(std::move(logger));
         spdlog::set_pattern("[%H:%M:%S] [%l] %v");
+
+        auto event = std::make_shared<spdlog::logger>("event", sink);
+        event->set_level(spdlog::level::info);
+        event->flush_on(spdlog::level::info);
+        event->set_pattern("[%H:%M:%S] %v");
+        spdlog::register_logger(std::move(event));
     }
 
     void CoSave_OnSave(SKSE::SerializationInterface* intfc)

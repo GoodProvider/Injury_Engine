@@ -293,6 +293,10 @@ namespace
         if (auto logger = spdlog::default_logger(); logger && logger->level() != level) {
             logger->set_level(level);
             logger->flush_on(level);
+            if (auto event = spdlog::get("event")) {
+                event->set_level(level);
+                event->flush_on(level);
+            }
             SKSE::log::info("verbose logging {}", enabled ? "on" : "off");
         }
     }

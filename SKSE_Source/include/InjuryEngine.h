@@ -146,8 +146,8 @@ namespace InjuryEngine
     void SetRegenRate(float percent);
     void Forget(RE::Actor* actor);
 
-    // Writes an info line to SkyrimNet_Whipped.log: "<kind>: <text>" (empty text is ignored).
-    void LogLine(std::string_view kind, std::string_view text);
+    // Writes a torture / heal / health line to SkyrimNet_Whipped.log: "[time] <category>: <text>" (empty text is ignored).
+    void LogLine(std::string_view category, std::string_view text);
 
     void Save(SKSE::SerializationInterface* intfc);
     void Load(SKSE::SerializationInterface* intfc, std::uint32_t version, std::uint32_t length);

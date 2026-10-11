@@ -2,6 +2,8 @@
 
 #include "InjuryConfig.h"
 
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -976,6 +978,16 @@ namespace InjuryEngine
             return std::format("{:.1f}%", tenth);
         }
 
+        void LogEvent(std::string_view category, const std::string& text)
+        {
+            if (text.empty()) {
+                return;
+            }
+            if (auto logger = spdlog::get("event")) {
+                logger->info("{}: {}", category, text);
+            }
+        }
+
         void LogInjuryPoint(std::string_view kind, RE::Actor* attacker, RE::Actor* victim, int source, int partIndex, int pointBefore,
             int pointAdded, int level, float amount, float healthAfter)
         {
@@ -983,9 +995,9 @@ namespace InjuryEngine
             const auto& body = GetBody();
             const char* partName = partIndex >= 0 && partIndex < kPartCount ? body.partName[partIndex].c_str() : "?";
             const float maxHealth = victim->AsActorValueOwner()->GetPermanentActorValue(RE::ActorValue::kHealth);
-            SKSE::log::info("{}: {} \xe2\x9e\xa4 {} | {} {} point:{}+{} level:{} amount:{:.1f} health:{}", kind, LogActor(attacker),
+            LogEvent(kind, std::format("{} \xe2\x9e\xa4 {} | {} {} point:{}+{} level:{} amount:{:.1f} health:{}", LogActor(attacker),
                 LogActor(victim), conf ? conf->id : "?", partName, pointBefore, pointAdded, LogLevelName(level), amount,
-                FormatHealthPercent(healthAfter, maxHealth));
+                FormatHealthPercent(healthAfter, maxHealth)));
         }
 
         std::string NarrationForm(int source, bool unarmed)
@@ -1191,7 +1203,9 @@ namespace InjuryEngine
         if (text.empty()) {
             return;
         }
-        SKSE::log::info("{}: {}", kind, text);
+        if (auto logger = spdlog::get("event")) {
+            logger->info("{}: {}", kind, text);
+        }
     }
 
     bool IsInternalDamage()

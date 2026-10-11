@@ -91,7 +91,7 @@ Function Torture_Execute(Actor speaker, string contextJson, string paramsJson) g
         if speaker.GetItemCount(whip) < 1
             if whip_main.require_whip
                 String noWhip = SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0)
-                SkyrimNet_Whipped_Main.ShortEvent(noWhip, speaker, target, "whip_lash_no_whip_" + speaker.GetFormID(), "whip_lash", (whip_main.event_ttl * 1000.0) as int)
+                SkyrimNet_Whipped_Main.ShortEvent(noWhip, speaker, target, "torture", "whip_lash_no_whip_" + speaker.GetFormID(), "whip_lash", (whip_main.event_ttl * 1000.0) as int)
                 return
             endif
             speaker.AddItem(whip, 1, true)

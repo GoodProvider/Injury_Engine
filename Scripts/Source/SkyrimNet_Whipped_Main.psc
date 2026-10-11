@@ -101,16 +101,16 @@ Function Verbose(String func, String msg)
     endif
 EndFunction
 
-; Every DirectNarration goes through here so the exact text sent is in SkyrimNet_Whipped.log (torture: narration: / health: narration:).
-Function DirectNarrate(String msg, Actor speaker, Actor target, String model = "torture") global
+; Every DirectNarration goes through here so the exact text sent is in SkyrimNet_Whipped.log ([time] torture: / heal: / health:).
+Function DirectNarrate(String msg, Actor speaker, Actor target, String category = "torture") global
     Trace("DirectNarration", NameOf(speaker) + " -> " + NameOf(target) + ": " + msg)
-    SkyrimNet_Whipped_Engine.LogLine(model + ": narration", msg)
+    SkyrimNet_Whipped_Engine.LogLine(category, msg)
     SkyrimNetApi.DirectNarration(msg, speaker, target)
 EndFunction
 
-Function ShortEvent(String msg, Actor speaker, Actor target, String eventId, String eventType, int ttlMs) global
+Function ShortEvent(String msg, Actor speaker, Actor target, String category, String eventId, String eventType, int ttlMs) global
     if msg != ""
-        SkyrimNet_Whipped_Engine.LogLine("short", msg)
+        SkyrimNet_Whipped_Engine.LogLine(category, msg)
     endif
     SkyrimNetApi.RegisterShortLivedEvent(eventId, eventType, msg, "", ttlMs, speaker, target)
 EndFunction
@@ -757,6 +757,15 @@ String Function InjuryShortEventId(String kind, String method, Actor torturer, A
     return kind + "_" + method + "_" + tortId + "_to_" + vicId
 EndFunction
 
+String Function InjuryLogCategory(String kind) global
+    if kind == "torturing"
+        return "torture"
+    elseif kind == "healing"
+        return "heal"
+    endif
+    return "health"
+EndFunction
+
 Function RegisterInjuryShortEvent(String msg, Actor speaker, Actor target, String kind, String method, Actor torturer, Actor victim)
     if msg == ""
         return
@@ -767,7 +776,7 @@ Function RegisterInjuryShortEvent(String msg, Actor speaker, Actor target, Strin
     elseif kind == "health"
         eventType = "injury_hit"
     endif
-    ShortEvent(msg, speaker, target, InjuryShortEventId(kind, method, torturer, victim), eventType, (event_ttl * 1000.0) as int)
+    ShortEvent(msg, speaker, target, InjuryLogCategory(kind), InjuryShortEventId(kind, method, torturer, victim), eventType, (event_ttl * 1000.0) as int)
 EndFunction
 
 String Function HealMethodFromCode(int code) global
@@ -1132,9 +1141,9 @@ Function HealSend(String phase, int i, String lead)
         RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target)
     elseif target == player || caster == player
         SkyrimNetApi.PurgeDialogue(true)
-        DirectNarrate(msg, target, toward, pending_heal_model)
+        DirectNarrate(msg, target, toward, "heal")
     elseif SkyrimNetApi.GetSpeechQueueSize() == 0
-        DirectNarrate(msg, target, toward, pending_heal_model)
+        DirectNarrate(msg, target, toward, "heal")
     else
         Trace("HealSend", "speech queue busy, event: " + msg)
         RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target)
@@ -1496,7 +1505,7 @@ Int Function External_Heal(Actor caster, Actor target, String text, Float health
     int healed = SkyrimNet_Whipped_Engine.HealPart(target, SkyrimNet_Whipped_Engine.PartIndex(part), health)
     Trace("External_Heal", NameOf(caster) + " -> " + NameOf(target) + " part:" + part + " health:" + health + " points:" + healed)
     if narrate && text != ""
-        DirectNarrate(text, caster, target, "torture")
+        DirectNarrate(text, caster, target, "heal")
     endif
     main.StartSync()
     return healed
