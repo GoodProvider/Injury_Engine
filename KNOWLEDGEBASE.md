@@ -125,3 +125,9 @@ Each hooked hit called `StartSync` → `RegisterForSingleUpdate(0.2)`, which res
 ## Removed Papyrus-to-DLL contract needs both rebuilt (stale .pex)
 
 Removing a scene phase (the torture "end" line) from `InjuryEngine::SceneText` and `Main.psc` only works if `pyro` is rerun as well as `make dll`. A stale `.pex` still calls `SceneText("end", ...)`; the new DLL has no such branch, so the generic path rendered `"Bob , and it is too much. ..."` (empty `hit.end` / `inline.end` plus the level text) about 13 s after the last hit. `SceneText` now returns an empty string with a warning for any phase other than start / again / switch, and `SceneSend` skips empty lines. Symptom of a stale `.pex`: half-rendered scene lines; compare `Scripts/*.pex` timestamps with `Scripts/Source/*.psc`.
+
+## Injury point log lines are throttled (skipped:N)
+
+`LogInjuryPoint` writes at most one `torture:` / `health:` line per second per category + attacker + victim + source; hits in between only increment a counter, and the next logged line ends with `skipped:<n>`. The part is not in the key, so the shown part is just the first hit after the window. A final burst's count is only reported if another line for that key follows. Use `whip.debug.verbose_logging` debug lines (`hit`, `real hit`) when every hit matters.
+
+- **Narration log format:** `SkyrimNet_Whipped.log` lines are `[hh:mm:ss] <category>:<direct|event|short>:<start|switch|update|finish> <text>`. Scene / heal phases map again->update, end->finish; one-shot lines default to `start`. `Engine.LogLine` takes (category, narrationType, sessionType, text), so DLL and .pex must be deployed together.

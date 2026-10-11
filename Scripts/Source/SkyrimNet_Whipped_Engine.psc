@@ -99,8 +99,9 @@ String Function GetStateJson(Actor akActor) global native
 String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false, Bool unarmedForm = false) global native
 ; Parallel to the last TakeHits() result (same index).
 Bool Function HitUnarmed(Int index) global native
-; Writes a torture / heal / health line to SkyrimNet_Whipped.log ("[hh:mm:ss] <category>:<narrationType> <text>", narrationType = direct / event / short).
-Function LogLine(String category, String narrationType, String text) global native
+; Writes a torture / heal / health line to SkyrimNet_Whipped.log ("[hh:mm:ss] <category>:<narrationType>:<sessionType> <text>",
+; narrationType = direct / event / short, sessionType = start / switch / update / finish).
+Function LogLine(String category, String narrationType, String sessionType, String text) global native
 ; All codes passive: wrapped as ordinary healing (narration.heal.passive).
 String Function HealText(Actor victim, Int[] codes) global native
 ; kind / source as in SyncHealth; percent is turned into words (no numbers in narration).

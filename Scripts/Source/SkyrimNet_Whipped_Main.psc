@@ -100,15 +100,15 @@ Function Verbose(String func, String msg)
 EndFunction
 
 ; Every DirectNarration goes through here so the exact text sent is in SkyrimNet_Whipped.log ([hh:mm:ss] torture:direct / heal:direct / health:direct).
-Function DirectNarrate(String msg, Actor speaker, Actor target, String category = "torture") global
+Function DirectNarrate(String msg, Actor speaker, Actor target, String category = "torture", String session = "start") global
     Trace("DirectNarration", NameOf(speaker) + " -> " + NameOf(target) + ": " + msg)
-    SkyrimNet_Whipped_Engine.LogLine(category, "direct", msg)
+    SkyrimNet_Whipped_Engine.LogLine(category, "direct", session, msg)
     SkyrimNetApi.DirectNarration(msg, speaker, target)
 EndFunction
 
-Function ShortEvent(String msg, Actor speaker, Actor target, String category, String eventId, String eventType, int ttlMs) global
+Function ShortEvent(String msg, Actor speaker, Actor target, String category, String eventId, String eventType, int ttlMs, String session = "start") global
     if msg != ""
-        SkyrimNet_Whipped_Engine.LogLine(category, "short", msg)
+        SkyrimNet_Whipped_Engine.LogLine(category, "short", session, msg)
     endif
     SkyrimNetApi.RegisterShortLivedEvent(eventId, eventType, msg, "", ttlMs, speaker, target)
 EndFunction
@@ -581,9 +581,9 @@ String Function SceneLine(String phase, int[] picked)
 EndFunction
 
 ; DirectNarration when the speech queue is empty, otherwise a short-lived event.
-Function OptionalDirectNarrate(String msg, Actor speaker, Actor target)
+Function OptionalDirectNarrate(String msg, Actor speaker, Actor target, String session = "start")
     if SkyrimNetApi.GetSpeechQueueSize() == 0
-        DirectNarrate(msg, speaker, target, "torture")
+        DirectNarrate(msg, speaker, target, "torture", session)
     else
         Trace("OptionalDirectNarrate", "speech queue busy, event: " + msg)
         int pi = SceneFind(speaker, target)
@@ -594,8 +594,18 @@ Function OptionalDirectNarrate(String msg, Actor speaker, Actor target)
                 method = SOURCE_WHIP
             endif
         endif
-        RegisterInjuryShortEvent(msg, speaker, target, "torturing", method, speaker, target)
+        RegisterInjuryShortEvent(msg, speaker, target, "torturing", method, speaker, target, session)
     endif
+EndFunction
+
+; Log session type of a scene / heal phase.
+String Function SessionOf(String phase) global
+    if phase == "again"
+        return "update"
+    elseif phase == "end"
+        return "finish"
+    endif
+    return phase
 EndFunction
 
 ; One combined line for the picked pairs. If the player is attacker or victim of any pair in the batch and purge is true,
@@ -636,14 +646,14 @@ Function SceneSend(String phase, int[] picked, Bool purge)
         if method == ""
             method = SOURCE_WHIP
         endif
-        RegisterInjuryShortEvent(msg, speaker, target, "torturing", method, speaker, target)
+        RegisterInjuryShortEvent(msg, speaker, target, "torturing", method, speaker, target, SessionOf(phase))
     elseif involved
         if purge
             SkyrimNetApi.PurgeDialogue(true) ; the torture comes first: drop queued lines, let the current one finish
         endif
-        DirectNarrate(msg, speaker, target, "torture")
+        DirectNarrate(msg, speaker, target, "torture", SessionOf(phase))
     else
-        OptionalDirectNarrate(msg, speaker, target)
+        OptionalDirectNarrate(msg, speaker, target, SessionOf(phase))
     endif
 EndFunction
 
@@ -741,7 +751,7 @@ String Function InjuryLogCategory(String kind) global
     return "health"
 EndFunction
 
-Function RegisterInjuryShortEvent(String msg, Actor speaker, Actor target, String kind, String method, Actor torturer, Actor victim)
+Function RegisterInjuryShortEvent(String msg, Actor speaker, Actor target, String kind, String method, Actor torturer, Actor victim, String session = "start")
     if msg == ""
         return
     endif
@@ -751,7 +761,7 @@ Function RegisterInjuryShortEvent(String msg, Actor speaker, Actor target, Strin
     elseif kind == "health"
         eventType = "injury_hit"
     endif
-    ShortEvent(msg, speaker, target, InjuryLogCategory(kind), InjuryShortEventId(kind, method, torturer, victim), eventType, (event_ttl * 1000.0) as int)
+    ShortEvent(msg, speaker, target, InjuryLogCategory(kind), InjuryShortEventId(kind, method, torturer, victim), eventType, (event_ttl * 1000.0) as int, session)
 EndFunction
 
 String Function HealMethodFromCode(int code) global
@@ -1111,18 +1121,18 @@ Function HealSend(String phase, int i, String lead)
     Actor player = Game.GetPlayer()
     Trace("HealSend", phase + " " + target.GetDisplayName() + " caster:" + NameOf(caster) + " visible:" + visible + ": " + msg)
     if !visible
-        SkyrimNet_Whipped_Engine.LogLine("heal", "event", msg)
+        SkyrimNet_Whipped_Engine.LogLine("heal", "event", SessionOf(phase), msg)
         SkyrimNetApi.RegisterPersistentEvent(msg, target, toward)
     elseif !narration_enabled
-        RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target)
+        RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target, SessionOf(phase))
     elseif target == player || caster == player
         SkyrimNetApi.PurgeDialogue(true)
-        DirectNarrate(msg, target, toward, "heal")
+        DirectNarrate(msg, target, toward, "heal", SessionOf(phase))
     elseif SkyrimNetApi.GetSpeechQueueSize() == 0
-        DirectNarrate(msg, target, toward, "heal")
+        DirectNarrate(msg, target, toward, "heal", SessionOf(phase))
     else
         Trace("HealSend", "speech queue busy, event: " + msg)
-        RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target)
+        RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target, SessionOf(phase))
     endif
 EndFunction
 

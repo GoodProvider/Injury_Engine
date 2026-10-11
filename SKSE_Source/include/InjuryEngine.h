@@ -148,7 +148,7 @@ namespace InjuryEngine
 
     // Writes a narration line to SkyrimNet_Whipped.log: "[hh:mm:ss] <category>:<narrationType> <text>"
     // (category torture / heal / health; narrationType direct / event / short; empty text is ignored).
-    void LogLine(std::string_view category, std::string_view narrationType, std::string_view text);
+    void LogLine(std::string_view category, std::string_view narrationType, std::string_view sessionType, std::string_view text);
 
     void Save(SKSE::SerializationInterface* intfc);
     void Load(SKSE::SerializationInterface* intfc, std::uint32_t version, std::uint32_t length);

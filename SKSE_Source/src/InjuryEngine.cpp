@@ -991,13 +991,38 @@ namespace InjuryEngine
         void LogInjuryPoint(std::string_view kind, RE::Actor* attacker, RE::Actor* victim, int source, int partIndex, int pointBefore,
             int pointAdded, int level, float amount, float healthAfter)
         {
+            // One line per second per category + attacker + victim + source; the rest only count into skipped.
+            int skipped = 0;
+            {
+                struct Throttle
+                {
+                    std::chrono::steady_clock::time_point last;
+                    int skipped = 0;
+                };
+                static std::mutex throttleLock;
+                static std::unordered_map<std::string, Throttle> throttles;
+                const auto now = std::chrono::steady_clock::now();
+                const std::string key = std::format("{}|{:08X}|{:08X}|{}", kind, attacker ? attacker->GetFormID() : 0u,
+                    victim->GetFormID(), source);
+                std::lock_guard lock(throttleLock);
+                const auto it = throttles.find(key);
+                if (it == throttles.end()) {
+                    throttles[key] = { now, 0 };
+                } else if (now - it->second.last < std::chrono::seconds(1)) {
+                    ++it->second.skipped;
+                    return;
+                } else {
+                    skipped = it->second.skipped;
+                    it->second = { now, 0 };
+                }
+            }
             const auto* conf = InjuryConfig::Find(source);
             const auto& body = GetBody();
             const char* partName = partIndex >= 0 && partIndex < kPartCount ? body.partName[partIndex].c_str() : "?";
             const float maxHealth = victim->AsActorValueOwner()->GetPermanentActorValue(RE::ActorValue::kHealth);
-            LogEvent(kind, std::format("{} \xe2\x9e\xa4 {} | {} {} point:{}+{} level:{} amount:{:.1f} health:{}", LogActor(attacker),
-                LogActor(victim), conf ? conf->id : "?", partName, pointBefore, pointAdded, LogLevelName(level), amount,
-                FormatHealthPercent(healthAfter, maxHealth)));
+            LogEvent(kind, std::format("{} \xe2\x9e\xa4 {} | {} {} point:{}+{} level:{} amount:{:.1f} health:{} skipped:{}",
+                LogActor(attacker), LogActor(victim), conf ? conf->id : "?", partName, pointBefore, pointAdded, LogLevelName(level),
+                amount, FormatHealthPercent(healthAfter, maxHealth), skipped));
         }
 
         std::string NarrationForm(int source, bool unarmed)
@@ -1198,13 +1223,13 @@ namespace InjuryEngine
         }
     }
 
-    void LogLine(std::string_view kind, std::string_view narrationType, std::string_view text)
+    void LogLine(std::string_view kind, std::string_view narrationType, std::string_view sessionType, std::string_view text)
     {
         if (text.empty()) {
             return;
         }
         if (auto logger = spdlog::get("event")) {
-            logger->info("{}:{} {}", kind, narrationType, text);
+            logger->info("{}:{}:{} {}", kind, narrationType, sessionType, text);
         }
     }
 

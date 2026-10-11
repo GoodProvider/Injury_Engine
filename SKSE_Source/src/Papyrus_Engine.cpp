@@ -203,9 +203,10 @@ namespace
         return InjuryEngine::HitUnarmed(static_cast<std::size_t>(index));
     }
 
-    void LogLine(RE::StaticFunctionTag*, RE::BSFixedString kind, RE::BSFixedString narrationType, RE::BSFixedString text)
+    void LogLine(RE::StaticFunctionTag*, RE::BSFixedString kind, RE::BSFixedString narrationType, RE::BSFixedString sessionType,
+        RE::BSFixedString text)
     {
-        InjuryEngine::LogLine(kind.c_str(), narrationType.c_str(), text.c_str());
+        InjuryEngine::LogLine(kind.c_str(), narrationType.c_str(), sessionType.c_str(), text.c_str());
     }
 
     RE::BSFixedString LevelText(RE::StaticFunctionTag*, RE::BSFixedString sourceId, RE::Actor* victim, std::int32_t level)
