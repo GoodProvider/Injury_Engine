@@ -870,6 +870,16 @@ namespace InjuryEngine
             return name && *name ? name : "Someone";
         }
 
+        std::string LogActor(RE::Actor* actor)
+        {
+            if (!actor) {
+                return "Someone (00000000)";
+            }
+            char buf[160];
+            std::snprintf(buf, sizeof(buf), "%s (%08X)", NameOf(actor).c_str(), static_cast<std::uint32_t>(actor->GetFormID()));
+            return buf;
+        }
+
         std::map<std::string, std::string> ActorVars(RE::Actor* actor)
         {
             const auto* base = actor ? actor->GetActorBase() : nullptr;
@@ -990,13 +1000,13 @@ namespace InjuryEngine
             if (top <= 0) {
                 st.lastHours[index] = now;
             }
-            if (!c.hit) {
+            if (!c.hit || c.deficit <= 0) {
                 c.hit = true;
                 c.deficit = healed + 1;
             } else if (c.deficit <= healed) {
-                // A healing wound of this type reopens straight to medium damage.
+                // A hit on a healing wound just adds one step to where it has healed down to.
                 level = std::max(level, static_cast<int>(kLight));
-                c.deficit = healed + body.partMedium[index];
+                c.deficit = c.deficit + 1;
             } else {
                 level = std::max(level, DamageStage(c.deficit - healed, index) + 1);
                 c.deficit = std::min(healed + body.partMax[index], c.deficit + 1);
@@ -1004,8 +1014,8 @@ namespace InjuryEngine
             MarkTouched(st, source, index);
             g_pained[id] = true;
             TakeHealth(actor, Deficit(st) - deficitBefore);
-            SKSE::log::info("hit {:08X} {} part:{} level:{} types:{}", id, conf ? conf->id : "?", body.partName[index], level, CellsText(st, index));
-            SKSE::log::debug("hit {:08X} fresh:{} deficit:{} -> {}", id, fresh, deficitBefore, Deficit(st));
+            SKSE::log::debug("hit {:08X} {} part:{} level:{} types:{} fresh:{} deficit:{} -> {}", id, conf ? conf->id : "?",
+                body.partName[index], level, CellsText(st, index), fresh, deficitBefore, Deficit(st));
             return EncodeHit(fresh, source, 1 << index, level);
         }
     }
@@ -1031,7 +1041,13 @@ namespace InjuryEngine
         State* existing = Current(actor, now);
         State& st = existing ? *existing : g_actors[actor->GetFormID()];
         int index = -1;
-        return TortureHit(actor, st, source, part, now, index);
+        const std::int32_t code = TortureHit(actor, st, source, part, now, index);
+        if (code >= 0) {
+            const auto* conf = InjuryConfig::Find(source);
+            SKSE::log::info("{} {} {} part:{} level:{}", LogActor(nullptr), LogActor(actor), conf ? conf->id : "?",
+                GetBody().partName[index], code % 10);
+        }
+        return code;
     }
 
     std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points)
@@ -1048,7 +1064,7 @@ namespace InjuryEngine
         // the same path as hooked damage: points worth of health, torture wounds absorb their share first
         const float amount = points * RatioReal(maxHealth);
         const float pass = OnDamage(actor, attacker, amount, source, false);
-        SKSE::log::info("real hit {:08X} {} points:{} amount:{:.1f} pass:{:.1f}", actor->GetFormID(), InjuryConfig::Find(source)->id, points,
+        SKSE::log::debug("real hit {:08X} {} points:{} amount:{:.1f} pass:{:.1f}", actor->GetFormID(), InjuryConfig::Find(source)->id, points,
             amount, pass);
         if (pass > 0.0f) {
             InternalScope scope;
@@ -1061,7 +1077,8 @@ namespace InjuryEngine
     {
         // Hooked torture damage (out-of-combat punches, "(torture)" spells): the game applies none
         // of it. A melee hit is one torture hit; spell damage is one hit per hook.hit_share of max health.
-        float OnTortureDamage(RE::Actor* victim, RE::Actor* attacker, float amount, const InjuryConfig::Source& conf, int source, bool melee)
+        float OnTortureDamage(RE::Actor* victim, RE::Actor* attacker, float amount, const InjuryConfig::Source& conf, int source,
+            bool physicalMelee)
         {
             auto* av = victim->AsActorValueOwner();
             const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
@@ -1072,7 +1089,7 @@ namespace InjuryEngine
                 std::lock_guard lock(g_lock);
                 const RE::FormID id = victim->GetFormID();
                 int hits = 1;
-                if (!melee) {
+                if (!physicalMelee) {
                     float& carry = g_tortureCarry[id][source];
                     carry += amount;
                     const float share = conf.hitShare * maxHealth;
@@ -1088,6 +1105,7 @@ namespace InjuryEngine
                 State& st = existing ? *existing : g_actors[id];
                 int mask = 0;
                 int level = 0;
+                int lastPart = -1;
                 bool fresh = false;
                 for (int i = 0; i < hits; ++i) {
                     int index = -1;
@@ -1095,6 +1113,7 @@ namespace InjuryEngine
                     if (i == 0) {
                         fresh = code >= 100000000;
                     }
+                    lastPart = index;
                     mask |= 1 << index;
                     level = std::max(level, static_cast<int>(code % 10));
                 }
@@ -1110,22 +1129,23 @@ namespace InjuryEngine
                     e.fresh = fresh;
                     g_hits.push_back(e);
                 }
-                SKSE::log::info("torture damage {:08X} {} amount:{:.1f} melee:{} hits:{} mask:{} level:{}", id, conf.id, amount, melee, hits, mask,
-                    level);
+                const std::string partText = hits == 1 && lastPart >= 0 ? GetBody().partName[lastPart] : PartsText(source, mask);
+                SKSE::log::info("{} {} {} part:{} level:{} amount:{:.1f} hits:{}", LogActor(attacker), LogActor(victim), conf.id, partText, level,
+                    amount, hits);
             }
             NotifyPapyrus();
             return 0.0f;
         }
     }
 
-    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool melee)
+    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee)
     {
         const auto* conf = InjuryConfig::Find(source);
         if (!victim || amount <= 0.0f || !conf || victim->IsDead()) {
             return amount;
         }
         if (conf->IsTorture()) {
-            return OnTortureDamage(victim, attacker, amount, *conf, source, melee);
+            return OnTortureDamage(victim, attacker, amount, *conf, source, physicalMelee);
         }
         if (conf->model != "health") {
             return amount;
@@ -1218,8 +1238,8 @@ namespace InjuryEngine
                     e.fresh = fresh;
                     g_hits.push_back(e);
                 }
-                SKSE::log::info("damage {:08X} {} part:{} amount:{:.1f} absorbed:{:.1f} torture_replaced:{} points:{} mask:{} level:{}", id,
-                    conf->id, firstName, amount, absorbed, replacedNow, points, mask, level);
+                SKSE::log::info("real {} {} {} part:{} amount:{:.1f} absorbed:{:.1f} torture_replaced:{} points:{} mask:{} level:{}",
+                    LogActor(attacker), LogActor(victim), conf->id, firstName, amount, absorbed, replacedNow, points, mask, level);
                 if (replacedNow > 0 && firstPart >= 0) {
                     SKSE::log::debug("damage {:08X} {} types after replacement: {}", id, firstName, CellsText(st, firstPart));
                 }
@@ -1277,14 +1297,14 @@ namespace InjuryEngine
         }
         const auto& b = GetBody();
         for (int i = 0; i < kPartCount; ++i) {
-            if (b.partName[i] == name) {
+            if (InjuryConfig::IEquals(b.partName[i], name)) {
                 return i;
             }
         }
         // Regions: the first part in that region ("head" -> face).
         for (int i = 0; i < kPartCount; ++i) {
             const int region = b.partRegion[i];
-            if (region >= 0 && region < static_cast<int>(b.regionName.size()) && b.regionName[region] == name) {
+            if (region >= 0 && region < static_cast<int>(b.regionName.size()) && InjuryConfig::IEquals(b.regionName[region], name)) {
                 return i;
             }
         }
@@ -1619,9 +1639,17 @@ namespace InjuryEngine
         lead["times"] = times;
         lead["by"] = by;
         const std::string text = InjuryConfig::Render(InjuryConfig::Str(source, "narration.hit.lead"), lead);
-        const std::string levelText = InjuryConfig::Render(
-            InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), vars);
-        return text + levelText;
+        return text + LevelText(sourceId, victim, level);
+    }
+
+    std::string LevelText(std::string_view sourceId, RE::Actor* victim, int level)
+    {
+        const int source = InjuryConfig::IndexOf(sourceId);
+        if (source < 0 || !victim) {
+            return {};
+        }
+        return InjuryConfig::Render(
+            InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), ActorVars(victim));
     }
 
     std::string HealText(RE::Actor* victim, const std::vector<std::int32_t>& codes)
@@ -1747,6 +1775,131 @@ namespace InjuryEngine
         return InjuryConfig::Render(InjuryConfig::Str(source, path),
             { { "speaker", NameOf(speaker) }, { "target", NameOf(target) },
                 { "times", InjuryConfig::Str(source, std::string("narration.summary.times.") + times) } });
+    }
+
+    std::string SceneText(std::string_view phase, const std::vector<RE::Actor*>& attackers, const std::vector<RE::Actor*>& victims,
+        const std::vector<std::string>& sources, const std::vector<int>& masks, const std::vector<int>& levels)
+    {
+        const std::size_t n = std::min({ attackers.size(), victims.size(), sources.size(), masks.size(), levels.size() });
+        struct Pair
+        {
+            RE::Actor* attacker;
+            RE::Actor* victim;
+            int source, mask, level;
+        };
+        std::vector<Pair> pairs;
+        for (std::size_t i = 0; i < n; ++i) {
+            const int source = InjuryConfig::IndexOf(sources[i]);
+            if (source >= 0 && victims[i]) {
+                pairs.push_back({ attackers[i], victims[i], source, masks[i], levels[i] });
+            }
+        }
+        if (pairs.empty()) {
+            return {};
+        }
+        const std::string ph(phase);
+        const auto sess = [](int source, const std::string& key) { return InjuryConfig::Str(source, "narration.session." + key); };
+        const auto join = [](const std::vector<std::string>& names) {
+            std::string out;
+            for (std::size_t i = 0; i < names.size(); ++i) {
+                out += i == 0 ? names[i]
+                              : (i + 1 == names.size() ? InjuryConfig::SessionStr("and", " and ") : InjuryConfig::SessionStr("comma", ", ")) + names[i];
+            }
+            return out;
+        };
+        const auto finish = [](std::string text) {
+            while (!text.empty() && text.back() == ' ') {
+                text.pop_back();
+            }
+            if (!text.empty() && text.back() != '.' && text.back() != '!' && text.back() != '?') {
+                text += '.';
+            }
+            return text;
+        };
+        const auto hasAttacker = [](const Pair& p) { return p.attacker && p.attacker != p.victim; };
+        const auto feeling = [&](const Pair& p) {
+            auto vars = ActorVars(p.victim);
+            vars["target"] = NameOf(p.victim);
+            vars["attacker"] = NameOf(p.attacker);
+            vars["parts"] = PartsText(p.source, p.mask);
+            vars["noun"] = sess(p.source, "hit_noun");
+            return InjuryConfig::Render(InjuryConfig::SessionStr(hasAttacker(p) ? "feeling" : "feeling_none"), vars) +
+                   LevelText(InjuryConfig::Find(p.source)->id, p.victim, p.level);
+        };
+        const auto inlineHit = [&](const Pair& p) {
+            auto vars = ActorVars(p.victim);
+            vars["target"] = NameOf(p.victim);
+            vars["parts"] = PartsText(p.source, p.mask);
+            return InjuryConfig::Render(InjuryConfig::SessionStr("inline." + ph), vars) +
+                   LevelText(InjuryConfig::Find(p.source)->id, p.victim, p.level);
+        };
+
+        std::vector<std::string> sentences;
+        if (ph == "switch") {
+            // one clause per pair: "Bob switches to punching"
+            for (const auto& p : pairs) {
+                auto vars = ActorVars(p.victim);
+                vars["target"] = NameOf(p.victim);
+                sentences.push_back(NameOf(p.attacker) + " " + InjuryConfig::Render(sess(p.source, "switch"), vars));
+            }
+        } else {
+            std::vector<RE::Actor*> order;  // victims, first seen first
+            for (const auto& p : pairs) {
+                if (std::ranges::find(order, p.victim) == order.end()) {
+                    order.push_back(p.victim);
+                }
+            }
+            for (auto* victim : order) {
+                std::vector<const Pair*> group;
+                std::vector<const Pair*> alone;  // no attacker: its own clause each
+                for (const auto& p : pairs) {
+                    if (p.victim == victim) {
+                        (hasAttacker(p) ? group : alone).push_back(&p);
+                    }
+                }
+                const std::string target = NameOf(victim);
+                if (!group.empty()) {
+                    std::vector<std::string> names;
+                    bool same = true;
+                    for (const auto* p : group) {
+                        names.push_back(NameOf(p->attacker));
+                        same = same && p->source == group.front()->source;
+                    }
+                    const bool many = group.size() > 1;
+                    const int first = group.front()->source;
+                    std::string what;
+                    if (ph == "end") {
+                        what = same ? sess(first, "end") : InjuryConfig::SessionStr("mixed.end");
+                    } else if (same) {
+                        what = sess(first, many ? ph + "_many" : ph);
+                    } else {
+                        what = InjuryConfig::SessionStr("mixed." + ph);
+                    }
+                    auto vars = ActorVars(victim);
+                    vars["target"] = target;
+                    vars["attackers"] = join(names);
+                    vars["what"] = InjuryConfig::Render(what, vars);
+                    vars["stop"] = InjuryConfig::SessionStr(many ? "stop_many" : "stop_one");
+                    sentences.push_back(InjuryConfig::Render(InjuryConfig::SessionStr(ph == "end" ? "end" : "clause"), vars));
+                }
+                for (const auto* p : alone) {
+                    auto vars = ActorVars(victim);
+                    vars["target"] = target;
+                    sentences.push_back(InjuryConfig::Render(sess(p->source, "no_attacker." + ph), vars));
+                }
+            }
+        }
+        if (pairs.size() == 1 && sentences.size() == 1) {
+            return finish(sentences.front() + inlineHit(pairs.front()));
+        }
+        std::string out;
+        for (const auto& sentence : sentences) {
+            out += finish(sentence) + " ";
+        }
+        for (const auto& p : pairs) {
+            out += finish(feeling(p)) + " ";
+        }
+        return finish(out);
     }
 
     void SetIncludeSexualParts(bool enabled)

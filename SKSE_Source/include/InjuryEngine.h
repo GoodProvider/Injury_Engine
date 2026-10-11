@@ -72,10 +72,11 @@ namespace InjuryEngine
     int PartIndex(std::string_view name);
 
     // Damage taken (health points, positive) from the damage hooks. `source` is the classified source index;
-    // melee: from HandleHealthDamage (one torture hit), else spell / other damage. Returns the damage the game
+    // physicalMelee: weapon / fist / unarmed-body hits from HandleHealthDamage (one torture hit per call); false
+    // for spell ticks and active torture effects (accumulate per hook.hit_share). Returns the damage the game
     // should still apply: torture sources none (they become torture hits), health sources what torture wounds
     // do not absorb.
-    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool melee);
+    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee);
 
     // True if the actor has any damage left (any source).
     bool HasOpenWounds(RE::Actor* actor);
@@ -116,10 +117,16 @@ namespace InjuryEngine
     // Narration text rendered from the JSON files.
     std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count,
         bool noCause = false);
+    // The feeling sentence of a hit level (narration.hit.levels), rendered for the victim.
+    std::string LevelText(std::string_view sourceId, RE::Actor* victim, int level);
     // Heal codes all passive, or a source-heal event without a source: wrapped in narration.heal.passive.
     std::string HealText(RE::Actor* victim, const std::vector<std::int32_t>& codes);
     std::string SourceHealText(int kind, int healingSource, int percent, RE::Actor* caster, RE::Actor* target);
     // Renders the string at `path` with {speaker}, {target} and {times} (words for count).
+    // Combined torture narration for the pairs (parallel lists) of one phase: start, again, switch or end.
+    // Pairs are grouped by victim; same method / mixed methods and one or many attackers are worded from session.json.
+    std::string SceneText(std::string_view phase, const std::vector<RE::Actor*>& attackers, const std::vector<RE::Actor*>& victims,
+        const std::vector<std::string>& sources, const std::vector<int>& masks, const std::vector<int>& levels);
     std::string ActionText(std::string_view sourceId, std::string_view path, RE::Actor* speaker, RE::Actor* target, int count);
 
     // Setting "include sexual parts": new hits and prompts use the 5 extra small parts; existing wounds on them

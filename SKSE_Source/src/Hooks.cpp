@@ -6,10 +6,11 @@
 // Vtable hooks on Character and PlayerCharacter:
 //   MagicTarget::AddTarget          every effect applied to an actor, with the magic item and caster
 //                                   (instant potions included), so healing sources can be named.
-//   Actor::HandleHealthDamage       melee / ranged hit damage (SE / AE only; the VR slot is not verified)
-//   ActorValueOwner::ModActorValue  every other health damage (spells, poison, falls, ...)
-// Damage is classified (Classifier) and handed to InjuryEngine::OnDamage, which may reduce it (whip wounds
-// absorb their share). HandleHealthDamage's own nested ModActorValue calls are not counted twice.
+//   Actor::HandleHealthDamage       weapon and projectile hits including concentration beam ticks (SE / AE only;
+//                                   the VR slot is not verified)
+//   ActorValueOwner::ModActorValue  other health damage when not nested inside HandleHealthDamage
+// Damage is classified (Classifier) and handed to InjuryEngine::OnDamage, which may reduce it (torture wounds
+// absorb their share; torture damage itself is taken whole). HandleHealthDamage's own nested ModActorValue calls are not counted twice.
 namespace
 {
     constexpr std::size_t kMagicTargetVtbl = 4;  // Actor bases: TESObjectREFR (0-3), MagicTarget (4)
@@ -19,7 +20,6 @@ namespace
     constexpr std::size_t kHandleHealthDamageIdx = 0x104;  // Actor::HandleHealthDamage (SE / AE); CommonLib slot comments are hex
 
     thread_local int g_inHandle = 0;
-    int g_logged = 0;  // first few damage events are logged to verify the hook paths in game
 
     struct HandleScope
     {
@@ -36,6 +36,7 @@ namespace
             if (added) {
                 auto* actor = skyrim_cast<RE::Actor*>(a_this);
                 InjuryEngine::NoteHealingSource(actor, a_data.caster, a_data.magicItem, a_data.effect);
+                Classifier::NoteEffect(actor, a_data.effect);
             }
             return added;
         }
@@ -51,13 +52,11 @@ namespace
                 return func(a_this, a_attacker, a_damage);
             }
             const float amount = std::fabs(a_damage);
-            const int source = Classifier::Classify(a_this, a_attacker);
-            if (g_logged < 40) {
-                ++g_logged;
-                SKSE::log::info("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} source:{}", a_this->GetFormID(),
-                    a_attacker ? a_attacker->GetFormID() : 0, a_damage, InjuryEngine::SourceId(source));
-            }
-            const float kept = source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source) : amount;
+            bool physicalMelee = false;
+            const int source = Classifier::Classify(a_this, a_attacker, &physicalMelee);
+            SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} source:{} physical:{}", a_this->GetFormID(),
+                a_attacker ? a_attacker->GetFormID() : 0, a_damage, InjuryEngine::SourceId(source), physicalMelee);
+            const float kept = source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source, physicalMelee) : amount;
             HandleScope scope;
             func(a_this, a_attacker, std::copysign(kept, a_damage));
         }
@@ -73,13 +72,10 @@ namespace
                 g_inHandle == 0 && !InjuryEngine::IsInternalDamage()) {
                 if (auto* actor = skyrim_cast<RE::Actor*>(a_this)) {
                     const int source = Classifier::Classify(actor, nullptr);
-                    if (g_logged < 40) {
-                        ++g_logged;
-                        SKSE::log::info("[hook] ModActorValue victim:{:08X} damage:{:.2f} source:{}", actor->GetFormID(), a_value,
-                            InjuryEngine::SourceId(source));
-                    }
+                    SKSE::log::debug("[hook] ModActorValue victim:{:08X} damage:{:.2f} source:{}", actor->GetFormID(), a_value,
+                        InjuryEngine::SourceId(source));
                     if (source >= 0) {
-                        a_value = -InjuryEngine::OnDamage(actor, nullptr, -a_value, source);
+                        a_value = -InjuryEngine::OnDamage(actor, nullptr, -a_value, source, false);
                     }
                 }
             }

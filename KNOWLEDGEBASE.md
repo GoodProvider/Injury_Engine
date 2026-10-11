@@ -2,6 +2,18 @@
 
 Quirks and lessons for SkyrimNet_Whipped. Read before changes; append a dated entry (newest first) after a session that found something non-obvious. Entries marked *(from SkyrimNet_SexLab)* were learned there and apply here too.
 
+## Concentration torture beams use HandleHealthDamage per tick (2026-10-11)
+
+Sparks / Flames / Frostbite `(torture)` are concentration spells with a projectile; each tick can arrive in `Actor::HandleHealthDamage`, not only in `ModActorValue`. Those ticks must **not** set `physicalMelee` (they accumulate against `hook.hit_share` like other spell torture). When the hit form is a projectile or otherwise fails `ClassifyForm`, `Classifier` must prefer the live `(torture)` effect from `g_torture` over guessing unarmed `punching` on an out-of-combat NPC with empty hands.
+
+## Never walk active effects from damage hooks (2026-10-10)
+
+`ModActorValue` / `HandleHealthDamage` hooks run inside the engine's own active-effect update (a value-modifier effect applying damage). A nested `VisitActiveEffects` / `GetActiveEffectList` walk there crashes when effects are dispelled in the same update (`SkyrimSE+0FAEDF5`, `mov rax,[rcx]` reading 0x1, `MagicTarget::EffectVisitor` on the stack; seen right after removing a DD armbinder). Track effects as they land instead: `Classifier::NoteEffect` (AddTarget hook) and hit events feed `g_torture`, read back within `kTortureWindow`.
+
+## Torture replaced the whip model; hooked torture needs in-game verification (2026-10-09)
+
+Whipping is now one of eight `model: "torture"` types (`"whip"` is still read as torture). Each (type, part) holds one deficit; a part counts only its **largest** type for the health hold and the overlay. Healing lowers every type on the part by one (slap 3, pinch 4, fire 1, heal 2 gives 1 / 2 / 0); real damage replacing torture lowers the maximum by one and clamps every type to it (convert 2 gives 2 / 2 / 1). A hit on a type that sits below the part's maximum costs no health. Co-save record 4; records 2 / 3 load as whipping (`deficit = damage > 0 ? healing_max + damage : healing_max - healing`). Unverified, check the `classify` / `torture damage` lines with verbose logging: (1) fire / frost / shock torture comes only from the "(torture)" spells (MGEF 0x813–0x815, copies of vanilla Flames / Frostbite / Sparks effects; matched by form, in or out of combat; vanilla spells are always real damage); (2) concentration spells may tick after the 0.6 s `TESHitEvent` window, so `Classifier` falls back to scanning the victim's active effects for a torture MGEF; (3) an out-of-combat punch is classified before combat starts (the attacker's `IsInCombat()` at the hit); (4) the hooks return 0 for torture, so the game applies no damage and `TakeHealth` applies the floor-limited torture loss instead. `kMaxSources` is 32 (8 torture + 8 health files already filled 16).
+
 ## PrismaUI view path (from SkyrimNet_SexLab, 2026-07-24)
 
 `CreateView("SkyrimNet_Whipped/overlay.html")` loads from **`Data/PrismaUI/views/`**, not `SKSE/Plugins/`. `make release` copies `PrismaUI/` into the package. A missing file gives a valid-looking C++ path but no visible UI. Do not `Focus` a view that should not pause the game; the overlay is `Show`-only.
@@ -64,7 +76,7 @@ In cross-runtime builds (SE+AE+VR, our default) `MagicTarget::GetActiveEffectLis
 
 ## Real damage replaces whip damage; the damage hooks need in-game verification (2026-10-06)
 
-Whip points hold health down by `deficit × 0.9 × max / 186`; real points are worth `max / 120` health each (6 parts × 20 = 100% of max). A real hit while whip points remain is cut by `min(damage, whip hold)` **inside the hook** (the original is called with the reduced amount), the same health worth of whip points is removed and real points added, so health only drops once all whip wounds are replaced and the 10% floor never blocks real damage. Unverified assumptions, check the first `[hook] ...` lines in `SkyrimNet_Whipped.log`: (1) `Actor::HandleHealthDamage` (vfunc 0x104; the VR slot is not verified, so the hook is skipped on VR) receives the damage as a positive amount (the code uses `fabs` and keeps the sign); (2) melee damage reaches `HandleHealthDamage`, everything else `ActorValueOwner::ModActorValue(kDamage, Health)` (vfunc 6); (3) a nested `ModActorValue` call inside `HandleHealthDamage` is ignored through a thread-local scope, so a damage that reaches both is not counted twice; (4) `TESHitEvent` may fire after the damage, so `Classifier::Classify` falls back to the attacker's equipped weapon, then to unarmed (people bludgeoning, creatures mauling), then `generic`. Damage the engine does itself (`TakeHealth`, regen take-back) is wrapped in `InternalScope` and never classified.
+Whip points hold health down by `deficit × 0.9 × max / 186`; real points are worth `max / 120` health each (6 parts × 20 = 100% of max). A real hit while whip points remain is cut by `min(damage, whip hold)` **inside the hook** (the original is called with the reduced amount), the same health worth of whip points is removed and real points added on the same part (one attack = one part, whipped parts first, spilling to another part only when full), so health only drops once all whip wounds are replaced and the 10% floor never blocks real damage. Unverified assumptions, turn on `whip.debug.verbose_logging` and check the `[hook] ...` lines in `SkyrimNet_Whipped.log`: (1) `Actor::HandleHealthDamage` (vfunc 0x104; the VR slot is not verified, so the hook is skipped on VR) receives the damage as a positive amount (the code uses `fabs` and keeps the sign); (2) melee damage reaches `HandleHealthDamage`, everything else `ActorValueOwner::ModActorValue(kDamage, Health)` (vfunc 6); (3) a nested `ModActorValue` call inside `HandleHealthDamage` is ignored through a thread-local scope, so a damage that reaches both is not counted twice; (4) `TESHitEvent` may fire after the damage, so `Classifier::Classify` falls back to the attacker's equipped weapon, then to unarmed (people bludgeoning, creatures mauling), then `generic`. Damage the engine does itself (`TakeHealth`, regen take-back) is wrapped in `InternalScope` and never classified.
 
 ## Papyrus: `key` is reserved, native strings come back case-folded risk (2026-10-06)
 
@@ -73,3 +85,15 @@ A Papyrus parameter named `key` fails to compile ("key is not a variable"); use 
 ## CommonLibSSE vtable slot comments are hex (2026-10-06)
 
 `// 104` next to `Actor::HandleHealthDamage` in `RE/A/Actor.h` means slot `0x104` (260). Hooking decimal `104` (`0x68`, `Unk_68`, called every movement update) crashed the game a second after loading a save, inside our thunk (`Classifier::Classify` read the bogus "attacker" argument), with a call stack through actor movement / `bhkCharacterProxy` and no `[hook]` log line. Always write vtable indices in hex (`0x104`, `0x6`, `0x1`), exactly as the CommonLib comment shows.
+
+## SkyrimNet has no silent-narration call; events are the silent path (2026-10-06)
+
+`SkyrimNetApi` offers `DirectNarration` (forces a reply) and `RegisterEvent` / `RegisterShortLivedEvent` (recorded, nobody is made to speak); there is no "silent" flag. Passive healing (game time, natural regen, `pain_gone.none` / `full.none`) uses `RegisterShortLivedEvent` so it is in the LLM's recent history (for `event_ttl`) without anyone remarking on it; non-whip hits are short-lived events too. Since 2026-10-06 every event this mod sends is a `RegisterShortLivedEvent` (`event_ttl`); permanent history comes only from DirectNarrations (summaries, fresh hits / heals, fully healed).
+
+## Papyrus builds trace arguments even when the trace is gated (2026-10-06)
+
+Papyrus has no lazy evaluation: `Verbose("f", "x:" + victim.GetDistance(a))` makes the native call and the string even with verbose logging off. Wrap any verbose trace whose message calls a native, measures distance or loops in `if verbose_logging` (see `docs/developers/papyrus.md`). The same holds in C++ for `SKSE::log::debug` arguments (spdlog drops the line but the arguments are evaluated), so keep debug lines off per-tick paths unless something changed.
+
+## Names passed into natives arrive with another mod's casing (2026-10-09)
+
+The case-folding risk above happened in the other direction: SkyrimNet_SexLab passed `"pussy"` to `External_Damage`, and `PartIndex` received `"Pussy"` (the BSFixedString pool had interned that spelling first). The case-sensitive compare failed, so the slap landed on a random part ("slaps Nina's pussy… Nina's right arm is slapped"). `InjuryEngine::PartIndex` and `InjuryConfig::IndexOf` (source ids) now compare with `InjuryConfig::IEquals`. Any native that matches a Papyrus string against names from JSON must use it.
