@@ -15,10 +15,10 @@ Scriptname SkyrimNet_Whipped_Engine Hidden
 ; Torture hit (source id of a model "torture" file: "whipping", "slapping", ...) on a random part (the type's
 ; part_weights); takes the health the part's new maximum holds down
 ; (never below 10% of max health). Returns a hit code, or -1 for None/dead actors and unknown sources.
-Int Function Hit(Actor akActor, String sourceId) global native
+Int Function Hit(Actor akActor, Actor attacker, String sourceId) global native
 
 ; Hit on one part (PartIndex). -1, a part outside the active set (sexual parts off) or one the actor's sex lacks: random.
-Int Function HitPart(Actor akActor, String sourceId, Int part) global native
+Int Function HitPart(Actor akActor, Actor attacker, String sourceId, Int part) global native
 
 ; Scripted real damage: points damage points of the health source with file id sourceId (a model "health" file, or
 ; the health half of a "both" file such as "falling"), applied like a hooked hit: torture wounds absorb their share,
@@ -79,20 +79,32 @@ Int Function SourceCount() global native
 ; True for a torture type (whipping, pinching, slapping, pulling, punching, fire, frost, shock, falling, and any
 ; torture file another mod adds).
 Bool Function IsTorture(String sourceId) global native
+; Torture source id for an action alias ("whip", "pinch", ...) or for the source id itself. "" when none.
+String Function SourceOfAlias(String alias) global native
+; Torture_Target type list from each torture file's action.alias, joined with "|", action.order first.
+String Function ActionAliases() global native
 
 ; Decorator data with text resolved for this actor (empty sources when no injury):
 ; {"sources":[{"id","looks_heading","feels_intro","feels_outro","parts":[{"part","region","stage","look","feel"}]}]}
 String Function GetStateJson(Actor akActor) global native
 
 ; Narration text rendered from the JSON files. noCause leaves out narration.hit.by_* (the caller's cause leads instead).
-String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false) global native
+String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false, Bool unarmedForm = false) global native
+; Parallel to the last TakeHits() result (same index).
+Bool Function HitUnarmed(Int index) global native
+; Writes an info line to SkyrimNet_Whipped.log ("<kind>: <text>").
+Function LogLine(String kind, String text) global native
 ; All codes passive: wrapped as ordinary healing (narration.heal.passive).
 String Function HealText(Actor victim, Int[] codes) global native
 ; kind / source as in SyncHealth; percent is turned into words (no numbers in narration).
 ; Source none (pain gone / fully healed by natural healing): wrapped as ordinary healing.
+; The feeling sentence of a hit level 0-3 (narration.hit.levels), rendered for the victim.
+String Function LevelText(String sourceId, Actor victim, Int level) global native
 String Function SourceHealText(Int kind, Int source, Int percent, Actor caster, Actor target) global native
 ; Renders the string at a dotted path ("narration.summary.text", "action.no_whip") with {speaker}, {target} and
 ; {times} (words for count, from narration.summary.times).
+; Combined torture narration for parallel lists of pairs (an attacker that is not an Actor means none); phase start, again, switch or end.
+String Function SceneText(String phase, Form[] attackers, Form[] victims, String[] sources, Int[] masks, Int[] levels) global native
 String Function ActionText(String sourceId, String path, Actor speaker, Actor target, Int count) global native
 
 ; Raw value at a dotted path of injuries/<source>.json, placeholders untouched ("" / 0 when absent).

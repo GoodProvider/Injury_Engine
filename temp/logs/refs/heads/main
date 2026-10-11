@@ -1,0 +1,4 @@
+0000000000000000000000000000000000000000 5277386399e17eb4d3d088dff1d34180936f120f GoodProvider <134991253+GoodProvider@users.noreply.github.com> 1790995017 -0700	clone: from https://github.com/GoodProvider/SkyrimNet_Whip.git
+5277386399e17eb4d3d088dff1d34180936f120f be3a11e5d0acd79ab7844fed1c3bb70882231335 GoodProvider <134991253+GoodProvider@users.noreply.github.com> 1791081398 -0700	commit: Rename SkyrimNet_Whip to SkyrimNet_Whipped
+be3a11e5d0acd79ab7844fed1c3bb70882231335 90e7335557404405c6c383ffd5a44fab67c65a42 GoodProvider <134991253+GoodProvider@users.noreply.github.com> 1791135331 -0700	commit: Move healing narration into helpers/healing.prompt and drop gratitude clause
+90e7335557404405c6c383ffd5a44fab67c65a42 4a10c0c873609e9793847a4d8c2551c69fb145c6 GoodProvider <134991253+GoodProvider@users.noreply.github.com> 1791139647 -0700	commit: Fix heal prompt render error and runaway healing; heal random parts

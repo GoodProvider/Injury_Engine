@@ -1,0 +1,40 @@
+{
+  "FormKey": "000817:SkyrimNet_Whipped.esp",
+  "EditorID": "SkyrimNet_Whipped_FrostbiteTorture",
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Frostbite (torture)"
+  },
+  "MenuDisplayObject": "09DB72:Skyrim.esm",
+  "EquipmentType": "013F44:Skyrim.esm",
+  "Description": {
+    "TargetLanguage": "English",
+    "Value": ""
+  },
+  "BaseCost": 16,
+  "CastType": "Concentration",
+  "TargetType": "Aimed",
+  "HalfCostPerk": "0F2CA8:Skyrim.esm",
+  "Effects": [
+    {
+      "BaseEffect": "000814:SkyrimNet_Whipped.esp",
+      "Data": {
+        "Magnitude": 8.0,
+        "Duration": 1
+      }
+    },
+    {
+      "BaseEffect": "0B729D:Skyrim.esm",
+      "Data": {
+        "Magnitude": 50.0,
+        "Duration": 4
+      }
+    },
+    {
+      "BaseEffect": "0F3934:Skyrim.esm",
+      "Data": {
+        "Duration": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+Fix heal prompt render error and runaway healing; heal random parts
+
+- healing.prompt: drop join([var, ...]) (inja parses [..] as JSON, so every
+  render failed with parse_error.101 "[h"); build phrases inline with {% if %}.
+  Logic in a {% raw %} block, rendered via ParseString("heal", json); kind and
+  source are ints; new stage 5 (part fully healed) text
+- DamageHealing_Engine: Ratio() divides by kPartCount * (kMaxDamage + kHealed)
+  = 186, the real max deficit (was 120, so a deficit of 180 gave a wounded
+  level of -35, the regen take-back caused bleedout, and the recovery
+  converted the whole deficit in one tick); ConvertHealth clamps the wounded
+  level to kHealthFloor
+- Health conversion heals one point at a time on a random part (damage
+  first, then healing); TakeHealed reports stage 5 (healed)
+- Main.psc: RenderHealPrompt load-then-ParseString, healing narration
+  batching; rebuilt .pex and SkyrimNet_Whipped.dll
+- CLAUDE.md, README.md, manifest.yaml: health link (/ 186, 10% floor),
+  random-part healing, heal narration
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

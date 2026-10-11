@@ -30,7 +30,10 @@ Schema: `SKSE/Plugins/SkyrimNet/config/plugins/SkyrimNet_Whipped/manifest.yaml`.
 | `whip.action.require_whip`, `whip.action.give_to_player`, `whip.action.max_strikes` | Action eligibility, setup (`give_to_player` = "Add gear to player": `GiveGear` adds the whip and the Flames / Frostbite / Sparks (torture) spells); `max_strikes` needs a reload (re-registers the action) |
 | `whip.healing.hours_per_point`, `whip.healing.regen_rate` | Passed to the DLL (`SetHoursPerPoint`, `SetRegenRate`) |
 | `whip.healing.give_healing_hands` | Adds Healing Hands (Skyrim.esm 0x4D3F2) to the player |
-| `whip.narration.enabled`, `.cooldown`, `.max_distance`, `.event_ttl` | Narration gate |
+| `whip.narration.enabled`, `.cooldown`, `.max_distance`, `.event_ttl` | Narration gate (`cooldown`: healing only) |
+| `whip.narration.torture_narration_window_size` | Passive healing is not reported this long after a torture hit (`InTortureSession`); torture narration itself is a session (`NarrateHits`: start narration, summary 2 s after the last hit) |
+| `whip.narration.torture_maximum_break` | Seconds without a hit that end the torture (end narration), default 3 |
+| `whip.narration.torture_direct_narration_gap` | Seconds between combined "again" narrations during continuous torture, default 6 |
 | `whip.overlay.enabled` | Overlay on/off |
 | `whip.debug.verbose_logging` | `Main.verbose_logging`; passed to the DLL (`SetVerboseLogging`) |
 
@@ -46,6 +49,7 @@ Global functions on `SkyrimNet_Whipped_Main` for other mods (SkyrimNet_SexLab Fo
 |----------|------|
 | `Int External_Injure(Actor attacker, Actor victim, String text, String type, Int count = 1, String part = "", Bool narrate = True, Bool torture = True)` | Any injury type by file id, including types other mods ship in their own `injuries/<id>.json` (`injuries/guide.md`, "Injury types from other mods"). `torture = True`: `count` torture hits, like `External_Torture` (needs a `torture` or `both` file); returns the last hit code or -1. `torture = False`: `count` real damage points (needs a `health` or `both` file, e.g. `falling`; can kill; `part` ignored, the part is picked like an attack's), narrated like any real hit; `narrate` only sends `text`. Returns the source index or -1 |
 | `Int External_Torture(Actor attacker, Actor victim, String text, String type, Int count = 1, String part = "", Bool narrate = True)` | `External_Injure(..., torture = True)`: any torture type (`whipping`, `pinching`, `slapping`, `pulling`, `punching`, `fire`, `frost`, `shock`, `falling`, or another mod's); -1 for an unknown type |
+| `String External_TortureText(Actor attacker, Actor victim, String damage_type, String body_part = "", Int damage_amount = 1)` | `External_Damage` for a torture type, **silent**: the hits land (no narration, no event) and the feeling text the injuries would have been narrated with is returned for the caller to narrate itself. `""` on failure (victim None or dead, not a torture type, no hit landed). Used by SkyrimNet_SexLab Punish. |
 | `Int External_Strike(Actor attacker, Actor victim, String text, Int count = 1, String part = "", Bool narrate = True)` | `count` whip hits on `part` (part name or region, `""` random). One DirectNarration: `text` plus the injury text (`text` alone while narration is off). Returns the last hit code or -1 |
 | `Int External_Heal(Actor caster, Actor target, String text, Float health, String part = "", Bool narrate = True)` | Heals `health` worth of torture points on `part` first (each point lowers every torture type on its part), then any part, and raises health to match. Narrates `text`; the heal stages narrate through the usual sync. Returns points healed |
 | `Bool External_SexualParts()` | `whip.body.include_sexual_parts` |
@@ -62,6 +66,7 @@ Natives behind them: `Engine.RealHit(actor, attacker, source, points)` / `Engine
 | `skyrimnet_whipped.heal_pending` (IntList) / `heal_count` | Part heals (`part * 8 + stage`) since the last heal narration, takes count |
 | `skyrimnet_whipped.heal_narrated` | A heal was narrated since the last lash (unset = next heal is fresh) |
 | `skyrimnet_whipped.last_narration` | Real time of the last narration (cooldown) |
+| `skyrimnet_whipped.last_torture` | Real time of the last torture hit (torture narration window / interval) |
 
 ## ESP / Spriggit
 

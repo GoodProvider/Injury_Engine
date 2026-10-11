@@ -37,7 +37,7 @@ Update only the rows the delta touches.
 | When the delta includes | Update |
 |-------------------------|--------|
 | Prompts, decorator JSON, heal text | `docs/authors/prompts.md`; `docs/reference/json-keys.md`; changelogs |
-| `Whip_Target` action | `docs/authors/actions.md`; changelogs |
+| `Torture_Target` action | `docs/authors/actions.md`; changelogs |
 | Papyrus / ESP / settings | `docs/developers/papyrus.md`; README settings table; `CLAUDE.md` Flow / Form IDs; changelogs |
 | SKSE plugin / overlay | `docs/developers/overlay.md`; changelogs |
 | Install / requirements | `README.md` (Requirements, Install); `FOMOD_source/` |

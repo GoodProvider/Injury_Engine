@@ -27,9 +27,9 @@ a file that fails to parse is skipped and named there.
 | `sexual_parts.json` | **not a source** | optional parts (setting "Include sexual body parts"): part names, size and hit chance, plus their `looks` / `feels` text per source id (see below) |
 | `sexual` | (not written yet) | will require the victim to be in SexLab; do not create it unless asked |
 
-A new injury type = a new `<id>.json` copied from a `health` file (not from `whipping.json`) plus a mapping in
-`Classifier.cpp` (C++), which you cannot do here. Tell the user what hit class should map to it. A type that only
-scripts call (a `torture` file used through `External_Injure` / `External_Torture`) needs no C++.
+A new injury type = a new `<id>.json` copied from a `health` file (not from `whipping.json`) plus a `classify`
+array in that file (see below). A type that only scripts call (a `torture` file used through `External_Injure` /
+`External_Torture`) needs no `classify` block.
 
 ### Injury types from other mods
 
@@ -56,7 +56,7 @@ and the mod manager merges that folder with this one at runtime (nothing to regi
 - **Stages** (damage per part, 20 max): light 1-3, medium 4-10, severe 11-20. All health sources use the same scale;
   100% of max health lost = every part an actor has at its max.
 - **torture** sources: each hit adds a point of that type to one part (picked by the type's `part_weights`); a healing
-  wound of that type that is hit again reopens at medium. Each type is tracked separately per part, but a part counts
+  wound of that type that is hit again just gains one point on top of where it had healed down to. Each type is tracked separately per part, but a part counts
   only its **worst** type: that alone holds health down (never below 10%) and shows on the overlay. Wounds heal over game
   time, and every point of healing lowers **every** type on the part by one (slap light, pinch severe, fire light: all
   heal together). Damage drains, then healing rises through recovering, mostly healed, healed (scar).
@@ -87,8 +87,23 @@ damage_max, healing_max, thresholds, health_link, regions, parts
 stages             damage stage names, first 3 = light, medium, severe. torture adds recovering, mostly_healed, healed.
 part_weights       (torture, optional) {"part name": weight}: chance of the type landing there; 0 = never; missing parts keep
                    the body's weight (main parts one, sexual parts their sexual_parts.json weight)
+classify           (optional) how incoming damage picks this source. Highest `priority` wins. The C++ classifier
+                   has no source names of its own; it only reads these rules. A "both" file puts the rule in the
+                   half it belongs to (falling's landing rule is in `health`).
+                   weapon_types     Skyrim weapon type names: OneHandSword, TwoHandSword, OneHandAxe, TwoHandAxe,
+                                    OneHandDagger, Bow, Crossbow, OneHandMace, Staff, HandToHandMelee
+                   keyword          the weapon must have this keyword (WeapTypeWarhammer on a two-hand axe)
+                   without_keyword  the weapon must not have this keyword
+                   resist           ResistFire, ResistFrost or ResistShock (health spell damage)
+                   effect_file / effect_id   this exact magic effect is the torture spell (local form id, hex string)
+                   ignore_weapon_file / ignore_weapon_id   this weapon is not injury damage (the padded whip)
+                   unarmed          true: no weapon, or the fist weapon. npc / combat are true, false, or omitted (either)
+                   falling          true: landing damage (no hit, no attacker, still falling)
+                   fallback         true: anything that matched nothing else (generic.json)
 hook.hit_share     (torture, optional, default 0.05) share of max health that hooked spell damage needs for one torture
-                   hit (fire / frost / shock ticks); a punch is always one hit
+                   hit (spell ticks); a punch is always one hit
+action.alias / action.order   (torture, optional) short name for Torture_Target ("whip", "pinch", ...) and its
+                   place in the type list. The source id itself is always accepted too.
 action.verb, action.animation   (torture) log verb; animation event the NPC plays per Torture_Target strike ("" = none)
 defaults           (whipping only) default values for dashboard settings; manifest.yaml must mirror them
 overlay            (whipping only) title, bar order, colors (hex) incl. "replaced"
@@ -97,9 +112,13 @@ action             (whipping) Torture_Target description ({target}, {type} and {
 text.looks_heading / looks   what each wounded part looks like  -> character bio ("### Whip Wounds" list)
 text.feels_intro / feels / feels_outro   how it feels  -> final instructions
 narration.list     how part names are joined ("face, back and left arm")
-narration.hit      hit narration: lead + verb + times + by, then levels[0..3] by the worst part's state before the hit
+narration.form     short phrase for who-hit-whom narration ("a keen cutting blade"); bludgeoning may add form_unarmed
+narration.hit      hit narration: lead + verb + times + by when no attacker is named; otherwise session.json hit
+                   templates plus levels[0..3] by the worst part's state before the hit
                    (0 undamaged, 1 light, 2 medium, 3 severe)
-narration.summary  (torture) Torture_Target summary line
+narration.summary  (torture) times words (once / twice / several / many)
+narration.session  (torture) switch, end, hit_noun; shared hit / mixed_hit / no_attacker_hit / inline templates
+                   in injuries/session.json (not a source)
 narration.heal     stage (text when a part reaches that stage while healing), source_healed, part_healed,
                    passive (generic, else whipping, is read): wraps healing with no healing source (game time,
                    natural regen, and heal_events pain_gone.none / full.none), {text} is the healing sentence(s);

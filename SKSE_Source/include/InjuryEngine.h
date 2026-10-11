@@ -55,9 +55,9 @@ namespace InjuryEngine
 
     // Torture hit on a random part (source model "torture"). Takes the matching health (never below the floor).
     // Returns a hit code, or -1 for None/dead actors and unknown / non-torture sources.
-    std::int32_t Hit(RE::Actor* actor, std::string_view sourceId);
+    std::int32_t Hit(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId);
     // Hit on one part (PartIndex); -1, a part outside the active set, or one the actor's sex lacks: random.
-    std::int32_t HitPart(RE::Actor* actor, std::string_view sourceId, int part);
+    std::int32_t HitPart(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId, int part);
     // Scripted real damage: `points` damage points of the health source with file id `base` (a "health" file, or the
     // health half of a "both" file), applied like a hooked hit (the part is picked as for an attack; the hit is
     // queued for narration). Returns the source index, -1 for None/dead actors or no such health source.
@@ -76,7 +76,8 @@ namespace InjuryEngine
     // for spell ticks and active torture effects (accumulate per hook.hit_share). Returns the damage the game
     // should still apply: torture sources none (they become torture hits), health sources what torture wounds
     // do not absorb.
-    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee);
+    // unarmedForm: the hit matched an "unarmed" classify rule, so narration uses narration.form_unarmed when that key exists.
+    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm = false);
 
     // True if the actor has any damage left (any source).
     bool HasOpenWounds(RE::Actor* actor);
@@ -89,6 +90,8 @@ namespace InjuryEngine
     std::vector<std::int32_t> TakeHits();
     std::vector<RE::Actor*> HitVictims();
     std::vector<RE::Actor*> HitAttackers();
+    // Parallel to the last TakeHits result (same index).
+    bool HitUnarmed(std::size_t index);
 
     // Called from the MagicTarget::AddTarget hook for every effect applied to an actor.
     void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect);
@@ -116,7 +119,7 @@ namespace InjuryEngine
 
     // Narration text rendered from the JSON files.
     std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count,
-        bool noCause = false);
+        bool noCause = false, bool unarmedForm = false);
     // The feeling sentence of a hit level (narration.hit.levels), rendered for the victim.
     std::string LevelText(std::string_view sourceId, RE::Actor* victim, int level);
     // Heal codes all passive, or a source-heal event without a source: wrapped in narration.heal.passive.
@@ -136,6 +139,9 @@ namespace InjuryEngine
     // Percent of natural regeneration that heals torture wounds (the rest of the regen is taken back).
     void SetRegenRate(float percent);
     void Forget(RE::Actor* actor);
+
+    // Writes an info line to SkyrimNet_Whipped.log: "<kind>: <text>" (empty text is ignored).
+    void LogLine(std::string_view kind, std::string_view text);
 
     void Save(SKSE::SerializationInterface* intfc);
     void Load(SKSE::SerializationInterface* intfc, std::uint32_t version, std::uint32_t length);

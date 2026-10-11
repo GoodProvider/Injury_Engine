@@ -24,30 +24,23 @@ Function Setup()
         strikes += "|" + i
         i += 1
     endwhile
+    String typeList = SkyrimNet_Whipped_Engine.ActionAliases()
+    if typeList == ""
+        typeList = TYPES
+    endif
     ; description from injuries/whipping.json action.description ({target}, {type} and {strikes} are SkyrimNet placeholders)
     SkyrimNetApi.RegisterAction(ACTION_NAME, \
             SkyrimNet_Whipped_Engine.Text(main.SOURCE_WHIP, "action.description"), \
             "SkyrimNet_Whipped_Actions", "Torture_IsEligible", \
             "SkyrimNet_Whipped_Actions", "Torture_Execute", \
             "", "PAPYRUS", 1, \
-            "{\"target\": \"Actor\", \"type\": \"" + TYPES + "\", \"strikes\": \"" + strikes + "\"}")
-    Trace("Setup", "registered " + ACTION_NAME + " types:" + TYPES + " strikes:" + strikes)
+            "{\"target\": \"Actor\", \"type\": \"" + typeList + "\", \"strikes\": \"" + strikes + "\"}")
+    Trace("Setup", "registered " + ACTION_NAME + " types:" + typeList + " strikes:" + strikes)
 EndFunction
 
-; Action type -> injury source id ("" for an unknown type).
+; Action type -> injury source id ("" for an unknown type). Aliases live on each torture file as action.alias.
 String Function SourceOfType(String type) global
-    if type == "whip" || type == "whipping"
-        return "whipping"
-    elseif type == "pinch" || type == "pinching"
-        return "pinching"
-    elseif type == "slap" || type == "slapping"
-        return "slapping"
-    elseif type == "pull" || type == "pulling"
-        return "pulling"
-    elseif type == "punch" || type == "punching"
-        return "punching"
-    endif
-    return ""
+    return SkyrimNet_Whipped_Engine.SourceOfAlias(type)
 EndFunction
 
 ; Hand torture needs no item, so the whip requirement only matters once the type is chosen (Torture_Execute).
@@ -97,9 +90,8 @@ Function Torture_Execute(Actor speaker, string contextJson, string paramsJson) g
     if whipping
         if speaker.GetItemCount(whip) < 1
             if whip_main.require_whip
-                SkyrimNetApi.RegisterShortLivedEvent("whip_lash_no_whip_" + speaker.GetFormID(), "whip_lash", \
-                    SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0), "", \
-                    (whip_main.event_ttl * 1000.0) as int, speaker, target)
+                String noWhip = SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0)
+                SkyrimNet_Whipped_Main.ShortEvent(noWhip, speaker, target, "whip_lash_no_whip_" + speaker.GetFormID(), "whip_lash", (whip_main.event_ttl * 1000.0) as int)
                 return
             endif
             speaker.AddItem(whip, 1, true)

@@ -145,6 +145,7 @@ namespace Overlay
             }
             g_lastPush = json;
         }
+        SKSE::log::debug("Overlay: push {} bytes", json.size());
         Invoke("whipUpdate(" + json + ");");
     }
 

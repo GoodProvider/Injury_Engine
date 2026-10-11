@@ -6,12 +6,13 @@
     <title>SkyrimNet Whipped Overlay</title>
     <!--
         Whip damage overlay (C++ Overlay.cpp). Shown without Focus: no cursor, no input, game keeps running.
-        C++ pushes whipUpdate({title, max, healed, medium, severe, mostly_healed, colors,
-                               actors:[{id, name, replaced, parts:[[damage, healing] x6]}]})
+        C++ pushes whipUpdate({title, max, part_max, healed, medium, severe, mostly_healed, colors,
+                               actors:[{id, name, replaced, parts:[[damage, healing] x6 or x11]}]})
         whenever the engine state changes (numbers and colors come from injuries/whipping.json); parts are head, body,
-        right arm, left arm, right leg, left leg. whipReset() drops everything (new game / load / overlay turned off).
-        Layout: #WhippedPanel holds the title ("Whip Damage", white) above .actor-whipped-damage-bars, one bar per
-        whipped actor, most recently hit first. Hurting: width = total whip damage over the whole body, colored by the
+        right arm, left arm, right leg, left leg, then (with "include sexual parts") nipples, pussy, penis, lips,
+        ass hole; part_max is each part's damage points in that order. whipReset() drops everything (new game / load / overlay turned off).
+        Layout: #WhippedPanel holds the title ("Torture Damage", white) above .actor-whipped-damage-bars, one bar per
+        tortured actor, most recently hit first. Each part counts only its worst torture type. Hurting: width = total torture damage over the whole body, colored by the
         average damage of the damaged parts. Real damage replaces whip damage: `replaced` points grow as a darker red
         segment from the left while the whip fill shrinks. Healing (no damage left): width = healing progress of the
         parts still healing, colored by their average healing. Bars show only the actor's name.
@@ -109,18 +110,18 @@
 <body>
     <div id="overlay">
         <div id="WhippedPanel">
-            <div class="panel-title">Whip Damage</div>
+            <div class="panel-title">Torture Damage</div>
             <div class="actor-whipped-damage-bars"></div>
         </div>
     </div>
     <script>
-        const PART_COUNT = 6;
         const IDLE_MS = 3000;     // overlay fades this long after the last change
         const GONE_MS = 1500;     // fully healed: empty bar shown this long before its fade
         const FLASH_MS = 1000;    // healing bar flashes this long when a healing actor is hit
         const FADE_MS = 600;
         // Replaced by the numbers in every push (injuries/whipping.json), these only cover the first frame.
-        const cfg = { max: 120, healed: 11, medium: 4, severe: 11, mostlyHealed: 4 };
+        // partMax: damage points per part in `parts` order (6 parts, 11 with "include sexual parts").
+        const cfg = { max: 120, partMax: [20, 20, 20, 20, 20, 20], healed: 11, medium: 4, severe: 11, mostlyHealed: 4 };
 
         const overlay = document.getElementById('overlay');
         const panel = document.getElementById('WhippedPanel');
@@ -129,9 +130,9 @@
         const actors = new Map();  // id -> {bar, fill, replacedBar, label, name, parts, replaced, sum, lastHit, gone, flashUntil, flashTimer}
         let lastChange = 0;
 
-        const noParts = () => Array.from({ length: PART_COUNT }, () => [0, cfg.healed]);
+        const noParts = () => cfg.partMax.map(() => [0, cfg.healed]);
 
-        function maxDamage() { return cfg.max / PART_COUNT; }
+        function maxDamage(i) { return cfg.partMax[i] ?? cfg.max / cfg.partMax.length; }
 
         function damageStage(damage) {
             if (damage >= cfg.severe) return 'severe';
@@ -142,9 +143,9 @@
         // Whole-body summary: {state: hurting|healing|healed, width %, cls, damage total}.
         function summarize(parts) {
             let damage = 0, damaged = 0, healing = 0, unhealed = 0;
-            for (const [d, h] of parts) {
+            for (const [i, [d, h]] of parts.entries()) {
                 if (d > 0) {
-                    damage += Math.min(d, maxDamage());
+                    damage += Math.min(d, maxDamage(i));
                     damaged++;
                 } else if (h < cfg.healed) {
                     healing += Math.max(h, 0);
@@ -245,6 +246,7 @@
 
         function configure(state) {
             if (typeof state.max === 'number') cfg.max = state.max;
+            if (Array.isArray(state.part_max) && state.part_max.length) cfg.partMax = state.part_max;
             if (typeof state.healed === 'number') cfg.healed = state.healed;
             if (typeof state.medium === 'number') cfg.medium = state.medium;
             if (typeof state.severe === 'number') cfg.severe = state.severe;

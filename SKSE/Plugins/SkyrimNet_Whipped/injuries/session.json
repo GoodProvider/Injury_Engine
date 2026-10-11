@@ -1,0 +1,34 @@
+{
+  "and": " and ",
+  "comma": ", ",
+  "clause": "{attackers} {what}",
+  "end": "After {what}, {attackers} {stop}",
+  "stop_one": "stops",
+  "stop_many": "stop",
+  "mixed": {
+    "end": "torturing {target} again and again"
+  },
+  "mixed_hit": {
+    "start": "hit {target}",
+    "again": "hit {target} again and again"
+  },
+  "hit": {
+    "start": "hits {target} with {form}",
+    "start_many": "hit {target} with {form}",
+    "again": "hits {target} again and again with {form}",
+    "again_many": "hit {target} again and again with {form}"
+  },
+  "no_attacker_hit": {
+    "start": "is hit with {form}",
+    "again": "is hit again and again with {form}",
+    "end": "is no longer being hurt"
+  },
+  "inline": {
+    "start": " hitting {target}'s {parts}",
+    "again": ", the last one hitting {target}'s {parts}",
+    "switch": ", hitting {target}'s {parts}",
+    "end": " after hitting {target}'s {parts}"
+  },
+  "feeling": "{attacker}'s last {noun} lands on {target}'s {parts}",
+  "feeling_none": "The last {noun} lands on {target}'s {parts}"
+}

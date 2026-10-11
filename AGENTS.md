@@ -1,10 +1,22 @@
 # AGENTS.md
 
-Agent guidance for SkyrimNet_Whipped (padded whip for SkyrimNet).
+Agent guidance for SkyrimNet_Whipped (torture damage and a padded whip for SkyrimNet).
+
+## General instructions
+The agent's job is not finished until the latest changes are ready for testing in Skyrim.
+If this is possible step by step instructions should be left for the developer.
+
+**Deploy before you stop.** This repo is the MO2 mod folder (`SkyrimNet_Whipped`). After C++, Papyrus, or injury JSON work, always ship the files the game loads:
+
+1. **DLL** — `make dll` → [SKSE/Plugins/SkyrimNet_Whipped.dll](SKSE/Plugins/SkyrimNet_Whipped.dll) (CMake copies the build output here; do not hand-copy from `build/` elsewhere).
+2. **Injuries** — [SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json](SKSE/Plugins/SkyrimNet_Whipped/injuries/) (edit in place; no separate packaging step).
+3. **Papyrus** — `pyro skyrimse.ppj` or VS Code **`compile: pyro`** → [Scripts/*.pex](Scripts/) (Pyro writes into this repo, not into overwrite).
+
+If a fix “does nothing” in-game, confirm MO2 is loading this folder (not a disabled release copy) and that overwrite has no stale `SkyrimNet_Whipped` DLL or `.pex` shadowing it. See [KNOWLEDGEBASE.md](KNOWLEDGEBASE.md) (.pex vs .dll deploy).
 
 ## What this is
 
-Standalone padded whip for SkyrimNet. Each lash wounds a random body part; `SkyrimNet_Whipped.dll` (`InjuryEngine`) tracks injury per source (whipping plus classified slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / generic damage) per part (co-saved), reads all wound data and text from `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json`, Papyrus narrates hits and healing, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
+Standalone torture damage and padded whip for SkyrimNet. Each torture hit (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock) wounds a body part; `SkyrimNet_Whipped.dll` (`InjuryEngine`) tracks injury per source (torture types, each part counting its worst type, plus classified slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / generic damage) per part (co-saved), reads all wound data and text from `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json`, Papyrus narrates hits and healing, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
 
 ## Key paths
 
@@ -48,7 +60,7 @@ Relative paths for other machines: [docs/reference/papyrus-rules.md](docs/refere
 | Players / settings / install | [README.md](README.md) |
 | Architecture, flow, Form IDs | [CLAUDE.md](CLAUDE.md) |
 | Prompts | [docs/authors/prompts.md](docs/authors/prompts.md) |
-| LLM action (`Whip_Target`) | [docs/authors/actions.md](docs/authors/actions.md) |
+| LLM action (`Torture_Target`) | [docs/authors/actions.md](docs/authors/actions.md) |
 | Papyrus / ESP / settings | [docs/developers/papyrus.md](docs/developers/papyrus.md) |
 | SKSE plugin / PrismaUI overlay | [docs/developers/overlay.md](docs/developers/overlay.md) |
 | Quirks | [KNOWLEDGEBASE.md](KNOWLEDGEBASE.md) |

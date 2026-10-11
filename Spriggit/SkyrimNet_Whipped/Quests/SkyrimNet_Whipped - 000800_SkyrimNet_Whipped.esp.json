@@ -25,6 +25,21 @@
             "MutagenObjectType": "ScriptObjectProperty",
             "Name": "HealingHands",
             "Object": "04D3F2:Skyrim.esm"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "TortureFlames",
+            "Object": "000816:SkyrimNet_Whipped.esp"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "TortureFrostbite",
+            "Object": "000817:SkyrimNet_Whipped.esp"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "TortureSparks",
+            "Object": "000818:SkyrimNet_Whipped.esp"
           }
         ]
       },

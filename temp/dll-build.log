@@ -1,0 +1,155 @@
+-- Running vcpkg install
+warning: attempting to set builtin-baseline in vcpkg.json while overriding the default-registry in vcpkg-configuration.json.
+the default-registry from vcpkg-configuration.json will be used.
+Fetching registry information from https://github.com/microsoft/vcpkg.git (HEAD)...
+Detecting compiler hash for triplet x64-windows...
+Compiler found: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe
+Detecting compiler hash for triplet x64-windows-static...
+Compiler found: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe
+The following packages will be built and installed:
+    commonlibsse-ng-fork:x64-windows-static@4.39.5 -- C:\Skyrim\dev\mods\SkyrimNet_Whipped\SKSE_Source\./vcpkg-ports\commonlibsse-ng-fork
+  * directxmath:x64-windows-static@2022-12-12 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\ecd21e108091a293a27869c9c093ad558ffcdc42
+    directxtk:x64-windows-static@2022-10-17 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\29b7fdf1ce9b66105a1bfa329e5309afe8505dc7
+  * fmt:x64-windows-static@9.1.0#1 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\3f452404270b508daf355b72031ad3ee7d0d5751
+    nlohmann-json:x64-windows-static@3.11.2 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\caa64b8c731ac2457575ea3c5f1827bc82ecac84
+  * rapidcsv:x64-windows-static@8.64 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\1842f5ea6077feea4ef5d07bb43e2fd648763718
+    spdlog:x64-windows-static@1.11.0 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\296d78e54c14ce64474b66f60847026ddb1f576e
+  * vcpkg-cmake:x64-windows@2022-10-30 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\063c28b7401ba0090497ba7b0931b2eb09b18a24
+  * vcpkg-cmake-config:x64-windows@2022-02-06#1 -- C:\Users\bhuff\AppData\Local\vcpkg\registries\git-trees\8d54cc4f487d51b655abec5f9c9c3f86ca83311f
+Additional packages (*) will be modified to complete this operation.
+Restored 8 package(s) from C:\Users\bhuff\AppData\Local\vcpkg\archives in 244 ms. Use --debug to see more details.
+Installing 1/9 vcpkg-cmake-config:x64-windows@2022-02-06#1...
+Elapsed time to handle vcpkg-cmake-config:x64-windows: 11.9 ms
+vcpkg-cmake-config:x64-windows package ABI: 1e5f5b5f5bde0f43452bedb49b51383b8db0c633977073390ffd338434463797
+Installing 2/9 vcpkg-cmake:x64-windows@2022-10-30...
+Elapsed time to handle vcpkg-cmake:x64-windows: 14 ms
+vcpkg-cmake:x64-windows package ABI: 6c592418abea9411ab3fb88bfa3f67a4a8a11423204daa1c17f7ff7f9121bc86
+Installing 3/9 fmt:x64-windows-static@9.1.0#1...
+Elapsed time to handle fmt:x64-windows-static: 22.4 ms
+fmt:x64-windows-static package ABI: 4f4867cc59557731f75c62a28b11b0805e245d2b79b4a06d6b4790a2fb99d0d7
+Installing 4/9 spdlog:x64-windows-static@1.11.0...
+Elapsed time to handle spdlog:x64-windows-static: 41.6 ms
+spdlog:x64-windows-static package ABI: 4c77ceacc5c92d0f85d534bfc82cee859df144d55684bc17530413c0b6e288c7
+Installing 5/9 rapidcsv:x64-windows-static@8.64...
+Elapsed time to handle rapidcsv:x64-windows-static: 11.3 ms
+rapidcsv:x64-windows-static package ABI: d147936621bca53a9ca4aa8cc276fa7bf66470ecf6ad880965239b5dc4002ee1
+Installing 6/9 directxmath:x64-windows-static@2022-12-12...
+Elapsed time to handle directxmath:x64-windows-static: 15.5 ms
+directxmath:x64-windows-static package ABI: fa6f591e841a0f60cdf0494760f879fa10d7742bc332ffe19cf36a34a9a60ace
+Installing 7/9 directxtk:x64-windows-static@2022-10-17...
+Elapsed time to handle directxtk:x64-windows-static: 21.6 ms
+directxtk:x64-windows-static package ABI: fc664a964b4b1ff02096d523eacc56fea02b025f043e287afa342f8c0f4d85a9
+Installing 8/9 commonlibsse-ng-fork:x64-windows-static@4.39.5...
+Building commonlibsse-ng-fork:x64-windows-static@4.39.5...
+C:\Skyrim\dev\mods\SkyrimNet_Whipped\SKSE_Source\cmake\x64-windows-static.cmake: info: loaded overlay triplet from here
+C:\Skyrim\dev\mods\SkyrimNet_Whipped\SKSE_Source\./vcpkg-ports\commonlibsse-ng-fork: info: installing overlay port from here
+-- Using cached MinLL-CommonLibVR-550cc4fb9114649dcf526d1f3d73d710c5d7003b.tar.gz
+-- Cleaning sources at C:/dev/vcpkg/buildtrees/commonlibsse-ng-fork/src/10c5d7003b-ad5913a656.clean. Use --editable to skip cleaning for the packages you specify.
+-- Extracting source C:/dev/vcpkg/downloads/MinLL-CommonLibVR-550cc4fb9114649dcf526d1f3d73d710c5d7003b.tar.gz
+-- Using source at C:/dev/vcpkg/buildtrees/commonlibsse-ng-fork/src/10c5d7003b-ad5913a656.clean
+-- Using cached ValveSoftware-openvr-60eb187801956ad277f1cae6680e3a410ee0873b.tar.gz
+-- Cleaning sources at C:/dev/vcpkg/buildtrees/commonlibsse-ng-fork/src/410ee0873b-5e205b7152.clean. Use --editable to skip cleaning for the packages you specify.
+-- Extracting source C:/dev/vcpkg/downloads/ValveSoftware-openvr-60eb187801956ad277f1cae6680e3a410ee0873b.tar.gz
+-- Using source at C:/dev/vcpkg/buildtrees/commonlibsse-ng-fork/src/410ee0873b-5e205b7152.clean
+-- Found external ninja('1.12.1').
+-- Configuring x64-windows-static
+-- Building x64-windows-static-dbg
+-- Building x64-windows-static-rel
+-- Installing: C:/dev/vcpkg/packages/commonlibsse-ng-fork_x64-windows-static/include/openvr.h
+-- Installing: C:/dev/vcpkg/packages/commonlibsse-ng-fork_x64-windows-static/share/CommonLibSSE/CommonLibSSE.cmake
+-- Installing: C:/dev/vcpkg/packages/commonlibsse-ng-fork_x64-windows-static/lib/openvr_api.lib
+-- Installing: C:/dev/vcpkg/packages/commonlibsse-ng-fork_x64-windows-static/share/commonlibsse-ng-fork/copyright
+-- Performing post-build validation
+C:\Skyrim\dev\mods\SkyrimNet_Whipped\SKSE_Source\./vcpkg-ports\commonlibsse-ng-fork\portfile.cmake: warning: ${CURRENT_PACKAGES_DIR}/debug/include should not exist. To suppress this message, add set(VCPKG_POLICY_ALLOW_DEBUG_INCLUDE enabled)
+note: If this directory was created by a build system that does not allow installing headers in debug to be disabled, delete the duplicate directory with file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+C:\Skyrim\dev\mods\SkyrimNet_Whipped\SKSE_Source\./vcpkg-ports\commonlibsse-ng-fork\portfile.cmake: warning: mismatching number of debug and release binaries. This often indicates incorrect handling of debug or release in portfile.cmake or the build system. If the intent is to only ever produce release components for this triplet, the triplet should have set(VCPKG_BUILD_TYPE release) added to its .cmake file. To suppress this message, add set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+C:\dev\vcpkg\packages\commonlibsse-ng-fork_x64-windows-static: note: the binaries are relative to ${CURRENT_PACKAGES_DIR} here
+note: The following are debug binaries:
+note: debug/lib/CommonLibSSE.lib
+note: The following are release binaries:
+note: lib/CommonLibSSE.lib
+note: lib/openvr_api.lib
+C:\Skyrim\dev\mods\SkyrimNet_Whipped\SKSE_Source\./vcpkg-ports\commonlibsse-ng-fork\portfile.cmake: warning: Found 2 post-build check problem(s). These are usually caused by bugs in portfile.cmake or the upstream build system. Please correct these before submitting this port to the curated registry.
+Starting submission of commonlibsse-ng-fork:x64-windows-static@4.39.5 to 1 binary cache(s) in the background
+Elapsed time to handle commonlibsse-ng-fork:x64-windows-static: 4.4 min
+commonlibsse-ng-fork:x64-windows-static package ABI: e72ded4b710f61908e727ff9a796d29a3e57baa1da82bdf7a2764d43c4ba5e34
+Installing 9/9 nlohmann-json:x64-windows-static@3.11.2...
+Elapsed time to handle nlohmann-json:x64-windows-static: 49 ms
+nlohmann-json:x64-windows-static package ABI: 3a3358b9d76fd75643fd084ebb49cfbe52d939555196afd3059dc2b1b300e34d
+Total install time: 4.5 min
+spdlog provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(spdlog CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
+
+spdlog provides pkg-config modules:
+
+  # Fast C++ logging library.
+  spdlog
+
+directxtk provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(directxtk CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE Microsoft::DirectXTK)
+
+commonlibsse-ng-fork provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(CommonLibSSE CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE CommonLibSSE::CommonLibSSE)
+
+The package nlohmann-json provides CMake targets:
+
+    find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE nlohmann_json::nlohmann_json)
+
+The package nlohmann-json can be configured to not provide implicit conversions via a custom triplet file:
+
+    set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
+
+For more information, see the docs here:
+    
+    https://json.nlohmann.me/api/macros/json_use_implicit_conversions/
+
+Waiting for 1 remaining binary cache submissions...
+Completed submission of commonlibsse-ng-fork:x64-windows-static@4.39.5 to 1 binary cache(s) in 2.5 min (1/1)
+-- Running vcpkg install - done
+-- Selecting Windows SDK version 10.0.22621.0 to target Windows 10.0.26200.
+-- The CXX compiler identification is MSVC 19.43.34809.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+Parsing commonlibsse_plugin_version 0.1.0
+Setting minor version to 1
+Parsing ADD_COMMONLIBSSE_PLUGIN_MINIMUM_SKSE_VERSION 0
+-- SKSE plugin output folder: C:/Skyrim/dev/mods/SkyrimNet_Whipped/SKSE_Source/../SKSE/Plugins
+-- Configuring done (429.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Skyrim/dev/mods/SkyrimNet_Whipped/SKSE_Source/build/release
+MSBuild version 17.13.19+0d9f5a35a for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Skyrim/dev/mods/SkyrimNet_Whipped/SKSE_Source/CMakeLists.txt
+  cmake_pch.cxx
+  Classifier.cpp
+  Hooks.cpp
+  InjuryConfig.cpp
+  InjuryEngine.cpp
+  Overlay.cpp
+  Papyrus_Engine.cpp
+  plugin.cpp
+  __SkyrimNet_WhippedPlugin.cpp
+     Creating library C:/Skyrim/dev/mods/SkyrimNet_Whipped/SKSE_Source/build/release/Release/SkyrimNet_Whipped.lib and object C:/Skyrim/dev/mods/SkyrimNet_Whipped/SKSE_Source/build/release/Release/SkyrimNet_Whipped.exp
+  SkyrimNet_Whipped.vcxproj -> C:\Skyrim\dev\mods\SkyrimNet_Whipped\SKSE_Source\build\release\Release\SkyrimNet_Whipped.dll
+  Building Custom Rule C:/Skyrim/dev/mods/SkyrimNet_Whipped/SKSE_Source/CMakeLists.txt

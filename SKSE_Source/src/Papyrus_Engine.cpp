@@ -2,19 +2,23 @@
 #include "InjuryEngine.h"
 #include "Overlay.h"
 
+#include <algorithm>
+#include <string>
+#include <vector>
+
 // Natives for Scripts/Source/SkyrimNet_Whipped_Engine.psc
 namespace
 {
-    std::int32_t Hit(RE::StaticFunctionTag*, RE::Actor* actor, RE::BSFixedString sourceId)
+    std::int32_t Hit(RE::StaticFunctionTag*, RE::Actor* actor, RE::Actor* attacker, RE::BSFixedString sourceId)
     {
-        const auto result = InjuryEngine::Hit(actor, sourceId.c_str());
+        const auto result = InjuryEngine::Hit(actor, attacker, sourceId.c_str());
         Overlay::Notify();
         return result;
     }
 
-    std::int32_t HitPart(RE::StaticFunctionTag*, RE::Actor* actor, RE::BSFixedString sourceId, std::int32_t part)
+    std::int32_t HitPart(RE::StaticFunctionTag*, RE::Actor* actor, RE::Actor* attacker, RE::BSFixedString sourceId, std::int32_t part)
     {
-        const auto result = InjuryEngine::HitPart(actor, sourceId.c_str(), part);
+        const auto result = InjuryEngine::HitPart(actor, attacker, sourceId.c_str(), part);
         Overlay::Notify();
         return result;
     }
@@ -120,15 +124,83 @@ namespace
         return InjuryConfig::IsTorture(InjuryConfig::IndexOf(sourceId.c_str()));
     }
 
+    // action.alias ("whip") or the source id itself ("whipping"), torture sources only.
+    RE::BSFixedString SourceOfAlias(RE::StaticFunctionTag*, RE::BSFixedString alias)
+    {
+        if (alias.empty()) {
+            return "";
+        }
+        for (int i = 0; i < InjuryConfig::SourceCount(); ++i) {
+            if (!InjuryConfig::IsTorture(i)) {
+                continue;
+            }
+            const auto* s = InjuryConfig::Find(i);
+            if (!s) {
+                continue;
+            }
+            if (InjuryConfig::IEquals(s->id, alias.c_str()) || InjuryConfig::IEquals(InjuryConfig::Str(i, "action.alias"), alias.c_str())) {
+                return s->id;
+            }
+        }
+        return "";
+    }
+
+    RE::BSFixedString ActionAliases(RE::StaticFunctionTag*)
+    {
+        struct Item
+        {
+            float order;
+            int index;
+            std::string alias;
+        };
+        std::vector<Item> items;
+        for (int i = 0; i < InjuryConfig::SourceCount(); ++i) {
+            if (!InjuryConfig::IsTorture(i)) {
+                continue;
+            }
+            const std::string alias = InjuryConfig::Str(i, "action.alias");
+            if (alias.empty()) {
+                continue;
+            }
+            items.push_back({ InjuryConfig::Number(i, "action.order", 1000.0f), i, alias });
+        }
+        std::ranges::sort(items, [](const Item& a, const Item& b) {
+            return a.order < b.order || (a.order == b.order && a.index < b.index);
+        });
+        std::string out;
+        for (const auto& item : items) {
+            if (!out.empty()) {
+                out += '|';
+            }
+            out += item.alias;
+        }
+        return out;
+    }
+
     RE::BSFixedString GetStateJson(RE::StaticFunctionTag*, RE::Actor* actor)
     {
         return InjuryEngine::StateJson(actor);
     }
 
     RE::BSFixedString HitText(RE::StaticFunctionTag*, RE::BSFixedString sourceId, RE::Actor* attacker, RE::Actor* victim,
-        std::int32_t mask, std::int32_t level, std::int32_t count, bool noCause)
+        std::int32_t mask, std::int32_t level, std::int32_t count, bool noCause, bool unarmedForm)
     {
-        return InjuryEngine::HitText(sourceId.c_str(), attacker, victim, mask, level, count, noCause);
+        return InjuryEngine::HitText(sourceId.c_str(), attacker, victim, mask, level, count, noCause, unarmedForm);
+    }
+
+    bool HitUnarmed(RE::StaticFunctionTag*, std::int32_t index)
+    {
+        return InjuryEngine::HitUnarmed(static_cast<std::size_t>(index));
+    }
+
+    void LogLine(RE::StaticFunctionTag*, RE::BSFixedString kind, RE::BSFixedString text)
+    {
+        InjuryEngine::LogLine(kind.c_str(), text.c_str());
+    }
+
+    RE::BSFixedString LevelText(RE::StaticFunctionTag*, RE::BSFixedString sourceId, RE::Actor* victim, std::int32_t level)
+    {
+        return InjuryEngine::LevelText(sourceId.c_str(), victim, level);
     }
 
     RE::BSFixedString HealText(RE::StaticFunctionTag*, RE::Actor* victim, std::vector<std::int32_t> codes)
@@ -146,6 +218,25 @@ namespace
         RE::Actor* target, std::int32_t count)
     {
         return InjuryEngine::ActionText(sourceId.c_str(), path.c_str(), speaker, target, count);
+    }
+
+    RE::BSFixedString SceneText(RE::StaticFunctionTag*, RE::BSFixedString phase, std::vector<RE::TESForm*> attackers,
+        std::vector<RE::TESForm*> victims, std::vector<RE::BSFixedString> sources, std::vector<std::int32_t> masks,
+        std::vector<std::int32_t> levels)
+    {
+        std::vector<std::string> ids;
+        for (const auto& id : sources) {
+            ids.emplace_back(id.c_str());
+        }
+        std::vector<RE::Actor*> atk;
+        std::vector<RE::Actor*> vic;
+        for (auto* form : attackers) {
+            atk.push_back(form ? form->As<RE::Actor>() : nullptr);
+        }
+        for (auto* form : victims) {
+            vic.push_back(form ? form->As<RE::Actor>() : nullptr);
+        }
+        return InjuryEngine::SceneText(phase.c_str(), atk, vic, ids, masks, levels);
     }
 
     // Raw JSON string at a dotted path of injuries/<source>.json ("" when absent), no placeholders replaced.
@@ -226,11 +317,17 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("SourceId", s, SourceId);
     a_vm->RegisterFunction("SourceCount", s, SourceCount);
     a_vm->RegisterFunction("IsTorture", s, IsTorture);
+    a_vm->RegisterFunction("SourceOfAlias", s, SourceOfAlias);
+    a_vm->RegisterFunction("ActionAliases", s, ActionAliases);
     a_vm->RegisterFunction("GetStateJson", s, GetStateJson);
     a_vm->RegisterFunction("HitText", s, HitText);
+    a_vm->RegisterFunction("HitUnarmed", s, HitUnarmed);
+    a_vm->RegisterFunction("LogLine", s, LogLine);
+    a_vm->RegisterFunction("LevelText", s, LevelText);
     a_vm->RegisterFunction("HealText", s, HealText);
     a_vm->RegisterFunction("SourceHealText", s, SourceHealText);
     a_vm->RegisterFunction("ActionText", s, ActionText);
+    a_vm->RegisterFunction("SceneText", s, SceneText);
     a_vm->RegisterFunction("Text", s, Text);
     a_vm->RegisterFunction("TextCount", s, TextCount);
     a_vm->RegisterFunction("Number", s, Number);
