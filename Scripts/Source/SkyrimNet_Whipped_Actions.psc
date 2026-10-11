@@ -1,12 +1,14 @@
 Scriptname SkyrimNet_Whipped_Actions extends Quest
 
-; LLM action "Whip_Target": the speaker walks to the target and lashes them with the padded whip.
-; Registered from Papyrus (not YAML) so eligibility can check the speaker's inventory
-; when whip.action.require_whip is on. Texts: SKSE/Plugins/SkyrimNet_Whipped/injuries/whipping.json.
+; LLM action "Torture_Target": the speaker walks to the target and tortures them: whips them with the padded whip,
+; or pinches, slaps, pulls or punches them by hand. Registered from Papyrus (not YAML) so eligibility can check the
+; speaker's inventory. Texts: SKSE/Plugins/SkyrimNet_Whipped/injuries/whipping.json (action description) and each
+; type's own injuries/<type>.json (no_whip, summary).
 
 SkyrimNet_Whipped_Main Property main Auto
 
-String Property ACTION_NAME = "Whip_Target" AutoReadOnly
+String Property ACTION_NAME = "Torture_Target" AutoReadOnly
+String Property TYPES = "whip|pinch|slap|pull|punch" AutoReadOnly
 
 Function Trace(String func, String msg, Bool notification=False) global
     Debug.Trace("[SkyrimNet_Whipped_Actions] " + func + ": " + msg)
@@ -22,39 +24,64 @@ Function Setup()
         strikes += "|" + i
         i += 1
     endwhile
-    ; description from injuries/whipping.json action.description ({target} and {strikes} are SkyrimNet placeholders)
+    ; description from injuries/whipping.json action.description ({target}, {type} and {strikes} are SkyrimNet placeholders)
     SkyrimNetApi.RegisterAction(ACTION_NAME, \
             SkyrimNet_Whipped_Engine.Text(main.SOURCE_WHIP, "action.description"), \
-            "SkyrimNet_Whipped_Actions", "Whip_IsEligible", \
-            "SkyrimNet_Whipped_Actions", "Whip_Execute", \
+            "SkyrimNet_Whipped_Actions", "Torture_IsEligible", \
+            "SkyrimNet_Whipped_Actions", "Torture_Execute", \
             "", "PAPYRUS", 1, \
-            "{\"target\": \"Actor\", \"strikes\": \"" + strikes + "\"}")
-    Trace("Setup", "registered " + ACTION_NAME + " strikes:" + strikes)
+            "{\"target\": \"Actor\", \"type\": \"" + TYPES + "\", \"strikes\": \"" + strikes + "\"}")
+    Trace("Setup", "registered " + ACTION_NAME + " types:" + TYPES + " strikes:" + strikes)
 EndFunction
 
-Bool Function Whip_IsEligible(Actor akActor, string contextJson, string paramsJson) global
+; Action type -> injury source id ("" for an unknown type).
+String Function SourceOfType(String type) global
+    if type == "whip" || type == "whipping"
+        return "whipping"
+    elseif type == "pinch" || type == "pinching"
+        return "pinching"
+    elseif type == "slap" || type == "slapping"
+        return "slapping"
+    elseif type == "pull" || type == "pulling"
+        return "pulling"
+    elseif type == "punch" || type == "punching"
+        return "punching"
+    endif
+    return ""
+EndFunction
+
+; Hand torture needs no item, so the whip requirement only matters once the type is chosen (Torture_Execute).
+Bool Function Torture_IsEligible(Actor akActor, string contextJson, string paramsJson) global
     SkyrimNet_Whipped_Main whip_main = SkyrimNet_Whipped_Main.Get()
     if whip_main == None || akActor == None
         return false
     endif
     if akActor == Game.GetPlayer() || akActor.IsDead() || akActor.IsInCombat()
+        if whip_main.verbose_logging
+            Trace("Torture_IsEligible", "[v] " + akActor.GetDisplayName() + " no: player/dead/in combat")
+        endif
         return false
     endif
-    if whip_main.require_whip && akActor.GetItemCount(whip_main.PaddedWhip) < 1
-        return false
+    if whip_main.verbose_logging
+        Trace("Torture_IsEligible", "[v] " + akActor.GetDisplayName() + " yes")
     endif
     return true
 EndFunction
 
-Function Whip_Execute(Actor speaker, string contextJson, string paramsJson) global
+Function Torture_Execute(Actor speaker, string contextJson, string paramsJson) global
     SkyrimNet_Whipped_Main whip_main = SkyrimNet_Whipped_Main.Get()
     if whip_main == None || speaker == None
         return
     endif
     Actor target = SkyrimNetApi.GetJsonActor(paramsJson, "target", None)
     if target == None || target == speaker || target.IsDead()
-        Trace("Whip_Execute", "no valid target: " + paramsJson)
+        Trace("Torture_Execute", "no valid target: " + paramsJson)
         return
+    endif
+    String source = SourceOfType(SkyrimNetApi.GetJsonString(paramsJson, "type", "whip"))
+    if source == "" || !SkyrimNet_Whipped_Engine.IsTorture(source)
+        Trace("Torture_Execute", "unknown or unloaded type, using whip: " + paramsJson)
+        source = whip_main.SOURCE_WHIP
     endif
     int strikes = SkyrimNetApi.GetJsonString(paramsJson, "strikes", "3") as int
     if strikes < 1
@@ -62,72 +89,71 @@ Function Whip_Execute(Actor speaker, string contextJson, string paramsJson) glob
     elseif strikes > whip_main.max_strikes
         strikes = whip_main.max_strikes
     endif
+    Bool whipping = source == whip_main.SOURCE_WHIP
 
     Weapon whip = whip_main.PaddedWhip
     Bool given = false
-    if speaker.GetItemCount(whip) < 1
-        if whip_main.require_whip
-            SkyrimNetApi.RegisterEvent("whip_lash", SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0), \
-                speaker, target)
-            return
+    Weapon previous = None
+    if whipping
+        if speaker.GetItemCount(whip) < 1
+            if whip_main.require_whip
+                SkyrimNetApi.RegisterShortLivedEvent("whip_lash_no_whip_" + speaker.GetFormID(), "whip_lash", \
+                    SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0), "", \
+                    (whip_main.event_ttl * 1000.0) as int, speaker, target)
+                return
+            endif
+            speaker.AddItem(whip, 1, true)
+            given = true
         endif
-        speaker.AddItem(whip, 1, true)
-        given = true
+        previous = speaker.GetEquippedWeapon(false)
     endif
 
-    Trace("Whip_Execute", speaker.GetDisplayName() + " -> " + target.GetDisplayName() + " strikes:" + strikes + " given:" + given)
-    Weapon previous = speaker.GetEquippedWeapon(false)
+    Trace("Torture_Execute", speaker.GetDisplayName() + " -> " + target.GetDisplayName() + " " + source + " strikes:" + strikes + " given:" + given)
     StorageUtil.SetIntValue(speaker, whip_main.KEY_IN_ACTION, 1)
 
-    speaker.EquipItem(whip, false, true)
+    if whipping
+        speaker.EquipItem(whip, false, true)
+    endif
     if speaker.GetDistance(target) > 120.0
         speaker.PathToReference(target, 1.0)
     endif
     speaker.SetAngle(0.0, 0.0, speaker.GetAngleZ() + speaker.GetHeadingAngle(target))
-    speaker.DrawWeapon()
+    if whipping
+        speaker.DrawWeapon()
+    endif
     Utility.Wait(1.0)
 
     int done = 0
-    int worst = -1 ; hit code with the highest level, for the summary narration
     while done < strikes && !target.IsDead() && !speaker.IsDead()
-        Debug.SendAnimationEvent(speaker, "attackStart")
-        Utility.Wait(0.45)
-        int code = whip_main.Lash(speaker, target, false)
-        if code >= 0 && (worst < 0 || code % 10 >= worst % 10)
-            worst = code
+        int code
+        if whipping
+            Debug.SendAnimationEvent(speaker, "attackStart")
+            Utility.Wait(0.45)
+            code = whip_main.Lash(speaker, target)
+        else
+            ; by hand: no real swing (it would land as real damage and start a fight); the type's animation, if any
+            code = whip_main.Torture(speaker, target, source)
         endif
         done += 1
+        if whip_main.verbose_logging
+            Trace("Torture_Execute", "[v] " + source + " strike " + done + "/" + strikes + " code:" + code \
+                + " distance:" + (speaker.GetDistance(target) / whip_main.UNITS_PER_METER) + "m")
+        endif
         Utility.Wait(0.75)
     endwhile
 
     Utility.Wait(0.5) ; let a late enchantment hit from the last swing see the in-action flag
     StorageUtil.UnsetIntValue(speaker, whip_main.KEY_IN_ACTION)
-    speaker.SheatheWeapon()
-    if previous != None && previous != whip
-        speaker.EquipItem(previous, false, true)
-    else
-        speaker.UnequipItem(whip, false, true)
-    endif
-    if given
-        speaker.RemoveItem(whip, 1, true)
-    endif
-
-    if done > 0
-        NarrateSummary(whip_main, speaker, target, done, worst)
+    if whipping
+        speaker.SheatheWeapon()
+        if previous != None && previous != whip
+            speaker.EquipItem(previous, false, true)
+        else
+            speaker.UnequipItem(whip, false, true)
+        endif
+        if given
+            speaker.RemoveItem(whip, 1, true)
+        endif
     endif
 EndFunction
 
-; injuries/whipping.json narration.summary ("<speaker> whips <target> once/twice/several times/again and again ...")
-; plus the hardest-hitting lash's narration. No digits: the actor would repeat them.
-Function NarrateSummary(SkyrimNet_Whipped_Main whip_main, Actor speaker, Actor target, int done, int worst) global
-    String msg = SkyrimNet_Whipped_Engine.ActionText(whip_main.SOURCE_WHIP, "narration.summary.text", speaker, target, done)
-    if worst >= 0
-        msg += " " + whip_main.LashText(speaker, target, worst)
-    endif
-    StorageUtil.SetFloatValue(target, whip_main.KEY_LAST_NARRATION, Utility.GetCurrentRealTime())
-    if whip_main.narration_enabled
-        SkyrimNetApi.DirectNarration(msg, speaker, target)
-    else
-        SkyrimNetApi.RegisterEvent("whip_lash", msg, speaker, target)
-    endif
-EndFunction
