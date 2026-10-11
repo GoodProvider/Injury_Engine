@@ -97,3 +97,7 @@ Papyrus has no lazy evaluation: `Verbose("f", "x:" + victim.GetDistance(a))` mak
 ## Names passed into natives arrive with another mod's casing (2026-10-09)
 
 The case-folding risk above happened in the other direction: SkyrimNet_SexLab passed `"pussy"` to `External_Damage`, and `PartIndex` received `"Pussy"` (the BSFixedString pool had interned that spelling first). The case-sensitive compare failed, so the slap landed on a random part ("slaps Nina's pussy… Nina's right arm is slapped"). `InjuryEngine::PartIndex` and `InjuryConfig::IndexOf` (source ids) now compare with `InjuryConfig::IEquals`. Any native that matches a Papyrus string against names from JSON must use it.
+
+## Torture scene phase strings arrive as Start / End (2026-10-11)
+
+`Main.SceneTick` passes `"start"` and `"end"` into `Engine.SceneText`; Papyrus re-interns them as `"Start"` and `"End"` (same pool as `Start` / `SPELL` in the note above). `"again"` is unchanged. `InjuryEngine::SceneText` folds the phase to lowercase before comparing or building `session.json` paths (`hit.start`, `inline.end`, …). Without that, the first combined torture line was only the attacker name plus `narration.hit.levels` (e.g. `Bob , the small flame passed slowly…`).
