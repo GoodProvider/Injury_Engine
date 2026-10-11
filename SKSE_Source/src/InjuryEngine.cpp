@@ -1198,13 +1198,13 @@ namespace InjuryEngine
         }
     }
 
-    void LogLine(std::string_view kind, std::string_view text)
+    void LogLine(std::string_view kind, std::string_view narrationType, std::string_view text)
     {
         if (text.empty()) {
             return;
         }
         if (auto logger = spdlog::get("event")) {
-            logger->info("{}: {}", kind, text);
+            logger->info("{}:{} {}", kind, narrationType, text);
         }
     }
 
@@ -2035,6 +2035,10 @@ namespace InjuryEngine
             return {};
         }
         const std::string ph = FoldPhase(phase);
+        if (ph != "start" && ph != "again" && ph != "switch") {
+            SKSE::log::warn("scene text: unknown phase \"{}\"", phase);
+            return {};
+        }
         if (pairs.size() == 1 && pairs[0].attacker && pairs[0].attacker != pairs[0].victim && (ph == "start" || ph == "again")) {
             const auto& p = pairs[0];
             std::string text = AttackLine(p.source, p.attacker, p.victim, p.mask, p.level, ph == "again", false, ph == "start");
@@ -2116,9 +2120,7 @@ namespace InjuryEngine
                     const bool many = group.size() > 1;
                     const int first = group.front()->source;
                     std::string what;
-                    if (ph == "end") {
-                        what = same ? sess(first, "end") : InjuryConfig::SessionStr("mixed.end");
-                    } else if (same) {
+                    if (same) {
                         what = InjuryConfig::SessionStr(std::string("hit.") + ph + (many ? "_many" : ""));
                     } else {
                         what = InjuryConfig::SessionStr("mixed_hit." + ph);
@@ -2130,8 +2132,7 @@ namespace InjuryEngine
                         vars["form"] = NarrationForm(first, false);
                     }
                     vars["what"] = InjuryConfig::Render(what, vars);
-                    vars["stop"] = InjuryConfig::SessionStr(many ? "stop_many" : "stop_one");
-                    sentences.push_back(InjuryConfig::Render(InjuryConfig::SessionStr(ph == "end" ? "end" : "clause"), vars));
+                    sentences.push_back(InjuryConfig::Render(InjuryConfig::SessionStr("clause"), vars));
                 }
                 for (const auto* p : alone) {
                     auto vars = ActorVars(victim);

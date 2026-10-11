@@ -34,15 +34,13 @@ String Property KEY_SC_NARR = "skyrimnet_whipped.sc_narr" AutoReadOnly
 String Property KEY_SC_STATE = "skyrimnet_whipped.sc_state" AutoReadOnly
 String Property KEY_SC_SWITCH = "skyrimnet_whipped.sc_switch" AutoReadOnly
 String Property KEY_SC_CAUSE = "skyrimnet_whipped.sc_cause" AutoReadOnly
-; KEY_SC_STATE values: not narrated yet / narrated and in sight / out of sight (never narrated, memory at the end)
+; KEY_SC_STATE values: not narrated yet / narrated and in sight / out of sight (never narrated)
 Int Property SC_PENDING = 0 AutoReadOnly
 Int Property SC_RUNNING = 1 AutoReadOnly
 Int Property SC_HIDDEN = 2 AutoReadOnly
 Int Property SC_SEL_START = 0 AutoReadOnly
 Int Property SC_SEL_SWITCH = 1 AutoReadOnly
 Int Property SC_SEL_AGAIN = 2 AutoReadOnly
-Int Property SC_SEL_END_SAID = 3 AutoReadOnly
-Int Property SC_SEL_END_QUIET = 4 AutoReadOnly
 ; Heals since the victim's last heal narration: IntList of heal codes (see SkyrimNet_Whipped_Engine.TakeHealed)
 String Property KEY_HEAL_PENDING = "skyrimnet_whipped.heal_pending" AutoReadOnly
 ; Heal session (mirrors the torture scene): parallel lists on this quest, one entry per healed actor.
@@ -101,16 +99,16 @@ Function Verbose(String func, String msg)
     endif
 EndFunction
 
-; Every DirectNarration goes through here so the exact text sent is in SkyrimNet_Whipped.log ([time] torture: / heal: / health:).
+; Every DirectNarration goes through here so the exact text sent is in SkyrimNet_Whipped.log ([hh:mm:ss] torture:direct / heal:direct / health:direct).
 Function DirectNarrate(String msg, Actor speaker, Actor target, String category = "torture") global
     Trace("DirectNarration", NameOf(speaker) + " -> " + NameOf(target) + ": " + msg)
-    SkyrimNet_Whipped_Engine.LogLine(category, msg)
+    SkyrimNet_Whipped_Engine.LogLine(category, "direct", msg)
     SkyrimNetApi.DirectNarration(msg, speaker, target)
 EndFunction
 
 Function ShortEvent(String msg, Actor speaker, Actor target, String category, String eventId, String eventType, int ttlMs) global
     if msg != ""
-        SkyrimNet_Whipped_Engine.LogLine(category, msg)
+        SkyrimNet_Whipped_Engine.LogLine(category, "short", msg)
     endif
     SkyrimNetApi.RegisterShortLivedEvent(eventId, eventType, msg, "", ttlMs, speaker, target)
 EndFunction
@@ -355,7 +353,7 @@ EndFunction
 ; Torture hits (whipping, slapping, ...) form one scene of (attacker, victim) pairs, see "Torture scene" below:
 ;   - a pair's first hit (pending start) or a method change: NarrateHits sends "start" immediately; player in batch: purge + DirectNarration, else OptionalDirectNarrate
 ;   - a hit after that is a short-lived event; every torture_direct_narration_gap seconds one combined "again" line
-;   - a pair whose last hit is torture_maximum_break seconds old ends: one combined "end" line (out of sight: a memory)
+;   - a pair whose last hit is torture_maximum_break seconds old is dropped with no line (stops "again")
 ;   - only pairs in sight of the player are narrated
 Function NarrateInjury(Actor attacker, Actor victim, int code, Bool unarmedForm = False)
     NarrateHits(attacker, victim, SourceOfCode(code), MaskOf(code), LevelOf(code), 1, "", unarmedForm)
@@ -521,18 +519,10 @@ Function ClearTortureScene(Actor victim)
 EndFunction
 
 ; Does pair i belong to the selection: SC_SEL_START pending starts, SC_SEL_SWITCH method switches, SC_SEL_AGAIN running
-; pairs with more than one hit, SC_SEL_END_SAID ended pairs to narrate now, SC_SEL_END_QUIET ended pairs for a memory.
-; Starts, switches and again lines skip pairs whose break already elapsed.
+; pairs with more than one hit. Starts, switches and again lines skip pairs whose break already elapsed.
 Bool Function SceneMatches(int i, int mode, float now)
     int st = StorageUtil.IntListGet(self, KEY_SC_STATE, i)
     Bool ended = now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i) >= torture_maximum_break
-    if mode == SC_SEL_END_SAID || mode == SC_SEL_END_QUIET
-        if !ended || SceneVictim(i) == None || SceneVictim(i).IsDead()
-            return false
-        endif
-        Bool said = st != SC_HIDDEN && narration_enabled
-        return said == (mode == SC_SEL_END_SAID)
-    endif
     if ended
         return false
     endif
@@ -634,9 +624,7 @@ Function SceneSend(String phase, int[] picked, Bool purge)
         StorageUtil.FloatListSet(self, KEY_SC_NARR, picked[k], Utility.GetCurrentRealTime())
         k += 1
     endwhile
-    if phase != "end"
-        msg = CauseText(cause) + msg
-    endif
+    msg = CauseText(cause) + msg
     if msg == ""
         return
     endif
@@ -659,7 +647,7 @@ Function SceneSend(String phase, int[] picked, Bool purge)
     endif
 EndFunction
 
-; Called by OnUpdate: visibility, then switches, new pairs, the periodic line and the ended pairs, each as one combined line.
+; Called by OnUpdate: visibility, then switches, new pairs, the periodic line; drop pairs past torture_maximum_break.
 Function SceneTick()
     if scene_tick_active
         return
@@ -709,19 +697,6 @@ Function SceneTick()
     if due
         SceneSend("again", again, true)
     endif
-    SceneSend("end", SceneSelect(SC_SEL_END_SAID), true)
-    int[] quiet = SceneSelect(SC_SEL_END_QUIET)
-    Int[] one = Utility.CreateIntArray(1)
-    i = 0
-    while i < quiet.Length
-        one[0] = quiet[i]
-        String msg = SceneLine("end", one)
-        if msg != ""
-            Trace("SceneTick", "memory " + NameOf(SceneAttacker(quiet[i])) + " -> " + NameOf(SceneVictim(quiet[i])) + ": " + msg)
-            SkyrimNetApi.RegisterPersistentEvent(msg, SceneAttacker(quiet[i]), SceneVictim(quiet[i]))
-        endif
-        i += 1
-    endwhile
     i = total - 1
     while i >= 0
         if now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i) >= torture_maximum_break
@@ -1136,6 +1111,7 @@ Function HealSend(String phase, int i, String lead)
     Actor player = Game.GetPlayer()
     Trace("HealSend", phase + " " + target.GetDisplayName() + " caster:" + NameOf(caster) + " visible:" + visible + ": " + msg)
     if !visible
+        SkyrimNet_Whipped_Engine.LogLine("heal", "event", msg)
         SkyrimNetApi.RegisterPersistentEvent(msg, target, toward)
     elseif !narration_enabled
         RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target)

@@ -99,8 +99,8 @@ String Function GetStateJson(Actor akActor) global native
 String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false, Bool unarmedForm = false) global native
 ; Parallel to the last TakeHits() result (same index).
 Bool Function HitUnarmed(Int index) global native
-; Writes a torture / heal / health line to SkyrimNet_Whipped.log ("[time] <category>: <text>").
-Function LogLine(String category, String text) global native
+; Writes a torture / heal / health line to SkyrimNet_Whipped.log ("[hh:mm:ss] <category>:<narrationType> <text>", narrationType = direct / event / short).
+Function LogLine(String category, String narrationType, String text) global native
 ; All codes passive: wrapped as ordinary healing (narration.heal.passive).
 String Function HealText(Actor victim, Int[] codes) global native
 ; kind / source as in SyncHealth; percent is turned into words (no numbers in narration).
@@ -110,7 +110,7 @@ String Function LevelText(String sourceId, Actor victim, Int level) global nativ
 String Function SourceHealText(Int kind, Int source, Int percent, Actor caster, Actor target) global native
 ; Renders the string at a dotted path ("narration.summary.text", "action.no_whip") with {speaker}, {target} and
 ; {times} (words for count, from narration.summary.times).
-; Combined torture narration for parallel lists of pairs (an attacker that is not an Actor means none); phase start, again, switch or end.
+; Combined torture narration for parallel lists of pairs (an attacker that is not an Actor means none); phase start, again, or switch.
 String Function SceneText(String phase, Form[] attackers, Form[] victims, String[] sources, Int[] masks, Int[] levels) global native
 String Function ActionText(String sourceId, String path, Actor speaker, Actor target, Int count) global native
 

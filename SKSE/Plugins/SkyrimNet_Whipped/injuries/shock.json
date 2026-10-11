@@ -172,7 +172,6 @@
     },
     "session": {
       "switch": "switches to casting sparks",
-      "end": "casting sparks on {target} again and again",
       "hit_noun": "spark"
     },
     "heal": {

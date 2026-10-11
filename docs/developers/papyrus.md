@@ -32,7 +32,7 @@ Schema: `SKSE/Plugins/SkyrimNet/config/plugins/SkyrimNet_Whipped/manifest.yaml`.
 | `whip.healing.give_healing_hands` | Adds Healing Hands (Skyrim.esm 0x4D3F2) to the player |
 | `whip.narration.enabled`, `.cooldown`, `.max_distance`, `.event_ttl` | Narration gate (`cooldown`: healing only) |
 | `whip.narration.torture_narration_window_size` | Passive healing is not reported this long after a torture hit (`InTortureSession`); torture narration itself is a session (`NarrateHits`: start narration, summary 2 s after the last hit) |
-| `whip.narration.torture_maximum_break` | Seconds without a hit that end the torture (end narration), default 3 |
+| `whip.narration.torture_maximum_break` | Seconds without a hit that end the torture session (no line; stops \"again\"), default 3 |
 | `whip.narration.torture_direct_narration_gap` | Seconds between combined "again" narrations during continuous torture, default 6 |
 | `whip.overlay.enabled` | Overlay on/off |
 | `whip.debug.verbose_logging` | `Main.verbose_logging`; passed to the DLL (`SetVerboseLogging`) |

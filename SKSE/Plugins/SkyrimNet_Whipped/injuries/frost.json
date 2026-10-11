@@ -172,7 +172,6 @@
     },
     "session": {
       "switch": "switches to casting frostbite",
-      "end": "casting frostbite on {target} again and again",
       "hit_noun": "frost"
     },
     "heal": {

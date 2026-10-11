@@ -116,8 +116,12 @@ The case-folding risk above happened in the other direction: SkyrimNet_SexLab pa
 
 ## Sessions are exclusive per victim (2026-10-11)
 
-A torture scene and a heal session used to run side by side, so the scene's `again` / `end` lines ("the whipping stops") followed the heal `start` line. Now a different activity silently closes the open session: `HealOpen` and non-torture `NarrateRealHits` call `ClearTortureScene`; torture and real hits call `ClearHealBatch`. `TakeHits` also carries classifier torture (punching, fire, frost, shock), so `NarrateRealHits` checks `IsTorture` before clearing the scene.
+A torture scene and a heal session used to run side by side, so the scene's periodic `again` lines followed the heal `start` line. Now a different activity silently closes the open session: `HealOpen` and non-torture `NarrateRealHits` call `ClearTortureScene`; torture and real hits call `ClearHealBatch`. `TakeHits` also carries classifier torture (punching, fire, frost, shock), so `NarrateRealHits` checks `IsTorture` before clearing the scene.
 
 ## RegisterForSingleUpdate replaces a pending update (2026-10-11)
 
 Each hooked hit called `StartSync` → `RegisterForSingleUpdate(0.2)`, which resets the timer. A concentration torture beam postponed `OnUpdate` until the hits paused, so short-lived `torture_hit` events lagged seconds behind damage. `StartSync` now sets `sync_pending` and skips scheduling when an update is already waiting; `OnInjury` drains `TakeHits`, `TakeQueuedHealActors`, and `TakeSyncEvents` immediately so short-lived events land in the same frame as the hook.
+
+## Removed Papyrus-to-DLL contract needs both rebuilt (stale .pex)
+
+Removing a scene phase (the torture "end" line) from `InjuryEngine::SceneText` and `Main.psc` only works if `pyro` is rerun as well as `make dll`. A stale `.pex` still calls `SceneText("end", ...)`; the new DLL has no such branch, so the generic path rendered `"Bob , and it is too much. ..."` (empty `hit.end` / `inline.end` plus the level text) about 13 s after the last hit. `SceneText` now returns an empty string with a warning for any phase other than start / again / switch, and `SceneSend` skips empty lines. Symptom of a stale `.pex`: half-rendered scene lines; compare `Scripts/*.pex` timestamps with `Scripts/Source/*.psc`.

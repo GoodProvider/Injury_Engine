@@ -181,7 +181,6 @@
     },
     "session": {
       "switch": "switches to pulling",
-      "end": "pulling {target} again and again",
       "hit_noun": "pull"
     },
     "heal": {

@@ -187,7 +187,6 @@
     },
     "session": {
       "switch": "switches to punching",
-      "end": "punching {target} again and again",
       "hit_noun": "punch"
     },
     "heal": {

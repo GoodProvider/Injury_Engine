@@ -132,7 +132,7 @@ namespace InjuryEngine
     std::string HealText(RE::Actor* victim, const std::vector<std::int32_t>& codes);
     std::string SourceHealText(int kind, int healingSource, int percent, RE::Actor* caster, RE::Actor* target);
     // Renders the string at `path` with {speaker}, {target} and {times} (words for count).
-    // Combined torture narration for the pairs (parallel lists) of one phase: start, again, switch or end.
+    // Combined torture narration for the pairs (parallel lists) of one phase: start, again, or switch.
     // Pairs are grouped by victim; same method / mixed methods and one or many attackers are worded from session.json.
     std::string SceneText(std::string_view phase, const std::vector<RE::Actor*>& attackers, const std::vector<RE::Actor*>& victims,
         const std::vector<std::string>& sources, const std::vector<int>& masks, const std::vector<int>& levels);
@@ -146,8 +146,9 @@ namespace InjuryEngine
     void SetRegenRate(float percent);
     void Forget(RE::Actor* actor);
 
-    // Writes a torture / heal / health line to SkyrimNet_Whipped.log: "[time] <category>: <text>" (empty text is ignored).
-    void LogLine(std::string_view category, std::string_view text);
+    // Writes a narration line to SkyrimNet_Whipped.log: "[hh:mm:ss] <category>:<narrationType> <text>"
+    // (category torture / heal / health; narrationType direct / event / short; empty text is ignored).
+    void LogLine(std::string_view category, std::string_view narrationType, std::string_view text);
 
     void Save(SKSE::SerializationInterface* intfc);
     void Load(SKSE::SerializationInterface* intfc, std::uint32_t version, std::uint32_t length);

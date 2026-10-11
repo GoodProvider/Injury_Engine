@@ -57,7 +57,7 @@ schema:
     - name: "Narrate lashes"
       path: "whip.narration.enabled"
       type: "bool"
-      description: "Send Direct Narrations for torture and healing. Torture is narrated when it starts, every few seconds while it continues, when the method changes and when it stops (the speech queue is cleared first when the player is involved); hits in between are short-lived events. Off: everything is recorded as short-lived events."
+      description: "Send Direct Narrations for torture and healing. Torture is narrated when it starts, every few seconds while it continues, and when the method changes (the speech queue is cleared first when the player is involved); hits in between are short-lived events. Off: everything is recorded as short-lived events."
       defaultValue: true
       category: "Narration"
 
@@ -73,7 +73,7 @@ schema:
     - name: "Torture maximum break (sec)"
       path: "whip.narration.torture_maximum_break"
       type: "float"
-      description: "Torture counts as continuous while the pause between hits stays below this. A break this long ends it: one narration says who stopped after hitting where. Out of sight, a memory is stored between torturer and tortured instead."
+      description: "Torture counts as continuous while the pause between hits stays below this. A break this long ends the session with no narration; combined \"again\" lines stop for that pair."
       min: 0.5
       max: 30
       defaultValue: 3.0

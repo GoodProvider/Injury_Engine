@@ -181,7 +181,6 @@
     },
     "session": {
       "switch": "switches to slapping",
-      "end": "slapping {target} again and again",
       "hit_noun": "slap"
     },
     "heal": {

@@ -172,7 +172,6 @@
     },
     "session": {
       "switch": "switches to casting flames",
-      "end": "casting flames on {target} again and again",
       "hit_noun": "flame"
     },
     "heal": {

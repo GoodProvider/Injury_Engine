@@ -216,7 +216,6 @@
     },
     "session": {
       "switch": "switches to whipping",
-      "end": "whipping {target} again and again",
       "hit_noun": "lash"
     },
     "heal": {

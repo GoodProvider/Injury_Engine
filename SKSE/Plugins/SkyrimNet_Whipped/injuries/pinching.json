@@ -181,7 +181,6 @@
     },
     "session": {
       "switch": "switches to pinching",
-      "end": "pinching {target} again and again",
       "hit_noun": "pinch"
     },
     "heal": {
