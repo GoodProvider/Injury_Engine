@@ -6,6 +6,7 @@
 #include <array>
 #include <atomic>
 #include <bit>
+#include <cctype>
 #include <chrono>
 #include <cmath>
 #include <format>
@@ -84,6 +85,14 @@ namespace InjuryEngine
             int mask = 0;
             int level = 0;
             bool fresh = false;
+            bool unarmed = false;
+        };
+
+        struct HealthLogEntry
+        {
+            int part = 0;
+            int countBefore = 0;
+            int level = 0;
         };
 
         std::mutex g_lock;
@@ -101,6 +110,7 @@ namespace InjuryEngine
         std::vector<RE::Actor*> g_syncCasters;
         std::vector<RE::Actor*> g_hitVictims;
         std::vector<RE::Actor*> g_hitAttackers;
+        std::vector<bool> g_hitUnarmed;
         float g_hoursPerPoint = 1.0f;
         float g_regenRate = 10.0f;
         thread_local int g_internal = 0;  // >0 while the engine itself changes health
@@ -564,7 +574,7 @@ namespace InjuryEngine
         // One torture hit of `source` on `part` (-1 or a part the actor can't take: weighted random by the
         // type's part_weights). Takes the health the part's new maximum holds down. Caller holds g_lock.
         // Returns the hit code; `index` gets the part.
-        std::int32_t TortureHit(RE::Actor* actor, State& st, int source, int part, double now, int& index);
+        std::int32_t TortureHit(RE::Actor* actor, RE::Actor* attacker, State& st, int source, int part, double now, int& index, float amount);
 
         // ---- real (health model) -----------------------------------------------------------------------
 
@@ -880,6 +890,57 @@ namespace InjuryEngine
             return buf;
         }
 
+        const char* LogLevelName(int level)
+        {
+            switch (level) {
+            case kLight:
+                return "light";
+            case kMedium:
+                return "medium";
+            case kSevere:
+                return "severe";
+            default:
+                return "undamaged";
+            }
+        }
+
+        std::string FormatHealthPercent(float health, float maxHealth)
+        {
+            if (maxHealth <= 0.0f) {
+                return "0%";
+            }
+            const float pct = health / maxHealth * 100.0f;
+            const float tenth = std::round(pct * 10.0f) / 10.0f;
+            const float whole = std::round(tenth);
+            if (std::fabs(tenth - whole) < 0.05f) {
+                return std::format("{:.0f}%", whole);
+            }
+            return std::format("{:.1f}%", tenth);
+        }
+
+        void LogInjuryPoint(std::string_view kind, RE::Actor* attacker, RE::Actor* victim, int source, int partIndex, int pointBefore,
+            int pointAdded, int level, float amount, float healthAfter)
+        {
+            const auto* conf = InjuryConfig::Find(source);
+            const auto& body = GetBody();
+            const char* partName = partIndex >= 0 && partIndex < kPartCount ? body.partName[partIndex].c_str() : "?";
+            const float maxHealth = victim->AsActorValueOwner()->GetPermanentActorValue(RE::ActorValue::kHealth);
+            SKSE::log::info("{}: {} \xe2\x9e\xa4 {} | {} {} point:{}+{} level:{} amount:{:.1f} health:{}", kind, LogActor(attacker),
+                LogActor(victim), conf ? conf->id : "?", partName, pointBefore, pointAdded, LogLevelName(level), amount,
+                FormatHealthPercent(healthAfter, maxHealth));
+        }
+
+        std::string NarrationForm(int source, bool unarmed)
+        {
+            if (unarmed) {
+                const std::string alt = InjuryConfig::Str(source, "narration.form_unarmed");
+                if (!alt.empty()) {
+                    return alt;
+                }
+            }
+            return InjuryConfig::Str(source, "narration.form");
+        }
+
         std::map<std::string, std::string> ActorVars(RE::Actor* actor)
         {
             const auto* base = actor ? actor->GetActorBase() : nullptr;
@@ -933,6 +994,49 @@ namespace InjuryEngine
             return text.empty() ? InjuryConfig::Str(source, "narration.list.fallback", "body") : text;
         }
 
+        // Papyrus interns "start" / "end" as "Start" / "End"; fold before session.json lookups.
+        std::string FoldPhase(std::string_view phase)
+        {
+            std::string ph(phase);
+            std::ranges::transform(ph, ph.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+            return ph;
+        }
+
+        // narration.hit.levels often lead with a redundant clause (", the small flame..."); scene start keeps the rest.
+        std::string LevelSensationTail(std::string_view levelText)
+        {
+            const std::string text(levelText);
+            const auto dot = text.find(". ");
+            return dot != std::string::npos ? text.substr(dot + 2) : text;
+        }
+
+        // One attacker, one victim. The words come from session.json (hit.* / clause / inline.*) and the
+        // source's narration.form and narration.hit.levels. Short events and the scene's start / again line share this.
+        std::string AttackLine(int source, RE::Actor* attacker, RE::Actor* victim, int mask, int level, bool again, bool unarmed,
+            bool sceneStart = false)
+        {
+            const std::string phase = again ? "again" : "start";
+            auto vars = ActorVars(victim);
+            vars["target"] = NameOf(victim);
+            vars["attackers"] = NameOf(attacker);
+            vars["form"] = NarrationForm(source, unarmed);
+            vars["parts"] = PartsText(source, mask);
+            const std::string what = InjuryConfig::SessionStr(std::string("hit.") + phase,
+                again ? "hits {target} again and again with {form}" : "hits {target} with {form}");
+            vars["what"] = InjuryConfig::Render(what, vars);
+            const std::string sentence = InjuryConfig::Render(InjuryConfig::SessionStr("clause", "{attackers} {what}"), vars);
+            const std::string feeling = InjuryConfig::Render(
+                InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), ActorVars(victim));
+            if (sceneStart && !again) {
+                return sentence + ", " + LevelSensationTail(feeling);
+            }
+            const std::string tail = InjuryConfig::Render(
+                InjuryConfig::SessionStr(std::string("inline.") + phase,
+                    again ? ", the last one hitting {target}'s {parts}" : " hitting {target}'s {parts}"),
+                vars);
+            return sentence + tail + feeling;
+        }
+
         // The source whose heal_events wording fits the actor: torture-only wounds use the torture type with the
         // most left (whipping when they are all healed), anything else generic's.
         int HealEventsSource(const State* st)
@@ -958,7 +1062,7 @@ namespace InjuryEngine
             return generic >= 0 ? generic : whip;
         }
 
-        std::int32_t TortureHit(RE::Actor* actor, State& st, int source, int part, double now, int& index)
+        std::int32_t TortureHit(RE::Actor* actor, RE::Actor* attacker, State& st, int source, int part, double now, int& index, float amount)
         {
             const auto& body = GetBody();
             const RE::FormID id = actor->GetFormID();
@@ -996,6 +1100,7 @@ namespace InjuryEngine
                         : top <= healed                        ? kLight
                                                                : DamageStage(top - healed, index) + 1;
             Cell& c = st.torture[source][index];
+            const int pointBefore = c.hit && c.deficit > 0 ? c.deficit : 0;
             DropHealed(id, source, index);
             if (top <= 0) {
                 st.lastHours[index] = now;
@@ -1014,10 +1119,21 @@ namespace InjuryEngine
             MarkTouched(st, source, index);
             g_pained[id] = true;
             TakeHealth(actor, Deficit(st) - deficitBefore);
+            const int pointAdded = c.deficit - pointBefore;
+            const float healthAfter = actor->AsActorValueOwner()->GetActorValue(RE::ActorValue::kHealth);
+            LogInjuryPoint("torture", attacker, actor, source, index, pointBefore, pointAdded, level, amount, healthAfter);
             SKSE::log::debug("hit {:08X} {} part:{} level:{} types:{} fresh:{} deficit:{} -> {}", id, conf ? conf->id : "?",
                 body.partName[index], level, CellsText(st, index), fresh, deficitBefore, Deficit(st));
             return EncodeHit(fresh, source, 1 << index, level);
         }
+    }
+
+    void LogLine(std::string_view kind, std::string_view text)
+    {
+        if (text.empty()) {
+            return;
+        }
+        SKSE::log::info("{}: {}", kind, text);
     }
 
     bool IsInternalDamage()
@@ -1025,12 +1141,12 @@ namespace InjuryEngine
         return g_internal > 0;
     }
 
-    std::int32_t Hit(RE::Actor* actor, std::string_view sourceId)
+    std::int32_t Hit(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId)
     {
-        return HitPart(actor, sourceId, -1);
+        return HitPart(actor, attacker, sourceId, -1);
     }
 
-    std::int32_t HitPart(RE::Actor* actor, std::string_view sourceId, int part)
+    std::int32_t HitPart(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId, int part)
     {
         const int source = InjuryConfig::IndexOf(sourceId);
         if (!actor || actor->IsDead() || !InjuryConfig::IsTorture(source)) {
@@ -1041,13 +1157,7 @@ namespace InjuryEngine
         State* existing = Current(actor, now);
         State& st = existing ? *existing : g_actors[actor->GetFormID()];
         int index = -1;
-        const std::int32_t code = TortureHit(actor, st, source, part, now, index);
-        if (code >= 0) {
-            const auto* conf = InjuryConfig::Find(source);
-            SKSE::log::info("{} {} {} part:{} level:{}", LogActor(nullptr), LogActor(actor), conf ? conf->id : "?",
-                GetBody().partName[index], code % 10);
-        }
-        return code;
+        return TortureHit(actor, attacker, st, source, part, now, index, 0.0f);
     }
 
     std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points)
@@ -1107,9 +1217,10 @@ namespace InjuryEngine
                 int level = 0;
                 int lastPart = -1;
                 bool fresh = false;
+                const float pointAmount = physicalMelee ? amount : conf.hitShare * maxHealth;
                 for (int i = 0; i < hits; ++i) {
                     int index = -1;
-                    const std::int32_t code = TortureHit(victim, st, source, -1, now, index);
+                    const std::int32_t code = TortureHit(victim, attacker, st, source, -1, now, index, pointAmount);
                     if (i == 0) {
                         fresh = code >= 100000000;
                     }
@@ -1127,18 +1238,16 @@ namespace InjuryEngine
                     e.mask = mask;
                     e.level = level;
                     e.fresh = fresh;
+                    e.unarmed = false;
                     g_hits.push_back(e);
                 }
-                const std::string partText = hits == 1 && lastPart >= 0 ? GetBody().partName[lastPart] : PartsText(source, mask);
-                SKSE::log::info("{} {} {} part:{} level:{} amount:{:.1f} hits:{}", LogActor(attacker), LogActor(victim), conf.id, partText, level,
-                    amount, hits);
             }
             NotifyPapyrus();
             return 0.0f;
         }
     }
 
-    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee)
+    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm)
     {
         const auto* conf = InjuryConfig::Find(source);
         if (!victim || amount <= 0.0f || !conf || victim->IsDead()) {
@@ -1179,6 +1288,7 @@ namespace InjuryEngine
             int points = 0;
             int mask = 0;
             int level = 0;
+            std::vector<HealthLogEntry> healthLogs;
             while (left > 1e-4f && part >= 0) {
                 if (TortureOpen(st, part) && left >= ratioT - 1e-3f) {
                     ReplaceTorturePoint(st, part);
@@ -1203,8 +1313,11 @@ namespace InjuryEngine
                     }
                     st.carry -= ratioR;
                     // the part's stage before the point lands: 0 undamaged .. 3 severe
-                    level = std::max(level, DamageStage(PartDamage(st, part), part) + 1);
+                    const int pointLevel = DamageStage(PartDamage(st, part), part) + 1;
+                    level = std::max(level, pointLevel);
+                    const int countBefore = st.real[source][part];
                     AddRealPoint(st, source, part);
+                    healthLogs.push_back({ part, countBefore, pointLevel });
                     mask |= 1 << part;
                     ++points;
                     DropHealed(id, source, part);
@@ -1236,10 +1349,16 @@ namespace InjuryEngine
                     e.mask = mask;
                     e.level = level;
                     e.fresh = fresh;
+                    e.unarmed = unarmedForm;
                     g_hits.push_back(e);
                 }
-                SKSE::log::info("real {} {} {} part:{} amount:{:.1f} absorbed:{:.1f} torture_replaced:{} points:{} mask:{} level:{}",
-                    LogActor(attacker), LogActor(victim), conf->id, firstName, amount, absorbed, replacedNow, points, mask, level);
+                const float currentHealth = av->GetActorValue(RE::ActorValue::kHealth);
+                const float finalHealth = currentHealth - pass;
+                for (std::size_t i = 0; i < healthLogs.size(); ++i) {
+                    const auto& entry = healthLogs[i];
+                    const float healthAfter = i + 1 == healthLogs.size() ? finalHealth : currentHealth - ratioR * static_cast<float>(i + 1);
+                    LogInjuryPoint("health", attacker, victim, source, entry.part, entry.countBefore, 1, entry.level, ratioR, healthAfter);
+                }
                 if (replacedNow > 0 && firstPart >= 0) {
                     SKSE::log::debug("damage {:08X} {} types after replacement: {}", id, firstName, CellsText(st, firstPart));
                 }
@@ -1381,6 +1500,7 @@ namespace InjuryEngine
         std::vector<std::int32_t> codes;
         g_hitVictims.clear();
         g_hitAttackers.clear();
+        g_hitUnarmed.clear();
         for (const auto& e : g_hits) {
             auto* victim = RE::TESForm::LookupByID<RE::Actor>(e.victim);
             if (!victim) {
@@ -1391,9 +1511,16 @@ namespace InjuryEngine
             codes.push_back(EncodeHit(e.fresh, e.source, e.mask, e.level));
             g_hitVictims.push_back(victim);
             g_hitAttackers.push_back(e.attacker.get().get());
+            g_hitUnarmed.push_back(e.unarmed);
         }
         g_hits.clear();
         return codes;
+    }
+
+    bool HitUnarmed(std::size_t index)
+    {
+        std::lock_guard lock(g_lock);
+        return index < g_hitUnarmed.size() && g_hitUnarmed[index];
     }
 
     std::vector<RE::Actor*> HitVictims()
@@ -1612,15 +1739,19 @@ namespace InjuryEngine
         return out.dump();
     }
 
-    std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count,
-        bool noCause)
+    std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count, bool noCause,
+        bool unarmedForm)
     {
         const int source = InjuryConfig::IndexOf(sourceId);
         if (source < 0 || !victim) {
             return {};
         }
+        const std::string levelText = LevelText(sourceId, victim, level);
+        const std::string parts = PartsText(source, mask);
+        if (!noCause && attacker && attacker != victim) {
+            return AttackLine(source, attacker, victim, mask, level, count > 1, unarmedForm);
+        }
         auto vars = ActorVars(victim);
-        // noCause: the caller's cause leads the line, so drop ours ("as {attacker} ..." / "by the fall").
         std::string by = noCause ? std::string() : InjuryConfig::Str(source, "narration.hit.by_none");
         if (!noCause && attacker && attacker != victim) {
             by = InjuryConfig::Render(InjuryConfig::Str(source, "narration.hit.by_attacker"), { { "attacker", NameOf(attacker) } });
@@ -1634,12 +1765,12 @@ namespace InjuryEngine
             times = InjuryConfig::Str(source, "narration.hit.times.several");
         }
         auto lead = vars;
-        lead["parts"] = PartsText(source, mask);
+        lead["parts"] = parts;
         lead["verb"] = InjuryConfig::Str(source, std::popcount(static_cast<unsigned>(mask)) > 1 ? "narration.hit.verb_many" : "narration.hit.verb_one");
         lead["times"] = times;
         lead["by"] = by;
         const std::string text = InjuryConfig::Render(InjuryConfig::Str(source, "narration.hit.lead"), lead);
-        return text + LevelText(sourceId, victim, level);
+        return text + levelText;
     }
 
     std::string LevelText(std::string_view sourceId, RE::Actor* victim, int level)
@@ -1797,7 +1928,18 @@ namespace InjuryEngine
         if (pairs.empty()) {
             return {};
         }
-        const std::string ph(phase);
+        const std::string ph = FoldPhase(phase);
+        if (pairs.size() == 1 && pairs[0].attacker && pairs[0].attacker != pairs[0].victim && (ph == "start" || ph == "again")) {
+            const auto& p = pairs[0];
+            std::string text = AttackLine(p.source, p.attacker, p.victim, p.mask, p.level, ph == "again", false, ph == "start");
+            while (!text.empty() && text.back() == ' ') {
+                text.pop_back();
+            }
+            if (!text.empty() && text.back() != '.' && text.back() != '!' && text.back() != '?') {
+                text += '.';
+            }
+            return text;
+        }
         const auto sess = [](int source, const std::string& key) { return InjuryConfig::Str(source, "narration.session." + key); };
         const auto join = [](const std::vector<std::string>& names) {
             std::string out;
@@ -1871,13 +2013,16 @@ namespace InjuryEngine
                     if (ph == "end") {
                         what = same ? sess(first, "end") : InjuryConfig::SessionStr("mixed.end");
                     } else if (same) {
-                        what = sess(first, many ? ph + "_many" : ph);
+                        what = InjuryConfig::SessionStr(std::string("hit.") + ph + (many ? "_many" : ""));
                     } else {
-                        what = InjuryConfig::SessionStr("mixed." + ph);
+                        what = InjuryConfig::SessionStr("mixed_hit." + ph);
                     }
                     auto vars = ActorVars(victim);
                     vars["target"] = target;
                     vars["attackers"] = join(names);
+                    if (same) {
+                        vars["form"] = NarrationForm(first, false);
+                    }
                     vars["what"] = InjuryConfig::Render(what, vars);
                     vars["stop"] = InjuryConfig::SessionStr(many ? "stop_many" : "stop_one");
                     sentences.push_back(InjuryConfig::Render(InjuryConfig::SessionStr(ph == "end" ? "end" : "clause"), vars));
@@ -1885,7 +2030,8 @@ namespace InjuryEngine
                 for (const auto* p : alone) {
                     auto vars = ActorVars(victim);
                     vars["target"] = target;
-                    sentences.push_back(InjuryConfig::Render(sess(p->source, "no_attacker." + ph), vars));
+                    vars["form"] = NarrationForm(p->source, false);
+                    sentences.push_back(target + " " + InjuryConfig::Render(InjuryConfig::SessionStr("no_attacker_hit." + ph), vars));
                 }
             }
         }
@@ -1897,7 +2043,7 @@ namespace InjuryEngine
             out += finish(sentence) + " ";
         }
         for (const auto& p : pairs) {
-            out += finish(feeling(p)) + " ";
+            out += finish(inlineHit(p)) + " ";
         }
         return finish(out);
     }
