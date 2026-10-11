@@ -3,6 +3,9 @@
   "title": "Frostbite",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 40, "resist": "ResistFrost" }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -59,12 +62,12 @@
       "head": [
         "{name}'s face: pale, numb-looking skin with a rime of frost on {his} lashes and hair.",
         "{name}'s face: waxy, bluish-white patches of frostbite on {his} cheeks, nose and ears.",
-        "{name}'s face: dead-white, hard, frozen skin; ice crusts {his} lips and eyelids."
+        "{name}'s face: dead-white, hard, frozen skin; ice crusts {his} lips and eyelids. {name} smells of cold, damp wool and frozen skin."
       ],
       "body": [
         "{name}'s back: pale skin, stiff with cold, a rime of frost on {his} clothing.",
         "{name}'s back: waxy, bluish-white patches of frostbite show where {his} clothing is stiff with ice.",
-        "{name}'s back: hard, frozen skin, ice crystals glittering on a stiff, frozen back."
+        "{name}'s back: hard, frozen skin, ice crystals glittering on a stiff, frozen back. A cold, damp smell like snowmelt clings to {him}."
       ],
       "arm": [
         "{name}'s {part}: pale, numb skin with frost on the sleeve.",
@@ -101,6 +104,7 @@
     }
   },
   "narration": {
+    "form": "biting frost",
     "list": {
       "and": " and ",
       "comma": ", ",

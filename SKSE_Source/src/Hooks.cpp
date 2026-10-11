@@ -53,10 +53,11 @@ namespace
             }
             const float amount = std::fabs(a_damage);
             bool physicalMelee = false;
-            const int source = Classifier::Classify(a_this, a_attacker, &physicalMelee);
-            SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} source:{} physical:{}", a_this->GetFormID(),
-                a_attacker ? a_attacker->GetFormID() : 0, a_damage, InjuryEngine::SourceId(source), physicalMelee);
-            const float kept = source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source, physicalMelee) : amount;
+            bool unarmedForm = false;
+            const int source = Classifier::Classify(a_this, a_attacker, &physicalMelee, &unarmedForm);
+            SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} source:{} physical:{} unarmed:{}",
+                a_this->GetFormID(), a_attacker ? a_attacker->GetFormID() : 0, a_damage, InjuryEngine::SourceId(source), physicalMelee, unarmedForm);
+            const float kept = source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source, physicalMelee, unarmedForm) : amount;
             HandleScope scope;
             func(a_this, a_attacker, std::copysign(kept, a_damage));
         }

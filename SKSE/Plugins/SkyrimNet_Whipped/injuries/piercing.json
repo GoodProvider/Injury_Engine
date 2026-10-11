@@ -3,6 +3,9 @@
   "title": "Stab Wounds",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 50, "weapon_types": ["OneHandDagger", "Bow", "Crossbow"] }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -58,23 +61,23 @@
     "looks": {
       "head": [
         "{name}'s face: a small puncture beads blood near {his} cheek or temple.",
-        "{name}'s face: a deep puncture has bled down {his} cheek; the skin around it is already swelling.",
-        "{name}'s face: a savage puncture through the cheek or brow; blood floods from it and {his} face is deathly pale."
+        "{name}'s face: a deep puncture has bled down {his} cheek; the skin around it is already swelling. A faint metallic smell of blood clings to the wound.",
+        "{name}'s face: a savage puncture through the cheek or brow; blood floods from it and {his} face is deathly pale. The thick iron smell of blood surrounds {him}."
       ],
       "body": [
         "{name}'s back: a small puncture wound weeps a thin line of blood.",
-        "{name}'s back: a deep stab wound, steady dark blood soaking {his} clothing around it.",
-        "{name}'s back: a deep stab wound into the torso; blood pulses from it and {his} breathing is wet and shallow."
+        "{name}'s back: a deep stab wound, steady dark blood soaking {his} clothing around it. The coppery smell of blood seeps from it.",
+        "{name}'s back: a deep stab wound into the torso; blood pulses from it and {his} breathing is wet and shallow. {name} smells of blood, heavy and metallic."
       ],
       "arm": [
         "{name}'s {part}: a small puncture, oozing blood.",
-        "{name}'s {part}: a deep stab wound through the muscle, blood running steadily.",
-        "{name}'s {part}: the arm is skewered through; blood pours and the limb hangs useless."
+        "{name}'s {part}: a deep stab wound through the muscle, blood running steadily. A coppery tang of blood rises from it.",
+        "{name}'s {part}: the arm is skewered through; blood pours and the limb hangs useless. The smell of fresh blood is strong around {him}."
       ],
       "leg": [
         "{name}'s {part}: a small puncture in the thigh or calf, oozing blood.",
-        "{name}'s {part}: a deep stab wound, blood running down into {his} boot.",
-        "{name}'s {part}: a deep, bleeding puncture through the muscle; the leg buckles under any weight."
+        "{name}'s {part}: a deep stab wound, blood running down into {his} boot. It gives off the metallic tang of blood.",
+        "{name}'s {part}: a deep, bleeding puncture through the muscle; the leg buckles under any weight. The air around {him} is thick with the smell of blood."
       ]
     },
     "feels": {
@@ -101,6 +104,7 @@
     }
   },
   "narration": {
+    "form": "a sharp stabbing point",
     "list": {
       "and": " and ",
       "comma": ", ",
@@ -120,7 +124,7 @@
       "levels": [
         ", a sudden sharp stab. The point punches in and out, and {he} gasps as the pain blooms hot around it.",
         " into a puncture that is already bleeding. The point drives deeper, and the pain flares, sharp and nauseating.",
-        ", and the point drives deep into the wound. The pain is huge and wet and {he} chokes on a cry as blood runs.",
+        ", and the point drives deep into the wound. The pain is huge and wet and {he} chokes on a cry as blood runs. The smell of blood is suddenly thick.",
         ", and it is too much. The stab is crushing and cold; {he} goes ashen, {his} breath rattles and {his} knees give."
       ]
     },

@@ -11,7 +11,7 @@ Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/js
 | `SKSE_Source/src/plugin.cpp` | Entry, logger (`SKSE\SkyrimNet_Whipped.log`), messaging, co-save registration |
 | `SKSE_Source/src/InjuryEngine.cpp`, `include/InjuryEngine.h` | Per-actor, per-part, per-source injury (whip and health models), real-damage replacement of whip points, health link, co-save v2, narration text, `StateJson`, `OverlayJson` |
 | `SKSE_Source/src/InjuryConfig.cpp`, `include/InjuryConfig.h` | Loads `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json` at kDataLoaded (nlohmann-json), dotted-path lookup, `{token}` rendering |
-| `SKSE_Source/src/Classifier.cpp`, `include/Classifier.h` | TESHitEvent sink + damage classification (slashing, piercing, bludgeoning, burning, freezing, shocking, mauling, generic) |
+| `SKSE_Source/src/Classifier.cpp`, `include/Classifier.h` | TESHitEvent sink. Which source a hit becomes is the `classify` array in `injuries/*.json` |
 | `SKSE/Plugins/SkyrimNet_Whipped/injuries/` | Injury data and text per source; `guide.md` is the agent-facing editing guide |
 | `SKSE_Source/src/Papyrus_Engine.cpp` | Natives bound to `SkyrimNet_Whipped_Engine.psc` |
 | `SKSE_Source/src/Hooks.cpp` | Vtable hooks: `MagicTarget::AddTarget` (healing sources), `Actor::HandleHealthDamage` (SE / AE) and `ActorValueOwner::ModActorValue` (damage intake, classify, `InjuryEngine::OnDamage`, may reduce the damage) |
@@ -27,6 +27,10 @@ Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/js
 ## Natives
 
 Declared in `Scripts/Source/SkyrimNet_Whipped_Engine.psc`, registered in `Papyrus_Engine.cpp`. Native parameters must use engine types (`RE::Actor*`, `RE::BSFixedString`, …). A signature change means rebuilding the DLL and recompiling the `.psc` and every caller.
+
+## Logging
+
+`SkyrimNet_Whipped.log` (`plugin.cpp` `InitLog`) starts at `info`. The native `SetVerboseLogging` (setting `whip.debug.verbose_logging`, pushed by `ApplyPluginConfig`) switches the spdlog level to `debug`, so `SKSE::log::debug` lines appear: hook damage, classifier decisions, health taken / converted, heal queue, taken hits / heals, sync events, overlay pushes, co-save contents. Anything logged before the first `ApplyPluginConfig` (plugin load, `kDataLoaded`, co-save load) is at info level only. Arguments of `debug` calls are still evaluated when the level is `info`, so keep them cheap on hot paths (`ConvertHealth` logs only when points were healed).
 
 ## Overlay
 
@@ -45,4 +49,4 @@ Declared in `Scripts/Source/SkyrimNet_Whipped_Engine.psc`, registered in `Papyru
 
 ## Damage hooks (verify in game)
 
-`HandleHealthDamage` (Actor vfunc 0x104, SE / AE; skipped on VR, slot unverified) sees melee / ranged hit damage, `ModActorValue` (ActorValueOwner vfunc 6) every other health damage. A thread-local scope stops the nested `ModActorValue` call inside `HandleHealthDamage` from counting twice, and `InjuryEngine::IsInternalDamage()` hides the engine's own `DamageActorValue` calls. The first 40 intercepted damages are logged as `[hook] ...` in `SkyrimNet_Whipped.log` (victim, attacker, damage, classified source): use them to confirm the sign of `HandleHealthDamage`'s damage argument, that melee goes through the hook you expect, and the classifier result.
+`HandleHealthDamage` (Actor vfunc 0x104, SE / AE; skipped on VR, slot unverified) sees melee / ranged hit damage, `ModActorValue` (ActorValueOwner vfunc 6) every other health damage. A thread-local scope stops the nested `ModActorValue` call inside `HandleHealthDamage` from counting twice, and `InjuryEngine::IsInternalDamage()` hides the engine's own `DamageActorValue` calls. With verbose logging on, every intercepted damage is logged as `[hook] ...` in `SkyrimNet_Whipped.log` (victim, attacker, damage, classified source), followed by the classifier's `classify ...` line: use them to confirm the sign of `HandleHealthDamage`'s damage argument, that melee goes through the hook you expect, and the classifier result.

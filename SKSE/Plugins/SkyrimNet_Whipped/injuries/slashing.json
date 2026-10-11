@@ -3,6 +3,10 @@
   "title": "Slash Wounds",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 50, "weapon_types": ["OneHandSword", "TwoHandSword", "OneHandAxe"] },
+    { "priority": 50, "weapon_types": ["TwoHandAxe"], "without_keyword": "WeapTypeWarhammer" }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -58,23 +62,23 @@
     "looks": {
       "head": [
         "{name}'s face: a shallow red cut runs across {his} cheek or brow, beaded with blood.",
-        "{name}'s face: a deep gash gapes along {his} cheek, bleeding steadily down {his} jaw.",
-        "{name}'s face: a ragged, bone-deep slash splits {his} face open; blood sheets over {his} features and one eye is lost in it."
+        "{name}'s face: a deep gash gapes along {his} cheek, bleeding steadily down {his} jaw. The coppery smell of fresh blood hangs about {him}.",
+        "{name}'s face: a ragged, bone-deep slash splits {his} face open; blood sheets over {his} features and one eye is lost in it. {name} reeks of blood, a thick iron stench."
       ],
       "body": [
         "{name}'s back: a thin red line of a cut, weeping a little blood through {his} clothing.",
-        "{name}'s back: a long, open gash soaks {his} clothing with blood.",
-        "{name}'s back: a deep, ragged slash cuts through muscle; blood runs freely and {his} clothing is sodden with it."
+        "{name}'s back: a long, open gash soaks {his} clothing with blood. The warm iron smell of blood clings to {him}.",
+        "{name}'s back: a deep, ragged slash cuts through muscle; blood runs freely and {his} clothing is sodden with it. The heavy, coppery stench of blood follows {him}."
       ],
       "arm": [
         "{name}'s {part}: a shallow cut, welling blood in a thin red line.",
-        "{name}'s {part}: a deep gash laid open along the muscle, blood running to the fingertips.",
-        "{name}'s {part}: the slash cuts to the bone; the arm hangs heavy and dripping."
+        "{name}'s {part}: a deep gash laid open along the muscle, blood running to the fingertips. A sharp tang of blood rises from it.",
+        "{name}'s {part}: the slash cuts to the bone; the arm hangs heavy and dripping. It smells strongly of fresh blood."
       ],
       "leg": [
         "{name}'s {part}: a shallow cut across the thigh or calf, blood seeping into {his} clothing.",
-        "{name}'s {part}: a deep gash, blood running down into {his} boot.",
-        "{name}'s {part}: a ragged slash through the muscle; the leg is slick with blood and barely holds weight."
+        "{name}'s {part}: a deep gash, blood running down into {his} boot. The tang of blood rises from the wound.",
+        "{name}'s {part}: a ragged slash through the muscle; the leg is slick with blood and barely holds weight. The air around {him} smells thickly of blood."
       ]
     },
     "feels": {
@@ -101,6 +105,7 @@
     }
   },
   "narration": {
+    "form": "a keen cutting blade",
     "list": {
       "and": " and ",
       "comma": ", ",
@@ -119,8 +124,8 @@
       "by_none": "",
       "levels": [
         ", a clean, hot line of pain. The edge bites and opens the skin, and {he} sucks in a sharp breath as the blood wells.",
-        " across flesh that is already cut. The blade finds the open wound again, and {he} cries out as the pain flares white-hot.",
-        ", and the blade bites deep into the wound. The pain is huge and nauseating, and {his} composure breaks as the blood pours.",
+        " across flesh that is already cut. The blade finds the open wound again, and {he} cries out as the pain flares white-hot. The smell of blood thickens in the air.",
+        ", and the blade bites deep into the wound. The pain is huge and nauseating, and {his} composure breaks as the blood pours. The coppery smell of blood is everywhere.",
         ", and it is too much. The blow cuts through muscle and tendon; {he} goes pale, {his} vision tunnels and {his} legs begin to give."
       ]
     },

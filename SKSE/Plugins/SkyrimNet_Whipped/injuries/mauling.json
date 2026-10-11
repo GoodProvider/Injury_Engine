@@ -3,6 +3,9 @@
   "title": "Bites and Claw Wounds",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 70, "unarmed": true, "npc": false }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -58,23 +61,23 @@
     "looks": {
       "head": [
         "{name}'s face: shallow claw scratches or a nip across {his} cheek, bleeding lightly.",
-        "{name}'s face: deep claw furrows and bite marks torn across {his} cheek and jaw.",
-        "{name}'s face: savagely torn, flayed flesh across the face, blood streaming from bite and claw wounds."
+        "{name}'s face: deep claw furrows and bite marks torn across {his} cheek and jaw. {name} smells of blood and the rank musk of the beast.",
+        "{name}'s face: savagely torn, flayed flesh across the face, blood streaming from bite and claw wounds. The raw stench of blood and torn flesh, sour with animal saliva, clings to {him}."
       ],
       "body": [
         "{name}'s back: shallow claw scratches, torn clothing and light bleeding.",
-        "{name}'s back: deep claw furrows and bite marks, clothing in tatters and soaked in blood.",
-        "{name}'s back: savagely torn flesh, deep bites and raking claw wounds, blood streaming."
+        "{name}'s back: deep claw furrows and bite marks, clothing in tatters and soaked in blood. A smell of blood and wet animal fur clings to {him}.",
+        "{name}'s back: savagely torn flesh, deep bites and raking claw wounds, blood streaming. {name} reeks of blood, torn flesh and the musk of whatever savaged {him}."
       ],
       "arm": [
         "{name}'s {part}: shallow scratches and a nip, bleeding lightly.",
-        "{name}'s {part}: deep bite marks and claw furrows, torn and bleeding.",
-        "{name}'s {part}: savagely mangled flesh torn to the bone, streaming blood."
+        "{name}'s {part}: deep bite marks and claw furrows, torn and bleeding. It smells of blood and sour animal spit.",
+        "{name}'s {part}: savagely mangled flesh torn to the bone, streaming blood. It reeks of raw meat and blood."
       ],
       "leg": [
         "{name}'s {part}: shallow scratches and a nip, bleeding lightly.",
-        "{name}'s {part}: deep bite marks and claw furrows, torn trousers and blood in {his} boot.",
-        "{name}'s {part}: savagely mangled flesh torn to the bone; the leg gives way under any weight."
+        "{name}'s {part}: deep bite marks and claw furrows, torn trousers and blood in {his} boot. The wound smells of blood and beast.",
+        "{name}'s {part}: savagely mangled flesh torn to the bone; the leg gives way under any weight. A raw, meaty stench of blood rises from it."
       ]
     },
     "feels": {
@@ -101,6 +104,7 @@
     }
   },
   "narration": {
+    "form": "teeth and claws",
     "list": {
       "and": " and ",
       "comma": ", ",
@@ -119,8 +123,8 @@
       "by_none": "",
       "levels": [
         ", a sudden rake and snap. Teeth and claws catch {his} skin and {he} yelps and recoils.",
-        " into flesh that is already torn. The teeth find the open wound again and {he} shrieks as the pain flares.",
-        ", and the jaws clamp down on the raw wound. The pain is huge and nauseating and {he} cries out as {he} is shaken.",
+        " into flesh that is already torn. The teeth find the open wound again and {he} shrieks as the pain flares. The air smells of blood and beast.",
+        ", and the jaws clamp down on the raw wound. The pain is huge and nauseating and {he} cries out as {he} is shaken. The stench of blood and animal musk is overwhelming.",
         ", and it is too much. The savaging tears {him} open; {he} goes limp and ashen, {his} cries thinning to a gasp."
       ]
     },

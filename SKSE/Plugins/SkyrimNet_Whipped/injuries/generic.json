@@ -3,6 +3,9 @@
   "title": "Wounds",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 0, "fallback": true }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -58,23 +61,23 @@
     "looks": {
       "head": [
         "{name}'s face: a light bruise or scratch.",
-        "{name}'s face: a nasty, bleeding wound, swollen and discolored.",
-        "{name}'s face: a severe injury, bleeding heavily and badly swollen."
+        "{name}'s face: a nasty, bleeding wound, swollen and discolored. A faint smell of blood clings to {him}.",
+        "{name}'s face: a severe injury, bleeding heavily and badly swollen. {name} smells strongly of blood."
       ],
       "body": [
         "{name}'s back: a light bruise or scratch.",
-        "{name}'s back: a nasty, bleeding wound, stiff and discolored.",
-        "{name}'s back: a severe injury, bleeding heavily; {he} can barely stay upright."
+        "{name}'s back: a nasty, bleeding wound, stiff and discolored. The smell of blood clings to {his} clothing.",
+        "{name}'s back: a severe injury, bleeding heavily; {he} can barely stay upright. {name} smells heavily of blood and sweat."
       ],
       "arm": [
         "{name}'s {part}: a light bruise or scratch.",
-        "{name}'s {part}: a nasty, bleeding wound, swollen and sore.",
-        "{name}'s {part}: a severe injury; the arm is badly hurt and almost useless."
+        "{name}'s {part}: a nasty, bleeding wound, swollen and sore. It smells faintly of blood.",
+        "{name}'s {part}: a severe injury; the arm is badly hurt and almost useless. It smells strongly of blood."
       ],
       "leg": [
         "{name}'s {part}: a light bruise or scratch.",
-        "{name}'s {part}: a nasty, bleeding wound, swollen and sore.",
-        "{name}'s {part}: a severe injury; the leg barely takes weight."
+        "{name}'s {part}: a nasty, bleeding wound, swollen and sore. It smells faintly of blood.",
+        "{name}'s {part}: a severe injury; the leg barely takes weight. The smell of blood rises from it."
       ]
     },
     "feels": {
@@ -101,6 +104,7 @@
     }
   },
   "narration": {
+    "form": "a hard blow",
     "list": {
       "and": " and ",
       "comma": ", ",
@@ -120,7 +124,7 @@
       "levels": [
         ", a sudden stab of pain. It catches {him} by surprise and {he} flinches and grunts.",
         " on a spot that is already sore. The pain flares, and {he} cries out.",
-        ", and it lands hard on the wound. The pain is huge and nauseating, and {he} staggers.",
+        ", and it lands hard on the wound. The pain is huge and nauseating, and {he} staggers. The smell of blood rises.",
         ", and it is too much. The pain crashes through {him}; {he} goes pale and {his} legs begin to give."
       ]
     },
@@ -131,7 +135,8 @@
         "healed": "The wound on {name}'s {part} has healed."
       },
       "source_healed": "All of {name}'s wounds have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed."
+      "part_healed": "Every injury on {name}'s {part} has healed.",
+      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
     },
     "heal_events": {
       "nouns": {

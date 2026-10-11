@@ -3,6 +3,11 @@
   "title": "Bruises and Breaks",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 55, "weapon_types": ["TwoHandAxe"], "keyword": "WeapTypeWarhammer" },
+    { "priority": 50, "weapon_types": ["OneHandMace", "Staff", "HandToHandMelee"] },
+    { "priority": 40, "unarmed": true, "npc": true, "combat": true }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -58,23 +63,23 @@
     "looks": {
       "head": [
         "{name}'s face: a red, swelling bruise rises on {his} cheek or brow.",
-        "{name}'s face: a dark purple bruise and a split lip; one eye is swelling shut.",
-        "{name}'s face: a battered, badly swollen mess; broken skin, a crooked nose and an eye swollen shut."
+        "{name}'s face: a dark purple bruise and a split lip; one eye is swelling shut. A faint smell of blood and sweat clings to {him}.",
+        "{name}'s face: a battered, badly swollen mess; broken skin, a crooked nose and an eye swollen shut. {name} smells of blood and fear-sweat."
       ],
       "body": [
         "{name}'s back: a dull red bruise spreads across {his} ribs.",
         "{name}'s back: dark purple bruising across the ribs and spine; every breath looks painful.",
-        "{name}'s back: huge black-purple bruises; {his} ribs look broken and {his} posture is twisted."
+        "{name}'s back: huge black-purple bruises; {his} ribs look broken and {his} posture is twisted. {name} smells sour with sweat and the faint iron of blood."
       ],
       "arm": [
         "{name}'s {part}: a red, swelling bruise.",
         "{name}'s {part}: a dark, swollen bruise; the arm is held awkwardly.",
-        "{name}'s {part}: a crushed, swollen limb, bruised black and held at a wrong angle."
+        "{name}'s {part}: a crushed, swollen limb, bruised black and held at a wrong angle. A faint smell of blood rises where the skin has split."
       ],
       "leg": [
         "{name}'s {part}: a red, swelling bruise on the thigh or calf.",
         "{name}'s {part}: a dark, swollen bruise; the leg is favored.",
-        "{name}'s {part}: a crushed, swollen leg bruised black; it looks broken and will not take weight."
+        "{name}'s {part}: a crushed, swollen leg bruised black; it looks broken and will not take weight. {name} smells of sweat and a little blood."
       ]
     },
     "feels": {
@@ -101,6 +106,8 @@
     }
   },
   "narration": {
+    "form": "a heavy blunt weapon",
+    "form_unarmed": "heavy clenched fists",
     "list": {
       "and": " and ",
       "comma": ", ",

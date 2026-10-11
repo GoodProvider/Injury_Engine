@@ -3,6 +3,9 @@
   "title": "Electrical Burns",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 40, "resist": "ResistShock" }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -57,24 +60,24 @@
     "feels_outro": "Answer must be creative and different, repetition will be punished.",
     "looks": {
       "head": [
-        "{name}'s face: a faint red, branching mark, with singed hair standing on end.",
-        "{name}'s face: red, branching burn marks across the cheek and temple, the skin blistered.",
-        "{name}'s face: deep, black-edged burn marks branching across {his} face, the skin split and smoking."
+        "{name}'s face: a faint red, branching mark, with singed hair standing on end. A sharp smell of ozone and singed hair clings to {him}.",
+        "{name}'s face: red, branching burn marks across the cheek and temple, the skin blistered. {name} smells of ozone and scorched skin.",
+        "{name}'s face: deep, black-edged burn marks branching across {his} face, the skin split and smoking. The acrid stench of burnt hair and flesh hangs about {him}."
       ],
       "body": [
-        "{name}'s back: a faint red, branching mark through the clothing.",
-        "{name}'s back: red, branching burn marks, blistered and scorched through the clothing.",
-        "{name}'s back: deep, black-edged burn marks branching across {his} back; the clothing smolders."
+        "{name}'s back: a faint red, branching mark through the clothing. A faint whiff of ozone hangs about {him}.",
+        "{name}'s back: red, branching burn marks, blistered and scorched through the clothing. {name} smells of ozone and scorched cloth.",
+        "{name}'s back: deep, black-edged burn marks branching across {his} back; the clothing smolders. {name} reeks of burnt cloth and seared flesh."
       ],
       "arm": [
-        "{name}'s {part}: a faint red, branching mark; the hand twitches.",
-        "{name}'s {part}: red, branching burn marks, blistered; the fingers curl and tremble.",
-        "{name}'s {part}: deep, black-edged burn marks; the arm trembles and the hand is clenched like a claw."
+        "{name}'s {part}: a faint red, branching mark; the hand twitches. It carries a faint, sharp smell of ozone.",
+        "{name}'s {part}: red, branching burn marks, blistered; the fingers curl and tremble. It smells of ozone and scorched skin.",
+        "{name}'s {part}: deep, black-edged burn marks; the arm trembles and the hand is clenched like a claw. It gives off an acrid smell of burnt flesh."
       ],
       "leg": [
-        "{name}'s {part}: a faint red, branching mark; the muscle twitches.",
-        "{name}'s {part}: red, branching burn marks, blistered; the muscle trembles.",
-        "{name}'s {part}: deep, black-edged burn marks; the leg trembles and spasms."
+        "{name}'s {part}: a faint red, branching mark; the muscle twitches. A faint smell of ozone clings to {him}.",
+        "{name}'s {part}: red, branching burn marks, blistered; the muscle trembles. It smells sharply of ozone and singed skin.",
+        "{name}'s {part}: deep, black-edged burn marks; the leg trembles and spasms. An acrid stench of seared flesh rises from it."
       ]
     },
     "feels": {
@@ -101,6 +104,7 @@
     }
   },
   "narration": {
+    "form": "crackling lightning",
     "list": {
       "and": " and ",
       "comma": ", ",
@@ -118,9 +122,9 @@
       "by_attacker": " by {attacker}'s lightning",
       "by_none": "",
       "levels": [
-        ", a sudden crack of current. The jolt throws {his} muscles into a spasm, and {he} jerks with a yelp.",
-        " through muscles that are already jangling. The current arcs through the burn, and {he} convulses as the pain flares.",
-        ", and the lightning arcs through the burns. The pain is blinding and {he} locks up in a spasm, hair standing on end and breath gone.",
+        ", a sudden crack of current. The jolt throws {his} muscles into a spasm, and {he} jerks with a yelp. The air smells sharply of ozone.",
+        " through muscles that are already jangling. The current arcs through the burn, and {he} convulses as the pain flares. The smell of ozone and singed hair rises.",
+        ", and the lightning arcs through the burns. The pain is blinding and {he} locks up in a spasm, hair standing on end and breath gone. The acrid stench of burnt flesh fills the air.",
         ", and it is too much. The current floods {him}; {he} convulses, smoking, then goes slack, {his} heart stuttering."
       ]
     },

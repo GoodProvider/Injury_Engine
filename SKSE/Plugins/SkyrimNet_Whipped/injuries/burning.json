@@ -3,6 +3,9 @@
   "title": "Burns",
   "model": "health",
   "requires": "",
+  "classify": [
+    { "priority": 40, "resist": "ResistFire" }
+  ],
   "damage_max": 20,
   "healing_max": 11,
   "thresholds": {
@@ -57,24 +60,24 @@
     "feels_outro": "Answer must be creative and different, repetition will be punished.",
     "looks": {
       "head": [
-        "{name}'s face: reddened, tight skin like a bad sunburn; the eyebrows are singed.",
-        "{name}'s face: blistering burns, weeping and shiny; the hair is scorched.",
-        "{name}'s face: charred, blackened skin split and raw; the burns are terrible."
+        "{name}'s face: reddened, tight skin like a bad sunburn; the eyebrows are singed. A faint smell of singed hair hangs about {him}.",
+        "{name}'s face: blistering burns, weeping and shiny; the hair is scorched. {name} smells of scorched hair and burnt skin.",
+        "{name}'s face: charred, blackened skin split and raw; the burns are terrible. The sickly-sweet stench of charred flesh hangs about {him}."
       ],
       "body": [
-        "{name}'s back: reddened, tight skin like a sunburn, the clothing scorched.",
-        "{name}'s back: blistered, weeping burns; the clothing is melted into the skin in places.",
+        "{name}'s back: reddened, tight skin like a sunburn, the clothing scorched. {name}'s clothing gives off a faint scorched smell.",
+        "{name}'s back: blistered, weeping burns; the clothing is melted into the skin in places. The smell of burnt cloth and blistered skin clings to {him}.",
         "{name}'s back: blackened, charred burns across the back, raw and cracked, with a smell of burnt flesh."
       ],
       "arm": [
-        "{name}'s {part}: red, tight skin like a sunburn.",
-        "{name}'s {part}: blistered, weeping burns.",
-        "{name}'s {part}: charred, blackened skin split open; the limb is raw."
+        "{name}'s {part}: red, tight skin like a sunburn. A faint singed smell rises from the skin.",
+        "{name}'s {part}: blistered, weeping burns. It smells of scorched skin.",
+        "{name}'s {part}: charred, blackened skin split open; the limb is raw. It reeks of cooked, charred flesh."
       ],
       "leg": [
-        "{name}'s {part}: red, tight skin like a sunburn.",
-        "{name}'s {part}: blistered, weeping burns, the clothing scorched away.",
-        "{name}'s {part}: charred, blackened skin, split and raw; the leg is badly burned."
+        "{name}'s {part}: red, tight skin like a sunburn. A faint singed smell rises from {his} clothing.",
+        "{name}'s {part}: blistered, weeping burns, the clothing scorched away. It smells of burnt cloth and scorched skin.",
+        "{name}'s {part}: charred, blackened skin, split and raw; the leg is badly burned. The stench of charred flesh rises from it."
       ]
     },
     "feels": {
@@ -101,6 +104,7 @@
     }
   },
   "narration": {
+    "form": "searing fire",
     "list": {
       "and": " and ",
       "comma": ", ",
@@ -118,10 +122,10 @@
       "by_attacker": " by {attacker}'s fire",
       "by_none": "",
       "levels": [
-        ", a sudden scorch of heat. The flame licks across {his} skin and {he} jerks away with a hiss of pain.",
+        ", a sudden scorch of heat. The flame licks across {his} skin and {he} jerks away with a hiss of pain. A smell of singed hair rises.",
         " over skin that is already scalded. The fire bites into the raw burn and {he} shrieks as the pain flares.",
         ", and the flames eat into the burn. The pain is huge and nauseating, the smell of scorched flesh sharp, and {he} staggers.",
-        ", and it is too much. The fire engulfs {him}; {he} screams, {his} skin blackening, and {his} strength drains away."
+        ", and it is too much. The fire engulfs {him}; {he} screams, {his} skin blackening, and {his} strength drains away. The stench of charred flesh fills the air."
       ]
     },
     "heal": {

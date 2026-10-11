@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <chrono>
 #include <mutex>
+#include <optional>
 #include <string_view>
 #include <unordered_map>
 
@@ -28,146 +29,217 @@ namespace Classifier
             double when = 0.0;
         };
 
+        // A classify-rule match. source -2 = nothing, -1 = ignore this hit (the padded whip).
+        struct Match
+        {
+            int source = -2;
+            bool unarmed = false;
+        };
+
         std::mutex g_lock;
         std::unordered_map<RE::FormID, Recent> g_recent;  // victim -> latest hit event
         // victim -> latest "(torture)" effect, from AddTarget and hit events. Damage hooks read this instead of walking
         // the active-effect list: they run inside the engine's own effect update, where a nested walk crashes.
         std::unordered_map<RE::FormID, TortureSeen> g_torture;
-        RE::TESObjectWEAP* g_whip = nullptr;
-        bool g_whipLooked = false;
-        RE::EffectSetting* g_tortureEffects[3] = {};  // Flames / Frostbite / Sparks (torture) effects
-        bool g_tortureLooked = false;
+
         double NowSeconds()
         {
             using namespace std::chrono;
             return duration<double>(steady_clock::now().time_since_epoch()).count();
         }
 
-        bool IsWhip(const RE::TESObjectWEAP* weapon)
-        {
-            if (!g_whipLooked) {
-                g_whipLooked = true;
-                if (auto* data = RE::TESDataHandler::GetSingleton()) {
-                    g_whip = data->LookupForm<RE::TESObjectWEAP>(0x803, "SkyrimNet_Whipped.esp");
-                }
-            }
-            return g_whip && weapon == g_whip;
-        }
-
-        // Class id -> source index, generic when that class has no file.
-        int Source(std::string_view id)
-        {
-            if (const int index = InjuryConfig::IndexOf(id); index >= 0) {
-                return index;
-            }
-            return InjuryConfig::GenericIndex();
-        }
-
-        // Source index as its id for the log ("ignore" for -1).
         std::string_view IdOf(int index)
         {
             const auto* s = InjuryConfig::Find(index);
             return s ? std::string_view(s->id) : std::string_view(index == -1 ? "ignore" : "none");
         }
 
-        int ClassifyWeapon(const RE::TESObjectWEAP* weapon)
+        std::optional<RE::WEAPON_TYPE> WeaponTypeOf(std::string_view name)
         {
             using Type = RE::WEAPON_TYPE;
-            switch (weapon->GetWeaponType()) {
-            case Type::kOneHandSword:
-            case Type::kTwoHandSword:
-            case Type::kOneHandAxe:
-                return Source("slashing");
-            case Type::kTwoHandAxe:
-                // war hammers share the two-hand axe animations
-                return Source(weapon->HasKeywordString("WeapTypeWarhammer") ? "bludgeoning" : "slashing");
-            case Type::kOneHandDagger:
-            case Type::kBow:
-            case Type::kCrossbow:
-                return Source("piercing");
-            case Type::kOneHandMace:
-            case Type::kStaff:
-            case Type::kHandToHandMelee:
-                return Source("bludgeoning");
-            default:
-                return InjuryConfig::GenericIndex();
-            }
-        }
-
-        // Torture rather than a fight: a person (NPC or the player) attacking while not in combat.
-        bool OutOfCombat(RE::Actor* attacker)
-        {
-            return attacker && !attacker->IsInCombat() && attacker->HasKeywordString("ActorTypeNPC");
-        }
-
-        // One of the "(torture)" spell effects of SkyrimNet_Whipped.esp (in or out of combat).
-        bool IsTortureEffect(const RE::EffectSetting* mgef)
-        {
-            if (!g_tortureLooked) {
-                g_tortureLooked = true;
-                if (auto* data = RE::TESDataHandler::GetSingleton()) {
-                    for (RE::FormID i = 0; i < 3; ++i) {
-                        g_tortureEffects[i] = data->LookupForm<RE::EffectSetting>(0x813 + i, "SkyrimNet_Whipped.esp");
-                    }
+            static const std::pair<std::string_view, Type> kTypes[] = {
+                { "OneHandSword", Type::kOneHandSword },
+                { "TwoHandSword", Type::kTwoHandSword },
+                { "OneHandAxe", Type::kOneHandAxe },
+                { "TwoHandAxe", Type::kTwoHandAxe },
+                { "OneHandDagger", Type::kOneHandDagger },
+                { "Bow", Type::kBow },
+                { "Crossbow", Type::kCrossbow },
+                { "OneHandMace", Type::kOneHandMace },
+                { "Staff", Type::kStaff },
+                { "HandToHandMelee", Type::kHandToHandMelee },
+            };
+            for (const auto& [n, t] : kTypes) {
+                if (n == name) {
+                    return t;
                 }
             }
-            return mgef && std::find(std::begin(g_tortureEffects), std::end(g_tortureEffects), mgef) != std::end(g_tortureEffects);
+            return std::nullopt;
         }
 
-        // Torture id for a fire / frost / shock effect, nullptr for any other.
-        const char* TortureId(const RE::EffectSetting* mgef)
+        std::string_view ResistName(const RE::EffectSetting* mgef)
         {
             switch (mgef->data.resistVariable) {
             case RE::ActorValue::kResistFire:
-                return "fire";
+                return "ResistFire";
             case RE::ActorValue::kResistFrost:
-                return "frost";
+                return "ResistFrost";
             case RE::ActorValue::kResistShock:
-                return "shock";
+                return "ResistShock";
             default:
-                return nullptr;
+                return {};
             }
         }
 
-        // Fire / frost / shock: torture (fire, frost, shock) for a "(torture)" spell, else real damage
-        // (burning, freezing, shocking).
-        int ClassifyMagic(const RE::MagicItem* item)
+        RE::TESForm* LookupForm(std::string_view file, std::uint32_t id)
+        {
+            if (file.empty() || id == 0) {
+                return nullptr;
+            }
+            auto* data = RE::TESDataHandler::GetSingleton();
+            return data ? data->LookupForm(id, file) : nullptr;
+        }
+
+        bool Npc(RE::Actor* actor)
+        {
+            return actor && actor->HasKeywordString("ActorTypeNPC");
+        }
+
+        bool UnarmedMatches(const InjuryConfig::ClassifyRule& rule, RE::Actor* attacker)
+        {
+            if (!rule.unarmed) {
+                return false;
+            }
+            const bool npc = Npc(attacker);
+            if (rule.npc == 1 && !npc) {
+                return false;
+            }
+            if (rule.npc == 0 && npc) {
+                return false;
+            }
+            const bool combat = attacker && attacker->IsInCombat();
+            if (rule.combat == 1 && !combat) {
+                return false;
+            }
+            if (rule.combat == 0 && combat) {
+                return false;
+            }
+            return true;
+        }
+
+        Match MatchUnarmed(RE::Actor* attacker)
+        {
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (UnarmedMatches(rule, attacker)) {
+                    return { rule.source, true };
+                }
+            }
+            return {};
+        }
+
+        bool WeaponTypeListed(const InjuryConfig::ClassifyRule& rule, RE::WEAPON_TYPE type)
+        {
+            for (const auto& name : rule.weaponTypes) {
+                if (const auto parsed = WeaponTypeOf(name); parsed && *parsed == type) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        Match MatchWeapon(const RE::TESObjectWEAP* weapon, RE::Actor* attacker)
+        {
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (!rule.hasIgnore) {
+                    continue;
+                }
+                if (auto* form = LookupForm(rule.ignoreFile, rule.ignoreId); form && form == weapon) {
+                    return { -1, false };
+                }
+            }
+            // A fist weapon is an unarmed hit when an unarmed rule claims this attacker. A mace stays a weapon rule.
+            if (weapon->GetWeaponType() == RE::WEAPON_TYPE::kHandToHandMelee) {
+                if (const Match hit = MatchUnarmed(attacker); hit.source >= 0) {
+                    return hit;
+                }
+            }
+            const auto type = weapon->GetWeaponType();
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (!WeaponTypeListed(rule, type)) {
+                    continue;
+                }
+                if (!rule.keyword.empty() && !weapon->HasKeywordString(rule.keyword.c_str())) {
+                    continue;
+                }
+                if (!rule.withoutKeyword.empty() && weapon->HasKeywordString(rule.withoutKeyword.c_str())) {
+                    continue;
+                }
+                return { rule.source, false };
+            }
+            return {};
+        }
+
+        // Torture source of a "(torture)" effect form, else the health source of its resist, else -2.
+        int EffectSource(const RE::EffectSetting* mgef)
+        {
+            if (!mgef) {
+                return -2;
+            }
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (!rule.hasEffect) {
+                    continue;
+                }
+                if (LookupForm(rule.effectFile, rule.effectId) == mgef) {
+                    return rule.source;
+                }
+            }
+            const auto resist = ResistName(mgef);
+            if (resist.empty()) {
+                return -2;
+            }
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (rule.hasEffect || rule.resist != resist) {
+                    continue;
+                }
+                return rule.source;
+            }
+            // An element we know, and no file claimed it: the fallback source, same as a missing class file.
+            return InjuryConfig::GenericIndex();
+        }
+
+        Match MatchMagic(const RE::MagicItem* item)
         {
             for (const auto* effect : item->effects) {
                 if (!effect || !effect->baseEffect) {
                     continue;
                 }
-                const bool torture = IsTortureEffect(effect->baseEffect);
-                const auto pick = [&](std::string_view tortureId, std::string_view realId) {
-                    const int t = torture ? InjuryConfig::IndexOf(tortureId) : -1;
-                    return t >= 0 ? t : Source(realId);
-                };
-                switch (effect->baseEffect->data.resistVariable) {
-                case RE::ActorValue::kResistFire:
-                    return pick("fire", "burning");
-                case RE::ActorValue::kResistFrost:
-                    return pick("frost", "freezing");
-                case RE::ActorValue::kResistShock:
-                    return pick("shock", "shocking");
-                default:
-                    break;
+                if (ResistName(effect->baseEffect).empty() && EffectSource(effect->baseEffect) < 0) {
+                    continue;
+                }
+                const int source = EffectSource(effect->baseEffect);
+                if (source != -2) {
+                    return { source, false };
                 }
             }
-            return InjuryConfig::GenericIndex();
+            return {};
         }
 
-        // Torture source index of a "(torture)" effect, -2 for any other effect.
         int TortureIndexOf(const RE::EffectSetting* mgef)
         {
-            if (!mgef || !IsTortureEffect(mgef)) {
+            if (!mgef) {
                 return -2;
             }
-            const char* id = TortureId(mgef);
-            const int index = id ? InjuryConfig::IndexOf(id) : -1;
-            return index >= 0 ? index : -2;
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (!rule.hasEffect) {
+                    continue;
+                }
+                if (LookupForm(rule.effectFile, rule.effectId) == mgef) {
+                    return rule.source >= 0 ? rule.source : -2;
+                }
+            }
+            return -2;
         }
 
-        // Caller holds g_lock.
         void NoteTortureLocked(RE::FormID victimId, int index)
         {
             if (g_torture.size() > 512) {
@@ -176,8 +248,6 @@ namespace Classifier
             g_torture[victimId] = { index, NowSeconds() };
         }
 
-        // Spell ticks with no hit event in the window: a "(torture)" effect seen on the victim recently.
-        // -2 when there is none. Never walks the active-effect list (see g_torture).
         int ClassifyActiveTorture(RE::Actor* victim)
         {
             std::lock_guard lock(g_lock);
@@ -192,34 +262,33 @@ namespace Classifier
             return it->second.index;
         }
 
-        // -2 = nothing recognised (caller decides), -1 = ignore, else a source index.
-        int ClassifyForm(RE::TESForm* form, RE::Actor* attacker)
+        Match ClassifyForm(RE::TESForm* form, RE::Actor* attacker)
         {
             if (!form) {
-                return -2;
+                return {};
             }
             if (const auto* weapon = form->As<RE::TESObjectWEAP>()) {
-                if (IsWhip(weapon)) {
-                    return -1;
-                }
-                // fists out of combat: a beating, torture punching
-                if (weapon->GetWeaponType() == RE::WEAPON_TYPE::kHandToHandMelee && OutOfCombat(attacker) &&
-                    InjuryConfig::IndexOf("punching") >= 0) {
-                    return InjuryConfig::IndexOf("punching");
-                }
-                return ClassifyWeapon(weapon);
+                return MatchWeapon(weapon, attacker);
             }
             if (const auto* magic = form->As<RE::MagicItem>()) {
-                return ClassifyMagic(magic);
+                return MatchMagic(magic);
+            }
+            return {};
+        }
+
+        int FallingSource()
+        {
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (rule.falling) {
+                    return rule.source;
+                }
             }
             return -2;
         }
 
-        // Landing damage: the character controller still holds the fall when the damage is applied.
-        // The health half of falling.json; -2 when not falling or falling.json is not loaded.
         int ClassifyFall(RE::Actor* victim)
         {
-            const int falling = InjuryConfig::IndexOf("falling", false);
+            const int falling = FallingSource();
             auto* controller = falling >= 0 ? victim->GetCharController() : nullptr;
             if (!controller) {
                 return -2;
@@ -235,7 +304,6 @@ namespace Classifier
             RE::BSEventNotifyControl ProcessEvent(const RE::TESHitEvent* event, RE::BSTEventSource<RE::TESHitEvent>*) override
             {
                 if (event && event->target) {
-                    // concentration beams keep hitting while held: keep the torture entry fresh
                     int torture = -2;
                     if (const auto* item = event->source ? RE::TESForm::LookupByID<RE::MagicItem>(event->source) : nullptr) {
                         for (const auto* effect : item->effects) {
@@ -261,6 +329,13 @@ namespace Classifier
 
     void Init()
     {
+        for (const auto& rule : InjuryConfig::ClassifyRules()) {
+            for (const auto& name : rule.weaponTypes) {
+                if (!WeaponTypeOf(name)) {
+                    SKSE::log::warn("injuries: {} classify weapon_types: unknown \"{}\"", IdOf(rule.source), name);
+                }
+            }
+        }
         static HitSink sink;
         if (auto* holder = RE::ScriptEventSourceHolder::GetSingleton()) {
             holder->AddEventSink<RE::TESHitEvent>(&sink);
@@ -279,7 +354,7 @@ namespace Classifier
         }
     }
 
-    int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee)
+    int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee, bool* unarmedForm)
     {
         if (!victim) {
             return -1;
@@ -289,7 +364,16 @@ namespace Classifier
                 *physicalMelee = value;
             }
         };
-        // 1. the latest hit event on this victim (weapon or spell that landed)
+        if (unarmedForm) {
+            *unarmedForm = false;
+        }
+        const auto take = [&](const Match& hit, bool physical) {
+            setPhysical(physical);
+            if (unarmedForm) {
+                *unarmedForm = hit.unarmed;
+            }
+            return hit.source;
+        };
         RE::FormID sourceId = 0;
         RE::ObjectRefHandle cause;
         {
@@ -304,66 +388,52 @@ namespace Classifier
             auto causeRef = cause.get();
             auto* hitter = attacker ? attacker : causeRef ? causeRef->As<RE::Actor>() : nullptr;
             auto* form = RE::TESForm::LookupByID(sourceId);
-            const int result = ClassifyForm(form, hitter);
-            if (result != -2) {
-                setPhysical(form && form->IsWeapon());
-                SKSE::log::debug("classify {:08X}: hit event form {:08X} -> {}", victimId, sourceId, IdOf(result));
-                return result;
+            const Match hit = ClassifyForm(form, hitter);
+            if (hit.source != -2) {
+                SKSE::log::debug("classify {:08X}: hit event form {:08X} -> {}", victimId, sourceId, IdOf(hit.source));
+                return take(hit, form && form->IsWeapon());
             }
-            // Projectile / other hit forms: do not guess unarmed while a torture spell is on the victim.
             if (const int active = ClassifyActiveTorture(victim); active != -2) {
-                setPhysical(false);
                 SKSE::log::debug("classify {:08X}: hit form {:08X} unknown, torture effect -> {}", victimId, sourceId, IdOf(active));
-                return active;
+                return take({ active, false }, false);
             }
         }
-        // 2. what the attacker is holding (the hit event may not have fired yet)
         if (attacker) {
             for (const bool left : { false, true }) {
                 auto* equipped = attacker->GetEquippedObject(left);
-                const int result = ClassifyForm(equipped, attacker);
-                if (result != -2) {
-                    setPhysical(true);
+                const Match hit = ClassifyForm(equipped, attacker);
+                if (hit.source != -2) {
                     SKSE::log::debug("classify {:08X}: attacker {:08X} equipped {:08X} -> {}", victimId, attacker->GetFormID(),
-                        equipped ? equipped->GetFormID() : 0, IdOf(result));
-                    return result;
+                        equipped ? equipped->GetFormID() : 0, IdOf(hit.source));
+                    return take(hit, true);
                 }
             }
-            // 3. unarmed: people punch (torture punching out of combat), animals bite and claw
             if (!attacker->GetEquippedObject(false) && !attacker->GetEquippedObject(true)) {
                 if (const int active = ClassifyActiveTorture(victim); active != -2) {
-                    setPhysical(false);
                     SKSE::log::debug("classify {:08X}: attacker {:08X} unarmed but torture effect -> {}", victimId, attacker->GetFormID(),
                         IdOf(active));
-                    return active;
+                    return take({ active, false }, false);
                 }
-                const bool npc = attacker->HasKeywordString("ActorTypeNPC");
-                const int punching = InjuryConfig::IndexOf("punching");
-                const int unarmed = !npc                                          ? Source("mauling")
-                                    : OutOfCombat(attacker) && punching >= 0  ? punching
-                                                                               : Source("bludgeoning");
-                setPhysical(true);
-                SKSE::log::debug("classify {:08X}: attacker {:08X} unarmed {} -> {}", victimId, attacker->GetFormID(), npc ? "npc" : "creature",
-                    IdOf(unarmed));
-                return unarmed;
+                const Match hit = MatchUnarmed(attacker);
+                SKSE::log::debug("classify {:08X}: attacker {:08X} unarmed {} -> {}", victimId, attacker->GetFormID(),
+                    Npc(attacker) ? "npc" : "creature", IdOf(hit.source >= 0 ? hit.source : InjuryConfig::GenericIndex()));
+                if (hit.source >= 0) {
+                    return take(hit, true);
+                }
+                return take({ InjuryConfig::GenericIndex(), false }, true);
             }
         }
-        // 4. spell ticks after the hit event window: a "(torture)" spell still running is torture
         if (const int active = ClassifyActiveTorture(victim); active != -2) {
-            setPhysical(false);
             SKSE::log::debug("classify {:08X}: torture spell effect active -> {}", victimId, IdOf(active));
-            return active;
+            return take({ active, false }, false);
         }
-        // 5. no hit and no attacker while falling: landing damage
         if (!sourceId && !attacker) {
             if (const int fall = ClassifyFall(victim); fall != -2) {
-                setPhysical(false);
                 SKSE::log::debug("classify {:08X}: landing -> {}", victimId, IdOf(fall));
-                return fall;
+                return take({ fall, false }, false);
             }
         }
-        setPhysical(false);
         SKSE::log::debug("classify {:08X}: no hit event or attacker weapon (hit form {:08X}) -> generic", victimId, sourceId);
-        return InjuryConfig::GenericIndex();
+        return take({ InjuryConfig::GenericIndex(), false }, false);
     }
 }
