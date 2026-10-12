@@ -100,8 +100,9 @@ classify           (optional) how incoming damage picks this source. Highest `pr
                    unarmed          true: no weapon, or the fist weapon. npc / combat are true, false, or omitted (either)
                    falling          true: landing damage (no hit, no attacker, still falling)
                    fallback         true: anything that matched nothing else (generic.json)
-hook.hit_share     (torture, optional, default 0.05) share of max health that hooked spell damage needs for one torture
-                   hit (spell ticks); a punch is always one hit
+hook.points_per_second  (torture, optional, default 2) points per real second hooked spell damage (fire / frost /
+                   shock) adds, whatever the spell's own damage
+hook.points_per_hit     (torture, optional, default 1) points one lash / punch / hand torture adds to the part it hits
 action.alias / action.order   (torture, optional) short name for Torture_Target ("whip", "pinch", ...) and its
                    place in the type list. The source id itself is always accepted too.
 action.verb, action.animation   (torture) log verb; animation event the NPC plays per Torture_Target strike ("" = none)

@@ -99,6 +99,10 @@ String Function GetStateJson(Actor akActor) global native
 String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false, Bool unarmedForm = false) global native
 ; Parallel to the last TakeHits() result (same index).
 Bool Function HitUnarmed(Int index) global native
+; Parallel to the last TakeHits() result: hits merged into that entry (1 when alone).
+Int Function HitCount(Int index) global native
+; Queues a hit code from Hit() for narration (merged and released at most once per second per victim, attacker and source).
+Function QueueHit(Actor victim, Actor attacker, Int code) global native
 ; Writes a torture / heal / health line to SkyrimNet_Whipped.log ("[hh:mm:ss] <category>:<narrationType>:<sessionType> <text>",
 ; narrationType = direct / event / short, sessionType = start / switch / update / finish).
 Function LogLine(String category, String narrationType, String sessionType, String text) global native

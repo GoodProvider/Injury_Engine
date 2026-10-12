@@ -71,7 +71,7 @@
     "ass hole": 0
   },
   "hook": {
-    "hit_share": 0.05
+    "points_per_hit": 2
   },
   "action": {
     "alias": "punch",

@@ -498,7 +498,8 @@ namespace Classifier
                 if (hit.source != -2) {
                     SKSE::log::debug("classify {:08X}: attacker {:08X} equipped {:08X} -> {}", victimId, attacker->GetFormID(),
                         equipped ? equipped->GetFormID() : 0, IdOf(hit.source));
-                    return take(hit, true);
+                    // an equipped spell (Sparks (torture), ...) ticks every frame: only a weapon is a melee hit
+                    return take(hit, equipped && equipped->IsWeapon());
                 }
             }
             if (!attacker->GetEquippedObject(false) && !attacker->GetEquippedObject(true)) {

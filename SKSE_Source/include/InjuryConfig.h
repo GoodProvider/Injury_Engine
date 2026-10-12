@@ -52,7 +52,8 @@ namespace InjuryConfig
         // Torture: pick weight per part (part_weights by part name, else the body's weight; 0 = never picked),
         // and the share of max health hooked damage (punches, spells) needs for one torture hit.
         std::array<float, kPartCount> partWeight{};
-        float hitShare = 0.05f;
+        float pointsPerSecond = 2.0f;  // hook.points_per_second: spell torture points per real second
+        int pointsPerHit = 1;          // hook.points_per_hit: points one melee / lash hit adds to its part
 
         bool IsTorture() const { return model == "torture"; }
     };

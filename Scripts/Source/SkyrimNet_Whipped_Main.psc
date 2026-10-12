@@ -68,6 +68,8 @@ Float Property torture_narration_window_size = 30.0 Auto Hidden
 ; A pause this long between hits ends the torture (end narration); this often one combined line during it
 Float Property torture_maximum_break = 3.0 Auto Hidden
 Float Property torture_direct_narration_gap = 6.0 Auto Hidden
+; An again line only while hits are still landing: the pair's last hit at most this many seconds ago
+Float Property torture_again_recent = 1.0 AutoReadOnly
 Float Property narration_max_distance = 15.0 Auto Hidden
 Float Property event_ttl = 30.0 Auto Hidden
 Bool Property include_sexual_parts = False Auto Hidden
@@ -77,6 +79,8 @@ Bool Property dll_ok = False Auto Hidden
 ; DirectNarration reenters Papyrus; SceneTick ignores nested calls while the outer tick runs.
 Bool Property scene_tick_active = False Auto Hidden
 Bool Property heal_tick_active = False Auto Hidden
+; TakeHits / HitVictims / HitAttackers share one C++ buffer: only one NarrateRealHits drains it at a time.
+Bool Property hits_draining = False Auto Hidden
 ; True while a 0.2 s sync update is already scheduled (RegisterForSingleUpdate replaces a pending one).
 Bool Property sync_pending = False Auto Hidden
 ; Model of the last TakePendingHealText (torture / health)
@@ -123,6 +127,7 @@ EndFunction
 Function Setup()
     Trace("Setup", "")
     scene_tick_active = False
+    hits_draining = False
     sync_pending = False
     if !Setup_CheckLinks()
         return
@@ -317,7 +322,8 @@ Int Function OnLash(Actor attacker, Actor victim, Bool narrate=True)
     endif
     Trace("OnLash", NameOf(attacker) + " -> " + victim.GetDisplayName() + " part:" + PartsOf(code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
     if narrate
-        NarrateInjury(attacker, victim, code)
+        SkyrimNet_Whipped_Engine.QueueHit(victim, attacker, code)
+        NarrateRealHits()
     endif
     ClearHealBatch(victim) ; pending heals are stale; the next heal is fresh
     StartSync()
@@ -368,17 +374,19 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
     if SkyrimNet_Whipped_Engine.IsTorture(source)
         kind = "torturing"
     endif
-    if msg != ""
-        Trace("NarrateInjury", source + " short-lived event: " + msg)
-        RegisterInjuryShortEvent(msg, attacker, victim, kind, source, attacker, victim)
-    endif
     if kind == "health"
+        if msg != ""
+            Trace("NarrateInjury", source + " short-lived event: " + msg)
+            RegisterInjuryShortEvent(msg, attacker, victim, kind, source, attacker, victim)
+        endif
         return
     endif
     StorageUtil.SetFloatValue(victim, KEY_LAST_TORTURE, Utility.GetCurrentRealTime())
     Bool visible = PairVisible(attacker, victim)
     int i = SceneFind(attacker, victim)
+    String session = "update"
     if i < 0
+        session = "start"
         SceneAdd(attacker, victim, source, part_mask, level, hits, cause, visible)
         i = StorageUtil.FormListCount(self, KEY_SC_VIC) - 1
         StartSync()
@@ -386,16 +394,21 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         SceneUpdate(i, source, part_mask, level, hits, cause, visible)
         StartSync()
     endif
-    if verbose_logging
-        Verbose("NarrateInjury", source + " " + victim.GetDisplayName() + " pair:" + i + " state:" + StorageUtil.IntListGet(self, KEY_SC_STATE, i) \
-            + " hits:" + StorageUtil.IntListGet(self, KEY_SC_COUNT, i) + " level:" + level + " " + GateText(victim))
-    endif
     Bool needStart = false
     if StorageUtil.IntListGet(self, KEY_SC_STATE, i) == SC_PENDING
         needStart = true
     elseif StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 1
         needStart = true
+        session = "switch"
         StorageUtil.IntListSet(self, KEY_SC_SWITCH, i, 0)
+    endif
+    if msg != ""
+        Trace("NarrateInjury", source + " short-lived event: " + msg)
+        RegisterInjuryShortEvent(msg, attacker, victim, kind, source, attacker, victim, session)
+    endif
+    if verbose_logging
+        Verbose("NarrateInjury", source + " " + victim.GetDisplayName() + " pair:" + i + " state:" + StorageUtil.IntListGet(self, KEY_SC_STATE, i) \
+            + " hits:" + StorageUtil.IntListGet(self, KEY_SC_COUNT, i) + " level:" + level + " " + GateText(victim))
     endif
     if needStart && visible
         StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_RUNNING)
@@ -519,11 +532,12 @@ Function ClearTortureScene(Actor victim)
 EndFunction
 
 ; Does pair i belong to the selection: SC_SEL_START pending starts, SC_SEL_SWITCH method switches, SC_SEL_AGAIN running
-; pairs with more than one hit. Starts, switches and again lines skip pairs whose break already elapsed.
+; pairs with more than one hit, the last within torture_again_recent. Starts, switches and again lines skip pairs whose
+; break already elapsed.
 Bool Function SceneMatches(int i, int mode, float now)
     int st = StorageUtil.IntListGet(self, KEY_SC_STATE, i)
-    Bool ended = now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i) >= torture_maximum_break
-    if ended
+    float sinceHit = now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i)
+    if sinceHit >= torture_maximum_break
         return false
     endif
     if mode == SC_SEL_START
@@ -531,7 +545,7 @@ Bool Function SceneMatches(int i, int mode, float now)
     elseif mode == SC_SEL_SWITCH
         return st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 1
     endif
-    return st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 0 && StorageUtil.IntListGet(self, KEY_SC_COUNT, i) >= 2
+    return sinceHit <= torture_again_recent && st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 0 && StorageUtil.IntListGet(self, KEY_SC_COUNT, i) >= 2
 EndFunction
 
 ; Indices of the pairs of a selection (empty array when none).
@@ -900,7 +914,8 @@ Int Function Torture(Actor attacker, Actor victim, String source, Bool narrate=T
     endif
     Trace("Torture", NameOf(attacker) + " -> " + victim.GetDisplayName() + " " + source + " part:" + PartsOf(code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
     if narrate
-        NarrateInjury(attacker, victim, code)
+        SkyrimNet_Whipped_Engine.QueueHit(victim, attacker, code)
+        NarrateRealHits()
     endif
     ClearHealBatch(victim)
     StartSync()
@@ -1288,27 +1303,41 @@ Event OnUpdate()
     endif
 EndEvent
 
-; Real (non-whip) hits queued by the damage hooks: narrate like lashes.
+; Hits queued by the damage hooks (real damage and hooked torture): narrate like lashes.
+; One drain at a time (hits_draining); a call while one runs returns, the running drain takes its hits.
 Function NarrateRealHits()
-    int[] codes = SkyrimNet_Whipped_Engine.TakeHits()
-    if codes.Length == 0
+    if hits_draining
         return
     endif
-    Actor[] victims = SkyrimNet_Whipped_Engine.HitVictims()
-    Actor[] attackers = SkyrimNet_Whipped_Engine.HitAttackers()
-    int i = 0
-    while i < codes.Length
-        if victims[i] != None
-            Trace("NarrateRealHits", NameOf(attackers[i]) + " -> " + NameOf(victims[i]) + " " + SourceOfCode(codes[i]) + " part:" + PartsOf(codes[i]) \
-                + " level:" + LevelOf(codes[i]) + " fresh:" + FreshOf(codes[i]))
-            NarrateInjury(attackers[i], victims[i], codes[i], SkyrimNet_Whipped_Engine.HitUnarmed(i))
-            ClearHealBatch(victims[i])
-            if !SkyrimNet_Whipped_Engine.IsTorture(SourceOfCode(codes[i]))
-                ClearTortureScene(victims[i]) ; real damage replaces the torture scene silently
+    hits_draining = True
+    int[] codes = SkyrimNet_Whipped_Engine.TakeHits()
+    while codes.Length > 0
+        Actor[] victims = SkyrimNet_Whipped_Engine.HitVictims()
+        Actor[] attackers = SkyrimNet_Whipped_Engine.HitAttackers()
+        bool[] unarmed = Utility.CreateBoolArray(codes.Length)
+        int[] counts = Utility.CreateIntArray(codes.Length)
+        int i = 0
+        while i < codes.Length
+            unarmed[i] = SkyrimNet_Whipped_Engine.HitUnarmed(i)
+            counts[i] = SkyrimNet_Whipped_Engine.HitCount(i)
+            i += 1
+        endwhile
+        i = 0
+        while i < codes.Length && i < victims.Length && i < attackers.Length
+            if victims[i] != None
+                Trace("NarrateRealHits", NameOf(attackers[i]) + " -> " + NameOf(victims[i]) + " " + SourceOfCode(codes[i]) + " part:" + PartsOf(codes[i]) \
+                    + " level:" + LevelOf(codes[i]) + " fresh:" + FreshOf(codes[i]) + " hits:" + counts[i])
+                NarrateHits(attackers[i], victims[i], SourceOfCode(codes[i]), MaskOf(codes[i]), LevelOf(codes[i]), counts[i], "", unarmed[i])
+                ClearHealBatch(victims[i])
+                if !SkyrimNet_Whipped_Engine.IsTorture(SourceOfCode(codes[i]))
+                    ClearTortureScene(victims[i]) ; real damage replaces the torture scene silently
+                endif
             endif
-        endif
-        i += 1
+            i += 1
+        endwhile
+        codes = SkyrimNet_Whipped_Engine.TakeHits()
     endwhile
+    hits_draining = False
 EndFunction
 
 ; Natural healing (no source: pain gone / fully healed) is always a silent short-lived event, text marked as ordinary healing.

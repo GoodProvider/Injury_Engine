@@ -73,7 +73,7 @@ namespace InjuryEngine
 
     // Damage taken (health points, positive) from the damage hooks. `source` is the classified source index;
     // physicalMelee: weapon / fist / unarmed-body hits from HandleHealthDamage (one torture hit per call); false
-    // for spell ticks and active torture effects (accumulate per hook.hit_share). Returns the damage the game
+    // for spell ticks and active torture effects (land hook.points_per_second points per second). Returns the damage the game
     // should still apply: torture sources none (they become torture hits), health sources what torture wounds
     // do not absorb.
     // unarmedForm: the hit matched an "unarmed" classify rule, so narration uses narration.form_unarmed when that key exists.
@@ -89,11 +89,16 @@ namespace InjuryEngine
     std::vector<std::int32_t> TakeHealed(RE::Actor* actor);
 
     // Real hits not yet narrated: hit codes; HitVictims / HitAttackers are parallel to the last TakeHits result.
+    // Hits of one victim, attacker and source merge while queued and leave at most once per second (a health hit also releases its victim's held hits).
     std::vector<std::int32_t> TakeHits();
     std::vector<RE::Actor*> HitVictims();
     std::vector<RE::Actor*> HitAttackers();
     // Parallel to the last TakeHits result (same index).
     bool HitUnarmed(std::size_t index);
+    // Parallel to the last TakeHits result: hits merged into that entry (1 when alone).
+    int HitCount(std::size_t index);
+    // Queues a hit code Papyrus already got from Hit (scripted torture), so it is merged and gated like hooked hits.
+    void QueueHit(RE::Actor* victim, RE::Actor* attacker, std::int32_t code);
 
     // Called from the MagicTarget::AddTarget hook for every effect applied to an actor.
     void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect);

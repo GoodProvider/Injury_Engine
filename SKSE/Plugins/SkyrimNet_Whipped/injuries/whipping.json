@@ -17,6 +17,9 @@
     "severe": 11,
     "mostly_healed": 4
   },
+  "hook": {
+    "points_per_hit": 2
+  },
   "health_link": {
     "wound_share": 0.9,
     "floor": 0.1

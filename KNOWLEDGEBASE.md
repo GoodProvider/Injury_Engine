@@ -8,7 +8,7 @@ MO2 overwrite wins over the mod folder, so an old `overwrite/SKSE/Plugins/Skyrim
 
 ## Torture spells: classify MGEF before resist health (2026-10-11)
 
-`(torture)` spells list the torture MGEF first and a vanilla resist effect second. `Classifier::Init` resolves `effect_file` / `effect_id` to a runtime form id (`LookupForm`, else ESL `0xFE000000 | (smallFileCompileIndex << 12) | localId`). `MatchMagic` prefers that torture MGEF over resist-only health rules (`shocking`, …); vanilla Flames / Frostbite / Sparks stay health. `OnTortureDamage` lands one point on the first tick of `fire` / `frost` / `shock` beams without waiting for `hit_share`. `Main.NarrateHits` sends `SceneSend("start", …)` immediately on the first registered hit of any torture source (method change uses `start` again, not `switch`).
+`(torture)` spells list the torture MGEF first and a vanilla resist effect second. `Classifier::Init` resolves `effect_file` / `effect_id` to a runtime form id (`LookupForm`, else ESL `0xFE000000 | (smallFileCompileIndex << 12) | localId`). `MatchMagic` prefers that torture MGEF over resist-only health rules (`shocking`, …); vanilla Flames / Frostbite / Sparks stay health. `OnTortureDamage` lands one point on the first tick of `fire` / `frost` / `shock` beams. `Main.NarrateHits` sends `SceneSend("start", …)` immediately on the first registered hit of any torture source (method change uses `start` again, not `switch`).
 
 ## DirectNarration reenters Papyrus during SceneTick (2026-10-11)
 
@@ -16,7 +16,7 @@ MO2 overwrite wins over the mod folder, so an old `overwrite/SKSE/Plugins/Skyrim
 
 ## Concentration torture beams use HandleHealthDamage per tick (2026-10-11)
 
-Sparks / Flames / Frostbite `(torture)` are concentration spells with a projectile; each tick can arrive in `Actor::HandleHealthDamage`, not only in `ModActorValue`. Those ticks must **not** set `physicalMelee` (they accumulate against `hook.hit_share` like other spell torture). When the hit form is a projectile or otherwise fails `ClassifyForm`, `Classifier` must prefer the live `(torture)` effect from `g_torture` over guessing unarmed `punching` on an out-of-combat NPC with empty hands.
+Sparks / Flames / Frostbite `(torture)` are concentration spells with a projectile; each tick can arrive in `Actor::HandleHealthDamage`, not only in `ModActorValue`. Those ticks must **not** set `physicalMelee` (they land `hook.points_per_second` points per real second like other spell torture). When the hit form is a projectile or otherwise fails `ClassifyForm`, `Classifier` must prefer the live `(torture)` effect from `g_torture` over guessing unarmed `punching` on an out-of-combat NPC with empty hands.
 
 ## Never walk active effects from damage hooks (2026-10-10)
 
@@ -131,3 +131,15 @@ Removing a scene phase (the torture "end" line) from `InjuryEngine::SceneText` a
 `LogInjuryPoint` writes at most one `torture:` / `health:` line per second per category + attacker + victim + source; hits in between only increment a counter, and the next logged line ends with `skipped:<n>`. The part is not in the key, so the shown part is just the first hit after the window. A final burst's count is only reported if another line for that key follows. Use `whip.debug.verbose_logging` debug lines (`hit`, `real hit`) when every hit matters.
 
 - **Narration log format:** `SkyrimNet_Whipped.log` lines are `[hh:mm:ss] <category>:<direct|event|short>:<start|switch|update|finish> <text>`. Scene / heal phases map again->update, end->finish; one-shot lines default to `start`. `Engine.LogLine` takes (category, narrationType, sessionType, text), so DLL and .pex must be deployed together.
+
+## TakeHits / HitVictims race across Papyrus threads (2026-10-11)
+
+`TakeHits` fills a shared C++ buffer that `HitVictims` / `HitAttackers` / `HitUnarmed` read afterwards. Each hooked hit fires `SkyrimNet_Whipped_Injury`, so several `OnInjury` threads (plus `OnUpdate`) ran `NarrateRealHits` at once. One thread's `TakeHits` cleared the arrays (even when it took nothing) while another was between `TakeHits` and `HitVictims`, so whole batches died with `Array index N is out of range` at `NarrateRealHits`. The first shock batch, the one that sends the scene `start`, was lost this way. Now `TakeHits` returns early without clearing when the queue is empty, and `NarrateRealHits` is guarded by `hits_draining` and loops until `TakeHits` is empty. Any native pair of the form "take + read parallel arrays" needs the same guard.
+
+## The attacker's equipped object can be a spell (2026-10-11)
+
+`Classifier::Classify` falls back to the attacker's equipped objects once the hit event is older than `kHitWindow`. With "Sparks (torture)" equipped, that matched shock and set `physicalMelee = true`, so every spell tick (each frame) landed a full melee hit: ~45 points a second instead of `hook.points_per_second`, health to the floor in 3 s, and ~50 Papyrus events a second that delayed narration by several seconds. Only an equipped weapon (`IsWeapon()`) counts as melee now.
+
+## Per-hit Papyrus narration lags behind fast hits (2026-10-11)
+
+Every queued hit used to get its own `NarrateRealHits` → `NarrateHits` pass (HitText, scene StorageUtil, visibility, short-lived event). At about 2 hits a second (spell ticks, quick whipping) Papyrus fell behind and `torture:short` lines came 1 to 6 s after the hit, and several shorts with the same event id (same attacker, victim, method) landed in one second although SkyrimNet keeps only the last. Now the queue merges in C++: hits of one victim, attacker and source collapse into one entry (`count`, latest part and level) and `TakeHits` releases one per key per second; a real (health) hit also releases that victim's held torture hits. Scripted strikes (`OnLash`, `Torture`) go through `QueueHit` so they are gated the same way. A merged entry narrates as "again and again" (`count` > 1).

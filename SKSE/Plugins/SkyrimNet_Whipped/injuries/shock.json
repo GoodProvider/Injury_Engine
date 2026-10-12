@@ -58,7 +58,7 @@
     "healed"
   ],
   "hook": {
-    "hit_share": 0.05
+    "points_per_second": 2
   },
   "action": {
     "verb": "shocks",

@@ -198,6 +198,16 @@ namespace
         return InjuryEngine::HitText(sourceId.c_str(), attacker, victim, mask, level, count, noCause, unarmedForm);
     }
 
+    std::int32_t HitCount(RE::StaticFunctionTag*, std::int32_t index)
+    {
+        return InjuryEngine::HitCount(static_cast<std::size_t>(index));
+    }
+
+    void QueueHit(RE::StaticFunctionTag*, RE::Actor* victim, RE::Actor* attacker, std::int32_t code)
+    {
+        InjuryEngine::QueueHit(victim, attacker, code);
+    }
+
     bool HitUnarmed(RE::StaticFunctionTag*, std::int32_t index)
     {
         return InjuryEngine::HitUnarmed(static_cast<std::size_t>(index));
@@ -339,6 +349,8 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("GetStateJson", s, GetStateJson);
     a_vm->RegisterFunction("HitText", s, HitText);
     a_vm->RegisterFunction("HitUnarmed", s, HitUnarmed);
+    a_vm->RegisterFunction("HitCount", s, HitCount);
+    a_vm->RegisterFunction("QueueHit", s, QueueHit);
     a_vm->RegisterFunction("LogLine", s, LogLine);
     a_vm->RegisterFunction("LevelText", s, LevelText);
     a_vm->RegisterFunction("HealText", s, HealText);

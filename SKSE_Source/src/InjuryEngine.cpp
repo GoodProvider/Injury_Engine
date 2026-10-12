@@ -53,17 +53,6 @@ namespace InjuryEngine
             return duration<double>(steady_clock::now().time_since_epoch()).count();
         }
 
-        // Sparks / Flames / Frostbite (torture) only; vanilla elemental spells stay health damage.
-        bool IsElementalTortureSpell(int source)
-        {
-            const auto* conf = InjuryConfig::Find(source);
-            if (!conf || !conf->IsTorture()) {
-                return false;
-            }
-            return InjuryConfig::IEquals(conf->id, "fire") || InjuryConfig::IEquals(conf->id, "frost") ||
-                   InjuryConfig::IEquals(conf->id, "shock");
-        }
-
         // Torture model: one deficit per (torture type, part) = damage + missing healing points, so
         // healingMax+1 .. healingMax+partMax is damage (light, medium, severe), 1 .. healingMax is healing
         // (recovering, mostly healed) and 0 on a hit cell is healed (scar). A part's torture is the maximum of
@@ -124,6 +113,7 @@ namespace InjuryEngine
             int level = 0;
             bool fresh = false;
             bool unarmed = false;
+            int count = 1;  // hits merged into this entry while it waited
         };
 
         struct HealthLogEntry
@@ -150,6 +140,30 @@ namespace InjuryEngine
         std::vector<RE::Actor*> g_hitVictims;
         std::vector<RE::Actor*> g_hitAttackers;
         std::vector<bool> g_hitUnarmed;
+        std::vector<int> g_hitCounts;
+        // Last release time per victim|attacker|source: TakeHits lets one hit per key through per kHitGap.
+        std::unordered_map<std::string, std::chrono::steady_clock::time_point> g_hitReleased;
+        constexpr std::chrono::milliseconds kHitGap{ 1000 };
+
+        // Queues a hit for narration. A queued hit of the same victim, attacker and source absorbs it (latest mask / level win).
+        // Caller holds g_lock.
+        void PushHit(const HitEntry& e)
+        {
+            for (auto& q : g_hits) {
+                if (q.victim == e.victim && q.attacker == e.attacker && q.source == e.source) {
+                    q.mask = e.mask;
+                    q.level = e.level;
+                    q.fresh = q.fresh || e.fresh;
+                    q.unarmed = e.unarmed;
+                    q.count += e.count;
+                    return;
+                }
+            }
+            if (g_hits.size() < 256) {
+                g_hits.push_back(e);
+            }
+        }
+
         float g_hoursPerPoint = 1.0f;
         float g_regenRate = 10.0f;
         thread_local int g_internal = 0;  // >0 while the engine itself changes health
@@ -1238,23 +1252,37 @@ namespace InjuryEngine
         return g_internal > 0;
     }
 
+    namespace
+    {
+        std::int32_t HitPoints(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId, int part, bool configPoints)
+        {
+            const int source = InjuryConfig::IndexOf(sourceId);
+            if (!actor || actor->IsDead() || !InjuryConfig::IsTorture(source)) {
+                return -1;
+            }
+            std::lock_guard lock(g_lock);
+            const double now = NowHours();
+            State* existing = Current(actor, now);
+            State& st = existing ? *existing : g_actors[actor->GetFormID()];
+            int index = -1;
+            const std::int32_t code = TortureHit(actor, attacker, st, source, part, now, index, 0.0f);
+            // hook.points_per_hit: the rest of the points land on the part the first one picked
+            const auto* conf = InjuryConfig::Find(source);
+            for (int p = 1; configPoints && conf && p < conf->pointsPerHit; ++p) {
+                TortureHit(actor, attacker, st, source, index, now, index, 0.0f);
+            }
+            return code;
+        }
+    }
+
     std::int32_t Hit(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId)
     {
-        return HitPart(actor, attacker, sourceId, -1);
+        return HitPoints(actor, attacker, sourceId, -1, true);
     }
 
     std::int32_t HitPart(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId, int part)
     {
-        const int source = InjuryConfig::IndexOf(sourceId);
-        if (!actor || actor->IsDead() || !InjuryConfig::IsTorture(source)) {
-            return -1;
-        }
-        std::lock_guard lock(g_lock);
-        const double now = NowHours();
-        State* existing = Current(actor, now);
-        State& st = existing ? *existing : g_actors[actor->GetFormID()];
-        int index = -1;
-        return TortureHit(actor, attacker, st, source, part, now, index, 0.0f);
+        return HitPoints(actor, attacker, sourceId, part, false);
     }
 
     std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points)
@@ -1283,7 +1311,8 @@ namespace InjuryEngine
     namespace
     {
         // Hooked torture damage (out-of-combat punches, "(torture)" spells): the game applies none
-        // of it. A melee hit is one torture hit; spell damage is one hit per hook.hit_share of max health.
+        // of it. A melee hit is hook.points_per_hit points on one part; spell damage lands hook.points_per_second
+        // points per real second whatever the spell's own damage.
         float OnTortureDamage(RE::Actor* victim, RE::Actor* attacker, float amount, const InjuryConfig::Source& conf, int source,
             bool physicalMelee)
         {
@@ -1298,8 +1327,10 @@ namespace InjuryEngine
                 const TortureBatchKey batchKey{ id, attacker ? attacker->GetFormID() : 0, source };
                 const double nowReal = NowRealSeconds();
                 bool newBatch = true;
+                double elapsed = 0.0;
                 if (const auto batchIt = g_tortureBatchLast.find(batchKey); batchIt != g_tortureBatchLast.end()) {
-                    newBatch = nowReal - batchIt->second > kTortureBatchGap;
+                    elapsed = nowReal - batchIt->second;
+                    newBatch = elapsed > kTortureBatchGap;
                 }
                 g_tortureBatchLast[batchKey] = nowReal;
                 if (g_tortureBatchLast.size() > 512) {
@@ -1310,23 +1341,15 @@ namespace InjuryEngine
                 int hits = 1;
                 if (!physicalMelee) {
                     float& carry = g_tortureCarry[id][source];
-                    const float share = conf.hitShare * maxHealth;
-                    const float carryBefore = carry;
-                    carry += amount;
-                    if (IsElementalTortureSpell(source) && carryBefore <= 0.0f) {
-                        carry = 0.0f;
-                        hits = 1;
-                    } else if (carryBefore <= 0.0f && carry < share) {
-                        // First tick of a beam below hit_share still lands one wound so narration can start.
+                    if (newBatch) {
+                        // The first tick of a beam always lands one wound so narration can start.
                         carry = 0.0f;
                         hits = 1;
                     } else {
-                        hits = static_cast<int>(carry / share);
-                        carry -= static_cast<float>(hits) * share;
-                        hits = std::min(hits, 8);
-                        if (hits == 0 && newBatch) {
-                            hits = 1;
-                        } else if (hits == 0) {
+                        carry += static_cast<float>(std::min(elapsed, 0.5)) * conf.pointsPerSecond;
+                        hits = std::min(static_cast<int>(carry), 8);
+                        carry -= static_cast<float>(hits);
+                        if (hits == 0) {
                             return 0.0f;
                         }
                     }
@@ -1338,18 +1361,22 @@ namespace InjuryEngine
                 int level = 0;
                 int lastPart = -1;
                 bool fresh = false;
-                const float pointAmount = physicalMelee ? amount : conf.hitShare * maxHealth;
                 for (int i = 0; i < hits; ++i) {
                     int index = -1;
-                    const std::int32_t code = TortureHit(victim, attacker, st, source, -1, now, index, pointAmount);
+                    std::int32_t code = TortureHit(victim, attacker, st, source, -1, now, index, amount);
                     if (i == 0) {
                         fresh = code >= 100000000;
+                    }
+                    // a melee hit is several points on the same part
+                    for (int p = 1; physicalMelee && p < conf.pointsPerHit; ++p) {
+                        const std::int32_t more = TortureHit(victim, attacker, st, source, index, now, index, amount);
+                        level = std::max(level, static_cast<int>(more % 10));
                     }
                     lastPart = index;
                     mask |= 1 << index;
                     level = std::max(level, static_cast<int>(code % 10));
                 }
-                if (g_hits.size() < 256) {
+                {
                     HitEntry e;
                     e.victim = id;
                     if (attacker) {
@@ -1360,7 +1387,8 @@ namespace InjuryEngine
                     e.level = level;
                     e.fresh = fresh;
                     e.unarmed = false;
-                    g_hits.push_back(e);
+                    e.count = hits;
+                    PushHit(e);
                 }
             }
             NotifyPapyrus();
@@ -1460,7 +1488,7 @@ namespace InjuryEngine
                     conf->id, firstName, amount, absorbed, replacedNow, st.carry);
             }
             if (mask != 0) {
-                if (g_hits.size() < 256) {
+                {
                     HitEntry e;
                     e.victim = id;
                     if (attacker) {
@@ -1471,7 +1499,7 @@ namespace InjuryEngine
                     e.level = level;
                     e.fresh = fresh;
                     e.unarmed = unarmedForm;
-                    g_hits.push_back(e);
+                    PushHit(e);
                 }
                 const float currentHealth = av->GetActorValue(RE::ActorValue::kHealth);
                 const float finalHealth = currentHealth - pass;
@@ -1638,23 +1666,92 @@ namespace InjuryEngine
     {
         std::lock_guard lock(g_lock);
         std::vector<std::int32_t> codes;
+        // an empty take must not wipe the arrays another Papyrus thread is still reading
+        if (g_hits.empty()) {
+            return codes;
+        }
+        const auto now = std::chrono::steady_clock::now();
+        const auto keyOf = [](const HitEntry& e) {
+            return std::format("{:08X}|{:08X}|{}", e.victim, e.attacker.native_handle(), e.source);
+        };
+        // One hit per victim, attacker and source per kHitGap; the rest wait (merged) in g_hits.
+        std::vector<bool> release(g_hits.size(), false);
+        bool any = false;
+        for (std::size_t i = 0; i < g_hits.size(); ++i) {
+            const auto it = g_hitReleased.find(keyOf(g_hits[i]));
+            if (it == g_hitReleased.end() || now - it->second >= kHitGap) {
+                release[i] = true;
+                any = true;
+            }
+        }
+        if (!any) {
+            return codes;
+        }
+        // Real damage clears the victim's torture scene: do not hold that victim's other hits behind it.
+        for (std::size_t i = 0; i < g_hits.size(); ++i) {
+            const auto* conf = InjuryConfig::Find(g_hits[i].source);
+            if (release[i] && conf && !conf->IsTorture()) {
+                for (std::size_t j = 0; j < g_hits.size(); ++j) {
+                    if (g_hits[j].victim == g_hits[i].victim) {
+                        release[j] = true;
+                    }
+                }
+            }
+        }
         g_hitVictims.clear();
         g_hitAttackers.clear();
         g_hitUnarmed.clear();
-        for (const auto& e : g_hits) {
+        g_hitCounts.clear();
+        std::vector<HitEntry> held;
+        for (std::size_t i = 0; i < g_hits.size(); ++i) {
+            const auto& e = g_hits[i];
+            if (!release[i]) {
+                held.push_back(e);
+                continue;
+            }
+            g_hitReleased[keyOf(e)] = now;
             auto* victim = RE::TESForm::LookupByID<RE::Actor>(e.victim);
             if (!victim) {
                 SKSE::log::debug("take hits: victim {:08X} gone, hit dropped", e.victim);
                 continue;
             }
-            SKSE::log::debug("take hits: {:08X} {} mask:{} level:{} fresh:{}", e.victim, SourceId(e.source), e.mask, e.level, e.fresh);
+            SKSE::log::debug("take hits: {:08X} {} mask:{} level:{} fresh:{} count:{}", e.victim, SourceId(e.source), e.mask, e.level,
+                e.fresh, e.count);
             codes.push_back(EncodeHit(e.fresh, e.source, e.mask, e.level));
             g_hitVictims.push_back(victim);
             g_hitAttackers.push_back(e.attacker.get().get());
             g_hitUnarmed.push_back(e.unarmed);
+            g_hitCounts.push_back(e.count);
         }
-        g_hits.clear();
+        g_hits = std::move(held);
+        for (auto it = g_hitReleased.begin(); it != g_hitReleased.end();) {
+            it = now - it->second > std::chrono::seconds(10) ? g_hitReleased.erase(it) : std::next(it);
+        }
         return codes;
+    }
+
+    void QueueHit(RE::Actor* victim, RE::Actor* attacker, std::int32_t code)
+    {
+        if (!victim || code < 0) {
+            return;
+        }
+        HitEntry e;
+        e.victim = victim->GetFormID();
+        if (attacker) {
+            e.attacker = attacker->GetHandle();
+        }
+        e.level = code % 10;
+        e.mask = (code / 10) % 100000;
+        e.source = (code / 1000000) % 100;
+        e.fresh = code >= 100000000;
+        std::lock_guard lock(g_lock);
+        PushHit(e);
+    }
+
+    int HitCount(std::size_t index)
+    {
+        std::lock_guard lock(g_lock);
+        return index < g_hitCounts.size() ? g_hitCounts[index] : 1;
     }
 
     bool HitUnarmed(std::size_t index)
@@ -2419,6 +2516,7 @@ namespace InjuryEngine
         g_tortureBatchLast.clear();
         g_events.clear();
         g_hits.clear();
+        g_hitReleased.clear();
         g_syncActors.clear();
         g_syncCasters.clear();
         g_hitVictims.clear();

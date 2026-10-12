@@ -254,13 +254,14 @@ namespace InjuryConfig
         }
 
         // Torture sources: part_weights {"part name": weight} over the body's weights (0 = never picked);
-        // hook.hit_share. Runs after the body is final (sexual parts read).
+        // hook.points_per_second, hook.points_per_hit. Runs after the body is final (sexual parts read).
         void FinishSources()
         {
             const Body& b = g_body;
             for (auto& s : g_sources) {
                 s.partWeight = b.partWeight;
-                s.hitShare = std::max(0.005f, s.json.value("/hook/hit_share"_json_pointer, 0.05f));
+                s.pointsPerSecond = std::max(0.1f, s.json.value("/hook/points_per_second"_json_pointer, 2.0f));
+                s.pointsPerHit = std::clamp(s.json.value("/hook/points_per_hit"_json_pointer, 1), 1, 10);
                 const auto w = s.json.find("part_weights");
                 if (w == s.json.end() || !w->is_object()) {
                     continue;
