@@ -127,6 +127,14 @@ narration.session  (torture) switch, end, hit_noun; shared hit / mixed_hit / no_
 narration.heal.level   (torture) high / mid / low: one heal-session sentence for the parts ({parts}) of this type
                    at that heal level, e.g. "The wounds on {name}'s {parts} have scabbed over." (low)
 narration.heal_events   (whipping and generic) spell / staff / potion healing: start, pain_gone, full, stopped
+death              (health files, and the health half of a "both" file) killing-blow narration, sent once when the
+                   victim dies within a few seconds of a hit of this source (setting "Narrate killing blows"):
+                   lead          "{attacker} kills {name} with {form}: " (an attacker other than the victim)
+                   lead_none     "{name} dies from {form}: " (no attacker)
+                   regions       head / body / arm / leg: arrays of lines, one picked at random, appended to the lead;
+                                 a sexual part uses head (lips) or body (the rest)
+                   soil, soil_chance   lines (one picked) added after the region line with this chance (0..1)
+                   {form} is narration.form (form_unarmed for an unarmed hit when present); {part} is the part hit.
 ```
 
 `text.looks.<region>` is an array indexed by stage (light, medium, severe). Health sources use `text.feels.<region>` the
@@ -152,6 +160,10 @@ Use `{name}`, `{part}`, `{he}`, `{him}`, `{his}` in text, plus `{reflexive}`. Hi
 `{owner_lc}`, `{progress}`. Summary: `{speaker}`, `{target}`, `{times}`. Unknown `{tokens}` are left as typed, so do not
 invent new ones (the code cannot fill them).
 
+Death text is `death.lead` (or `lead_none`) + one `death.regions.<region>` line (+ maybe one `soil` line), so each
+region line starts lowercase mid-sentence (after the colon) and is a full death: the wound, how it looks, how it smells,
+the last moment. Torture files have no `death` block (torture never kills).
+
 Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{by}"`, so `verb_one` / `verb_many`,
 `times.*` and `by_*` carry their own leading space, and each `levels` entry starts with a comma, space or period as needed.
 
@@ -175,6 +187,7 @@ Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{b
 2. Propose changes in plain language first when the user's request is open-ended, then edit.
 3. After editing, validate: `python -c "import json,sys;[json.load(open(f,encoding='utf-8')) for f in sys.argv[1:]]" injuries/*.json`
    and check every `looks` / `feels` region array has exactly one entry per stage (6 for whipping, 3 for others),
-   including the per-source blocks in `sexual_parts.json`.
+   including the per-source blocks in `sexual_parts.json`. Every health file's `death.regions` needs head, body, arm
+   and leg, each with at least one line (two or more so deaths do not repeat).
 4. Report what changed per file and anything that needs a code change (new class, new placeholder, body numbers).
 5. Do not touch the body block, `id`, `model`, or `requires` unless the user explicitly asks.

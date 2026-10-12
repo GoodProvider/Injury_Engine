@@ -29,7 +29,7 @@ Keys and placeholders are documented for authors in `SKSE/Plugins/SkyrimNet_Whip
 
 ## Natives returning text
 
-`HitText`, `HealMapText`, `SourceHealText`, `ActionText` render the JSON templates in C++ (placeholders `{name}`, `{he}`, `{him}`, `{his}`, `{part}`, `{parts}`, ... listed in `guide.md`). Codes passed in: hit code `fresh * 100000000 + source * 1000000 + part mask * 10 + level` (mask: bit per part, 11 parts); `HealMapText(actor)` takes no codes (it reads the actor's torture points); sync events `kind * 10000 + healing source * 1000 + percent` (kind 0 start, 1 pain gone, 2 fully healed, 3 stopped; healing source 0 none, 1 spell, 2 staff, 3 potion, 4 other).
+`HitText`, `HealMapText`, `SourceHealText`, `ActionText`, `DeathText` render the JSON templates in C++ (placeholders `{name}`, `{he}`, `{him}`, `{his}`, `{part}`, `{parts}`, ... listed in `guide.md`). Codes passed in: hit code `fresh * 100000000 + source * 1000000 + part mask * 10 + level` (mask: bit per part, 11 parts); `HealMapText(actor)` takes no codes (it reads the actor's torture points); sync events `kind * 10000 + healing source * 1000 + percent` (kind 0 start, 1 pain gone, 2 fully healed, 3 stopped; healing source 0 none, 1 spell, 2 staff, 3 potion, 4 other).
 
 ## Overlay (`whipUpdate`)
 

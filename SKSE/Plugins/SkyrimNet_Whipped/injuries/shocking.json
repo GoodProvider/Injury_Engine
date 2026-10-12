@@ -153,5 +153,32 @@
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the lightning bursts {his} eyes in their sockets; blood runs from the hollows, from {his} ears and nose, and {his} hair smokes and curls. The sharp smell of ozone, burned hair and blood fills the air as {name} jerks, stiffens and falls dead.",
+        "the bolt strikes {his} head and {his} jaw clamps shut so hard the teeth crack; branching burns spread over {his} blackened face and blood trickles from {his} ears. {name} convulses and drops, smoke rising from {him} in the stink of scorched skin and ozone."
+      ],
+      "body": [
+        "the lightning seizes {his} heart; fern-like burns branch black across {his} back and chest, the skin split and smoking where it entered. {name} goes rigid, shaking violently, then collapses, a last choked cry cut short, in the smell of ozone and cooked flesh.",
+        "the bolt tears through {his} back and out {his} chest, leaving a blackened, smoking hole ringed with burst blisters; the heart stops mid-beat. {name} falls jerking, blood frothing from {his} mouth, and the air reeks of ozone, burned cloth and scorched meat."
+      ],
+      "arm": [
+        "the lightning chars {his} {part} black from fingertips to shoulder; the fingers are curled into stiff claws and the skin has burst open along the bone. {name} convulses as the current stops {his} heart, and falls with a strangled scream into the stink of burned flesh and ozone.",
+        "the bolt splits {his} {part} open along its length; smoking, cooked muscle shows through the char and the hand is a blackened, twisted claw. {name} shakes and jerks on the ground, then lies still, the smell of scorched meat and hot metal thick around {him}."
+      ],
+      "leg": [
+        "the lightning runs down {his} {part} and bursts out through the foot; the leg is blackened and split, the boot burned through, the muscles knotted rigid. {name} falls jerking, kicking helplessly until {his} heart stops, and smoke rises from {him} in the stink of ozone and burned hair.",
+        "the bolt chars {his} {part} to the bone in branching black lines; the flesh splits and smokes, and the leg twitches long after {name} falls. {name}'s scream breaks off into a choked gasp and then silence, the air sharp with ozone and scorched flesh."
+      ]
+    },
+    "soil": [
+      "The current wrenches {his} bowels and bladder open, and the stink of shit and piss mixes with the smell of ozone and burned flesh.",
+      "As {his} body goes slack, the stench of {his} shit and piss joins the smell of scorched skin."
+    ],
+    "soil_chance": 0.4
   }
 }

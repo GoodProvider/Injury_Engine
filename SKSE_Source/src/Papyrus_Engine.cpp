@@ -74,6 +74,39 @@ namespace
         return InjuryEngine::HitAttackers();
     }
 
+    std::vector<RE::BSFixedString> TakeDeaths(RE::StaticFunctionTag*)
+    {
+        std::vector<RE::BSFixedString> out;
+        for (const auto& text : InjuryEngine::TakeDeaths()) {
+            out.emplace_back(text);
+        }
+        return out;
+    }
+
+    std::vector<RE::Actor*> DeathVictims(RE::StaticFunctionTag*)
+    {
+        return InjuryEngine::DeathVictims();
+    }
+
+    std::vector<RE::Actor*> DeathAttackers(RE::StaticFunctionTag*)
+    {
+        return InjuryEngine::DeathAttackers();
+    }
+
+    std::vector<RE::BSFixedString> DeathSources(RE::StaticFunctionTag*)
+    {
+        std::vector<RE::BSFixedString> out;
+        for (const auto& id : InjuryEngine::DeathSources()) {
+            out.emplace_back(id);
+        }
+        return out;
+    }
+
+    RE::BSFixedString DeathText(RE::StaticFunctionTag*, RE::BSFixedString sourceId, RE::Actor* attacker, RE::Actor* victim, std::int32_t part)
+    {
+        return InjuryEngine::DeathText(sourceId.c_str(), attacker, victim, part);
+    }
+
     std::vector<std::int32_t> TakeSyncEvents(RE::StaticFunctionTag*)
     {
         return InjuryEngine::TakeSyncEvents();
@@ -321,6 +354,11 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("TakeHits", s, TakeHits);
     a_vm->RegisterFunction("HitVictims", s, HitVictims);
     a_vm->RegisterFunction("HitAttackers", s, HitAttackers);
+    a_vm->RegisterFunction("TakeDeaths", s, TakeDeaths);
+    a_vm->RegisterFunction("DeathVictims", s, DeathVictims);
+    a_vm->RegisterFunction("DeathAttackers", s, DeathAttackers);
+    a_vm->RegisterFunction("DeathSources", s, DeathSources);
+    a_vm->RegisterFunction("DeathText", s, DeathText);
     a_vm->RegisterFunction("TakeSyncEvents", s, TakeSyncEvents);
     a_vm->RegisterFunction("SyncHealth", s, SyncHealth);
     a_vm->RegisterFunction("SyncActors", s, SyncActors);

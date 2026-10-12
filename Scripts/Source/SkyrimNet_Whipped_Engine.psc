@@ -86,6 +86,14 @@ String Function ActionAliases() global native
 String Function GetStateJson(Actor akActor) global native
 
 ; Narration text rendered from the JSON files. noCause leaves out narration.hit.by_* (the caller's cause leads instead).
+; Killing blows (a death within a few seconds of a real hit): the rendered death lines. DeathVictims / DeathAttackers /
+; DeathSources are parallel to the last result.
+String[] Function TakeDeaths() global native
+Actor[] Function DeathVictims() global native
+Actor[] Function DeathAttackers() global native
+String[] Function DeathSources() global native
+; Death line of a health source (death block of its injuries JSON); part -1 = random main part. "" when the file has none.
+String Function DeathText(String sourceId, Actor attacker, Actor victim, Int part = -1) global native
 String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false, Bool unarmedForm = false) global native
 ; Parallel to the last TakeHits() result (same index).
 Bool Function HitUnarmed(Int index) global native

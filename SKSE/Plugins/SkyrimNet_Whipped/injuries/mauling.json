@@ -153,5 +153,32 @@
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "jaws close on {his} face and tear it away; one eye is ripped out and blood pours from the hollow socket over raw, torn muscle and bare cheekbone. {name} screams until the teeth find the skull, and the smell of blood and brains hangs heavy over the feeding beast.",
+        "claws rip open {his} throat and the jaws tear it out; blood sprays in hot gouts and {his} head lolls on a ruin of torn windpipe and gristle. {name} dies with a wet, bubbling gasp, and the thick iron stench of blood fills the air."
+      ],
+      "body": [
+        "claws tear {his} belly open and the teeth drag {his} bowels out over the ground in long, steaming loops; the stench of blood, torn gut and half-eaten food is overwhelming. {name} screams and claws at the dirt, then lies still as the beast feeds.",
+        "the jaws rip through {his} back and side until the ribs are torn apart, and the heart and lungs lie bare to the air, wet, red and still twitching. A hot reek of blood, opened gut and half-digested food rises from {him}, and {his} last breath leaves in a bloody whimper."
+      ],
+      "arm": [
+        "jaws clamp on {his} {part} and wrench it off at the shoulder, leaving a ragged stump of torn muscle, white bone and dangling tendon that gushes blood. {name} screams as {he} falls, and the smell of blood and raw meat fills the air along with {his} final cries.",
+        "the teeth gnaw and tear {his} {part} until it is chewed to the bone, the flesh hanging in shreds and the fingers bitten away. {name} goes into shock, pale and shaking, and bleeds out in the stink of blood and the animal's breath."
+      ],
+      "leg": [
+        "the jaws tear {his} {part} open from knee to hip and rip the thigh away; the bone shows, gnawed and bloody, and blood pumps from the torn vessel into the dirt. {name} is dragged screaming and dies there, the reek of blood and raw meat thick in the air.",
+        "claws and teeth strip {his} {part} to a chewed stump of bone and muscle; the foot is gone and the blood pours out in a dark pool. {name}'s screams fade to whimpers and then to nothing, the air heavy with the smell of blood and torn flesh."
+      ]
+    },
+    "soil": [
+      "As {his} body goes slack, the stink of {his} shit and piss mixes with the blood.",
+      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
   }
 }

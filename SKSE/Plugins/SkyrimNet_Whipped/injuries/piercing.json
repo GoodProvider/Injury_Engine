@@ -153,5 +153,32 @@
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the point drives in through {his} eye and deep into the skull; when it comes free, blood and clear fluid run from the hollow socket down {his} cheek. {name} stiffens, twitches and falls, a sharp smell of blood and brain rising from the wound.",
+        "the point punches through {his} throat and out the back of the neck; blood bubbles from {his} mouth and from the hole with every failing breath. {name} claws at it, choking on the iron taste, and dies in a wet, rattling gasp."
+      ],
+      "body": [
+        "the point drives between {his} ribs and through the heart; blood bursts from the wound in hard spurts and froths pink at {his} lips. {name} stares, gasping, and folds to the ground as the hot smell of blood spreads around {him}.",
+        "the point is driven deep through {his} back into the lungs and gut; dark blood and bile seep from the hole, and a sour smell of opened bowel and half-digested food mixes with the iron of blood. {name} drowns slowly in {his} own blood, coughing red, until the last wet breath rattles out."
+      ],
+      "arm": [
+        "the point opens the great vessel inside {his} {part}; blood jets out in bright spurts with every heartbeat and the arm goes white and limp. {name} clutches at it, screaming, the smell of blood thick around {him}, until {his} grip slackens and {he} slumps dead in a red pool.",
+        "the point tears through {his} {part} at the shoulder and on into the chest; the arm hangs useless while blood pours from both holes. {name} falls gasping, {his} cries thinning to whimpers as the coppery smell of blood fills the air."
+      ],
+      "leg": [
+        "the point drives deep into {his} {part} and cuts the great vessel in the thigh; blood spurts in a hot fountain and pools fast beneath {him}. {name} collapses screaming, then turns pale and shaking, and bleeds out in the thick iron reek of {his} own blood.",
+        "the point punches through {his} {part} at the groin; dark blood floods {his} clothing and runs over the ground. {name} drags {reflexive} a little way, crying out, and dies there in a widening red pool that smells of blood and fear-sweat."
+      ]
+    },
+    "soil": [
+      "As {his} body goes slack, the stink of {his} shit and piss mixes with the blood.",
+      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
   }
 }

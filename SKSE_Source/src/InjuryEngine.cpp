@@ -103,6 +103,25 @@ namespace InjuryEngine
             int count = 1;  // hits merged into this entry while it waited
         };
 
+        // The last real (health) hit per victim: a death soon after it is that hit's killing blow.
+        struct LastReal
+        {
+            RE::ActorHandle attacker;
+            int source = 0;
+            int part = -1;
+            bool unarmed = false;
+            double when = 0.0;  // real seconds
+        };
+
+        struct DeathEntry
+        {
+            RE::ActorHandle victim;
+            RE::ActorHandle attacker;
+            int source = 0;
+            std::string text;
+        };
+        constexpr double kDeathWindow = 5.0;  // real seconds from the last real hit to the death (kill moves take a while)
+
         struct HealthLogEntry
         {
             int part = 0;
@@ -127,6 +146,11 @@ namespace InjuryEngine
         std::vector<RE::Actor*> g_hitAttackers;
         std::vector<bool> g_hitUnarmed;
         std::vector<int> g_hitCounts;
+        std::unordered_map<RE::FormID, LastReal> g_lastReal;  // per victim, see LastReal
+        std::vector<DeathEntry> g_deaths;                     // killing blows not yet taken by Papyrus
+        std::vector<RE::Actor*> g_deathVictims;
+        std::vector<RE::Actor*> g_deathAttackers;
+        std::vector<std::string> g_deathSources;
         // Last release time per victim|attacker|source: TakeHits lets one hit per key through per kHitGap.
         std::unordered_map<std::string, std::chrono::steady_clock::time_point> g_hitReleased;
         constexpr std::chrono::milliseconds kHitGap{ 1000 };
@@ -1246,6 +1270,7 @@ namespace InjuryEngine
             // stays on that part until it is full, then moves to another one.
             int part = PickPart(st, female);
             const int firstPart = part;
+            int lastPart = firstPart;
             float left = amount;
             float absorbed = 0.0f;
             int replacedNow = 0;
@@ -1282,6 +1307,7 @@ namespace InjuryEngine
                     const int countBefore = st.real[source][part];
                     ++st.real[source][part];
                     healthLogs.push_back({ part, countBefore, pointLevel });
+                    lastPart = part;
                     mask |= 1 << part;
                     ++points;
                 }
@@ -1298,6 +1324,10 @@ namespace InjuryEngine
 
             g_pained[id] = true;
             g_healers.erase(id);  // real damage ends the heal session too (silently)
+            if (g_lastReal.size() > 512) {
+                g_lastReal.clear();
+            }
+            g_lastReal[id] = { attacker ? attacker->GetHandle() : RE::ActorHandle{}, source, lastPart, unarmedForm, NowSeconds() };
             if (mask == 0) {
                 SKSE::log::debug("damage {:08X} {} part:{} amount:{:.1f} absorbed:{:.1f} torture_replaced:{}: no new point (carry {:.2f})", id,
                     conf->id, firstName, amount, absorbed, replacedNow, st.carry);
@@ -1772,6 +1802,154 @@ namespace InjuryEngine
             InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), ActorVars(victim));
     }
 
+    std::string DeathText(int source, RE::Actor* attacker, RE::Actor* victim, int part, bool unarmedForm)
+    {
+        if (!victim || !InjuryConfig::Find(source)) {
+            return {};
+        }
+        const auto& body = GetBody();
+        if (part < 0 || part >= kPartCount) {
+            part = RandomIndex(kCoreParts);
+        }
+        // death text exists for the main regions only: a sexual part dies as the nearest one (lips: head, else body)
+        std::string region = "body";
+        if (part < kCoreParts) {
+            region = body.regionName[body.partRegion[part]];
+        } else if (body.partName[part] == "lips") {
+            region = "head";
+        }
+        const nlohmann::json lines = InjuryConfig::Json(source, "death.regions." + region);
+        if (!lines.is_array() || lines.empty() || !lines[0].is_string()) {
+            return {};
+        }
+        auto vars = ActorVars(victim);
+        vars["part"] = body.partName[part];
+        vars["form"] = NarrationForm(source, unarmedForm);
+        const bool named = attacker && attacker != victim;
+        vars["attacker"] = NameOf(attacker);
+        std::string text = InjuryConfig::Render(InjuryConfig::Str(source, named ? "death.lead" : "death.lead_none"), vars);
+        const auto& pick = lines[RandomIndex(static_cast<int>(lines.size()))];
+        text += InjuryConfig::Render(pick.is_string() ? pick.get<std::string>() : std::string(), vars);
+        const nlohmann::json soil = InjuryConfig::Json(source, "death.soil");
+        const float chance = InjuryConfig::Number(source, "death.soil_chance", 0.0f);
+        if (soil.is_array() && !soil.empty() && std::uniform_real_distribution<float>(0.0f, 1.0f)(Rng()) < chance) {
+            const auto& extra = soil[RandomIndex(static_cast<int>(soil.size()))];
+            if (extra.is_string()) {
+                text += " " + InjuryConfig::Render(extra.get<std::string>(), vars);
+            }
+        }
+        return text;
+    }
+
+    std::string DeathText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int part)
+    {
+        return DeathText(InjuryConfig::IndexOf(sourceId), attacker, victim, part, false);
+    }
+
+    namespace
+    {
+        // A death within kDeathWindow of the victim's last real hit: that hit was the killing blow. TESDeathEvent
+        // comes twice (dying, then dead); the first one takes the record, so it is narrated once.
+        class DeathSink : public RE::BSTEventSink<RE::TESDeathEvent>
+        {
+        public:
+            RE::BSEventNotifyControl ProcessEvent(const RE::TESDeathEvent* event, RE::BSTEventSource<RE::TESDeathEvent>*) override
+            {
+                auto* victim = event && event->actorDying ? event->actorDying->As<RE::Actor>() : nullptr;
+                if (!victim) {
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                LastReal rec;
+                {
+                    std::lock_guard lock(g_lock);
+                    const auto it = g_lastReal.find(victim->GetFormID());
+                    if (it == g_lastReal.end()) {
+                        return RE::BSEventNotifyControl::kContinue;
+                    }
+                    rec = it->second;
+                    g_lastReal.erase(it);
+                }
+                const double age = NowSeconds() - rec.when;
+                const auto* conf = InjuryConfig::Find(rec.source);
+                if (age > kDeathWindow || !conf || conf->IsTorture()) {
+                    SKSE::log::debug("death {:08X}: last real hit {:.1f}s old, no killing blow", victim->GetFormID(), age);
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                RE::Actor* attacker = rec.attacker.get().get();
+                if (!attacker && event->actorKiller) {
+                    attacker = event->actorKiller->As<RE::Actor>();
+                }
+                std::string text = DeathText(rec.source, attacker, victim, rec.part, rec.unarmed);
+                SKSE::log::info("death {} by {}: {} part:{} text:{}", LogActor(victim), LogActor(attacker), conf->id,
+                    rec.part >= 0 ? GetBody().partName[rec.part] : "none", text.empty() ? "(none)" : "yes");
+                if (text.empty()) {
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                {
+                    std::lock_guard lock(g_lock);
+                    if (g_deaths.size() < 64) {
+                        g_deaths.push_back({ victim->GetHandle(), attacker ? attacker->GetHandle() : RE::ActorHandle{}, rec.source,
+                            std::move(text) });
+                    }
+                }
+                NotifyPapyrus();
+                return RE::BSEventNotifyControl::kContinue;
+            }
+        };
+    }
+
+    void InitDeaths()
+    {
+        static DeathSink sink;
+        if (auto* holder = RE::ScriptEventSourceHolder::GetSingleton()) {
+            holder->AddEventSink<RE::TESDeathEvent>(&sink);
+            SKSE::log::info("InjuryEngine: death event sink registered");
+        }
+    }
+
+    std::vector<std::string> TakeDeaths()
+    {
+        std::lock_guard lock(g_lock);
+        std::vector<std::string> texts;
+        // an empty take must not wipe the arrays another Papyrus thread is still reading
+        if (g_deaths.empty()) {
+            return texts;
+        }
+        g_deathVictims.clear();
+        g_deathAttackers.clear();
+        g_deathSources.clear();
+        for (auto& d : g_deaths) {
+            auto* victim = d.victim.get().get();
+            if (!victim) {
+                continue;
+            }
+            texts.push_back(d.text);
+            g_deathVictims.push_back(victim);
+            g_deathAttackers.push_back(d.attacker.get().get());
+            g_deathSources.push_back(SourceId(d.source));
+        }
+        g_deaths.clear();
+        return texts;
+    }
+
+    std::vector<RE::Actor*> DeathVictims()
+    {
+        std::lock_guard lock(g_lock);
+        return g_deathVictims;
+    }
+
+    std::vector<RE::Actor*> DeathAttackers()
+    {
+        std::lock_guard lock(g_lock);
+        return g_deathAttackers;
+    }
+
+    std::vector<std::string> DeathSources()
+    {
+        std::lock_guard lock(g_lock);
+        return g_deathSources;
+    }
+
     std::string HealMapText(RE::Actor* victim)
     {
         if (!victim) {
@@ -2225,6 +2403,8 @@ namespace InjuryEngine
         g_tortureBatchLast.clear();
         g_events.clear();
         g_hits.clear();
+        g_lastReal.clear();
+        g_deaths.clear();
         std::uint32_t count = 0;
         if (!intfc->ReadRecordData(count)) {
             return;
@@ -2264,5 +2444,10 @@ namespace InjuryEngine
         g_syncCasters.clear();
         g_hitVictims.clear();
         g_hitAttackers.clear();
+        g_lastReal.clear();
+        g_deaths.clear();
+        g_deathVictims.clear();
+        g_deathAttackers.clear();
+        g_deathSources.clear();
     }
 }

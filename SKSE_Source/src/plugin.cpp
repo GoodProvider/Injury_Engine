@@ -59,6 +59,7 @@ namespace
         case SKSE::MessagingInterface::kDataLoaded:
             InjuryConfig::Load();
             Classifier::Init();
+            InjuryEngine::InitDeaths();
             Overlay::Init();
             break;
         case SKSE::MessagingInterface::kNewGame:

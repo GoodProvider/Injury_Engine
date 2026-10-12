@@ -63,6 +63,8 @@ Float Property narration_cooldown = 8.0 Auto Hidden
 ; Health (real damage) hits: one DirectNarration at most this often, hits in between are short-lived events
 Float Property health_narration_cooloff = 6.0 Auto Hidden
 Float Property last_health_narration = -1000.0 Auto Hidden
+; Killing blows of real damage: narrate the death line (death block of the source's injuries JSON)
+Bool Property death_narration = True Auto Hidden
 Float Property torture_narration_window_size = 30.0 Auto Hidden
 ; A pause this long between hits ends the torture (end narration); this often one combined line during it
 Float Property torture_maximum_break = 3.0 Auto Hidden
@@ -238,6 +240,7 @@ Function ApplyPluginConfig()
     narration_enabled = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.narration.enabled", DefaultBool("narration_enabled"))
     narration_cooldown = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.cooldown", DefaultNumber("narration_cooldown", 8.0))
     health_narration_cooloff = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.health_narration_cooloff", DefaultNumber("health_narration_cooloff", 6.0))
+    death_narration = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.narration.death", DefaultBool("death_narration"))
     torture_narration_window_size = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_narration_window_size", DefaultNumber("torture_narration_window_size", 30.0))
     torture_maximum_break = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_maximum_break", DefaultNumber("torture_maximum_break", 3.0))
     torture_direct_narration_gap = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_direct_narration_gap", DefaultNumber("torture_direct_narration_gap", 6.0))
@@ -260,7 +263,7 @@ Function ApplyPluginConfig()
     endif
     Trace("ApplyPluginConfig", "require_whip:" + require_whip + " give_gear:" + give_gear + " max_strikes:" + max_strikes + " hours_per_point:" + hours_per_point \
         + " give_healing_hands:" + give_healing_hands + " regen_rate:" + regen_rate \
-        + " narration:" + narration_enabled + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
+        + " narration:" + narration_enabled + " death:" + death_narration + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
 EndFunction
 
 ;----------------------------------------------------------------------------------------------------
@@ -1071,6 +1074,7 @@ Function ProcessSyncEventBatch()
 EndFunction
 
 Function DrainInjuryQueues()
+    NarrateDeaths()
     NarrateRealHits()
     ProcessSyncEventBatch()
 EndFunction
@@ -1083,6 +1087,7 @@ EndEvent
 
 Event OnUpdate()
     sync_pending = False
+    NarrateDeaths()
     NarrateRealHits()
     SceneTick()
     int[] codes = SkyrimNet_Whipped_Engine.SyncHealth()
@@ -1105,6 +1110,33 @@ Event OnUpdate()
     endif
 EndEvent
 
+; Killing blows queued by the DLL (a death soon after a real hit): one death line each. In sight with narration on:
+; DirectNarration (once per death, no cooloff); otherwise a short-lived injury_death event. Setting off: nothing.
+Function NarrateDeaths()
+    String[] texts = SkyrimNet_Whipped_Engine.TakeDeaths()
+    if texts.Length == 0
+        return
+    endif
+    Actor[] victims = SkyrimNet_Whipped_Engine.DeathVictims()
+    Actor[] attackers = SkyrimNet_Whipped_Engine.DeathAttackers()
+    String[] sources = SkyrimNet_Whipped_Engine.DeathSources()
+    int i = 0
+    while i < texts.Length && i < victims.Length && i < attackers.Length && i < sources.Length
+        Actor victim = victims[i]
+        if victim != None && death_narration && texts[i] != ""
+            ClearTortureScene(victim)
+            ClearHealBatch(victim)
+            if narration_enabled && PairVisible(attackers[i], victim)
+                DirectNarrate(texts[i], attackers[i], victim, "health", "death")
+            else
+                Trace("NarrateDeaths", sources[i] + " short-lived event: " + texts[i])
+                ShortEvent(texts[i], attackers[i], victim, "health", InjuryShortEventId("death", sources[i], attackers[i], victim),                     "injury_death", (event_ttl * 1000.0) as int, "death")
+            endif
+        endif
+        i += 1
+    endwhile
+EndFunction
+
 ; Hits queued by the damage hooks (real damage and hooked torture): narrate like lashes.
 ; One drain at a time (hits_draining); a call while one runs returns, the running drain takes its hits.
 Function NarrateRealHits()
@@ -1126,7 +1158,9 @@ Function NarrateRealHits()
         endwhile
         i = 0
         while i < codes.Length && i < victims.Length && i < attackers.Length
-            if victims[i] != None
+            if victims[i] != None && victims[i].IsDead()
+                Trace("NarrateRealHits", NameOf(victims[i]) + " is dead, hit not narrated (the death line covers it)")
+            elseif victims[i] != None
                 Trace("NarrateRealHits", NameOf(attackers[i]) + " -> " + NameOf(victims[i]) + " " + SourceOfCode(codes[i]) + " part:" + PartsOf(codes[i]) \
                     + " level:" + LevelOf(codes[i]) + " fresh:" + FreshOf(codes[i]) + " hits:" + counts[i])
                 NarrateHits(attackers[i], victims[i], SourceOfCode(codes[i]), MaskOf(codes[i]), LevelOf(codes[i]), counts[i], "", unarmed[i])

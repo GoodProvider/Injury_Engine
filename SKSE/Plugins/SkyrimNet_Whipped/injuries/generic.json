@@ -153,5 +153,32 @@
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the blow breaks {his} skull; blood pours from {his} nose, mouth and ears and runs from the hollow where an eye was. {name} drops limp, a last gasp rattling out of {him}, and the iron smell of blood spreads over the ground.",
+        "{his} face and head are smashed open, a ruin of broken bone, torn skin and blood, with something grey showing in the wound. {name} crumples without a word, and the warm smell of blood and brains hangs in the air."
+      ],
+      "body": [
+        "the blow tears into {his} back and chest, breaking ribs and bursting what lies beneath; blood gushes from {his} mouth and soaks {his} clothes. {name} falls choking, a last red bubble at {his} lips, in the thick smell of blood.",
+        "the wound rips {his} body open; torn flesh, broken bone and dark blood spill out together, and a sour smell of opened gut and half-eaten food mixes with the iron of blood. {name} sags to the ground with a long, final moan."
+      ],
+      "arm": [
+        "{his} {part} is torn and broken past saving, bone through the skin and blood pouring from the ruin. {name} collapses, pale and shaking, and bleeds out with {his} final cries, the air thick with the smell of blood.",
+        "{his} {part} is mangled into a bloody, twisted wreck of bone and muscle hanging by strips of skin. {name} screams, then falls silent, dying in a spreading pool that smells of blood and sweat."
+      ],
+      "leg": [
+        "{his} {part} is broken and torn open, splintered bone jutting from the flesh and blood soaking the ground. {name} falls and does not rise; as {he} bleeds out, the smell of {his} blood fills the air along with {his} last cries.",
+        "{his} {part} is ripped and shattered, bent the wrong way beneath {him}, blood pumping from the wound. {name}'s screams fade into ragged breaths and then silence in the iron reek of blood."
+      ]
+    },
+    "soil": [
+      "As {his} body goes slack, the stink of {his} shit and piss mixes with the blood.",
+      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
   }
 }

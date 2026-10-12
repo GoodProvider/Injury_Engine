@@ -156,5 +156,32 @@
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the blow caves in {his} skull; bone splinters, an eye is driven from its socket and blood runs from the hollow, and grey brain spills from the broken bone. The warm, wet smell of blood and brains hangs on the air as {name} drops like a felled tree.",
+        "{his} face is smashed flat, nose, teeth and cheekbone crushed into a red ruin, and blood pours from {his} mouth, nose and ears. {name} falls twitching and dies with a gurgling breath, the iron smell of blood thick about {him}."
+      ],
+      "body": [
+        "the blow stoves in {his} chest and back; ribs crack and splinter inward, and jagged bone pokes through the skin. Blood wells from {his} mouth in dark gouts as the crushed lungs fail, and {name} collapses with a wet, sucking gasp in the smell of blood.",
+        "the blow breaks {his} back and bursts something deep inside; {name} folds the wrong way and blood and vomit gush from {his} mouth, sour with half-digested food. {name} lies broken and twitching in the stench until {he} goes still."
+      ],
+      "arm": [
+        "{his} {part} is smashed to pulp; splintered bone stands out through torn skin and muscle, and blood runs from the mangled limb. {name} dies screaming, curled around the ruined arm, the coppery smell of blood heavy in the air.",
+        "the blow shatters {his} {part} and drives on into {his} ribs; the arm hangs crooked, white bone showing through the split skin. {name} falls gasping and coughing blood, {his} last cries ending in a choked rattle."
+      ],
+      "leg": [
+        "{his} {part} is crushed at the knee; the joint is pulp, the shin bent sideways with bone through the skin, and blood soaks the ground. {name} falls screaming and dies where {he} lies, in the smell of blood and sweat.",
+        "the blow shatters {his} {part} and {name} crumples; the thigh bone bursts through the flesh and the great vessel tears, pouring blood beneath {him}. {name}'s screams fade to moans and then to nothing as {he} bleeds out in the iron reek."
+      ]
+    },
+    "soil": [
+      "As {his} body goes slack, the stink of {his} shit and piss mixes with the blood.",
+      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
   }
 }

@@ -93,6 +93,14 @@ namespace InjuryEngine
     // Queues a hit code Papyrus already got from Hit (scripted torture), so it is merged and gated like hooked hits.
     void QueueHit(RE::Actor* victim, RE::Actor* attacker, std::int32_t code);
 
+    // TESDeathEvent sink (kDataLoaded): a death within a few seconds of the victim's last real hit queues that
+    // source's DeathText. TakeDeaths returns the texts; DeathVictims / DeathAttackers / DeathSources are parallel to it.
+    void InitDeaths();
+    std::vector<std::string> TakeDeaths();
+    std::vector<RE::Actor*> DeathVictims();
+    std::vector<RE::Actor*> DeathAttackers();
+    std::vector<std::string> DeathSources();
+
     // Called from the MagicTarget::AddTarget hook for every effect applied to an actor.
     void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect);
 
@@ -127,6 +135,9 @@ namespace InjuryEngine
     // Narration text rendered from the JSON files.
     std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count,
         bool noCause = false, bool unarmedForm = false);
+    // Killing-blow line (death.lead / lead_none + a random death.regions.<region> line + maybe death.soil) for a health
+    // source; part -1 = random main part, a sexual part uses its nearest main region. "" when the file has no death text.
+    std::string DeathText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int part);
     // The feeling sentence of a hit level (narration.hit.levels), rendered for the victim.
     std::string LevelText(std::string_view sourceId, RE::Actor* victim, int level);
     // Heal session line: every part with torture points, at its heal level (high / mid / low) from its largest type,

@@ -153,5 +153,32 @@
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the fire burns {his} face away; hair and skin flare and blacken, the eyes boil and burst in their sockets, and charred skull shows through the cracked flesh. The stench of burned hair and cooked flesh chokes the air as {name} falls with a last, smoke-strangled shriek.",
+        "the flames pour into {his} mouth and eyes; {his} lips shrivel back from blackened teeth and the hollow sockets weep a boiling fluid. {name} collapses, smoking, and the smell of roasting meat and burned fat hangs over the body."
+      ],
+      "body": [
+        "the fire splits the skin of {his} back and belly; fat bubbles and drips, the flesh beneath cooks dark, and in places the ribs show black through the char. A thick, sweet stench of roasting meat and burned hair rolls off {him} as {name} falls writhing and screaming, then lies still and smoking.",
+        "the flames eat through {his} chest and back until the cooked organs show beneath the cracked, blackened skin, and the smell of burned fat and cooked gut is sickening. {name} dies curled in on {reflexive}, a final scream turning into a dry, smoky rattle."
+      ],
+      "arm": [
+        "{his} {part} is burned to nothing but a blackened stump, the hand gone and the charred bone poking from a crust of cooked flesh. {name} falls shrieking, rolling in the dirt, and the stench of burned meat and hair fills the air until {he} lies smoking and still.",
+        "the fire strips {his} {part} to the bone; the flesh hangs in cooked, blackened strips and the fingers are curled into charred claws. {name} collapses in the smoke and the reek of roasting flesh, {his} last scream thin and cracked."
+      ],
+      "leg": [
+        "{his} {part} is charred to the bone, the skin burst and blackened, the fat running and spitting. {name} falls and cannot rise, still burning, the smell of cooked meat and burned leather thick on the air as {his} screams die away.",
+        "the flames burn {his} {part} down to a black, smoking stump; the flesh has cooked away from the shin and the foot is a twisted lump of char. {name} drops, writhing, and dies in a haze of smoke that stinks of burned hair and roasted flesh."
+      ]
+    },
+    "soil": [
+      "As {his} body goes slack, the stink of {his} shit and piss mixes with the reek of burned flesh.",
+      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smoke."
+    ],
+    "soil_chance": 0.4
   }
 }

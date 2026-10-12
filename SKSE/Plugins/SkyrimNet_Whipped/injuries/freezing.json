@@ -153,5 +153,32 @@
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the frost freezes {his} face; the eyes turn milky white and ice crusts the lashes, the skin goes grey-blue and cracks, and blood seeps from the splits in red crystals. {name} topples stiffly, a last frozen breath misting from {his} lips, and the air smells of cold metal and blood.",
+        "the cold bites into {his} skull until the eyes burst into ice and dark, slushy blood weeps from the hollow sockets; {his} jaw locks with frost thick in the open mouth. {name} falls without a cry, the sharp smell of frozen blood hanging in the cold."
+      ],
+      "body": [
+        "the frost drives into {his} chest until the heart seizes; the skin of {his} back is white and rigid as stone and blood freezes in red crystals where it splits. {name} falls stiff, a thin, crackling gasp leaving {him}, and a smell of cold iron and frozen flesh hangs about the body.",
+        "the cold freezes {his} lungs mid-breath; frost spreads over {his} chest and back, the flesh cracking open in deep, bloodless fissures that glitter with red ice. {name} sinks down, rigid and blue-lipped, a last strangled wheeze leaving {him} in a frozen mist."
+      ],
+      "arm": [
+        "{his} {part} freezes solid and snaps off at the elbow like a dead branch; the stump is a frozen knot of white bone and grey muscle, blood oozing slowly in red slush. {name} stares at it, screaming, and dies shaking in the cold, the smell of frozen blood sharp on the air.",
+        "the frost turns {his} {part} to ice; the skin splits to the bone and the fingers break off when they strike the ground. {name} collapses, shuddering, {his} last cries thin and frozen, the air smelling of cold metal and blood."
+      ],
+      "leg": [
+        "{his} {part} freezes through and shatters like ice under {his} weight, and {he} falls beside a frozen stump of bone and muscle, blood seeping out in dark red slush. {name}'s screams fade into a shivering moan, and the cold smell of frozen blood hangs over {him} as {he} dies.",
+        "the cold freezes {his} {part} solid to the hip; the flesh cracks open in white, bloodless splits and the leg breaks with a sharp snap as {he} falls. {name} dies there, rigid and blue, {his} final scream frozen in a cloud of breath."
+      ]
+    },
+    "soil": [
+      "As {his} body goes slack, {his} bowels and bladder let go, and the warm stink of shit and piss steams in the cold.",
+      "In death the stench of {his} shit and piss spreads, warm and rank against the frozen air."
+    ],
+    "soil_chance": 0.4
   }
 }

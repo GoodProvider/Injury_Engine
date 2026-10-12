@@ -97,6 +97,13 @@ schema:
       defaultValue: 6.0
       category: "Narration"
 
+    - name: "Narrate killing blows"
+      path: "whip.narration.death"
+      type: "bool"
+      description: "When real damage kills someone, describe the killing wound (what it looks and smells like, the last moment). In sight with narration on: a Direct Narration; otherwise a short-lived event."
+      defaultValue: true
+      category: "Narration"
+
     - name: "Narration cooldown (sec)"
       path: "whip.narration.cooldown"
       type: "float"
