@@ -7,11 +7,9 @@
     { "priority": 40, "resist": "ResistShock" }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -127,15 +125,6 @@
         ", and the lightning arcs through the burns. The pain is blinding and {he} locks up in a spasm, hair standing on end and breath gone. The acrid stench of burnt flesh fills the air.",
         ", and it is too much. The current floods {him}; {he} convulses, smoking, then goes slack, {his} heart stuttering."
       ]
-    },
-    "heal": {
-      "stage": {
-        "medium": "The burn marks on {name}'s {part} have faded to angry, branching red lines.",
-        "light": "The marks on {name}'s {part} have faded to faint pink traces.",
-        "healed": "The marks on {name}'s {part} have healed, leaving only a faint branching scar."
-      },
-      "source_healed": "All of {name}'s electrical burns have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed."
     },
     "heal_events": {
       "nouns": {

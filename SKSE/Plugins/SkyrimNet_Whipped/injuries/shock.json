@@ -7,11 +7,9 @@
     { "priority": 90, "resist": "ResistShock", "effect_file": "SkyrimNet_Whipped.esp", "effect_id": "0x815" }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -52,10 +50,7 @@
   "stages": [
     "light",
     "medium",
-    "severe",
-    "recovering",
-    "mostly_healed",
-    "healed"
+    "severe"
   ],
   "hook": {
     "points_per_second": 2
@@ -72,69 +67,69 @@
       "head": [
         "{name}'s face: a blush of pink flushes the cheek and temple where the sparks played, the skin unbroken; tiny muscles beside the eye and mouth flicker on their own, and the fine hairs on {his} brow stand on end. A thin, sharp smell of ozone hangs about {him}.",
         "{name}'s face: delicate, fern-like red tracery branches across the cheek and jaw, with pinpoint grey-white burns where the sparks bit in; the eyelid on that side keeps fluttering and the corner of the mouth twitches. {name} smells of ozone and singed hair.",
-        "{name}'s face: deep, blistered entry burns ringed in black pit the cheek and brow, the branching marks swollen dark red; the whole side of {his} face jerks in uneven spasms, the lips are pale and the eyes glassy and unfocused. The acrid stench of scorched skin and burnt hair clings to {him}.",
-        "{name}'s face: the pinpoint burns have dried into small, dark scabbed craters, the fern-like tracery faded to a dull brownish web; now and then a muscle under the cheek still gives a small, stray twitch.",
-        "{name}'s face: the scabs are gone, leaving tiny, glossy pink pits and a faint rosy branching pattern that shows when {he} flushes.",
-        "{name}'s face: only a few small, pale pinprick scars remain, with a ghost of the branching pattern visible when {his} skin is cold or flushed."
+        "{name}'s face: deep, blistered entry burns ringed in black pit the cheek and brow, the branching marks swollen dark red; the whole side of {his} face jerks in uneven spasms, the lips are pale and the eyes glassy and unfocused. The acrid stench of scorched skin and burnt hair clings to {him}."
       ],
       "body": [
         "{name}'s back: a faint pink flush spreads across the shoulder blades, the skin raised in gooseflesh; the muscles beneath it ripple and quiver in small, uncontrolled twitches. {name} smells of fresh sweat and a sharp trace of ozone.",
         "{name}'s back: red, fern-like burn patterns branch across the shoulders and down the spine, dotted with pinpoint entry burns; the long muscles bunch and jump in cramping knots under the skin. {name} smells of ozone, sweat and singed cloth.",
-        "{name}'s back: deep, black-rimmed entry burns are seared into the skin, the branching marks swollen and blistered; the muscles clench in hard, rolling cramps, and {his} whole body shudders in fits, drenched in cold sweat. The acrid smell of burnt flesh and sour sweat clings to {him}.",
-        "{name}'s back: the entry burns have crusted into small, dark scabbed craters strung along the faded brown tracery; the muscles still jump in an occasional stray twitch. A faint smell of healing salve lingers.",
-        "{name}'s back: glossy pink pits mark where the burns were, joined by a soft rosy branching pattern that comes up when {he} is warm.",
-        "{name}'s back: small, pale pinprick scars remain, and a faint fern-like ghost shows across the shoulders in the cold."
+        "{name}'s back: deep, black-rimmed entry burns are seared into the skin, the branching marks swollen and blistered; the muscles clench in hard, rolling cramps, and {his} whole body shudders in fits, drenched in cold sweat. The acrid smell of burnt flesh and sour sweat clings to {him}."
       ],
       "arm": [
         "{name}'s {part}: the skin is flushed pink along the forearm, the hairs standing on end; the fingers curl and twitch on their own.",
         "{name}'s {part}: red, fern-like burns branch from the wrist toward the elbow, with pinpoint grey-white burns where the sparks bit; the forearm muscles cramp in visible knots and the hand trembles. It smells of ozone and singed hair.",
-        "{name}'s {part}: deep, blistered entry burns ringed in black are seared into the arm, the branching marks swollen and weeping; the hand is locked in a clawed cramp and the whole arm jerks in spasms. It gives off the acrid smell of scorched skin.",
-        "{name}'s {part}: small, dark scabbed craters dot the arm along a faded brownish web; the fingers still give a stray twitch now and then.",
-        "{name}'s {part}: the scabs have fallen away, leaving glossy pink pits and a faint rosy branching pattern along the forearm.",
-        "{name}'s {part}: a few small, pale pinprick scars remain along the arm, with a ghost of the branching pattern when the skin is cold."
+        "{name}'s {part}: deep, blistered entry burns ringed in black are seared into the arm, the branching marks swollen and weeping; the hand is locked in a clawed cramp and the whole arm jerks in spasms. It gives off the acrid smell of scorched skin."
       ],
       "leg": [
         "{name}'s {part}: a pink flush spreads over the thigh or calf, the skin pebbled with gooseflesh; the muscle beneath it flickers and twitches.",
         "{name}'s {part}: red, fern-like burns branch across the thigh or calf, with pinpoint grey-white entry burns; the muscle cramps into a hard, visible knot. It smells of ozone and singed skin.",
-        "{name}'s {part}: deep, black-ringed entry burns blister the thigh and calf, the branching marks swollen dark red; the muscle is seized in a rigid cramp and the leg jerks in fits. An acrid stench of seared flesh rises from it.",
-        "{name}'s {part}: small, dark scabbed craters dot the leg along a faded brownish web; the calf still gives an occasional stray twitch.",
-        "{name}'s {part}: glossy pink pits mark the old burns, with a soft rosy branching pattern across the skin.",
-        "{name}'s {part}: a few small, pale pinprick scars remain, the branching pattern visible only faintly in the cold."
+        "{name}'s {part}: deep, black-ringed entry burns blister the thigh and calf, the branching marks swollen dark red; the muscle is seized in a rigid cramp and the leg jerks in fits. An acrid stench of seared flesh rises from it."
       ]
     },
     "feels": {
-      "head": [
-        "{name}'s face prickles and crawls as if ants were running under the skin, and {his} teeth buzz with a metallic taste. {name} is jumpy and indignant, blinking hard against the twitch in {his} eyelid.",
-        "{name}'s face burns in sharp, needle-point stings, and the muscles of the cheek and jaw cramp and jump without warning. {name} is frightened and humiliated; {his} words come out clipped and uneven as {his} mouth twitches mid-sentence.",
-        "{name}'s face is searing, jolting agony, numb in patches and on fire in others, {his} vision flashing white and {his} heart racing hard. {name} is in shock and barely coherent; {his} jaw clenches in spasms and {he} can hardly shape a word.",
-        "{name}'s face itches and stings around the scabbed burns, and a stray twitch still tugs at {his} eyelid or lip. {name} is self-conscious and tired, speaking carefully in case {his} mouth jumps.",
-        "{name}'s face is oversensitive where the burns were, prickling at a touch or a cold wind. {name} flinches when a hand comes near {his} face.",
-        "{name}'s face feels normal again apart from an occasional faint prickle or a lone twitch. The crackle of magic nearby makes {him} flinch, a quiet memory of the sparks."
-      ],
-      "body": [
-        "{name}'s back prickles and tingles, the muscles twitching in small, maddening jumps. {name} is tense and hyper-alert, {his} shoulders drawn up, {his} breath catching at every flicker.",
-        "{name}'s back stings with needle-point burns and the long muscles cramp in hard, aching knots, while {his} heart beats fast and shallow. {name} is shaken and resentful, holding {reflexive} stiff and hunched, {his} breath coming in jerks.",
-        "{name}'s back is deep, searing burns and cramps that wrack {his} whole body in convulsions, {his} heart pounding and stumbling in {his} chest. {name} is terrified and close to collapse, unable to straighten, shaking uncontrollably and gasping.",
-        "{name}'s back itches around the scabbed burns, and the muscles still cramp or twitch when {he} turns too fast. {name} is weary and careful, moving slowly and wincing at sudden jolts.",
-        "{name}'s back feels tight and tingly over the old burns, with a stray twitch when {he} is tired. {name} is wary and keeps anyone from standing too close behind {him}.",
-        "{name}'s back has its full strength and ease again, with only an occasional lone twitch. The crackle of a spell nearby still makes {him} tense, a quiet memory of the sparks."
-      ],
-      "arm": [
-        "{name}'s {part} prickles and buzzes from the shoulder to the fingertips, the fingers jumping on their own. {name} is startled and shakes the arm out, keeping it close.",
-        "{name}'s {part} burns in sharp pinpoint stings, and the forearm cramps so the grip keeps failing. {name} is shaken and irritable, cradling the arm and fumbling anything {he} holds.",
-        "{name}'s {part} is searing agony, numb and burning at once, the hand locked in a cramp that will not let go. {name} is in shock and despair; the arm is useless and jerks in spasms {he} cannot stop.",
-        "{name}'s {part} is stiff and itchy around the scabs, and the fingers still twitch when {he} grips hard. {name} is frustrated and avoids heavy or fine work.",
-        "{name}'s {part} tingles faintly over the old burns, and the hand trembles a little when tired. {name} has accepted it; the arm works with only minor clumsiness.",
-        "{name}'s {part} has its full feeling and strength again, with only a rare stray twitch. The crackle of magic still makes {him} flinch, a quiet memory of the sparks."
-      ],
-      "leg": [
-        "{name}'s {part} prickles and buzzes, the muscle twitching in small jumps. {name} is unsettled and shifts {his} weight, with a brief hitch in {his} stride.",
-        "{name}'s {part} stings in sharp pinpoints and the calf or thigh cramps into a hard knot. {name} is shaken and vulnerable, walking stiff-legged and stopping to wait out the cramps.",
-        "{name}'s {part} is searing burns and a rigid, wrenching cramp, the leg jerking in fits that will not hold weight. {name} is panicked and exhausted, {his} heart racing; {he} cannot stand on it and needs support to move.",
-        "{name}'s {part} itches around the scabs and cramps when {he} walks too far. {name} is weary of the slow recovery and limps a little, resting the leg when {he} can.",
-        "{name}'s {part} tingles over the old burns, with a stray twitch at night or in the cold. {name} is regaining confidence, walking almost normally.",
-        "{name}'s {part} has its full strength and movement again, with only a lone twitch now and then. The crackle of magic still makes {him} flinch, a quiet memory of the sparks."
-      ]
+      "torture": {
+        "head": [
+          "{name}'s face prickles and crawls as if ants were running under the skin, and {his} teeth buzz with a metallic taste. {name} is jumpy and indignant, blinking hard against the twitch in {his} eyelid.",
+          "{name}'s face burns in sharp, needle-point stings, and the muscles of the cheek and jaw cramp and jump without warning. {name} is frightened and humiliated; {his} words come out clipped and uneven as {his} mouth twitches mid-sentence.",
+          "{name}'s face is searing, jolting agony, numb in patches and on fire in others, {his} vision flashing white and {his} heart racing hard. {name} is in shock and barely coherent; {his} jaw clenches in spasms and {he} can hardly shape a word."
+        ],
+        "body": [
+          "{name}'s back prickles and tingles, the muscles twitching in small, maddening jumps. {name} is tense and hyper-alert, {his} shoulders drawn up, {his} breath catching at every flicker.",
+          "{name}'s back stings with needle-point burns and the long muscles cramp in hard, aching knots, while {his} heart beats fast and shallow. {name} is shaken and resentful, holding {reflexive} stiff and hunched, {his} breath coming in jerks.",
+          "{name}'s back is deep, searing burns and cramps that wrack {his} whole body in convulsions, {his} heart pounding and stumbling in {his} chest. {name} is terrified and close to collapse, unable to straighten, shaking uncontrollably and gasping."
+        ],
+        "arm": [
+          "{name}'s {part} prickles and buzzes from the shoulder to the fingertips, the fingers jumping on their own. {name} is startled and shakes the arm out, keeping it close.",
+          "{name}'s {part} burns in sharp pinpoint stings, and the forearm cramps so the grip keeps failing. {name} is shaken and irritable, cradling the arm and fumbling anything {he} holds.",
+          "{name}'s {part} is searing agony, numb and burning at once, the hand locked in a cramp that will not let go. {name} is in shock and despair; the arm is useless and jerks in spasms {he} cannot stop."
+        ],
+        "leg": [
+          "{name}'s {part} prickles and buzzes, the muscle twitching in small jumps. {name} is unsettled and shifts {his} weight, with a brief hitch in {his} stride.",
+          "{name}'s {part} stings in sharp pinpoints and the calf or thigh cramps into a hard knot. {name} is shaken and vulnerable, walking stiff-legged and stopping to wait out the cramps.",
+          "{name}'s {part} is searing burns and a rigid, wrenching cramp, the leg jerking in fits that will not hold weight. {name} is panicked and exhausted, {his} heart racing; {he} cannot stand on it and needs support to move."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal again apart from an occasional faint prickle or a lone twitch. The crackle of magic nearby makes {him} flinch, a quiet memory of the sparks.",
+          "{name}'s face is oversensitive where the burns were, prickling at a touch or a cold wind. {name} flinches when a hand comes near {his} face.",
+          "{name}'s face itches and stings around the scabbed burns, and a stray twitch still tugs at {his} eyelid or lip. {name} is self-conscious and tired, speaking carefully in case {his} mouth jumps."
+        ],
+        "body": [
+          "{name}'s back has its full strength and ease again, with only an occasional lone twitch. The crackle of a spell nearby still makes {him} tense, a quiet memory of the sparks.",
+          "{name}'s back feels tight and tingly over the old burns, with a stray twitch when {he} is tired. {name} is wary and keeps anyone from standing too close behind {him}.",
+          "{name}'s back itches around the scabbed burns, and the muscles still cramp or twitch when {he} turns too fast. {name} is weary and careful, moving slowly and wincing at sudden jolts."
+        ],
+        "arm": [
+          "{name}'s {part} has its full feeling and strength again, with only a rare stray twitch. The crackle of magic still makes {him} flinch, a quiet memory of the sparks.",
+          "{name}'s {part} tingles faintly over the old burns, and the hand trembles a little when tired. {name} has accepted it; the arm works with only minor clumsiness.",
+          "{name}'s {part} is stiff and itchy around the scabs, and the fingers still twitch when {he} grips hard. {name} is frustrated and avoids heavy or fine work."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength and movement again, with only a lone twitch now and then. The crackle of magic still makes {him} flinch, a quiet memory of the sparks.",
+          "{name}'s {part} tingles over the old burns, with a stray twitch at night or in the cold. {name} is regaining confidence, walking almost normally.",
+          "{name}'s {part} itches around the scabs and cramps when {he} walks too far. {name} is weary of the slow recovery and limps a little, resting the leg when {he} can."
+        ]
+      }
     }
   },
   "narration": {
@@ -175,16 +170,11 @@
       "hit_noun": "spark"
     },
     "heal": {
-      "stage": {
-        "medium": "The blistered entry burns on {name}'s {part} have closed, leaving angry red branching marks and cramping muscle.",
-        "light": "The burns on {name}'s {part} have faded to a faint pink tracery, the twitching nearly gone.",
-        "recovering": "The burn points on {name}'s {part} have scabbed over, though the muscle still gives a lingering twitch.",
-        "mostly_healed": "The scabs on {name}'s {part} have fallen away, leaving glossy pink pits and a faint branching pattern.",
-        "healed": "The marks on {name}'s {part} have faded to a few pale pinprick scars; that burn has fully healed."
-      },
-      "source_healed": "All of {name}'s shock burns have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed.",
-      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+      "level": {
+        "high": "The marks on {name}'s {parts} are fading to a few pale pinprick scars.",
+        "mid": "The scabs on {name}'s {parts} have fallen away, leaving glossy pink pits and a faint branching pattern.",
+        "low": "The burn points on {name}'s {parts} have scabbed over, though the muscle still gives a lingering twitch."
+      }
     },
     "heal_events": {
       "nouns": {

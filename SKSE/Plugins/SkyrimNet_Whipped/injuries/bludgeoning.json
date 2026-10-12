@@ -9,11 +9,9 @@
     { "priority": 40, "unarmed": true, "npc": true, "combat": true }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -130,15 +128,6 @@
         ", and the blow crunches into already battered flesh. The pain is huge and nauseating, and {he} staggers.",
         ", and it is too much. The impact shatters something; {he} crumples, pale and gasping, {his} vision tunneling."
       ]
-    },
-    "heal": {
-      "stage": {
-        "medium": "The swelling on {name}'s {part} has gone down to a deep, purple bruise.",
-        "light": "The bruise on {name}'s {part} has faded to yellow-green.",
-        "healed": "The bruise on {name}'s {part} has healed without a mark."
-      },
-      "source_healed": "All of {name}'s bruises and breaks have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed."
     },
     "heal_events": {
       "nouns": {

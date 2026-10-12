@@ -1,4 +1,5 @@
 #include "Classifier.h"
+#include "InjuryConfig.h"
 #include "InjuryEngine.h"
 
 #include <cmath>
@@ -57,6 +58,9 @@ namespace
             const int source = Classifier::Classify(a_this, a_attacker, &physicalMelee, &unarmedForm);
             SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} source:{} physical:{} unarmed:{}",
                 a_this->GetFormID(), a_attacker ? a_attacker->GetFormID() : 0, a_damage, InjuryEngine::SourceId(source), physicalMelee, unarmedForm);
+            if (source >= 0 && InjuryConfig::IsTorture(source)) {
+                Classifier::MarkQuiet(a_this);  // no vanilla hit bark over the torture narration
+            }
             const float kept = source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source, physicalMelee, unarmedForm) : amount;
             HandleScope scope;
             func(a_this, a_attacker, std::copysign(kept, a_damage));
@@ -75,6 +79,9 @@ namespace
                     const int source = Classifier::Classify(actor, nullptr);
                     SKSE::log::debug("[hook] ModActorValue victim:{:08X} damage:{:.2f} source:{}", actor->GetFormID(), a_value,
                         InjuryEngine::SourceId(source));
+                    if (source >= 0 && InjuryConfig::IsTorture(source)) {
+                        Classifier::MarkQuiet(actor);
+                    }
                     if (source >= 0) {
                         a_value = -InjuryEngine::OnDamage(actor, nullptr, -a_value, source, false);
                     }

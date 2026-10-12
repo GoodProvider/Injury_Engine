@@ -4,11 +4,9 @@
   "model": "torture",
   "requires": "",
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -49,10 +47,7 @@
   "stages": [
     "light",
     "medium",
-    "severe",
-    "recovering",
-    "mostly_healed",
-    "healed"
+    "severe"
   ],
   "part_weights": {
     "face": 2,
@@ -81,69 +76,69 @@
       "head": [
         "{name}'s head: {his} hair is tangled and dragged out of place, the scalp beneath flushed pink, and one ear glows red and slightly puffy from being twisted.",
         "{name}'s head: loose strands of torn-out hair cling to {his} shoulders; the scalp is blotched red with tiny beads of blood at the roots, and one ear is swollen, hot and bruised purple along its fold.",
-        "{name}'s head: ragged bald patches show where hair was ripped out by the roots, the bare scalp raw, torn and oozing blood into what hair remains; one ear is split where it joins the head, swollen and dark with blood. Tears stream from {his} reddened eyes.",
-        "{name}'s head: the bald patches are crusted with thin brown scabs, the scalp around them still pink and tender; the ear is stiff, with a scabbed tear and fading yellow-green bruising.",
-        "{name}'s head: a short, soft fuzz of new hair is growing over the bare patches; the ear has a small pink mark where it was torn.",
-        "{name}'s head: the hair has grown back thick enough to hide where it was torn out, and the ear has only a faint pale nick at its root."
+        "{name}'s head: ragged bald patches show where hair was ripped out by the roots, the bare scalp raw, torn and oozing blood into what hair remains; one ear is split where it joins the head, swollen and dark with blood. Tears stream from {his} reddened eyes."
       ],
       "body": [
         "{name}'s back: a patch of skin is pinched red where it was grabbed and twisted.",
         "{name}'s back: twisted skin has bruised purple in finger-shaped blotches.",
-        "{name}'s back: the skin is torn where it was wrenched, bleeding inside dark, twisted bruises.",
-        "{name}'s back: thin scabs sit inside fading yellow-green bruises.",
-        "{name}'s back: faint pink marks show where the skin was torn.",
-        "{name}'s back: the skin has healed smooth, with no mark left."
+        "{name}'s back: the skin is torn where it was wrenched, bleeding inside dark, twisted bruises."
       ],
       "arm": [
         "{name}'s {part}: red finger marks ring the wrist where it was gripped and wrenched, and the arm hangs a little stiffly.",
         "{name}'s {part}: dark grip bruises circle the wrist and upper arm, the elbow is puffy, and the shoulder sits slightly hunched and swollen from being forced behind {his} back.",
-        "{name}'s {part}: the shoulder sits wrong, sagging and lumpy as if pulled from its socket; the skin at the wrist is torn and bleeding where it was twisted, the whole arm swollen and bruised black from shoulder to fingers, held limp at {his} side.",
-        "{name}'s {part}: the swelling at the shoulder is going down; the wrist bruises have faded to yellow-green around scabbed grip tears, and {he} keeps the arm bent close to {his} body.",
-        "{name}'s {part}: only faint brown shadows of the bruising remain, and the shoulder sits nearly level again.",
-        "{name}'s {part}: the arm looks normal, the shoulder level, with a faint pale mark at the wrist."
+        "{name}'s {part}: the shoulder sits wrong, sagging and lumpy as if pulled from its socket; the skin at the wrist is torn and bleeding where it was twisted, the whole arm swollen and bruised black from shoulder to fingers, held limp at {his} side."
       ],
       "leg": [
         "{name}'s {part}: the ankle is reddened with finger marks where it was gripped and twisted.",
         "{name}'s {part}: the knee is puffy and bruised purple along the inside, and the ankle is swollen from being wrenched.",
-        "{name}'s {part}: the knee is badly swollen and bent at a strange angle, the ankle fat and bruised black, the skin torn where it was twisted and bleeding into {his} boot.",
-        "{name}'s {part}: the swelling at knee and ankle is easing, the bruising faded to yellow-green around a few small scabs.",
-        "{name}'s {part}: the knee and ankle are back to their normal shape, with faint brownish bruising left.",
-        "{name}'s {part}: the leg looks normal again, without a mark."
+        "{name}'s {part}: the knee is badly swollen and bent at a strange angle, the ankle fat and bruised black, the skin torn where it was twisted and bleeding into {his} boot."
       ]
     },
     "feels": {
-      "head": [
-        "{name}'s scalp prickles hot and tight where {his} hair was yanked, and {his} ear burns and rings. {name} is startled and indignant, eyes watering, holding {his} head stiff and still.",
-        "{name}'s scalp throbs and stings at the roots, sore to the touch of {his} own hair, and {his} twisted ear aches with a deep, hot pulse. {name} is angry and humiliated, flinching when {his} hair shifts and tilting {his} head away from the hurt side.",
-        "{name}'s scalp is a raw, burning agony where the hair was torn out, every strand left screaming at the slightest movement; {his} ear pounds with a tearing pain and a roar of ringing. {name} is shaking, tearful and terrified, hunched with {his} head pulled down between {his} shoulders, barely able to turn it.",
-        "{name}'s scalp is tender and itchy under the scabs, and lying on that side of {his} head hurts. {name} is self-conscious about the bare patches, touching {his} hair often and turning {his} head carefully.",
-        "{name}'s scalp tingles where the new hair grows in, and {his} ear is a little sore when pressed. {name} flinches when anyone reaches toward {his} hair.",
-        "{name}'s scalp and ear feel normal again. A hand in {his} hair brings back a quiet memory of being dragged by it."
-      ],
-      "body": [
-        "{name}'s back stings sharply where the skin was pinched and twisted. {name} holds {his} shoulders tight.",
-        "{name}'s back aches in hot, bruised spots where it was wrenched. {name} keeps {his} back stiff and straight.",
-        "{name}'s back burns with a raw, tearing pain where the skin was torn. {name} moves slowly, wincing at every twist.",
-        "{name}'s back is tender and itchy under the scabs. {name} avoids leaning back against anything.",
-        "{name}'s back is only a little sore when pressed. {name} is wary of hands behind {him}.",
-        "{name}'s back feels normal again."
-      ],
-      "arm": [
-        "{name}'s {part} aches with a sharp twinge at the wrist and shoulder, and the joints feel strained. {name} is shaken and rubs the wrist, reluctant to raise the arm.",
-        "{name}'s {part} throbs deep in the shoulder and elbow, and lifting it sends a hot, grinding pain through the joint. {name} is resentful and guarded, keeping the arm close and gripping weakly.",
-        "{name}'s {part} is a sickening, tearing agony in the shoulder, as if it hangs loose from its socket; every jolt sends white-hot pain down to the fingers, which tingle and go numb. {name} is in shock, pale and sweating, clutching the arm against {his} body and unable to lift it at all.",
-        "{name}'s {part} is stiff and sore, the shoulder catching with a deep ache when {he} reaches or lifts. {name} is frustrated at the weakness and favors the other arm.",
-        "{name}'s {part} is a little tight at full reach and twinges when {he} lifts anything heavy. {name} uses it almost normally but keeps it from being pulled behind {him}.",
-        "{name}'s {part} has its full movement and strength again. Having the arm grabbed brings back a quiet memory of it being wrenched."
-      ],
-      "leg": [
-        "{name}'s {part} twinges at the ankle where it was twisted. {name} is shaken, with a slight hitch in {his} step.",
-        "{name}'s {part} aches deep in the knee and ankle, and full weight brings a sharp, wrenching pain. {name} limps stiffly, keeping the knee straight.",
-        "{name}'s {part} is a grinding, tearing agony in the knee, which feels loose and wrong, and the ankle cannot bear weight. {name} is panicked and exhausted, unable to stand on the leg without support.",
-        "{name}'s {part} is stiff and sore at knee and ankle, aching after a little walking. {name} limps and rests the leg when {he} can.",
-        "{name}'s {part} is slightly stiff in the morning or the cold. {name} walks almost normally but is careful on rough ground.",
-        "{name}'s {part} has its full strength and movement again, a quiet memory of the twisting."
-      ]
+      "torture": {
+        "head": [
+          "{name}'s scalp prickles hot and tight where {his} hair was yanked, and {his} ear burns and rings. {name} is startled and indignant, eyes watering, holding {his} head stiff and still.",
+          "{name}'s scalp throbs and stings at the roots, sore to the touch of {his} own hair, and {his} twisted ear aches with a deep, hot pulse. {name} is angry and humiliated, flinching when {his} hair shifts and tilting {his} head away from the hurt side.",
+          "{name}'s scalp is a raw, burning agony where the hair was torn out, every strand left screaming at the slightest movement; {his} ear pounds with a tearing pain and a roar of ringing. {name} is shaking, tearful and terrified, hunched with {his} head pulled down between {his} shoulders, barely able to turn it."
+        ],
+        "body": [
+          "{name}'s back stings sharply where the skin was pinched and twisted. {name} holds {his} shoulders tight.",
+          "{name}'s back aches in hot, bruised spots where it was wrenched. {name} keeps {his} back stiff and straight.",
+          "{name}'s back burns with a raw, tearing pain where the skin was torn. {name} moves slowly, wincing at every twist."
+        ],
+        "arm": [
+          "{name}'s {part} aches with a sharp twinge at the wrist and shoulder, and the joints feel strained. {name} is shaken and rubs the wrist, reluctant to raise the arm.",
+          "{name}'s {part} throbs deep in the shoulder and elbow, and lifting it sends a hot, grinding pain through the joint. {name} is resentful and guarded, keeping the arm close and gripping weakly.",
+          "{name}'s {part} is a sickening, tearing agony in the shoulder, as if it hangs loose from its socket; every jolt sends white-hot pain down to the fingers, which tingle and go numb. {name} is in shock, pale and sweating, clutching the arm against {his} body and unable to lift it at all."
+        ],
+        "leg": [
+          "{name}'s {part} twinges at the ankle where it was twisted. {name} is shaken, with a slight hitch in {his} step.",
+          "{name}'s {part} aches deep in the knee and ankle, and full weight brings a sharp, wrenching pain. {name} limps stiffly, keeping the knee straight.",
+          "{name}'s {part} is a grinding, tearing agony in the knee, which feels loose and wrong, and the ankle cannot bear weight. {name} is panicked and exhausted, unable to stand on the leg without support."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s scalp and ear feel normal again. A hand in {his} hair brings back a quiet memory of being dragged by it.",
+          "{name}'s scalp tingles where the new hair grows in, and {his} ear is a little sore when pressed. {name} flinches when anyone reaches toward {his} hair.",
+          "{name}'s scalp is tender and itchy under the scabs, and lying on that side of {his} head hurts. {name} is self-conscious about the bare patches, touching {his} hair often and turning {his} head carefully."
+        ],
+        "body": [
+          "{name}'s back feels normal again.",
+          "{name}'s back is only a little sore when pressed. {name} is wary of hands behind {him}.",
+          "{name}'s back is tender and itchy under the scabs. {name} avoids leaning back against anything."
+        ],
+        "arm": [
+          "{name}'s {part} has its full movement and strength again. Having the arm grabbed brings back a quiet memory of it being wrenched.",
+          "{name}'s {part} is a little tight at full reach and twinges when {he} lifts anything heavy. {name} uses it almost normally but keeps it from being pulled behind {him}.",
+          "{name}'s {part} is stiff and sore, the shoulder catching with a deep ache when {he} reaches or lifts. {name} is frustrated at the weakness and favors the other arm."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength and movement again, a quiet memory of the twisting.",
+          "{name}'s {part} is slightly stiff in the morning or the cold. {name} walks almost normally but is careful on rough ground.",
+          "{name}'s {part} is stiff and sore at knee and ankle, aching after a little walking. {name} limps and rests the leg when {he} can."
+        ]
+      }
     }
   },
   "narration": {
@@ -184,16 +179,11 @@
       "hit_noun": "pull"
     },
     "heal": {
-      "stage": {
-        "medium": "The torn skin on {name}'s {part} has closed, leaving deep bruising and strained, swollen joints.",
-        "light": "The bruising on {name}'s {part} has faded to sore, tender patches.",
-        "recovering": "The tears on {name}'s {part} have scabbed over and the swelling is easing.",
-        "mostly_healed": "The scabs on {name}'s {part} have fallen away and new hair and strength are returning.",
-        "healed": "{name}'s {part} has fully recovered; the hair has grown back and the joints move freely again."
-      },
-      "source_healed": "All of {name}'s wrenched and pulled injuries have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed.",
-      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+      "level": {
+        "high": "The last soreness in {name}'s {parts} is fading; the hair is growing back and the joints move almost freely.",
+        "mid": "The scabs on {name}'s {parts} have fallen away and new hair and strength are returning.",
+        "low": "The tears on {name}'s {parts} have scabbed over and the swelling is easing."
+      }
     },
     "heal_events": {
       "nouns": {

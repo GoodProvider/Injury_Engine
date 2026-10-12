@@ -1,0 +1,26 @@
+{
+  "FormKey": "00081A:SkyrimNet_Whipped.esp",
+  "EditorID": "SkyrimNet_Whipped_QuietSpell",
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Torture quiet"
+  },
+  "Description": {
+    "TargetLanguage": "English",
+    "Value": ""
+  },
+  "Flags": [
+    "ManualCostCalc",
+    "NoDualCastModification"
+  ],
+  "CastType": "FireAndForget",
+  "TargetType": "Touch",
+  "Effects": [
+    {
+      "BaseEffect": "000819:SkyrimNet_Whipped.esp",
+      "Data": {
+        "Duration": 3
+      }
+    }
+  ]
+}

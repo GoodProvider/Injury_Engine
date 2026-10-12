@@ -15,6 +15,12 @@
     {
       "BaseEffect": "000810:SkyrimNet_Whipped.esp",
       "Data": {}
+    },
+    {
+      "BaseEffect": "000819:SkyrimNet_Whipped.esp",
+      "Data": {
+        "Duration": 3
+      }
     }
   ]
 }

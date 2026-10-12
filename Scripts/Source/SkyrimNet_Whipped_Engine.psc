@@ -30,7 +30,7 @@ Int Function RealHit(Actor akActor, Actor attacker, String sourceId, Int points)
 Bool Function HasHealth(String sourceId) global native
 
 ; A caller's heal (spell, potion): health becomes whip points healed on part first (-1: random), then any part;
-; health rises by the points healed. Returns points healed (0 nothing open, -1 bad args). Heal codes queue as usual.
+; health rises by the points healed. Returns points healed (0 nothing open, -1 bad args).
 Int Function HealPart(Actor akActor, Int part, Float health) global native
 
 ; Part index by part name ("left arm", "ass hole") or region ("head" -> face); -1 when unknown or "".
@@ -39,19 +39,9 @@ Int Function PartIndex(String name) global native
 ; True if any damage is left (any source).
 Bool Function HasOpenWounds(Actor akActor) global native
 
-; Applies time to every tracked actor; returns those with parts that healed to a new stage
-; since the last TakeHealed.
-Actor[] Function TakeHealedActors() global native
-
-; Actors with heal codes already queued (does not apply game time).
-Actor[] Function TakeQueuedHealActors() global native
-
-; Heal codes for the actor, cleared on take (pass them to HealText):
-;   source * 128 + part * 8 + stage  a part reached a new stage (0 light .. 4 mostly healed, 5 healed)
-;   10000 + source                   a source has healed on every part it touched
-;   20000 + part                     a part has no injury left from any source
-; plus 100000 when no healing source contributed (game time, natural regen): passive, narrated silently.
-Int[] Function TakeHealed(Actor akActor) global native
+; True while a healing source (spell, staff, potion) works on the actor: its heal session is open.
+; Opens with the HEAL_START sync event; a torture or real hit, heal stopped or fully healed closes it.
+Bool Function IsHealing(Actor akActor) global native
 
 ; Real (non-whip) hits not yet narrated, as hit codes. HitVictims / HitAttackers are parallel to the last result
 ; (attacker may be None). The DLL sends mod event "SkyrimNet_Whipped_Injury" when one is queued.
@@ -106,10 +96,10 @@ Function QueueHit(Actor victim, Actor attacker, Int code) global native
 ; Writes a torture / heal / health line to SkyrimNet_Whipped.log ("[hh:mm:ss] <category>:<narrationType>:<sessionType> <text>",
 ; narrationType = direct / event / short, sessionType = start / switch / update / finish).
 Function LogLine(String category, String narrationType, String sessionType, String text) global native
-; All codes passive: wrapped as ordinary healing (narration.heal.passive).
-String Function HealText(Actor victim, Int[] codes) global native
+; Heal session line: every part with torture points at its heal level (high / mid / low, the inverse of light /
+; medium / severe) from its largest type, as narration.heal.level.<level> sentences. "" when nothing is left.
+String Function HealMapText(Actor victim) global native
 ; kind / source as in SyncHealth; percent is turned into words (no numbers in narration).
-; Source none (pain gone / fully healed by natural healing): wrapped as ordinary healing.
 ; The feeling sentence of a hit level 0-3 (narration.hit.levels), rendered for the victim.
 String Function LevelText(String sourceId, Actor victim, Int level) global native
 String Function SourceHealText(Int kind, Int source, Int percent, Actor caster, Actor target) global native

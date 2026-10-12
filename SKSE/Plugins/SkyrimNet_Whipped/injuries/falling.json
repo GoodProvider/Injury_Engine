@@ -3,11 +3,9 @@
   "model": "both",
   "requires": "",
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -50,10 +48,7 @@
     "stages": [
       "light",
       "medium",
-      "severe",
-      "recovering",
-      "mostly_healed",
-      "healed"
+      "severe"
     ],
     "part_weights": {
       "face": 0.6,
@@ -80,74 +75,74 @@
         "head": [
           "{name}'s face: a reddened graze across the cheek, flecked with dirt.",
           "{name}'s face: a raw, gravelly scrape along the cheek and brow, weeping and swelling, with a purple bruise rising under it.",
-          "{name}'s face: the skin is scraped away in a raw, bleeding patch packed with grit, the cheek swollen and the eye beside it puffed half shut.",
-          "{name}'s face: the scrape has crusted over in dark scabs, the skin around it pink, tight and bruised yellow-green.",
-          "{name}'s face: a pink, shiny patch marks where the scrape was; only a little flaking remains.",
-          "{name}'s face: the scrape has healed, leaving a faint pale mark."
+          "{name}'s face: the skin is scraped away in a raw, bleeding patch packed with grit, the cheek swollen and the eye beside it puffed half shut."
         ],
         "body": [
           "{name}'s back: dusty and rubbed pink where it hit the ground.",
           "{name}'s back: raw scrapes streak the skin, bruised purple where {he} landed hard.",
-          "{name}'s back: wide stretches of skin are scraped off and bleeding, grit ground into them, the ribs beneath bruised black.",
-          "{name}'s back: the scrapes have scabbed in long dark lines over fading yellow-green bruises.",
-          "{name}'s back: faint pink streaks show where the scrapes were.",
-          "{name}'s back: the skin has healed smooth, with no mark left."
+          "{name}'s back: wide stretches of skin are scraped off and bleeding, grit ground into them, the ribs beneath bruised black."
         ],
         "arm": [
           "{name}'s {part}: the elbow and forearm are reddened and rubbed raw in patches.",
           "{name}'s {part}: the elbow is scraped and weeping, with a dark bruise spreading along the forearm.",
-          "{name}'s {part}: the elbow is skinned to the red flesh and caked with grit and blood, the whole arm swollen and bruised black from catching the fall.",
-          "{name}'s {part}: scabs cover the elbow and forearm, ringed with fading yellow-green bruising.",
-          "{name}'s {part}: small pink patches mark the healed scrapes.",
-          "{name}'s {part}: the arm looks normal again, without a mark."
+          "{name}'s {part}: the elbow is skinned to the red flesh and caked with grit and blood, the whole arm swollen and bruised black from catching the fall."
         ],
         "leg": [
           "{name}'s {part}: the knee is scuffed red and the shin rubbed raw in places.",
           "{name}'s {part}: the knee is scraped and weeping, and the thigh is bruised purple from the landing.",
-          "{name}'s {part}: the knee is skinned and bleeding, grit packed into the wound, the whole leg swollen and bruised black.",
-          "{name}'s {part}: scabs cover the knee and shin over fading yellow-green bruises.",
-          "{name}'s {part}: pink patches and faint brown shadows mark where the scrapes were.",
-          "{name}'s {part}: the leg looks normal again, without a mark."
+          "{name}'s {part}: the knee is skinned and bleeding, grit packed into the wound, the whole leg swollen and bruised black."
         ]
       },
       "feels": {
-        "head": [
-          "{name}'s cheek stings where it hit the dirt, and {his} head swims a little. {name} is startled and shaken, wiping at {his} face.",
-          "{name}'s face burns and throbs where the skin was scraped off, and {his} head aches from the fall. {name} is angry and humiliated, flinching from anything that touches it.",
-          "{name}'s face is a raw, burning agony full of grit, and {his} head spins from the fall. {name} is dazed, tearful and frightened, barely able to open the swollen eye.",
-          "{name}'s face is tight and itchy under the scabs. {name} is self-conscious and keeps from touching it.",
-          "{name}'s face is only a little tender. {name} is wary of hitting the ground again.",
-          "{name}'s face feels normal again, though {he} flinches at the thought of the dirt."
-        ],
-        "body": [
-          "{name}'s back stings where it hit the ground. {name} straightens up stiffly.",
-          "{name}'s back burns along the scrapes and aches where {he} landed. {name} moves stiffly and winces when {he} twists.",
-          "{name}'s back is a raw, burning agony and every breath jars the bruised ribs. {name} gasps, hunched and barely able to sit up.",
-          "{name}'s back is tight and itchy under the scabs. {name} avoids lying on it.",
-          "{name}'s back is only a little sore when pressed. {name} is wary of falling again.",
-          "{name}'s back feels normal again."
-        ],
-        "arm": [
-          "{name}'s {part} stings at the elbow. {name} rubs it, shaken.",
-          "{name}'s {part} burns at the scraped elbow and aches along the bruise. {name} keeps it close and uses it carefully.",
-          "{name}'s {part} is a raw, throbbing agony from elbow to wrist. {name} is in shock, clutching the arm and unable to put weight on it.",
-          "{name}'s {part} is tight and itchy under the scabs and stiff at the elbow. {name} favors the other arm.",
-          "{name}'s {part} is almost back to normal, sore only when pressed. {name} braces it without thinking when {he} stumbles.",
-          "{name}'s {part} has its full movement and strength again."
-        ],
-        "leg": [
-          "{name}'s {part} stings at the knee. {name} walks with a slight hitch.",
-          "{name}'s {part} burns at the scraped knee and aches in the thigh. {name} limps and winces at every step.",
-          "{name}'s {part} is a raw, throbbing agony and will not take weight. {name} falls or needs support to move.",
-          "{name}'s {part} is stiff and itchy under the scabs and sore after a little walking. {name} limps and rests it when {he} can.",
-          "{name}'s {part} is only a little stiff in the cold. {name} is careful on rough ground.",
-          "{name}'s {part} has its full strength and movement again."
-        ]
+        "torture": {
+          "head": [
+            "{name}'s cheek stings where it hit the dirt, and {his} head swims a little. {name} is startled and shaken, wiping at {his} face.",
+            "{name}'s face burns and throbs where the skin was scraped off, and {his} head aches from the fall. {name} is angry and humiliated, flinching from anything that touches it.",
+            "{name}'s face is a raw, burning agony full of grit, and {his} head spins from the fall. {name} is dazed, tearful and frightened, barely able to open the swollen eye."
+          ],
+          "body": [
+            "{name}'s back stings where it hit the ground. {name} straightens up stiffly.",
+            "{name}'s back burns along the scrapes and aches where {he} landed. {name} moves stiffly and winces when {he} twists.",
+            "{name}'s back is a raw, burning agony and every breath jars the bruised ribs. {name} gasps, hunched and barely able to sit up."
+          ],
+          "arm": [
+            "{name}'s {part} stings at the elbow. {name} rubs it, shaken.",
+            "{name}'s {part} burns at the scraped elbow and aches along the bruise. {name} keeps it close and uses it carefully.",
+            "{name}'s {part} is a raw, throbbing agony from elbow to wrist. {name} is in shock, clutching the arm and unable to put weight on it."
+          ],
+          "leg": [
+            "{name}'s {part} stings at the knee. {name} walks with a slight hitch.",
+            "{name}'s {part} burns at the scraped knee and aches in the thigh. {name} limps and winces at every step.",
+            "{name}'s {part} is a raw, throbbing agony and will not take weight. {name} falls or needs support to move."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s face feels normal again, though {he} flinches at the thought of the dirt.",
+            "{name}'s face is only a little tender. {name} is wary of hitting the ground again.",
+            "{name}'s face is tight and itchy under the scabs. {name} is self-conscious and keeps from touching it."
+          ],
+          "body": [
+            "{name}'s back feels normal again.",
+            "{name}'s back is only a little sore when pressed. {name} is wary of falling again.",
+            "{name}'s back is tight and itchy under the scabs. {name} avoids lying on it."
+          ],
+          "arm": [
+            "{name}'s {part} has its full movement and strength again.",
+            "{name}'s {part} is almost back to normal, sore only when pressed. {name} braces it without thinking when {he} stumbles.",
+            "{name}'s {part} is tight and itchy under the scabs and stiff at the elbow. {name} favors the other arm."
+          ],
+          "leg": [
+            "{name}'s {part} has its full strength and movement again.",
+            "{name}'s {part} is only a little stiff in the cold. {name} is careful on rough ground.",
+            "{name}'s {part} is stiff and itchy under the scabs and sore after a little walking. {name} limps and rests it when {he} can."
+          ]
+        }
       }
     },
     "narration": {
-    "form": "the rough ground",
-    "list": {
+      "form": "the rough ground",
+      "list": {
         "and": " and ",
         "comma": ", ",
         "fallback": "body"
@@ -180,16 +175,11 @@
         }
       },
       "heal": {
-        "stage": {
-          "medium": "The torn skin on {name}'s {part} has closed, leaving deep bruising and sore, scraped patches.",
-          "light": "The bruising on {name}'s {part} has faded to sore, tender patches.",
-          "recovering": "The scrapes on {name}'s {part} have scabbed over and the swelling is easing.",
-          "mostly_healed": "The scabs on {name}'s {part} have fallen away, leaving fresh pink skin.",
-          "healed": "{name}'s {part} has fully recovered from the fall."
-        },
-        "source_healed": "All of {name}'s scrapes and bruises from falling have healed.",
-        "part_healed": "Every injury on {name}'s {part} has healed.",
-        "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+        "level": {
+          "high": "Only faint traces of the scrapes remain on {name}'s {parts}.",
+          "mid": "The scabs on {name}'s {parts} have fallen away, leaving fresh pink skin.",
+          "low": "The scrapes on {name}'s {parts} have scabbed over and the swelling is easing."
+        }
       },
       "heal_events": {
         "nouns": {
@@ -280,8 +270,8 @@
       }
     },
     "narration": {
-    "form": "a hard landing",
-    "list": {
+      "form": "a hard landing",
+      "list": {
         "and": " and ",
         "comma": ", ",
         "fallback": "body"
@@ -303,15 +293,6 @@
           ", and something gives with a sickening crack as {he} lands on already battered limbs. The pain is huge and {he} curls up, gasping.",
           ", and it is too much. {he} lands hard and lies still for a moment, broken and gasping, {his} vision tunneling."
         ]
-      },
-      "heal": {
-        "stage": {
-          "medium": "The swelling on {name}'s {part} from the fall has gone down to a deep, purple bruise.",
-          "light": "The bruise on {name}'s {part} from the fall has faded to yellow-green.",
-          "healed": "{name}'s {part} has fully recovered from the fall."
-        },
-        "source_healed": "All of {name}'s injuries from falling have healed.",
-        "part_healed": "Every injury on {name}'s {part} has healed."
       },
       "heal_events": {
         "nouns": {

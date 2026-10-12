@@ -9,10 +9,11 @@
 //
 // Two models:
 //   torture Whipping, pinching, slapping, pulling, punching, fire / frost / shock torture. Each hit damages one
-//           part (weighted by the type's part_weights): damage, then healing over game time, tracked per type
-//           per part as one deficit (damage + missing healing points). A part counts only its largest type:
-//           wounds hold health down by the sum of the part maxima * RatioTorture, never below the floor.
-//           Healing a part lowers every type on it by one.
+//           part (weighted by the type's part_weights): torture points per type per part (0 .. part max) go
+//           up with damage and down with healing (game time, healing sources). A part counts only its largest
+//           type: its points give the torture stage (light / medium / severe) and, inverted, the heal level
+//           (high / mid / low). Wounds hold health down by the sum of the part maxima * RatioTorture, never
+//           below the floor. Healing a part lowers every type on it by one.
 //   health  Real damage (slashing, freezing, ...): the health the attack takes becomes damage points
 //           (100% of max health = every part at damage_max), tagged with the classified source.
 // Real damage first replaces torture points (the hit does not lower health by that part; the part's maximum
@@ -23,7 +24,9 @@
 namespace InjuryEngine
 {
     constexpr std::uint32_t kRecord = 'DHEN';
-    constexpr std::uint32_t kRecordVersion = 4;  // 4: torture per type; 3: whipping only, 11 parts; 2: 6 parts (both still loaded)
+    // 5: torture points per type; 4: per-type deficit (healing_max + damage); 3: whipping only, 11 parts; 2: 6 parts
+    // (4, 3 and 2 still load, keeping the damage only)
+    constexpr std::uint32_t kRecordVersion = 5;
 
     constexpr int kCoreParts = 6;    // face, left arm, right arm, back, left leg, right leg
     constexpr int kPartCount = 11;   // + nipples, pussy, penis, lips, ass hole (only used with "include sexual parts")
@@ -41,14 +44,6 @@ namespace InjuryEngine
     {
         return (fresh ? 100000000 : 0) + source * 1000000 + mask * 10 + level;
     }
-
-    // Heal codes (TakeHealed): source * 128 + part * 8 + stage for a part that reached a new stage
-    // (0 light .. 4 mostly healed, 5 healed); kHealSourceBase + source when a source has healed on every part;
-    // kHealPartBase + part when a part has no injury left from any source.
-    // Plus kHealPassive when no healing source contributed (game time, natural regen): narrated silently.
-    constexpr std::int32_t kHealSourceBase = 10000;
-    constexpr std::int32_t kHealPartBase = 20000;
-    constexpr std::int32_t kHealPassive = 100000;
 
     // True while the engine itself is changing health: the damage hooks must ignore it.
     bool IsInternalDamage();
@@ -82,11 +77,9 @@ namespace InjuryEngine
     // True if the actor has any damage left (any source).
     bool HasOpenWounds(RE::Actor* actor);
 
-    // Applies time to every tracked actor; returns those with parts that healed to a new stage since the last TakeHealed.
-    std::vector<RE::Actor*> TakeHealedActors();
-    // Actors with heal codes already queued (does not apply game time).
-    std::vector<RE::Actor*> TakeQueuedHealActors();
-    std::vector<std::int32_t> TakeHealed(RE::Actor* actor);
+    // A healing source (spell, staff, potion) is working on the actor right now: its heal session is open.
+    // Opens with kHealStart; a torture or real hit, heal stopped or fully healed closes it.
+    bool IsHealing(RE::Actor* actor);
 
     // Real hits not yet narrated: hit codes; HitVictims / HitAttackers are parallel to the last TakeHits result.
     // Hits of one victim, attacker and source merge while queued and leave at most once per second (a health hit also releases its victim's held hits).
@@ -122,10 +115,13 @@ namespace InjuryEngine
 
     // Decorator data, text resolved from the JSON files for this actor:
     // {"sources":[{"id","looks_heading","feels_intro","feels_outro","parts":[{"part","region","stage","look","feel"}]}]}
+    // Torture parts: stage light / medium / severe and text.feels.torture, or during a heal session high / mid / low
+    // and text.feels.heal.
     std::string StateJson(RE::Actor* actor);
 
     // Torture overlay snapshot (no time applied), each part from its largest torture type:
-    // {"title","colors":{...},"actors":[{"id","name","replaced","parts":[[damage,healing] x active parts in overlay order]}]}
+    // {"title","max","part_max","medium","severe","colors":{...},
+    //  "actors":[{"id","name","replaced","healing","parts":[points x active parts in overlay order]}]}
     std::string OverlayJson();
 
     // Narration text rendered from the JSON files.
@@ -133,8 +129,9 @@ namespace InjuryEngine
         bool noCause = false, bool unarmedForm = false);
     // The feeling sentence of a hit level (narration.hit.levels), rendered for the victim.
     std::string LevelText(std::string_view sourceId, RE::Actor* victim, int level);
-    // Heal codes all passive, or a source-heal event without a source: wrapped in narration.heal.passive.
-    std::string HealText(RE::Actor* victim, const std::vector<std::int32_t>& codes);
+    // Heal session line: every part with torture points, at its heal level (high / mid / low) from its largest type,
+    // grouped by (type, level) into narration.heal.level.<level> sentences. "" when nothing is left.
+    std::string HealMapText(RE::Actor* victim);
     std::string SourceHealText(int kind, int healingSource, int percent, RE::Actor* caster, RE::Actor* target);
     // Renders the string at `path` with {speaker}, {target} and {times} (words for count).
     // Combined torture narration for the pairs (parallel lists) of one phase: start, again, or switch.

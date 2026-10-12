@@ -145,11 +145,9 @@ namespace InjuryConfig
         {
             Body b;
             b.damageMax = j.value("damage_max", b.damageMax);
-            b.healingMax = j.value("healing_max", b.healingMax);
             if (const auto t = j.find("thresholds"); t != j.end() && t->is_object()) {
                 b.medium = t->value("medium", b.medium);
                 b.severe = t->value("severe", b.severe);
-                b.mostlyHealed = t->value("mostly_healed", b.mostlyHealed);
             }
             if (const auto h = j.find("health_link"); h != j.end() && h->is_object()) {
                 b.woundShare = h->value("wound_share", b.woundShare);
@@ -184,7 +182,8 @@ namespace InjuryConfig
 
         // injuries/sexual_parts.json: the optional parts 6..10 (name, region, max, weight) and their text per source id
         // (a "both" file's health half falls back to the file id):
-        // {"parts":[{name,region,max,weight} x5], "text":{"<source id>":{"looks":{region:[..]},"feels":{region:[..]}}}}
+        // {"parts":[{name,region,max,weight} x5], "text":{"<source id>":{"looks":{region:[..]},"feels":{...}}}}
+        // (torture feels: {"torture":{region:[..]},"heal":{region:[..]}}; health feels: {region:[..]})
         void ReadSexualParts(const std::filesystem::path& file)
         {
             std::ifstream in(file);
@@ -210,7 +209,7 @@ namespace InjuryConfig
                     b.partRegion[i] = static_cast<int>(it - b.regionName.begin());
                 }
             }
-            // text.looks.<region> / text.feels.<region> arrays merged into each source's own JSON
+            // text.looks / text.feels merged into each source's own JSON (objects merge, region arrays are added)
             const auto t = j.find("text");
             if (t == j.end() || !t->is_object()) {
                 return;
@@ -228,9 +227,7 @@ namespace InjuryConfig
                     if (regions == st->end() || !regions->is_object()) {
                         continue;
                     }
-                    for (const auto& [region, lines] : regions->items()) {
-                        s.json["text"][kind][region] = lines;
-                    }
+                    s.json["text"][kind].merge_patch(*regions);
                 }
             }
         }

@@ -7,11 +7,9 @@
     { "priority": 40, "resist": "ResistFire" }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -127,15 +125,6 @@
         ", and the flames eat into the burn. The pain is huge and nauseating, the smell of scorched flesh sharp, and {he} staggers.",
         ", and it is too much. The fire engulfs {him}; {he} screams, {his} skin blackening, and {his} strength drains away. The stench of charred flesh fills the air."
       ]
-    },
-    "heal": {
-      "stage": {
-        "medium": "The burns on {name}'s {part} have dried into a raw, tight red.",
-        "light": "The burns on {name}'s {part} have faded to a sore, peeling pink.",
-        "healed": "The burns on {name}'s {part} have healed, leaving shiny, new skin."
-      },
-      "source_healed": "All of {name}'s burns have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed."
     },
     "heal_events": {
       "nouns": {

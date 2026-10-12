@@ -7,11 +7,9 @@
     { "priority": 70, "unarmed": true, "npc": false }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -127,15 +125,6 @@
         ", and the jaws clamp down on the raw wound. The pain is huge and nauseating and {he} cries out as {he} is shaken. The stench of blood and animal musk is overwhelming.",
         ", and it is too much. The savaging tears {him} open; {he} goes limp and ashen, {his} cries thinning to a gasp."
       ]
-    },
-    "heal": {
-      "stage": {
-        "medium": "The torn flesh on {name}'s {part} has closed into deep, angry bite and claw marks.",
-        "light": "The bite and claw marks on {name}'s {part} have healed into sore, pink scratches.",
-        "healed": "The bites and claws on {name}'s {part} have healed, leaving pale scars."
-      },
-      "source_healed": "All of {name}'s bite and claw wounds have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed."
     },
     "heal_events": {
       "nouns": {

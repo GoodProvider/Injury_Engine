@@ -56,13 +56,15 @@ and the mod manager merges that folder with this one at runtime (nothing to regi
 - **Stages** (damage per part, 20 max): light 1-3, medium 4-10, severe 11-20. All health sources use the same scale;
   100% of max health lost = every part an actor has at its max.
 - **torture** sources: each hit adds a point of that type to one part (picked by the type's `part_weights`); a healing
-  wound of that type that is hit again just gains one point on top of where it had healed down to. Each type is tracked separately per part, but a part counts
+  wound of that type that is hit again just gains one point on top of where it had healed down to (one value per part and type:
+  hits raise it, healing lowers it). Each type is tracked separately per part, but a part counts
   only its **worst** type: that alone holds health down (never below 10%) and shows on the overlay. Wounds heal over game
   time, and every point of healing lowers **every** type on the part by one (slap light, pinch severe, fire light: all
-  heal together). Damage drains, then healing rises through recovering, mostly healed, healed (scar).
+  heal together). The points give the torture stage light / medium / severe and, while a healing source works on the
+  actor (heal session), the heal level high / mid / low (severe = low, medium = mid, light = high).
 - **health** sources: the health an attack takes becomes damage points, tagged with the classified source, all on one random part
   (whipped parts first) until that part is full, then on another. Healing (potions, spells, rest) removes points at random across all sources; each source
-  and each part is reported as it heals.
+  and nothing is narrated per stage.
 - **Real damage replaces torture damage** first, on the same part the attack lands on (health is not lowered by that part): the
   part's worst type drops by one per point and every other type above it is clamped down to it, so a tortured actor only dies
   after the torture is all replaced; the overlay shows replaced points as a darker bar.
@@ -81,10 +83,10 @@ model              "torture" | "health" | "both"   ("whip" is still read as "tor
                    is "<id>_real" (logs, co-save, sexual_parts.json falls back to <id>); callers pass <id> plus a
                    torture flag. Example: falling.json.
 requires           "whip" | "sexlab" | ""   (metadata only; stored, not enforced)
-damage_max, healing_max, thresholds, health_link, regions, parts
+damage_max, thresholds, health_link, regions, parts
                    BODY BLOCK: must be identical in every file (only the first loaded file is read, whipping first).
                    Do not change numbers or part order without asking the user; the overlay and decorators depend on it.
-stages             damage stage names, first 3 = light, medium, severe. torture adds recovering, mostly_healed, healed.
+stages             damage stage names: light, medium, severe.
 part_weights       (torture, optional) {"part name": weight}: chance of the type landing there; 0 = never; missing parts keep
                    the body's weight (main parts one, sexual parts their sexual_parts.json weight)
 classify           (optional) how incoming damage picks this source. Highest `priority` wins. The C++ classifier
@@ -107,11 +109,13 @@ action.alias / action.order   (torture, optional) short name for Torture_Target 
                    place in the type list. The source id itself is always accepted too.
 action.verb, action.animation   (torture) log verb; animation event the NPC plays per Torture_Target strike ("" = none)
 defaults           (whipping only) default values for dashboard settings; manifest.yaml must mirror them
-overlay            (whipping only) title, bar order, colors (hex) incl. "replaced"
+overlay            (whipping only) title, bar order, colors (hex) incl. "replaced" and "healing" (heal session bar)
 action             (whipping) Torture_Target description ({target}, {type} and {strikes} are literal SkyrimNet placeholders, keep them),
                    no_whip line, impact_nodes list
 text.looks_heading / looks   what each wounded part looks like  -> character bio ("### Whip Wounds" list)
 text.feels_intro / feels / feels_outro   how it feels  -> final instructions
+                   torture: feels.torture.<region> [light, medium, severe] and feels.heal.<region> [high, mid, low]
+                   (used while a healing source works on the actor); health: feels.<region> [light, medium, severe]
 narration.list     how part names are joined ("face, back and left arm")
 narration.form     short phrase for who-hit-whom narration ("a keen cutting blade"); bludgeoning may add form_unarmed
 narration.hit      hit narration: lead + verb + times + by when no attacker is named; otherwise session.json hit
@@ -120,23 +124,22 @@ narration.hit      hit narration: lead + verb + times + by when no attacker is n
 narration.summary  (torture) times words (once / twice / several / many)
 narration.session  (torture) switch, end, hit_noun; shared hit / mixed_hit / no_attacker_hit / inline templates
                    in injuries/session.json (not a source)
-narration.heal     stage (text when a part reaches that stage while healing), source_healed, part_healed,
-                   passive (generic, else whipping, is read): wraps healing with no healing source (game time,
-                   natural regen, and heal_events pain_gone.none / full.none), {text} is the healing sentence(s);
-                   it should say this is ordinary healing nobody would remark on (it is recorded silently)
+narration.heal.level   (torture) high / mid / low: one heal-session sentence for the parts ({parts}) of this type
+                   at that heal level, e.g. "The wounds on {name}'s {parts} have scabbed over." (low)
 narration.heal_events   (whipping and generic) spell / staff / potion healing: start, pain_gone, full, stopped
 ```
 
-`text.looks.<region>` and `text.feels.<region>` are arrays indexed by stage, one entry per stage name in `stages`
-(torture 6, health sources 3). Regions: `head` (the face), `body` (the back), `arm`, `leg`.
+`text.looks.<region>` is an array indexed by stage (light, medium, severe). Health sources use `text.feels.<region>` the
+same way; torture sources split feelings into `text.feels.torture.<region>` (light, medium, severe) and
+`text.feels.heal.<region>` (high, mid, low). Regions: `head` (the face), `body` (the back), `arm`, `leg`.
 
 ### sexual_parts.json
 
 ```
 parts              exactly 5 entries in this order: nipples, pussy, penis, lips, ass hole
                    {name, region, max (damage points, at least 3), weight (hit chance; main parts are 1)}
-text.<source id>   {looks: {region: [...]}, feels: {region: [...]}} merged into that source's text.looks / text.feels;
-                   one entry per stage of that source (whipping 6, others 3). A source with no entry here has no text
+text.<source id>   {looks: {region: [...]}, feels: {...}} merged into that source's text.looks / text.feels, in the
+                   same shape (torture feels: {torture: {region: [...]}, heal: {region: [...]}}). A source with no entry here has no text
                    for these parts (empty sentence). A new source file needs a block here too.
 ```
 
@@ -145,7 +148,7 @@ The writing rules below apply; keep the prose about the wound and the pain, not 
 ### Placeholders
 
 Use `{name}`, `{part}`, `{he}`, `{him}`, `{his}` in text, plus `{reflexive}`. Hit narration also has `{parts}`, `{verb}`,
-`{times}`, `{by}`, `{attacker}`. Heal events also have `{caster}`, `{noun}`, `{who}`, `{obj}`, `{own}`, `{owner}`,
+`{times}`, `{by}`, `{attacker}`. Heal levels have `{parts}`. Heal events also have `{caster}`, `{noun}`, `{who}`, `{obj}`, `{own}`, `{owner}`,
 `{owner_lc}`, `{progress}`. Summary: `{speaker}`, `{target}`, `{times}`. Unknown `{tokens}` are left as typed, so do not
 invent new ones (the code cannot fill them).
 
@@ -155,7 +158,7 @@ Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{b
 ## Writing rules
 
 1. **No numbers** in anything the LLM reads: no digits, percentages or point counts (`docs/authors/prompts.md#no-numbers`).
-   Use stage words (light, medium, severe, recovering, healed) and plain description.
+   Use stage words (light, medium, severe; healing high, mid, low) and plain description.
 2. One sentence tone: concrete, sensory, specific to the damage type; escalate light -> medium -> severe; keep
    healing text moving toward scars/healed. Wounds the NPC would not survive must not read as trivial.
 3. `feels` describes sensation, emotion and how it changes tone, posture and movement of the speaker; do not narrate

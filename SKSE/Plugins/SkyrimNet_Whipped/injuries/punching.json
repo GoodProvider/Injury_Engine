@@ -7,11 +7,9 @@
     { "priority": 80, "unarmed": true, "npc": true, "combat": false }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -52,10 +50,7 @@
   "stages": [
     "light",
     "medium",
-    "severe",
-    "recovering",
-    "mostly_healed",
-    "healed"
+    "severe"
   ],
   "part_weights": {
     "face": 1.5,
@@ -87,69 +82,69 @@
       "head": [
         "{name}'s face: a hot red patch over one cheekbone, the skin puffy and shiny where a fist landed; a knuckle-shaped graze marks the brow.",
         "{name}'s face: one eye is ringed in deep purple and swelling half shut; the lip is split and fat, the skin over the cheekbone torn open where knuckles struck bone. Dried blood crusts under {his} nose, and {he} smells of sweat and blood.",
-        "{name}'s face: beaten out of shape, both eyes swollen to purple-black slits, the nose broken and pushed crooked, the brow and cheekbones split open over the bone; blood runs from {his} nose and mouth down {his} chin, and the whole face is lopsided with swelling. {name} smells of blood and fear-sweat.",
-        "{name}'s face: the swelling is going down; the black eyes have faded to sickly green and yellow rings, and dark scabs sit over the brow and cheekbone where the skin split.",
-        "{name}'s face: only a faint yellowish shadow lingers under one eye; the splits have closed to thin pink lines and the nose has settled, perhaps with a slight new bend.",
-        "{name}'s face: nothing shows but a small pale scar through one eyebrow and, perhaps, a nose that sits a little less straight than before."
+        "{name}'s face: beaten out of shape, both eyes swollen to purple-black slits, the nose broken and pushed crooked, the brow and cheekbones split open over the bone; blood runs from {his} nose and mouth down {his} chin, and the whole face is lopsided with swelling. {name} smells of blood and fear-sweat."
       ],
       "body": [
         "{name}'s back: red, fist-sized blotches over the ribs and kidneys, warm and slightly raised; no broken skin.",
         "{name}'s back and ribs: overlapping purple-blue bruises spread across the flanks and the small of the back, each the shape of a knuckled fist; {he} holds one arm pressed to {his} side. {name} smells of stale sweat.",
-        "{name}'s back and torso: a single sheet of black-purple bruising from the shoulder blades down over the kidneys and ribs; one side of the ribcage looks sunken and {he} cannot stand straight; there is blood at the corner of {his} mouth when {he} coughs. {name} smells sour with sweat and the iron of blood.",
-        "{name}'s back: the bruising has spread and faded into broad patches of green, yellow and brown across the ribs and the small of the back.",
-        "{name}'s back: a few dull yellow-brown shadows remain over the ribs; {he} stands nearly straight again.",
-        "{name}'s back: the skin is clear, with no mark left of the beating."
+        "{name}'s back and torso: a single sheet of black-purple bruising from the shoulder blades down over the kidneys and ribs; one side of the ribcage looks sunken and {he} cannot stand straight; there is blood at the corner of {his} mouth when {he} coughs. {name} smells sour with sweat and the iron of blood."
       ],
       "arm": [
         "{name}'s {part}: a red, puffy blotch on the forearm where {he} threw it up to shield {his} face.",
         "{name}'s {part}: dark blue-purple bruises line the outer forearm and upper arm, the skin split over the elbow; the arm is swollen and held stiffly.",
-        "{name}'s {part}: swollen thick from shoulder to wrist and bruised black along its whole outer edge; the forearm looks cracked and is held hugged against the body, the hand puffy and blotched.",
-        "{name}'s {part}: the bruises have turned green and yellow and drained down toward the wrist; a scab sits over the elbow.",
-        "{name}'s {part}: a faint yellowish stain along the forearm; the swelling is gone.",
-        "{name}'s {part}: the arm looks whole and unmarked."
+        "{name}'s {part}: swollen thick from shoulder to wrist and bruised black along its whole outer edge; the forearm looks cracked and is held hugged against the body, the hand puffy and blotched."
       ],
       "leg": [
         "{name}'s {part}: a red, tender blotch on the thigh where a knee or fist struck it.",
         "{name}'s {part}: a deep purple bruise spreads over the thigh, the muscle knotted and swollen beneath it.",
-        "{name}'s {part}: the thigh is swollen hard and bruised black-purple from hip to knee; the knee is puffy and {he} keeps the leg bent, unwilling to put weight on it.",
-        "{name}'s {part}: the bruising has faded to green and yellow and drained down toward the knee and shin.",
-        "{name}'s {part}: a faint brownish shadow on the thigh; the swelling has gone.",
-        "{name}'s {part}: the leg looks whole and unmarked."
+        "{name}'s {part}: the thigh is swollen hard and bruised black-purple from hip to knee; the knee is puffy and {he} keeps the leg bent, unwilling to put weight on it."
       ]
     },
     "feels": {
-      "head": [
-        "{name}'s face stings and throbs, hot and tight over the cheekbone, and {his} ears ring faintly. {name} is stunned and humiliated, blinking hard and keeping {his} chin down.",
-        "{name}'s face pounds with every heartbeat; the eye on one side will barely open, the split lip stings with every word and {he} tastes blood. {name} is cowed and seething at once, speaking thickly and flinching when anyone raises a hand.",
-        "{name}'s face is a sickening, pounding agony; {he} cannot breathe through the broken nose, cannot see through the swelling, and the room tilts whenever {he} moves {his} head. {name} is dazed and broken, mumbling through swollen lips, cringing from any movement near {him}.",
-        "{name}'s face is stiff and sore, aching dully when {he} chews or smiles, and the healing nose feels blocked and tender. {name} is ashamed of how {he} looks and keeps {his} face turned away.",
-        "{name}'s face is tender only when pressed, the cheekbone and nose still a little sensitive. {name} flinches when someone moves a hand quickly near {his} face.",
-        "{name}'s face feels normal again. A raised fist nearby still makes {him} tense, a quiet memory of the beating."
-      ],
-      "body": [
-        "{name}'s back and ribs ache deep and dull, and a hard breath catches. {name} is shaken and resentful, holding {reflexive} carefully upright.",
-        "{name}'s ribs and kidneys throb with a deep, sick ache, and every breath, cough or twist stabs under the bruises. {name} is frightened and bitter, hunched to one side and breathing in short, shallow pulls.",
-        "{name}'s ribs grind and stab with every breath, and a deep, nauseating ache sits in {his} gut and kidneys. {name} is beaten down and close to collapse, folded over {his} side, gasping, unable to straighten or lift {his} arms.",
-        "{name}'s ribs are stiff and sore, catching on a deep breath, laugh or sneeze. {name} is weary and careful, moving slowly and sleeping propped up.",
-        "{name}'s side twinges only when {he} twists hard or breathes in deep. {name} is cautious and keeps others from coming up behind {him}.",
-        "{name}'s back and ribs move freely again. A sudden grip on {his} shoulder still makes {him} brace for a blow."
-      ],
-      "arm": [
-        "{name}'s {part} aches and throbs where it took the blows. {name} is shaken and keeps it close.",
-        "{name}'s {part} throbs deep in the bone and the bruised muscle is weak; gripping hurts. {name} is wary and guarding, cradling the arm against {his} body.",
-        "{name}'s {part} is grinding, sickening pain that flares at the slightest movement, as if the bone is cracked. {name} is in shock and holds it pressed tight against {his} chest, unable to grip or lift anything.",
-        "{name}'s {part} is stiff and sore, aching when {he} lifts or carries. {name} is frustrated and favors the other arm.",
-        "{name}'s {part} is only tender when bumped. {name} uses it almost normally.",
-        "{name}'s {part} has its full strength again. Shielding {his} face with it is still the first thing {his} body wants to do."
-      ],
-      "leg": [
-        "{name}'s {part} aches dully and the thigh feels dead. {name} walks with a small hitch.",
-        "{name}'s {part} throbs, the muscle cramping when {he} puts weight on it. {name} limps and winces, careful on the stairs.",
-        "{name}'s {part} is a deep, crushing ache that buckles when {he} stands on it. {name} is exhausted and frightened, dragging the leg or leaning on whatever is near.",
-        "{name}'s {part} is stiff, the thigh sore when {he} bends the knee. {name} walks slowly and limps after long walks.",
-        "{name}'s {part} is only a little stiff in the morning. {name} walks almost normally.",
-        "{name}'s {part} has its full strength again; nothing remains but a quiet memory of the beating."
-      ]
+      "torture": {
+        "head": [
+          "{name}'s face stings and throbs, hot and tight over the cheekbone, and {his} ears ring faintly. {name} is stunned and humiliated, blinking hard and keeping {his} chin down.",
+          "{name}'s face pounds with every heartbeat; the eye on one side will barely open, the split lip stings with every word and {he} tastes blood. {name} is cowed and seething at once, speaking thickly and flinching when anyone raises a hand.",
+          "{name}'s face is a sickening, pounding agony; {he} cannot breathe through the broken nose, cannot see through the swelling, and the room tilts whenever {he} moves {his} head. {name} is dazed and broken, mumbling through swollen lips, cringing from any movement near {him}."
+        ],
+        "body": [
+          "{name}'s back and ribs ache deep and dull, and a hard breath catches. {name} is shaken and resentful, holding {reflexive} carefully upright.",
+          "{name}'s ribs and kidneys throb with a deep, sick ache, and every breath, cough or twist stabs under the bruises. {name} is frightened and bitter, hunched to one side and breathing in short, shallow pulls.",
+          "{name}'s ribs grind and stab with every breath, and a deep, nauseating ache sits in {his} gut and kidneys. {name} is beaten down and close to collapse, folded over {his} side, gasping, unable to straighten or lift {his} arms."
+        ],
+        "arm": [
+          "{name}'s {part} aches and throbs where it took the blows. {name} is shaken and keeps it close.",
+          "{name}'s {part} throbs deep in the bone and the bruised muscle is weak; gripping hurts. {name} is wary and guarding, cradling the arm against {his} body.",
+          "{name}'s {part} is grinding, sickening pain that flares at the slightest movement, as if the bone is cracked. {name} is in shock and holds it pressed tight against {his} chest, unable to grip or lift anything."
+        ],
+        "leg": [
+          "{name}'s {part} aches dully and the thigh feels dead. {name} walks with a small hitch.",
+          "{name}'s {part} throbs, the muscle cramping when {he} puts weight on it. {name} limps and winces, careful on the stairs.",
+          "{name}'s {part} is a deep, crushing ache that buckles when {he} stands on it. {name} is exhausted and frightened, dragging the leg or leaning on whatever is near."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal again. A raised fist nearby still makes {him} tense, a quiet memory of the beating.",
+          "{name}'s face is tender only when pressed, the cheekbone and nose still a little sensitive. {name} flinches when someone moves a hand quickly near {his} face.",
+          "{name}'s face is stiff and sore, aching dully when {he} chews or smiles, and the healing nose feels blocked and tender. {name} is ashamed of how {he} looks and keeps {his} face turned away."
+        ],
+        "body": [
+          "{name}'s back and ribs move freely again. A sudden grip on {his} shoulder still makes {him} brace for a blow.",
+          "{name}'s side twinges only when {he} twists hard or breathes in deep. {name} is cautious and keeps others from coming up behind {him}.",
+          "{name}'s ribs are stiff and sore, catching on a deep breath, laugh or sneeze. {name} is weary and careful, moving slowly and sleeping propped up."
+        ],
+        "arm": [
+          "{name}'s {part} has its full strength again. Shielding {his} face with it is still the first thing {his} body wants to do.",
+          "{name}'s {part} is only tender when bumped. {name} uses it almost normally.",
+          "{name}'s {part} is stiff and sore, aching when {he} lifts or carries. {name} is frustrated and favors the other arm."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength again; nothing remains but a quiet memory of the beating.",
+          "{name}'s {part} is only a little stiff in the morning. {name} walks almost normally.",
+          "{name}'s {part} is stiff, the thigh sore when {he} bends the knee. {name} walks slowly and limps after long walks."
+        ]
+      }
     }
   },
   "narration": {
@@ -190,16 +185,11 @@
       "hit_noun": "punch"
     },
     "heal": {
-      "stage": {
-        "medium": "The worst of the swelling on {name}'s {part} has gone down, leaving deep purple bruises.",
-        "light": "The bruises on {name}'s {part} have faded to sore, reddish-blue marks.",
-        "recovering": "The bruises on {name}'s {part} have turned green and yellow, and the splits have scabbed over.",
-        "mostly_healed": "Only faint yellow-brown shadows remain on {name}'s {part}; the swelling is gone.",
-        "healed": "The last of the bruising on {name}'s {part} has faded; that beating has fully healed."
-      },
-      "source_healed": "All of {name}'s bruises from the beating have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed.",
-      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+      "level": {
+        "high": "Only faint traces of bruising remain on {name}'s {parts}; that beating has almost healed.",
+        "mid": "Only yellow-brown shadows remain on {name}'s {parts}; the swelling is gone.",
+        "low": "The bruises on {name}'s {parts} have turned green and yellow, and the splits have scabbed over."
+      }
     },
     "heal_events": {
       "nouns": {

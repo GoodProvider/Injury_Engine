@@ -7,11 +7,9 @@
     { "priority": 40, "resist": "ResistFrost" }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -127,15 +125,6 @@
         ", and the cold sinks deep into the frostbitten flesh. {he} chokes on a cry as {his} skin hardens and {his} movements slow.",
         ", and it is too much. The cold crushes {him}; {he} goes blue and still, {his} breath rasping and {his} limbs refusing to answer."
       ]
-    },
-    "heal": {
-      "stage": {
-        "medium": "The frostbite on {name}'s {part} has thawed into a raw, aching red.",
-        "light": "The frostbite on {name}'s {part} has faded to a tender, peeling pink.",
-        "healed": "The frostbite on {name}'s {part} has healed, with feeling returned."
-      },
-      "source_healed": "All of {name}'s frostbite has healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed."
     },
     "heal_events": {
       "nouns": {

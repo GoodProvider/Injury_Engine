@@ -12,7 +12,7 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 - **Padded whip** (`SkyrimNet_Whipped_PaddedWhip`): craftable at the forge with DOM's recipe (leather strips plus one other vanilla item), or `help "Padded whip"` → `player.additem`.
 - **Welt decal on hit**: the same engine impact chain as DOM (weapon → impact data set → flesh impact → `SNW_WhipMarkDecal.dds`).
 - **Direct Narration on hit**: "Nina's face is hit by Ulfric's whip, a sudden, sharp slap of raw shock…", worded by how damaged that part already was (undamaged, light, medium, severe). After the first hit, a hit more than the torture narration window after the last one is narrated on its own, hits between the interval and the window are combined into one narration, and quicker hits are recorded as events; a busy speech queue or a distance limit also turns a narration into an event.
-- **Wound prompts**: a character-bio section with what each wounded part looks like, and a final-instructions section with how it feels to the speaker. Both follow each part from light, medium and severe damage through recovering, mostly healed and healed (scarred).
+- **Wound prompts**: a character-bio section with what each wounded part looks like, and a final-instructions section with how it feels to the speaker. The look follows each part through light, medium and severe damage; the feeling does too, and while a spell, staff or potion is healing the actor it switches to how the healing feels (low, mid, high).
 - **Torture_Target LLM action**: an NPC walks to the target and whips, pinches, slaps, pulls or punches them 1–N times, followed by one summary narration. Whipping needs the padded whip.
 - **Torture damage**: whipping, pinching, slapping, pulling and punching (fists outside combat), plus fire, frost and shock torture from the spells Flames (torture), Frostbite (torture) and Sparks (torture) (given to you by "Add gear to player"; the normal spells stay real damage). Torture holds health down but never below 10%, so it can't kill. Each type is tracked per body part, but a part counts only its worst type; healing a part heals every type on it at once.
 
@@ -22,9 +22,9 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 |-----|---------|---------|
 | `whip.action.require_whip` | on | The NPC must already carry the padded whip to whip with Torture_Target. Off: one is handed over for the lashing. |
 | `whip.action.max_strikes` | 10 | Most strikes per action (applies after a reload) |
-| `whip.healing.hours_per_point` | 1 | Game hours per point of damage drained, then per healing point gained |
+| `whip.healing.hours_per_point` | 1 | Game hours per torture point healed |
 | `whip.narration.enabled` | on | Narrate lashes (off = events only) |
-| `whip.narration.torture_narration_window_size` | 30 s | After a torture hit, passive healing is not reported for this long |
+| `whip.narration.torture_narration_window_size` | 30 s | Currently unused (passive healing is no longer narrated) |
 | `whip.narration.cooldown` | 8 s | Per-victim healing narration cooldown |
 | `whip.narration.max_distance` | 15 m | Farther lashes become events |
 | `whip.body.include_sexual_parts` | off | Include sexual body parts (nipples, pussy, penis, lips, and ass hole): small parts, hit less often and holding less damage, but still wounded light, medium and severe. Pussy only on women, penis only on men. |
@@ -42,17 +42,17 @@ Install `SkyrimNet_Whipped <version>.7z` with your mod manager (it is a FOMOD wi
 
 The engine owns decals: they can vanish on a cell change or reload, and scripts can't query them. So `SkyrimNet_Whipped.dll` (InjuryEngine, saved in the SKSE co-save) tracks each actor's six body parts, per injury source (whip wounds plus classified real damage, see below):
 
-| Damage | Stage | | Healing (damage 0) | Stage |
-|---|---|---|---|---|
-| 1–3 | light | | 0–3 | recovering |
-| 4–10 | medium | | 4–10 | mostly healed |
-| 11+ | severe | | 11 | healed (scar) |
+| Torture points | Torture stage | Heal level (while healing) |
+|---|---|---|
+| 1–3 | light | high |
+| 4–10 | medium | mid |
+| 11+ | severe | low |
 
-Each lash adds 1 damage to a random part; a part that is already healing reopens at damage 4. Every `hours_per_point` game hours a part loses 1 damage, then gains 1 healing; health restored by spells, potions or regeneration heals random parts one point at a time. Each part that heals to its next stage is narrated like a hit (first one always, later ones batched behind the cooldown or kept as short-lived events); only "fully healed" is always a Direct Narration. An actor is forgotten once every hit part is healed. Decorator `skyrimnet_whipped_injuries(uuid)` returns the injuries of every source with their descriptions already written for that actor.
+Each lash adds points to a random part and healing takes them away again: every `hours_per_point` game hours a part loses 1 point, and health restored by spells, potions or regeneration heals random parts one point at a time. When a healing spell, staff or potion starts working on someone, a heal session begins: their overlay bar turns light blue and the narration describes each wounded part at its heal level (a part at 15 points is "low", healed down to 9 it is "mid"); a new hit ends the session and the bar turns red again. An actor is forgotten once every part is back at 0. Decorator `skyrimnet_whipped_injuries(uuid)` returns the injuries of every source with their descriptions already written for that actor.
 
 ### Other injuries
 
-Ordinary damage is tracked too, classified by what hit the actor: slashing (swords, axes), piercing (daggers, arrows), bludgeoning (maces, hammers, staves, fists), burning, freezing and shocking (fire, frost and shock spells), mauling (creatures), falling (landing from a height) and generic (anything else). Each health point lost becomes damage on a random body part (all parts at maximum = no health left) with the same light / medium / severe stages, and health regained heals random injuries one point at a time; a type, a body part and the whole body are each reported as they finish healing. Real damage first replaces torture damage: while an actor still carries torture wounds the hit does not lower health (the part's worst type drops and the others are clamped to it), and the overlay shows the replaced part as a darker red bar; once all torture is replaced, further damage is normal and can kill. Torture wounds themselves keep their special rules (damage, then healing over time, never below 10% health).
+Ordinary damage is tracked too, classified by what hit the actor: slashing (swords, axes), piercing (daggers, arrows), bludgeoning (maces, hammers, staves, fists), burning, freezing and shocking (fire, frost and shock spells), mauling (creatures), falling (landing from a height) and generic (anything else). Each health point lost becomes damage on a random body part (all parts at maximum = no health left) with the same light / medium / severe stages, and health regained heals random injuries one point at a time; a type, a body part and the whole body are each reported as they finish healing. Real damage first replaces torture damage: while an actor still carries torture wounds the hit does not lower health (the part's worst type drops and the others are clamped to it), and the overlay shows the replaced part as a darker red bar; once all torture is replaced, further damage is normal and can kill. Torture wounds themselves keep their special rules (they heal over time and never take health below 10%).
 
 ### Editing the injury text and numbers
 

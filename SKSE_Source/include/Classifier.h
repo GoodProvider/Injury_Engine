@@ -18,4 +18,9 @@ namespace Classifier
     // hits (one torture wound per HandleHealthDamage call); false for spell ticks and active torture effects.
     // When `unarmedForm` is non-null, set true when the matching rule is an unarmed rule (fists, not a mace).
     int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee = nullptr, bool* unarmedForm = nullptr);
+
+    // Puts the short-lived QuietMarker effect (SPEL 0x81A) on a torture victim so the QuietDialogue quest's silent
+    // Hit / Assault / AssaultNC lines win over vanilla barks. Throttled per victim; the cast runs as an SKSE task
+    // because damage hooks sit inside the engine's effect update. Padded Whip hits get the marker from their ENCH.
+    void MarkQuiet(RE::Actor* victim);
 }

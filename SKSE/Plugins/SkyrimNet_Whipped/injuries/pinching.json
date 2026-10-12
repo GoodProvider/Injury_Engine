@@ -4,11 +4,9 @@
   "model": "torture",
   "requires": "",
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -49,10 +47,7 @@
   "stages": [
     "light",
     "medium",
-    "severe",
-    "recovering",
-    "mostly_healed",
-    "healed"
+    "severe"
   ],
   "part_weights": {
     "face": 0.5,
@@ -81,69 +76,69 @@
       "head": [
         "{name}'s face: small, bright red pinch marks on {his} cheeks and the edge of {his} jaw, the skin flushed and slightly puffy where fingers twisted it.",
         "{name}'s face: plum-colored bruises the size of fingertips dot {his} cheeks and chin, paired crescents of nail marks pressed into the skin, and a dark blood blister swelling beneath one cheekbone.",
-        "{name}'s face: the skin of {his} cheeks is torn in ragged little rips where it was twisted, weeping blood; deep, blood-filled bruises have puffed {his} face lopsided and half closed one eye. {name} smells of sweat and blood.",
-        "{name}'s face: the torn spots have crusted into small dark scabs, the blood blisters have dried to brown spots, and the bruising around them has faded to mottled yellow-green.",
-        "{name}'s face: the scabs are gone, leaving small patches of shiny pink new skin and faint brownish shadows where the bruises were.",
-        "{name}'s face: only a faint trace remains, a tiny pale mark near the jaw that most people would never notice."
+        "{name}'s face: the skin of {his} cheeks is torn in ragged little rips where it was twisted, weeping blood; deep, blood-filled bruises have puffed {his} face lopsided and half closed one eye. {name} smells of sweat and blood."
       ],
       "body": [
         "{name}'s back: red pinch marks scatter across {his} sides and the soft skin over {his} ribs, each one a small raised blotch. {name} smells of fresh sweat.",
         "{name}'s back and sides: clusters of fingertip bruises in purple and red, rows of nail crescents pressed into the skin, and a few dark blood blisters along {his} flanks. {name} smells of sweat.",
-        "{name}'s back and torso: large patches of skin twisted until they tore, leaving raw, bleeding rips; the bruises have merged into swollen, blood-filled purple-black swellings across {his} sides. The coppery smell of blood and sour sweat clings to {him}.",
-        "{name}'s back and sides: dark scabs cover the torn places and the dried blood blisters, ringed by bruising fading from purple to green and yellow.",
-        "{name}'s back and sides: blotchy pink new skin where the tears were, and faded brownish spots where the bruises sat.",
-        "{name}'s back: the marks have faded away; at most a few faint, slightly darker spots remain along {his} sides."
+        "{name}'s back and torso: large patches of skin twisted until they tore, leaving raw, bleeding rips; the bruises have merged into swollen, blood-filled purple-black swellings across {his} sides. The coppery smell of blood and sour sweat clings to {him}."
       ],
       "arm": [
         "{name}'s {part}: red pinch marks on the soft inside of the upper arm and the back of the forearm, the skin blotchy and warm.",
         "{name}'s {part}: fingertip bruises in dark purple pairs along the inner arm, deep nail crescents pressed into the skin, and a swollen blood blister near the elbow.",
-        "{name}'s {part}: the thin skin of the inner arm is torn in several places where it was wrenched and twisted, bleeding in slow trickles; deep blood-filled bruises have swollen the arm thick and tight.",
-        "{name}'s {part}: small dark scabs over the torn spots and dried brown blood blisters, surrounded by fading yellow-green bruising.",
-        "{name}'s {part}: small patches of pink new skin and faint brownish shadows along the inner arm.",
-        "{name}'s {part}: the marks are gone; a faint pale fleck on the inner arm is all that is left."
+        "{name}'s {part}: the thin skin of the inner arm is torn in several places where it was wrenched and twisted, bleeding in slow trickles; deep blood-filled bruises have swollen the arm thick and tight."
       ],
       "leg": [
         "{name}'s {part}: red pinch marks on the thigh and the tender skin of the inner thigh, each one a small, raised, angry blotch.",
         "{name}'s {part}: purple fingertip bruises in clusters up the inner thigh, nail crescents pressed deep into the skin, and dark blood blisters where the flesh was twisted hardest.",
-        "{name}'s {part}: the skin of the inner thigh is torn open in ragged rips that bleed down toward the knee; the thigh is swollen with deep, blood-filled bruises gone almost black.",
-        "{name}'s {part}: dark scabs over the torn skin, dried blood blisters, and bruising faded to yellow-green across the inner thigh.",
-        "{name}'s {part}: patches of shiny pink new skin and faint brownish spots up the inner thigh; the swelling is gone.",
-        "{name}'s {part}: the marks have faded to nothing more than a faint, slightly paler spot on the inner thigh."
+        "{name}'s {part}: the skin of the inner thigh is torn open in ragged rips that bleed down toward the knee; the thigh is swollen with deep, blood-filled bruises gone almost black."
       ]
     },
     "feels": {
-      "head": [
-        "{name}'s cheeks sting with a hot, nipping smart that lingers after the fingers let go. {name} feels belittled and indignant, rubbing at the spots as {he} speaks.",
-        "{name}'s face throbs in tight little points of pain, and the blood blister aches whenever {he} moves {his} mouth. {name} is humiliated and angry, keeping {his} face stiff and turned slightly away.",
-        "{name}'s face is a mass of raw, throbbing pain where the skin tore, the swelling pulsing with {his} heartbeat. {name} is shaken and close to tears or rage, speaking thickly through a face that hurts to move.",
-        "{name}'s face is sore and itches where the scabs sit, and the bruises ache when touched. {name} is self-conscious, keeping {his} expressions small.",
-        "{name}'s face is only tender in small spots when pressed. {name} flinches if anyone's fingers come near {his} cheek.",
-        "{name}'s face feels normal again. A hand near {his} cheek brings back a quiet memory of the pinching."
-      ],
-      "body": [
-        "{name}'s sides sting in hot little points, each one nipping again as clothing brushes it. {name} is startled and irritated, holding {his} arms close to {his} body.",
-        "{name}'s sides and back ache in throbbing clusters, the blood blisters tight and sore under {his} clothes. {name} is resentful and on edge, twisting away whenever anyone comes close.",
-        "{name}'s sides and back are raw, tearing pain where the skin ripped, and the swollen bruises throb with every breath. {name} is wretched and shaking, hunched and breathing shallowly to keep {his} ribs still.",
-        "{name}'s sides itch and pull where the scabs sit, and the fading bruises ache when {he} twists or bends. {name} is weary and guarded, moving carefully.",
-        "{name}'s sides are only tender in a few spots when pressed. {name} still tenses when someone reaches toward {his} ribs.",
-        "{name}'s back and sides feel normal again. A hand on {his} side can still bring back a quiet memory of the pinching."
-      ],
-      "arm": [
-        "{name}'s {part} stings in sharp little nips that fade to a warm smart. {name} is annoyed and wary, rubbing the arm and keeping it out of reach.",
-        "{name}'s {part} throbs in tight, bruised points along the inner arm, and the blood blister aches when {he} bends the elbow. {name} is sullen and guarding, holding the arm close against {his} side.",
-        "{name}'s {part} is raw, burning pain where the skin tore, the swollen arm throbbing deep and tight. {name} is miserable and shaking, unwilling to bend it or let anything touch it.",
-        "{name}'s {part} is sore and itches under the scabs, and the bruises ache when {he} grips or lifts. {name} is impatient with it, favoring the other arm.",
-        "{name}'s {part} is only tender in small spots when bumped. {name} uses it normally, but pulls it back from a grasping hand.",
-        "{name}'s {part} feels normal again. The memory of those fingers comes back quietly if someone grabs {his} arm."
-      ],
-      "leg": [
-        "{name}'s {part} stings hot in small, nipping points up the thigh. {name} is flustered and irritated, shifting {his} weight and pressing {his} legs together.",
-        "{name}'s {part} throbs in bruised clusters along the inner thigh, the blood blisters chafing with every step. {name} is humiliated and tense, walking a little stiffly with {his} legs apart.",
-        "{name}'s {part} is raw, tearing pain where the skin of the inner thigh ripped, the swollen bruises throbbing deep with every step. {name} is shaken and miserable, limping and flinching whenever cloth rubs the leg.",
-        "{name}'s {part} is sore and itches under the scabs, and the fading bruises ache after walking. {name} is weary of it, sitting carefully and avoiding tight clothing.",
-        "{name}'s {part} is only tender in a few spots when pressed. {name} walks normally but still tenses when a hand comes near {his} thigh.",
-        "{name}'s {part} feels normal again. A hand on {his} thigh can still bring back a quiet memory of the pinching."
-      ]
+      "torture": {
+        "head": [
+          "{name}'s cheeks sting with a hot, nipping smart that lingers after the fingers let go. {name} feels belittled and indignant, rubbing at the spots as {he} speaks.",
+          "{name}'s face throbs in tight little points of pain, and the blood blister aches whenever {he} moves {his} mouth. {name} is humiliated and angry, keeping {his} face stiff and turned slightly away.",
+          "{name}'s face is a mass of raw, throbbing pain where the skin tore, the swelling pulsing with {his} heartbeat. {name} is shaken and close to tears or rage, speaking thickly through a face that hurts to move."
+        ],
+        "body": [
+          "{name}'s sides sting in hot little points, each one nipping again as clothing brushes it. {name} is startled and irritated, holding {his} arms close to {his} body.",
+          "{name}'s sides and back ache in throbbing clusters, the blood blisters tight and sore under {his} clothes. {name} is resentful and on edge, twisting away whenever anyone comes close.",
+          "{name}'s sides and back are raw, tearing pain where the skin ripped, and the swollen bruises throb with every breath. {name} is wretched and shaking, hunched and breathing shallowly to keep {his} ribs still."
+        ],
+        "arm": [
+          "{name}'s {part} stings in sharp little nips that fade to a warm smart. {name} is annoyed and wary, rubbing the arm and keeping it out of reach.",
+          "{name}'s {part} throbs in tight, bruised points along the inner arm, and the blood blister aches when {he} bends the elbow. {name} is sullen and guarding, holding the arm close against {his} side.",
+          "{name}'s {part} is raw, burning pain where the skin tore, the swollen arm throbbing deep and tight. {name} is miserable and shaking, unwilling to bend it or let anything touch it."
+        ],
+        "leg": [
+          "{name}'s {part} stings hot in small, nipping points up the thigh. {name} is flustered and irritated, shifting {his} weight and pressing {his} legs together.",
+          "{name}'s {part} throbs in bruised clusters along the inner thigh, the blood blisters chafing with every step. {name} is humiliated and tense, walking a little stiffly with {his} legs apart.",
+          "{name}'s {part} is raw, tearing pain where the skin of the inner thigh ripped, the swollen bruises throbbing deep with every step. {name} is shaken and miserable, limping and flinching whenever cloth rubs the leg."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal again. A hand near {his} cheek brings back a quiet memory of the pinching.",
+          "{name}'s face is only tender in small spots when pressed. {name} flinches if anyone's fingers come near {his} cheek.",
+          "{name}'s face is sore and itches where the scabs sit, and the bruises ache when touched. {name} is self-conscious, keeping {his} expressions small."
+        ],
+        "body": [
+          "{name}'s back and sides feel normal again. A hand on {his} side can still bring back a quiet memory of the pinching.",
+          "{name}'s sides are only tender in a few spots when pressed. {name} still tenses when someone reaches toward {his} ribs.",
+          "{name}'s sides itch and pull where the scabs sit, and the fading bruises ache when {he} twists or bends. {name} is weary and guarded, moving carefully."
+        ],
+        "arm": [
+          "{name}'s {part} feels normal again. The memory of those fingers comes back quietly if someone grabs {his} arm.",
+          "{name}'s {part} is only tender in small spots when bumped. {name} uses it normally, but pulls it back from a grasping hand.",
+          "{name}'s {part} is sore and itches under the scabs, and the bruises ache when {he} grips or lifts. {name} is impatient with it, favoring the other arm."
+        ],
+        "leg": [
+          "{name}'s {part} feels normal again. A hand on {his} thigh can still bring back a quiet memory of the pinching.",
+          "{name}'s {part} is only tender in a few spots when pressed. {name} walks normally but still tenses when a hand comes near {his} thigh.",
+          "{name}'s {part} is sore and itches under the scabs, and the fading bruises ache after walking. {name} is weary of it, sitting carefully and avoiding tight clothing."
+        ]
+      }
     }
   },
   "narration": {
@@ -184,16 +179,11 @@
       "hit_noun": "pinch"
     },
     "heal": {
-      "stage": {
-        "medium": "The torn skin on {name}'s {part} has closed, leaving deep, dark bruises and blood blisters.",
-        "light": "The bruises on {name}'s {part} have faded to sore red pinch marks.",
-        "recovering": "The marks on {name}'s {part} have scabbed and dried, the bruises turning yellow-green.",
-        "mostly_healed": "The scabs on {name}'s {part} have fallen away, leaving pink new skin and faint brown shadows.",
-        "healed": "The last traces on {name}'s {part} have faded away; those pinch marks have fully healed."
-      },
-      "source_healed": "All of {name}'s pinch marks have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed.",
-      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+      "level": {
+        "high": "Only the faintest traces of the pinch marks remain on {name}'s {parts}.",
+        "mid": "The scabs on {name}'s {parts} have fallen away, leaving pink new skin and faint brown shadows.",
+        "low": "The marks on {name}'s {parts} have scabbed and dried, the bruises turning yellow-green."
+      }
     },
     "heal_events": {
       "nouns": {

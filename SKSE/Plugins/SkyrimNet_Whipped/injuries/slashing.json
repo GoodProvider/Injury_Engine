@@ -8,11 +8,9 @@
     { "priority": 50, "weapon_types": ["TwoHandAxe"], "without_keyword": "WeapTypeWarhammer" }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -128,15 +126,6 @@
         ", and the blade bites deep into the wound. The pain is huge and nauseating, and {his} composure breaks as the blood pours. The coppery smell of blood is everywhere.",
         ", and it is too much. The blow cuts through muscle and tendon; {he} goes pale, {his} vision tunnels and {his} legs begin to give."
       ]
-    },
-    "heal": {
-      "stage": {
-        "medium": "The gash on {name}'s {part} has closed into a raw, stitched-shut-looking cut.",
-        "light": "The cut on {name}'s {part} has knit into a thin pink line.",
-        "healed": "The cut on {name}'s {part} has healed, leaving a faint pale scar."
-      },
-      "source_healed": "All of {name}'s slash wounds have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed."
     },
     "heal_events": {
       "nouns": {

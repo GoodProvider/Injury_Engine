@@ -30,6 +30,6 @@ release:
 	if exist "${RELEASE_FILE}" del /q "${RELEASE_FILE}"
 	if exist "$(subst /,\,core)" rmdir /s /q "$(subst /,\,core)"
 	mkdir core
-	powershell -NoProfile -Command "Copy-Item -Path 'Scripts','SKSE','meshes','textures','Sound','PrismaUI','SkyrimNet_Whipped.esp','CHANGELOG-player.md' -Destination 'core/.' -Recurse -Force"
+	powershell -NoProfile -Command "Copy-Item -Path 'Scripts','SKSE','meshes','textures','Sound','PrismaUI','Seq','SkyrimNet_Whipped.esp','CHANGELOG-player.md' -Destination 'core/.' -Recurse -Force"
 	7z -bb1 a '${RELEASE_FILE}' -aoa FOMOD core
 	if exist "$(subst /,\,core)" rmdir /s /q "$(subst /,\,core)"

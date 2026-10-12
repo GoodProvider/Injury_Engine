@@ -7,11 +7,9 @@
     { "priority": 90, "resist": "ResistFrost", "effect_file": "SkyrimNet_Whipped.esp", "effect_id": "0x814" }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -52,10 +50,7 @@
   "stages": [
     "light",
     "medium",
-    "severe",
-    "recovering",
-    "mostly_healed",
-    "healed"
+    "severe"
   ],
   "hook": {
     "points_per_second": 2
@@ -72,69 +67,69 @@
       "head": [
         "{name}'s face: a hand-sized patch of cheek or brow has gone stark white and stiff where the frost was held, ringed by angry red skin; a fine rime of frost clings to {his} lashes.",
         "{name}'s face: the frost-nipped patches have swollen into tight, shiny red-violet skin, the tip of the nose and the ears waxy grey-white; small clear blisters are rising along the cheekbone, and {his} breath comes in short, misting puffs.",
-        "{name}'s face: the frozen skin has gone waxy and dead, mottled purple-black at the nose, ears and cheek and swollen with fat, blood-filled blisters; {his} lips are blue and the flesh looks like cold wax. A damp, faintly sweet smell of dying skin clings to {him}.",
-        "{name}'s face: the thawed skin is peeling in papery flakes over raw, blotchy red; dark crusts sit where the blisters burst, and the nose and ears are still puffy.",
-        "{name}'s face: thin, shiny pink new skin covers the frozen patches, with a slightly darker, uneven edge.",
-        "{name}'s face: the skin looks normal again, apart from a faint pale patch on the cheek or the rim of an ear that blanches white in the cold."
+        "{name}'s face: the frozen skin has gone waxy and dead, mottled purple-black at the nose, ears and cheek and swollen with fat, blood-filled blisters; {his} lips are blue and the flesh looks like cold wax. A damp, faintly sweet smell of dying skin clings to {him}."
       ],
       "body": [
         "{name}'s back: blotches of stark white, frost-stiffened skin the size of a spread hand, each ringed in angry red, with gooseflesh all across {his} shoulders. {name} smells of cold sweat.",
         "{name}'s back: the frozen patches have swollen into hard, shiny red-violet plaques between the shoulder blades, clear blisters rising at their centres and the skin around them mottled; {his} shoulders shake with shivers.",
-        "{name}'s back: broad swathes of waxy grey-white and purple-black frostbite, hard as cold leather and swollen with dark, blood-filled blisters; in places the skin has split and weeps. A damp, sickly-sweet smell of dying flesh clings to {him}.",
-        "{name}'s back: the thawed skin peels in sheets over raw, blotchy red; dark crusts mark where the blisters burst and the edges are still swollen. A faint smell of healing salve lingers.",
-        "{name}'s back: thin, shiny pink new skin covers the frozen patches, darker and uneven at the edges.",
-        "{name}'s back: the skin has healed with pale, faintly blotchy patches that turn white and mottled when {he} is cold."
+        "{name}'s back: broad swathes of waxy grey-white and purple-black frostbite, hard as cold leather and swollen with dark, blood-filled blisters; in places the skin has split and weeps. A damp, sickly-sweet smell of dying flesh clings to {him}."
       ],
       "arm": [
         "{name}'s {part}: a stark white, numb-looking patch on the forearm or upper arm where the frost was pressed, ringed by red; the fingers are pale and stiff.",
         "{name}'s {part}: the frozen patch has swollen red-violet and shiny, small clear blisters rising across it; the fingers are puffy, white at the tips and slow to move.",
-        "{name}'s {part}: waxy grey-white skin darkening to purple-black, hard and cold as wax, with fat blood-filled blisters; the fingertips are blue-black and the hand is badly swollen. It gives off a damp, sickly-sweet smell of dying flesh.",
-        "{name}'s {part}: the thawed skin peels in flakes over blotchy red, with dark crusts where the blisters burst; the hand is still puffy and the fingers are held stiffly.",
-        "{name}'s {part}: thin, shiny pink new skin over the frozen patch, darker at the edges; the swelling is gone.",
-        "{name}'s {part}: the skin looks normal again, though the fingers turn white and waxy faster than they should in the cold."
+        "{name}'s {part}: waxy grey-white skin darkening to purple-black, hard and cold as wax, with fat blood-filled blisters; the fingertips are blue-black and the hand is badly swollen. It gives off a damp, sickly-sweet smell of dying flesh."
       ],
       "leg": [
         "{name}'s {part}: a stark white, frost-stiffened patch on the thigh or calf, ringed by red, the skin around it pricked with gooseflesh.",
         "{name}'s {part}: the frozen patch has swollen into a shiny red-violet plaque studded with clear blisters; the toes are pale and the leg is held stiffly.",
-        "{name}'s {part}: waxy grey-white flesh turning purple-black, hard and cold as wax and swollen with dark, blood-filled blisters; the foot is blue and badly swollen. A damp, sickly-sweet smell of dying flesh rises from it.",
-        "{name}'s {part}: the thawed skin peels in papery sheets over raw, blotchy red; dark crusts mark the burst blisters and the ankle is still puffy.",
-        "{name}'s {part}: thin, shiny pink new skin covers the frozen patch, darker at the edges; the swelling has gone.",
-        "{name}'s {part}: the skin has healed, leaving a faint pale blotch that turns white and mottled in the cold."
+        "{name}'s {part}: waxy grey-white flesh turning purple-black, hard and cold as wax and swollen with dark, blood-filled blisters; the foot is blue and badly swollen. A damp, sickly-sweet smell of dying flesh rises from it."
       ]
     },
     "feels": {
-      "head": [
-        "{name}'s face stings with a sharp, burning cold that turns to a prickling numbness, and {his} teeth chatter. {name} is shaken and humiliated, squinting and speaking through stiff, clumsy lips.",
-        "{name}'s face aches with a deep, gnawing cold under numb, wooden skin, and the swollen patches throb as feeling tries to return. {name} is frightened and resentful, shivering hard, speaking thickly and keeping {his} face turned away.",
-        "{name}'s face is a dead, heavy numbness shot through with deep, burning stabs where the flesh is dying, and {he} is shaking, sluggish and lightheaded. {name} is in shock, terrified or drifting, {his} words slurred and {his} jaw barely moving.",
-        "{name}'s face burns and itches as it thaws, a maddening pins and needles crawling under the peeling skin. {name} is irritable and self-conscious, rubbing at {his} cheeks and wincing at both warm air and cold drafts.",
-        "{name}'s face is tender, the new skin tight and oversensitive to wind and cold. {name} flinches when cold air or a cold hand comes near {his} face.",
-        "{name}'s face feels normal, though it stings and goes numb faster than it should in the cold. A chill on {his} cheek brings back a quiet memory of the frost."
-      ],
-      "body": [
-        "{name}'s back burns with a searing cold where the frost was held, then prickles into numbness, and shivers rack {his} shoulders. {name} is stunned and tense, hunched forward with {his} arms wrapped around {reflexive}.",
-        "{name}'s back aches deep with cold, the swollen patches throbbing and the blisters stinging whenever clothing brushes them. {name} is miserable and enduring it, shuddering and stiff, unable to lean back or straighten fully.",
-        "{name}'s back is heavy, wooden and numb, pierced by deep, burning stabs where the flesh is dying, and the shivering has become violent, uncontrollable shaking. {name} is helpless and close to collapse, sluggish and confused, barely able to hold {reflexive} upright.",
-        "{name}'s back burns and itches as it thaws, pins and needles crawling across the peeling skin, and every brush of cloth stings. {name} is weary and on edge, moving carefully and rolling {his} shoulders to ease the itch.",
-        "{name}'s back is tender and tight over the new skin and aches dully when {he} is chilled. {name} is wary of cold drafts and edges toward any fire.",
-        "{name}'s back has its full movement again, but a cold wind across it makes {him} shiver harder than it should. The chill brings back a quiet memory of the frost held against {his} skin."
-      ],
-      "arm": [
-        "{name}'s {part} stings with a biting, burning cold that fades to a prickling numbness; the fingers are clumsy and slow. {name} is shaken, rubbing the arm and holding it close.",
-        "{name}'s {part} aches to the bone with cold, the swollen patch throbbing and the blisters stinging; {his} grip is weak and the fingers barely close. {name} is resentful and guarded, cradling the arm against {his} body and shivering.",
-        "{name}'s {part} is a dead, heavy numbness broken by deep, burning stabs where the flesh is dying, and the hand will not answer. {name} is terrified for the arm, in shock and shaking, unable to grip or move the fingers.",
-        "{name}'s {part} burns and itches as it thaws, pins and needles crawling into the fingers, and the stiff joints ache when {he} bends them. {name} is frustrated, flexing {his} fingers and fumbling small tasks.",
-        "{name}'s {part} is tender and tingles at the fingertips, aching in the cold. {name} keeps the hand tucked away or close to warmth.",
-        "{name}'s {part} has its full feeling and strength again; the fingers still go numb quickly in the cold, a quiet reminder of the frost."
-      ],
-      "leg": [
-        "{name}'s {part} stings with a burning cold that fades into prickling numbness, and the foot feels clumsy. {name} is shaken, shivering and stamping to bring the feeling back.",
-        "{name}'s {part} aches deep with cold, the swollen patch throbbing and the blisters stinging with every step, the toes numb. {name} is miserable and walks stiff-legged, unsure of {his} footing.",
-        "{name}'s {part} is a dead, wooden weight shot with deep, burning stabs where the flesh is dying, and {he} cannot feel the foot. {name} is panicked and exhausted, unable to trust the leg, stumbling or needing support.",
-        "{name}'s {part} burns and itches as it thaws, pins and needles prickling down into the toes, and it throbs when {he} stands. {name} is weary of it, limping and rubbing the leg whenever {he} rests.",
-        "{name}'s {part} is tender and stiff in the cold, the toes tingling after long walks. {name} walks almost normally but stamps {his} feet often to keep them warm.",
-        "{name}'s {part} has its full strength and feeling again; the foot aches and goes numb faster in the cold, a quiet reminder of the frost."
-      ]
+      "torture": {
+        "head": [
+          "{name}'s face stings with a sharp, burning cold that turns to a prickling numbness, and {his} teeth chatter. {name} is shaken and humiliated, squinting and speaking through stiff, clumsy lips.",
+          "{name}'s face aches with a deep, gnawing cold under numb, wooden skin, and the swollen patches throb as feeling tries to return. {name} is frightened and resentful, shivering hard, speaking thickly and keeping {his} face turned away.",
+          "{name}'s face is a dead, heavy numbness shot through with deep, burning stabs where the flesh is dying, and {he} is shaking, sluggish and lightheaded. {name} is in shock, terrified or drifting, {his} words slurred and {his} jaw barely moving."
+        ],
+        "body": [
+          "{name}'s back burns with a searing cold where the frost was held, then prickles into numbness, and shivers rack {his} shoulders. {name} is stunned and tense, hunched forward with {his} arms wrapped around {reflexive}.",
+          "{name}'s back aches deep with cold, the swollen patches throbbing and the blisters stinging whenever clothing brushes them. {name} is miserable and enduring it, shuddering and stiff, unable to lean back or straighten fully.",
+          "{name}'s back is heavy, wooden and numb, pierced by deep, burning stabs where the flesh is dying, and the shivering has become violent, uncontrollable shaking. {name} is helpless and close to collapse, sluggish and confused, barely able to hold {reflexive} upright."
+        ],
+        "arm": [
+          "{name}'s {part} stings with a biting, burning cold that fades to a prickling numbness; the fingers are clumsy and slow. {name} is shaken, rubbing the arm and holding it close.",
+          "{name}'s {part} aches to the bone with cold, the swollen patch throbbing and the blisters stinging; {his} grip is weak and the fingers barely close. {name} is resentful and guarded, cradling the arm against {his} body and shivering.",
+          "{name}'s {part} is a dead, heavy numbness broken by deep, burning stabs where the flesh is dying, and the hand will not answer. {name} is terrified for the arm, in shock and shaking, unable to grip or move the fingers."
+        ],
+        "leg": [
+          "{name}'s {part} stings with a burning cold that fades into prickling numbness, and the foot feels clumsy. {name} is shaken, shivering and stamping to bring the feeling back.",
+          "{name}'s {part} aches deep with cold, the swollen patch throbbing and the blisters stinging with every step, the toes numb. {name} is miserable and walks stiff-legged, unsure of {his} footing.",
+          "{name}'s {part} is a dead, wooden weight shot with deep, burning stabs where the flesh is dying, and {he} cannot feel the foot. {name} is panicked and exhausted, unable to trust the leg, stumbling or needing support."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal, though it stings and goes numb faster than it should in the cold. A chill on {his} cheek brings back a quiet memory of the frost.",
+          "{name}'s face is tender, the new skin tight and oversensitive to wind and cold. {name} flinches when cold air or a cold hand comes near {his} face.",
+          "{name}'s face burns and itches as it thaws, a maddening pins and needles crawling under the peeling skin. {name} is irritable and self-conscious, rubbing at {his} cheeks and wincing at both warm air and cold drafts."
+        ],
+        "body": [
+          "{name}'s back has its full movement again, but a cold wind across it makes {him} shiver harder than it should. The chill brings back a quiet memory of the frost held against {his} skin.",
+          "{name}'s back is tender and tight over the new skin and aches dully when {he} is chilled. {name} is wary of cold drafts and edges toward any fire.",
+          "{name}'s back burns and itches as it thaws, pins and needles crawling across the peeling skin, and every brush of cloth stings. {name} is weary and on edge, moving carefully and rolling {his} shoulders to ease the itch."
+        ],
+        "arm": [
+          "{name}'s {part} has its full feeling and strength again; the fingers still go numb quickly in the cold, a quiet reminder of the frost.",
+          "{name}'s {part} is tender and tingles at the fingertips, aching in the cold. {name} keeps the hand tucked away or close to warmth.",
+          "{name}'s {part} burns and itches as it thaws, pins and needles crawling into the fingers, and the stiff joints ache when {he} bends them. {name} is frustrated, flexing {his} fingers and fumbling small tasks."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength and feeling again; the foot aches and goes numb faster in the cold, a quiet reminder of the frost.",
+          "{name}'s {part} is tender and stiff in the cold, the toes tingling after long walks. {name} walks almost normally but stamps {his} feet often to keep them warm.",
+          "{name}'s {part} burns and itches as it thaws, pins and needles prickling down into the toes, and it throbs when {he} stands. {name} is weary of it, limping and rubbing the leg whenever {he} rests."
+        ]
+      }
     }
   },
   "narration": {
@@ -175,16 +170,11 @@
       "hit_noun": "frost"
     },
     "heal": {
-      "stage": {
-        "medium": "The blackened frostbite on {name}'s {part} has thawed into swollen, blistered red-violet skin.",
-        "light": "The blisters on {name}'s {part} have gone down, leaving tender, frost-nipped red skin.",
-        "recovering": "The frost bites on {name}'s {part} have thawed; the skin is peeling and itches with pins and needles.",
-        "mostly_healed": "The peeling skin on {name}'s {part} has given way to thin, shiny pink new skin.",
-        "healed": "The new skin on {name}'s {part} has toughened to normal, leaving only a lingering sensitivity to cold; that frost bite has fully healed."
-      },
-      "source_healed": "All of {name}'s frost bites have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed.",
-      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+      "level": {
+        "high": "The new skin on {name}'s {parts} is toughening, with only a lingering sensitivity to cold left.",
+        "mid": "The peeling skin on {name}'s {parts} has given way to thin, shiny pink new skin.",
+        "low": "The frost bites on {name}'s {parts} have thawed; the skin is peeling and itches with pins and needles."
+      }
     },
     "heal_events": {
       "nouns": {

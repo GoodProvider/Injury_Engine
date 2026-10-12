@@ -16,6 +16,8 @@ namespace Classifier
     {
         constexpr double kHitWindow = 0.6;  // real seconds a hit event stays usable for the damage that follows it
         constexpr double kTortureWindow = 2.0;  // real seconds a "(torture)" effect stays current after it was last seen
+        constexpr double kQuietRecast = 1.0;  // real seconds between QuietMarker casts on one victim (the marker lasts 3 s)
+        constexpr std::uint32_t kQuietSpellId = 0x81A;  // SPEL SkyrimNet_Whipped_QuietSpell
 
         struct Recent
         {
@@ -42,6 +44,7 @@ namespace Classifier
         // victim -> latest "(torture)" effect, from AddTarget and hit events. Damage hooks read this instead of walking
         // the active-effect list: they run inside the engine's own effect update, where a nested walk crashes.
         std::unordered_map<RE::FormID, TortureSeen> g_torture;
+        std::unordered_map<RE::FormID, double> g_quiet;  // victim -> last QuietMarker cast
         // classify effect_file / effect_id -> runtime MGEF form id (ESL light masters need explicit resolution)
         std::unordered_map<std::string, RE::FormID> g_classifyEffectForms;
 
@@ -529,5 +532,36 @@ namespace Classifier
         }
         SKSE::log::debug("classify {:08X}: no hit event or attacker weapon (hit form {:08X}) -> generic", victimId, sourceId);
         return take({ InjuryConfig::GenericIndex(), false }, false);
+    }
+
+    void MarkQuiet(RE::Actor* victim)
+    {
+        auto* tasks = SKSE::GetTaskInterface();
+        if (!victim || !tasks) {
+            return;
+        }
+        {
+            std::lock_guard lock(g_lock);
+            const double now = NowSeconds();
+            if (g_quiet.size() > 512) {
+                g_quiet.clear();
+            }
+            double& last = g_quiet[victim->GetFormID()];
+            if (now - last < kQuietRecast) {
+                return;
+            }
+            last = now;
+        }
+        tasks->AddTask([handle = victim->GetHandle()]() {
+            static auto* spell = skyrim_cast<RE::SpellItem*>(LookupForm("SkyrimNet_Whipped.esp", kQuietSpellId));
+            auto ref = handle.get();
+            auto* actor = ref ? ref->As<RE::Actor>() : nullptr;
+            auto* caster = actor && !actor->IsDead() ? actor->GetMagicCaster(RE::MagicSystem::CastingSource::kInstant) : nullptr;
+            if (!spell || !caster) {
+                return;
+            }
+            caster->CastSpellImmediate(spell, true, actor, 1.0f, false, 0.0f, nullptr);
+            SKSE::log::debug("quiet marker: victim {:08X}", actor->GetFormID());
+        });
     }
 }

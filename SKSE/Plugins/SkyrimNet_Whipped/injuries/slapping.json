@@ -4,11 +4,9 @@
   "model": "torture",
   "requires": "",
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "health_link": {
     "wound_share": 0.9,
@@ -49,10 +47,7 @@
   "stages": [
     "light",
     "medium",
-    "severe",
-    "recovering",
-    "mostly_healed",
-    "healed"
+    "severe"
   ],
   "part_weights": {
     "face": 2,
@@ -81,69 +76,69 @@
       "head": [
         "{name}'s face: a bright red handprint glows on {his} cheek, the outline of fingers clear against flushed, warm skin.",
         "{name}'s face: both cheeks are blotched angry red and puffy, the handprints swelling into each other, tiny burst vessels freckling the skin; {his} eyes are wet and bloodshot.",
-        "{name}'s face: swollen and lopsided, the cheeks bruised deep purple, the skin split over the cheekbone and the corner of the mouth, blood at {his} lips and a trickle from {his} nose; one eye is puffed half shut. A smell of sweat and blood clings to {him}.",
-        "{name}'s face: the swelling has gone down, leaving mottled purple-green bruises across the cheeks and a small crusted scab over the cheekbone.",
-        "{name}'s face: faint yellow-brown shadows linger along the cheekbones, and a thin pink line marks where the skin split.",
-        "{name}'s face: clear and even again; nothing shows of the slaps."
+        "{name}'s face: swollen and lopsided, the cheeks bruised deep purple, the skin split over the cheekbone and the corner of the mouth, blood at {his} lips and a trickle from {his} nose; one eye is puffed half shut. A smell of sweat and blood clings to {him}."
       ],
       "body": [
         "{name}'s back and buttocks: red handprints stand out on the skin, finger marks sharp at the edges, the flesh flushed and warm to the touch.",
         "{name}'s back and buttocks: overlapping handprints have merged into broad, puffy, deep red patches speckled with burst capillaries; the skin is hot and tight. {name} smells of fresh sweat.",
-        "{name}'s back and buttocks: swollen, shiny and bruised dark purple-black, the skin split and weeping in places where blow after blow landed; {his} clothing sticks to it. The smell of sweat and a faint tang of blood cling to {him}.",
-        "{name}'s back and buttocks: broad bruises fading from purple to green and yellow, small crusted scabs over the split places.",
-        "{name}'s back and buttocks: faint brownish-yellow stains linger where the bruises were, and a few pink marks show where the skin broke.",
-        "{name}'s back and buttocks: the skin is smooth and evenly colored again; no mark remains."
+        "{name}'s back and buttocks: swollen, shiny and bruised dark purple-black, the skin split and weeping in places where blow after blow landed; {his} clothing sticks to it. The smell of sweat and a faint tang of blood cling to {him}."
       ],
       "arm": [
         "{name}'s {part}: a red handprint stands out on the upper arm or forearm, the skin flushed and warm.",
         "{name}'s {part}: puffy, deep red patches where the slaps landed again and again, freckled with burst capillaries; the arm looks thickened.",
-        "{name}'s {part}: swollen and bruised dark purple, the skin split over the bone and oozing blood; the hand is puffy and held limp. It smells faintly of blood.",
-        "{name}'s {part}: a broad purple-green bruise fading at the edges, a small scab where the skin split.",
-        "{name}'s {part}: faint yellow-brown shadows remain under the skin; the swelling is gone.",
-        "{name}'s {part}: the skin looks normal again; nothing shows."
+        "{name}'s {part}: swollen and bruised dark purple, the skin split over the bone and oozing blood; the hand is puffy and held limp. It smells faintly of blood."
       ],
       "leg": [
         "{name}'s {part}: a red handprint glows on the thigh, the outline of fingers clear and the skin warm.",
         "{name}'s {part}: the thigh is blotched puffy, deep red and speckled with burst capillaries where the slaps piled up; the muscle is visibly swollen.",
-        "{name}'s {part}: the thigh is swollen tight and bruised purple-black, the skin split and weeping in places. It smells faintly of sweat and blood.",
-        "{name}'s {part}: a large bruise on the thigh fading from purple to green and yellow, the split places crusted over.",
-        "{name}'s {part}: only faint yellow-brown shadows remain on the thigh; the swelling is gone.",
-        "{name}'s {part}: the thigh looks normal again; nothing shows."
+        "{name}'s {part}: the thigh is swollen tight and bruised purple-black, the skin split and weeping in places. It smells faintly of sweat and blood."
       ]
     },
     "feels": {
-      "head": [
-        "{name}'s face stings hot and bright, the burn of the handprint pulsing in {his} cheek. {name} feels shock and indignity, cheeks flushed with more than pain, eyes stinging with sudden tears.",
-        "{name}'s face throbs and burns, swollen tight, and {his} ears ring from the blows. {name} is humiliated and torn between fury and fear, holding {his} head stiffly and blinking back tears.",
-        "{name}'s face is a pounding, swollen agony; {his} ears ring, {his} head swims and {he} tastes blood. {name} is dazed and close to breaking, words thick through swollen lips, flinching at the smallest movement near {him}.",
-        "{name}'s face aches dully and is tender to the touch, stiff when {he} chews or smiles. {name} is self-conscious and ashamed of the marks, keeping {his} face turned away.",
-        "{name}'s face is only faintly tender along the cheekbones. {name} still flinches when a hand is raised near {him}.",
-        "{name}'s face feels normal again. A raised hand still brings back a quiet, burning memory of the humiliation."
-      ],
-      "body": [
-        "{name}'s back and buttocks sting and burn, the skin hot and prickling under {his} clothes. {name} is startled and shamed, holding {reflexive} stiffly.",
-        "{name}'s back and buttocks throb with a deep, hot ache, and sitting or leaning back makes {him} wince. {name} is humiliated and resentful, standing rather than sitting and moving stiffly.",
-        "{name}'s back and buttocks are a pounding, raw agony; every step jars the swollen flesh and cloth scrapes the split skin. {name} is shaken and close to tears, unable to sit or lie on {his} back, trembling when anyone comes near.",
-        "{name}'s back and buttocks are sore and stiff, the bruises aching when {he} sits or bends. {name} is weary and guarded, sitting gingerly on one side.",
-        "{name}'s back and buttocks are only tender when pressed or sat on too long. {name} is wary of anyone standing behind {him}.",
-        "{name}'s back and buttocks feel normal again. Sitting down sometimes brings back a quiet memory of the shame."
-      ],
-      "arm": [
-        "{name}'s {part} stings hot where the hand landed, fading into a warm tingle. {name} is startled and rubs or shields the arm.",
-        "{name}'s {part} throbs with a deep, hot ache and the swollen skin feels tight. {name} is irritable and guarding, keeping the arm close and avoiding gripping anything hard.",
-        "{name}'s {part} is pounding, swollen pain that flares when {he} moves it or makes a fist. {name} is shaken and in pain, holding the arm against {his} body and unable to use it properly.",
-        "{name}'s {part} is sore and stiff, the bruise aching when bumped. {name} is frustrated, favoring the other arm for heavy work.",
-        "{name}'s {part} is only faintly tender when pressed. The arm works normally.",
-        "{name}'s {part} feels normal again. The memory of the slaps lingers more than any pain."
-      ],
-      "leg": [
-        "{name}'s {part} stings hot across the thigh, a bright burn that fades into warmth. {name} is startled and indignant, with a brief hitch in {his} stride.",
-        "{name}'s {part} throbs with a deep, hot ache in the thigh that flares with each step. {name} is humiliated and walks stiffly, wincing as cloth rubs over the marks.",
-        "{name}'s {part} is a swollen, pounding agony across the thigh; walking is painful and sitting worse. {name} is shaken and miserable, limping and keeping weight off the leg.",
-        "{name}'s {part} is sore and stiff where the bruises sit, aching when {he} sits or kneels. {name} is weary and moves with care.",
-        "{name}'s {part} is only faintly tender when pressed. {name} walks normally again.",
-        "{name}'s {part} feels normal again. The marks are gone; the memory of the humiliation is not."
-      ]
+      "torture": {
+        "head": [
+          "{name}'s face stings hot and bright, the burn of the handprint pulsing in {his} cheek. {name} feels shock and indignity, cheeks flushed with more than pain, eyes stinging with sudden tears.",
+          "{name}'s face throbs and burns, swollen tight, and {his} ears ring from the blows. {name} is humiliated and torn between fury and fear, holding {his} head stiffly and blinking back tears.",
+          "{name}'s face is a pounding, swollen agony; {his} ears ring, {his} head swims and {he} tastes blood. {name} is dazed and close to breaking, words thick through swollen lips, flinching at the smallest movement near {him}."
+        ],
+        "body": [
+          "{name}'s back and buttocks sting and burn, the skin hot and prickling under {his} clothes. {name} is startled and shamed, holding {reflexive} stiffly.",
+          "{name}'s back and buttocks throb with a deep, hot ache, and sitting or leaning back makes {him} wince. {name} is humiliated and resentful, standing rather than sitting and moving stiffly.",
+          "{name}'s back and buttocks are a pounding, raw agony; every step jars the swollen flesh and cloth scrapes the split skin. {name} is shaken and close to tears, unable to sit or lie on {his} back, trembling when anyone comes near."
+        ],
+        "arm": [
+          "{name}'s {part} stings hot where the hand landed, fading into a warm tingle. {name} is startled and rubs or shields the arm.",
+          "{name}'s {part} throbs with a deep, hot ache and the swollen skin feels tight. {name} is irritable and guarding, keeping the arm close and avoiding gripping anything hard.",
+          "{name}'s {part} is pounding, swollen pain that flares when {he} moves it or makes a fist. {name} is shaken and in pain, holding the arm against {his} body and unable to use it properly."
+        ],
+        "leg": [
+          "{name}'s {part} stings hot across the thigh, a bright burn that fades into warmth. {name} is startled and indignant, with a brief hitch in {his} stride.",
+          "{name}'s {part} throbs with a deep, hot ache in the thigh that flares with each step. {name} is humiliated and walks stiffly, wincing as cloth rubs over the marks.",
+          "{name}'s {part} is a swollen, pounding agony across the thigh; walking is painful and sitting worse. {name} is shaken and miserable, limping and keeping weight off the leg."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal again. A raised hand still brings back a quiet, burning memory of the humiliation.",
+          "{name}'s face is only faintly tender along the cheekbones. {name} still flinches when a hand is raised near {him}.",
+          "{name}'s face aches dully and is tender to the touch, stiff when {he} chews or smiles. {name} is self-conscious and ashamed of the marks, keeping {his} face turned away."
+        ],
+        "body": [
+          "{name}'s back and buttocks feel normal again. Sitting down sometimes brings back a quiet memory of the shame.",
+          "{name}'s back and buttocks are only tender when pressed or sat on too long. {name} is wary of anyone standing behind {him}.",
+          "{name}'s back and buttocks are sore and stiff, the bruises aching when {he} sits or bends. {name} is weary and guarded, sitting gingerly on one side."
+        ],
+        "arm": [
+          "{name}'s {part} feels normal again. The memory of the slaps lingers more than any pain.",
+          "{name}'s {part} is only faintly tender when pressed. The arm works normally.",
+          "{name}'s {part} is sore and stiff, the bruise aching when bumped. {name} is frustrated, favoring the other arm for heavy work."
+        ],
+        "leg": [
+          "{name}'s {part} feels normal again. The marks are gone; the memory of the humiliation is not.",
+          "{name}'s {part} is only faintly tender when pressed. {name} walks normally again.",
+          "{name}'s {part} is sore and stiff where the bruises sit, aching when {he} sits or kneels. {name} is weary and moves with care."
+        ]
+      }
     }
   },
   "narration": {
@@ -184,16 +179,11 @@
       "hit_noun": "slap"
     },
     "heal": {
-      "stage": {
-        "medium": "The split skin on {name}'s {part} has closed, leaving deep, swollen bruises.",
-        "light": "The swelling on {name}'s {part} has gone down to sore red marks.",
-        "recovering": "The slap marks on {name}'s {part} have faded into mottled purple-green bruises.",
-        "mostly_healed": "The bruises on {name}'s {part} have faded to faint yellow-brown shadows.",
-        "healed": "The last shadows of bruising on {name}'s {part} have faded; nothing of the slaps shows any more."
-      },
-      "source_healed": "All of {name}'s slap marks have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed.",
-      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+      "level": {
+        "high": "Only the last faint shadows of bruising remain on {name}'s {parts}.",
+        "mid": "The bruises on {name}'s {parts} have faded to faint yellow-brown shadows.",
+        "low": "The slap marks on {name}'s {parts} have faded into mottled purple-green bruises."
+      }
     },
     "heal_events": {
       "nouns": {

@@ -11,11 +11,9 @@
     }
   ],
   "damage_max": 20,
-  "healing_max": 11,
   "thresholds": {
     "medium": 4,
-    "severe": 11,
-    "mostly_healed": 4
+    "severe": 11
   },
   "hook": {
     "points_per_hit": 2
@@ -59,10 +57,7 @@
   "stages": [
     "light",
     "medium",
-    "severe",
-    "recovering",
-    "mostly_healed",
-    "healed"
+    "severe"
   ],
   "defaults": {
     "require_whip": true,
@@ -95,9 +90,8 @@
       "light": "#e8837a",
       "medium": "#d0342c",
       "severe": "#7a0c0c",
-      "recovering": "#f2c94c",
-      "mostly_healed": "#f7e08a",
-      "replaced": "#3d0606"
+      "replaced": "#3d0606",
+      "healing": "#8fd3ff"
     }
   },
   "action": {
@@ -119,69 +113,69 @@
       "head": [
         "{name}'s face: a bright red diagonal welt crosses {his} cheek or forehead, raised and swollen; the skin is unbroken.",
         "{name}'s face: a deep red-to-purple welt with thin splits of broken skin beaded with dark blood; swelling is starting to close one of {his} eyes. A sour smell of sweat clings to {him}.",
-        "{name}'s face: gaping lacerations with raw strands across the wound; dark blood pours down {his} jaw and neck; one eye is swollen shut and the rest of {his} face is deathly pale. {name} smells of sweat and fresh blood.",
-        "{name}'s face: thick, crusted maroon-black scabs line the cuts; the skin around them is mottled yellow-green; hair is missing in patches along the scalp lines.",
-        "{name}'s face: the scabs are gone, leaving shiny pink-purple scar tissue edged with darkened skin.",
-        "{name}'s face: a thin silvery-white scar line remains; on the scalp or brow it leaves a narrow bald track."
+        "{name}'s face: gaping lacerations with raw strands across the wound; dark blood pours down {his} jaw and neck; one eye is swollen shut and the rest of {his} face is deathly pale. {name} smells of sweat and fresh blood."
       ],
       "body": [
         "{name}'s back: long, raised pink-red stripes cross {his} shoulder blades and ribs; no open wounds. {name} smells of fresh sweat.",
         "{name}'s back: parallel tramline bruises, dark red-purple raised borders around paler strips, with small cuts and pinpoint bleeding. {name} smells of sweat with a faint tang of blood.",
-        "{name}'s back and torso: ragged, deep lacerations cut through the skin into the flesh beneath; huge purple-black bruises spread across {him}; dark blood soaks {his} clothing. The coppery smell of blood and sour sweat clings to {him}.",
-        "{name}'s back: broad, raised blackish-red scab ridges, surrounded by bruising fading from purple to green and yellow. A faint smell of healing salve or old sweat lingers.",
-        "{name}'s back: raised purplish-pink scar lines framed by brownish darkened skin.",
-        "{name}'s back: permanent tramline scars, darker brown or faded pale, are stamped across it."
+        "{name}'s back and torso: ragged, deep lacerations cut through the skin into the flesh beneath; huge purple-black bruises spread across {him}; dark blood soaks {his} clothing. The coppery smell of blood and sour sweat clings to {him}."
       ],
       "arm": [
         "{name}'s {part}: a diagonal red welt across the forearm or upper arm with slight swelling.",
         "{name}'s {part}: a wide purple bruise with pinpoint bleeding under the skin and scraped lines; the arm looks visibly thickened. It smells faintly of sweat and blood.",
-        "{name}'s {part}: gaping lacerations expose raw tissue; dark blood drips down the wrist and fingers; the hand is puffy and swollen. The smell of blood rises from the welts.",
-        "{name}'s {part}: a long, thick maroon scab across the arm surrounded by fading yellow-green bruising; the elbow or wrist is held bent.",
-        "{name}'s {part}: a bright pink, slightly raised scar along the strike line, bordered by faint brown.",
-        "{name}'s {part}: a faint, smooth, pale scar line runs along the arm."
+        "{name}'s {part}: gaping lacerations expose raw tissue; dark blood drips down the wrist and fingers; the hand is puffy and swollen. The smell of blood rises from the welts."
       ],
       "leg": [
         "{name}'s {part}: a straight red welt across the thigh or calf, slightly raised, no bleeding.",
         "{name}'s {part}: a broad purple bruise with distinct parallel red borders; the muscle is visibly swollen. It smells faintly of sweat and blood.",
-        "{name}'s {part}: a deep, jagged laceration into the muscle; dark blood runs down the shin into {his} boot; the leg is badly swollen. The smell of blood clings to {his} boot.",
-        "{name}'s {part}: crusted maroon-black scabs over the wounds; yellow-green-brown bruising has drained down toward the ankle and foot.",
-        "{name}'s {part}: a smooth pinkish-purple scar with darker rings around it; the swelling is gone.",
-        "{name}'s {part}: a faint pale scar line runs across the thigh or calf."
+        "{name}'s {part}: a deep, jagged laceration into the muscle; dark blood runs down the shin into {his} boot; the leg is badly swollen. The smell of blood clings to {his} boot."
       ]
     },
     "feels": {
-      "head": [
-        "{name}'s face burns with a sharp, hot sting that throbs with {his} pulse. {name} feels shock, indignity and a rush of adrenaline, and winces and squints whenever {he} speaks.",
-        "{name}'s face aches deeply under a searing cut; the skin feels stretched to bursting. {name} is torn between burning anger and fear; {his} vision on that side is blurred, and {he} holds {his} jaw rigid because opening {his} mouth pulls the cut wider.",
-        "{name}'s face is blinding, sickening agony; {he} is lightheaded and nauseous. {name} is in shock, terrified or dissociating; {he} cannot see on that side, {his} speech is slurred, and turning {his} head brings sharp, agonizing winces.",
-        "{name}'s face itches maddeningly, and the scabs pull tight and crack whenever {he} moves it. {name} is frustrated and self-conscious about the disfigurement, and speaks and chews with small, guarded jaw movements.",
-        "{name}'s facial scar is hypersensitive to touch, cold air and sweat, and pulls tight when {he} smiles or frowns. {name} flinches when anyone reaches toward {his} face.",
-        "{name}'s face feels normal apart from an occasional phantom itch or ache in the cold. Touching the scar brings back a quiet memory of the whipping."
-      ],
-      "body": [
-        "{name}'s back burns like a concentrated sunburn, and clothing rubbing against it hurts at once. {name} is stunned and hyper-aware of {his} skin, breathing shallowly so {his} ribs do not stretch the welts.",
-        "{name}'s back throbs deep inside, sharper with every twist or step; clothing feels like sandpaper on raw nerves. {name} is resentful and enduring it stoically, unable to lean back, holding a rigid forward-leaning posture.",
-        "{name}'s back is tearing agony that spikes with every breath, and {he} shivers with cold from shock. {name} is helpless, horrified, close to collapse; {he} cannot stand straight, bend or twist, and gasps in quick shallow breaths.",
-        "{name}'s back itches deep down where {he} cannot safely scratch, and the skin pulls tight when {he} reaches or bends. {name} is weary and on guard against being touched; {he} cannot lie on {his} back and moves slowly and carefully.",
-        "{name}'s back pulls tight when {he} stretches or twists, with numb patches over the scars. {name} is wary of anyone behind {him}; sudden movements bring a sharp tug.",
-        "{name}'s back has its full movement and strength again. {name} startles badly if touched on the back or approached from behind."
-      ],
-      "arm": [
-        "{name}'s {part} stings with a sharp snap of pain fading into a lingering warm burn. {name} instinctively protects it and hesitates to bend it or carry anything.",
-        "{name}'s {part} throbs heavily deep in the muscle, flaring when {he} bends the elbow or grips. {name} is irritable and guarding; {his} grip is weak and {he} cradles the arm against {his} chest.",
-        "{name}'s {part} is searing, tearing pain with burning nerve shocks down into the fingers. {name} is in despair, shock or desperate rage; the arm is useless, and {he} cannot bend it, hold anything or make a fist.",
-        "{name}'s {part} is stiff, and straightening it threatens to split the scab; it itches constantly. {name} is frustrated at being limited and cannot reach far or carry heavy loads.",
-        "{name}'s {part} is tender when bumped and slightly tight at full extension. {name} has accepted the mark; the arm works, with minor stiffness in fine or heavy work.",
-        "{name}'s {part} has its full feeling, strength and movement again. The scar is a quiet reminder of the whipping."
-      ],
-      "leg": [
-        "{name}'s {part} stings hot on the surface with mild warmth. {name} is annoyed and shaken, with a brief hitch or slight limp in {his} stride.",
-        "{name}'s {part} aches deep in the thigh or calf, with sharp pain when {he} puts full weight on it. {name} feels frustrated and vulnerable and walks stiff-legged, avoiding bending the knee.",
-        "{name}'s {part} is excruciating with every step, full of deep pulsing pressure, the toes cold. {name} is panicked, in agony and exhausted; {he} cannot put weight on the leg and drags it or needs support to move.",
-        "{name}'s {part} pulls tight and tears at the scab when {he} bends the knee or hip, and throbs heavily when {he} stands. {name} is weary of the slow recovery, limps, and needs to rest the leg raised.",
-        "{name}'s {part} is slightly stiff in the morning or the cold, the scar less flexible than the skin around it. {name} is relieved and regaining confidence, walking almost normally but hesitating before jumping or running.",
-        "{name}'s {part} has its full strength and movement again; the scar aches faintly in cold weather, a quiet reminder of the whipping."
-      ]
+      "torture": {
+        "head": [
+          "{name}'s face burns with a sharp, hot sting that throbs with {his} pulse. {name} feels shock, indignity and a rush of adrenaline, and winces and squints whenever {he} speaks.",
+          "{name}'s face aches deeply under a searing cut; the skin feels stretched to bursting. {name} is torn between burning anger and fear; {his} vision on that side is blurred, and {he} holds {his} jaw rigid because opening {his} mouth pulls the cut wider.",
+          "{name}'s face is blinding, sickening agony; {he} is lightheaded and nauseous. {name} is in shock, terrified or dissociating; {he} cannot see on that side, {his} speech is slurred, and turning {his} head brings sharp, agonizing winces."
+        ],
+        "body": [
+          "{name}'s back burns like a concentrated sunburn, and clothing rubbing against it hurts at once. {name} is stunned and hyper-aware of {his} skin, breathing shallowly so {his} ribs do not stretch the welts.",
+          "{name}'s back throbs deep inside, sharper with every twist or step; clothing feels like sandpaper on raw nerves. {name} is resentful and enduring it stoically, unable to lean back, holding a rigid forward-leaning posture.",
+          "{name}'s back is tearing agony that spikes with every breath, and {he} shivers with cold from shock. {name} is helpless, horrified, close to collapse; {he} cannot stand straight, bend or twist, and gasps in quick shallow breaths."
+        ],
+        "arm": [
+          "{name}'s {part} stings with a sharp snap of pain fading into a lingering warm burn. {name} instinctively protects it and hesitates to bend it or carry anything.",
+          "{name}'s {part} throbs heavily deep in the muscle, flaring when {he} bends the elbow or grips. {name} is irritable and guarding; {his} grip is weak and {he} cradles the arm against {his} chest.",
+          "{name}'s {part} is searing, tearing pain with burning nerve shocks down into the fingers. {name} is in despair, shock or desperate rage; the arm is useless, and {he} cannot bend it, hold anything or make a fist."
+        ],
+        "leg": [
+          "{name}'s {part} stings hot on the surface with mild warmth. {name} is annoyed and shaken, with a brief hitch or slight limp in {his} stride.",
+          "{name}'s {part} aches deep in the thigh or calf, with sharp pain when {he} puts full weight on it. {name} feels frustrated and vulnerable and walks stiff-legged, avoiding bending the knee.",
+          "{name}'s {part} is excruciating with every step, full of deep pulsing pressure, the toes cold. {name} is panicked, in agony and exhausted; {he} cannot put weight on the leg and drags it or needs support to move."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal apart from an occasional phantom itch or ache in the cold. Touching the scar brings back a quiet memory of the whipping.",
+          "{name}'s facial scar is hypersensitive to touch, cold air and sweat, and pulls tight when {he} smiles or frowns. {name} flinches when anyone reaches toward {his} face.",
+          "{name}'s face itches maddeningly, and the scabs pull tight and crack whenever {he} moves it. {name} is frustrated and self-conscious about the disfigurement, and speaks and chews with small, guarded jaw movements."
+        ],
+        "body": [
+          "{name}'s back has its full movement and strength again. {name} startles badly if touched on the back or approached from behind.",
+          "{name}'s back pulls tight when {he} stretches or twists, with numb patches over the scars. {name} is wary of anyone behind {him}; sudden movements bring a sharp tug.",
+          "{name}'s back itches deep down where {he} cannot safely scratch, and the skin pulls tight when {he} reaches or bends. {name} is weary and on guard against being touched; {he} cannot lie on {his} back and moves slowly and carefully."
+        ],
+        "arm": [
+          "{name}'s {part} has its full feeling, strength and movement again. The scar is a quiet reminder of the whipping.",
+          "{name}'s {part} is tender when bumped and slightly tight at full extension. {name} has accepted the mark; the arm works, with minor stiffness in fine or heavy work.",
+          "{name}'s {part} is stiff, and straightening it threatens to split the scab; it itches constantly. {name} is frustrated at being limited and cannot reach far or carry heavy loads."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength and movement again; the scar aches faintly in cold weather, a quiet reminder of the whipping.",
+          "{name}'s {part} is slightly stiff in the morning or the cold, the scar less flexible than the skin around it. {name} is relieved and regaining confidence, walking almost normally but hesitating before jumping or running.",
+          "{name}'s {part} pulls tight and tears at the scab when {he} bends the knee or hip, and throbs heavily when {he} stands. {name} is weary of the slow recovery, limps, and needs to rest the leg raised."
+        ]
+      }
     }
   },
   "narration": {
@@ -222,16 +216,11 @@
       "hit_noun": "lash"
     },
     "heal": {
-      "stage": {
-        "medium": "The open lacerations on {name}'s {part} have closed into deep, bruised welts.",
-        "light": "The welts on {name}'s {part} have faded to sore red marks.",
-        "recovering": "The wounds on {name}'s {part} have scabbed over.",
-        "mostly_healed": "The scabs on {name}'s {part} have fallen away, leaving pink scar tissue.",
-        "healed": "The pink scar tissue on {name}'s {part} has faded to a faint, pale scar line; that wound has fully healed."
-      },
-      "source_healed": "All of {name}'s whip wounds have healed.",
-      "part_healed": "Every injury on {name}'s {part} has healed.",
-      "passive": "{text} This is only {his} body's ordinary healing; the people of Skyrim mend quickly, and nobody would think it worth remarking on."
+      "level": {
+        "high": "Only faint pink scar lines remain on {name}'s {parts}; those wounds have almost healed.",
+        "mid": "The scabs on {name}'s {parts} have fallen away, leaving pink scar tissue.",
+        "low": "The wounds on {name}'s {parts} have scabbed over."
+      }
     },
     "heal_events": {
       "nouns": {

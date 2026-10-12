@@ -52,21 +52,9 @@ namespace
         return InjuryEngine::HasOpenWounds(actor);
     }
 
-    std::vector<RE::Actor*> TakeHealedActors(RE::StaticFunctionTag*)
+    bool IsHealing(RE::StaticFunctionTag*, RE::Actor* actor)
     {
-        auto result = InjuryEngine::TakeHealedActors();
-        Overlay::Notify();
-        return result;
-    }
-
-    std::vector<RE::Actor*> TakeQueuedHealActors(RE::StaticFunctionTag*)
-    {
-        return InjuryEngine::TakeQueuedHealActors();
-    }
-
-    std::vector<std::int32_t> TakeHealed(RE::StaticFunctionTag*, RE::Actor* actor)
-    {
-        return InjuryEngine::TakeHealed(actor);
+        return InjuryEngine::IsHealing(actor);
     }
 
     std::vector<std::int32_t> TakeHits(RE::StaticFunctionTag*)
@@ -224,9 +212,9 @@ namespace
         return InjuryEngine::LevelText(sourceId.c_str(), victim, level);
     }
 
-    RE::BSFixedString HealText(RE::StaticFunctionTag*, RE::Actor* victim, std::vector<std::int32_t> codes)
+    RE::BSFixedString HealMapText(RE::StaticFunctionTag*, RE::Actor* victim)
     {
-        return InjuryEngine::HealText(victim, codes);
+        return InjuryEngine::HealMapText(victim);
     }
 
     RE::BSFixedString SourceHealText(RE::StaticFunctionTag*, std::int32_t kind, std::int32_t source, std::int32_t percent,
@@ -329,9 +317,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("HealPart", s, HealPart);
     a_vm->RegisterFunction("PartIndex", s, PartIndex);
     a_vm->RegisterFunction("HasOpenWounds", s, HasOpenWounds);
-    a_vm->RegisterFunction("TakeHealedActors", s, TakeHealedActors);
-    a_vm->RegisterFunction("TakeQueuedHealActors", s, TakeQueuedHealActors);
-    a_vm->RegisterFunction("TakeHealed", s, TakeHealed);
+    a_vm->RegisterFunction("IsHealing", s, IsHealing);
     a_vm->RegisterFunction("TakeHits", s, TakeHits);
     a_vm->RegisterFunction("HitVictims", s, HitVictims);
     a_vm->RegisterFunction("HitAttackers", s, HitAttackers);
@@ -353,7 +339,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("QueueHit", s, QueueHit);
     a_vm->RegisterFunction("LogLine", s, LogLine);
     a_vm->RegisterFunction("LevelText", s, LevelText);
-    a_vm->RegisterFunction("HealText", s, HealText);
+    a_vm->RegisterFunction("HealMapText", s, HealMapText);
     a_vm->RegisterFunction("SourceHealText", s, SourceHealText);
     a_vm->RegisterFunction("ActionText", s, ActionText);
     a_vm->RegisterFunction("SceneText", s, SceneText);

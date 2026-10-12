@@ -30,15 +30,15 @@ Declared in `Scripts/Source/SkyrimNet_Whipped_Engine.psc`, registered in `Papyru
 
 ## Logging
 
-`SkyrimNet_Whipped.log` (`plugin.cpp` `InitLog`) starts at `info`. The native `SetVerboseLogging` (setting `whip.debug.verbose_logging`, pushed by `ApplyPluginConfig`) switches the spdlog level to `debug`, so `SKSE::log::debug` lines appear: hook damage, classifier decisions, health taken / converted, heal queue, taken hits / heals, sync events, overlay pushes, co-save contents. Anything logged before the first `ApplyPluginConfig` (plugin load, `kDataLoaded`, co-save load) is at info level only. Arguments of `debug` calls are still evaluated when the level is `info`, so keep them cheap on hot paths (`ConvertHealth` logs only when points were healed).
+`SkyrimNet_Whipped.log` (`plugin.cpp` `InitLog`) starts at `info`. The native `SetVerboseLogging` (setting `whip.debug.verbose_logging`, pushed by `ApplyPluginConfig`) switches the spdlog level to `debug`, so `SKSE::log::debug` lines appear: hook damage, classifier decisions, health taken / converted, taken hits, sync events, overlay pushes, co-save contents. Anything logged before the first `ApplyPluginConfig` (plugin load, `kDataLoaded`, co-save load) is at info level only. Arguments of `debug` calls are still evaluated when the level is `info`, so keep them cheap on hot paths (`ConvertHealth` logs only when points were healed).
 
 ## Overlay
 
 - Setting `whip.overlay.enabled` ("Show whipping overlay").
 - `Overlay::Init` on `kDataLoaded`: PrismaUI API, `CreateView("SkyrimNet_Whipped/overlay.html")`. PrismaUI is a listed requirement; if it is missing anyway → no overlay, everything else works.
-- The natives `Hit`, `SyncHealth`, `TakeHealedActors`, `TakeHits` and `Forget` call `Overlay::Notify`, which pushes `OverlayJson` to JS `whipUpdate(json)` only when it differs from the last push.
+- The natives `Hit`, `SyncHealth`, `TakeHits` and `Forget` call `Overlay::Notify`, which pushes `OverlayJson` to JS `whipUpdate(json)` only when it differs from the last push.
 - The view is shown, never focused (no pause, no cursor).
-- Page: `#WhippedPanel` with a white title ("Whip Damage", from `whipping.json` `overlay.title`) above `.actor-whipped-damage-bars`: one name-only bar per whipped actor, most recently hit first; red damage fill or yellow healing fill. Real damage replacing whip damage grows a darker red segment (`overlay.colors.replaced`) from the left while the whip fill shrinks; an actor with no whip damage left is dropped and the panel hides when nobody has whip damage; the whole overlay fades 3 s after the last change. Numbers, thresholds and colors come from the JSON in every push (the page has no copies).
+- Page: `#WhippedPanel` with a white title ("Whip Damage", from `whipping.json` `overlay.title`) above `.actor-whipped-damage-bars`: one name-only bar per whipped actor, most recently hit first; width = whole-body torture points, red fill by average stage, light blue (`overlay.colors.healing`) while a healing source works on the actor (heal session). Real damage replacing whip damage grows a darker red segment (`overlay.colors.replaced`) from the left while the whip fill shrinks; an actor with no whip damage left is dropped and the panel hides when nobody has whip damage; the whole overlay fades 3 s after the last change. Numbers, thresholds and colors come from the JSON in every push (the page has no copies).
 
 ## Lifecycle
 

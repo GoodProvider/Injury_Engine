@@ -1,0 +1,12 @@
+{
+  "FormKey": "00081B:SkyrimNet_Whipped.esp",
+  "EditorID": "SkyrimNet_Whipped_QuietDialogue",
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "SkyrimNet Whipped quiet barks"
+  },
+  "Flags": [
+    "StartGameEnabled"
+  ],
+  "Priority": 100
+}
