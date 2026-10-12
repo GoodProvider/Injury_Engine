@@ -33,6 +33,7 @@ Schema: `SKSE/Plugins/SkyrimNet/config/plugins/SkyrimNet_Whipped/manifest.yaml`.
 | `whip.narration.enabled`, `.cooldown`, `.max_distance`, `.event_ttl` | Narration gate (`cooldown`: healing only) |
 | `whip.narration.torture_narration_window_size` | Unused since passive heals are no longer narrated (was `InTortureSession`); torture narration itself is a session (`NarrateHits`: start narration, summary 2 s after the last hit) |
 | `whip.narration.torture_maximum_break` | Seconds without a hit that end the torture session (no line; stops \"again\"), default 3 |
+| `whip.narration.health_narration_cooloff` | Seconds between spoken (DirectNarration) real-damage narrations, default 6; hits in between, or while the speech queue is busy, are short-lived events |
 | `whip.narration.torture_direct_narration_gap` | Seconds between combined "again" narrations during continuous torture, default 6 |
 | `whip.overlay.enabled` | Overlay on/off |
 | `whip.debug.verbose_logging` | `Main.verbose_logging`; passed to the DLL (`SetVerboseLogging`) |

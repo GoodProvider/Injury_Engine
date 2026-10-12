@@ -60,6 +60,9 @@ Bool Property give_healing_hands = True Auto Hidden
 Float Property regen_rate = 10.0 Auto Hidden
 Bool Property narration_enabled = True Auto Hidden
 Float Property narration_cooldown = 8.0 Auto Hidden
+; Health (real damage) hits: one DirectNarration at most this often, hits in between are short-lived events
+Float Property health_narration_cooloff = 6.0 Auto Hidden
+Float Property last_health_narration = -1000.0 Auto Hidden
 Float Property torture_narration_window_size = 30.0 Auto Hidden
 ; A pause this long between hits ends the torture (end narration); this often one combined line during it
 Float Property torture_maximum_break = 3.0 Auto Hidden
@@ -234,6 +237,7 @@ Function ApplyPluginConfig()
     regen_rate = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.healing.regen_rate", DefaultNumber("regen_rate", 10.0))
     narration_enabled = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.narration.enabled", DefaultBool("narration_enabled"))
     narration_cooldown = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.cooldown", DefaultNumber("narration_cooldown", 8.0))
+    health_narration_cooloff = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.health_narration_cooloff", DefaultNumber("health_narration_cooloff", 6.0))
     torture_narration_window_size = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_narration_window_size", DefaultNumber("torture_narration_window_size", 30.0))
     torture_maximum_break = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_maximum_break", DefaultNumber("torture_maximum_break", 3.0))
     torture_direct_narration_gap = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_direct_narration_gap", DefaultNumber("torture_direct_narration_gap", 6.0))
@@ -370,8 +374,15 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
     endif
     if kind == "health"
         if msg != ""
-            Trace("NarrateInjury", source + " short-lived event: " + msg)
-            RegisterInjuryShortEvent(msg, attacker, victim, kind, source, attacker, victim)
+            Float now = Utility.GetCurrentRealTime()
+            Bool cooled = now < last_health_narration || now - last_health_narration >= health_narration_cooloff
+            if narration_enabled && cooled && SkyrimNetApi.GetSpeechQueueSize() == 0
+                last_health_narration = now
+                DirectNarrate(msg, attacker, victim, "health", "start")
+            else
+                Trace("NarrateInjury", source + " short-lived event: " + msg)
+                RegisterInjuryShortEvent(msg, attacker, victim, kind, source, attacker, victim)
+            endif
         endif
         return
     endif

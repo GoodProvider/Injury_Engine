@@ -88,6 +88,15 @@ schema:
       defaultValue: 6.0
       category: "Narration"
 
+    - name: "Health narration cooloff (sec)"
+      path: "whip.narration.health_narration_cooloff"
+      type: "float"
+      description: "Real damage: at most one spoken narration this often (when the speech queue is empty); hits in between are short-lived events."
+      min: 0
+      max: 120
+      defaultValue: 6.0
+      category: "Narration"
+
     - name: "Narration cooldown (sec)"
       path: "whip.narration.cooldown"
       type: "float"
