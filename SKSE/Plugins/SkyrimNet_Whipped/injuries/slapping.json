@@ -201,6 +201,10 @@
         "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to soothe {own} swelling, bruises, and sting.",
         "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to soothe {own} swelling, bruises, and sting."
       },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
       "pain_gone": {
         "none": "The sting of {name}'s slap marks is gone, but the bruises are still fading.",
         "source": "The warm light of {owner_lc} {noun} has taken the sting from {own} slap marks, but the healing continues."

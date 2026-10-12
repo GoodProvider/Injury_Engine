@@ -665,18 +665,15 @@ namespace InjuryEngine
             }
         }
 
-        // A healing source touched a tracked actor: refresh it, or start one (queuing kHealStart).
-        void Seen(RE::FormID id, const State& st, RE::Actor* caster, RE::MagicItem* item, double now)
+        // A healing source touched an actor: refresh its session, or start one (queuing kHealStart). An unhurt actor
+        // (st null or no points) still gets the start line: healing feels nice anyway.
+        void Seen(RE::FormID id, const State* st, RE::Actor* caster, RE::MagicItem* item, double now)
         {
             if (const auto it = g_healers.find(id); it != g_healers.end()) {
                 it->second.lastSeen = now;
                 return;
             }
-            const int points = TotalPoints(st);
-            if (points <= 0) {
-                SKSE::log::debug("healing source on {:08X} ignored: no points left", id);
-                return;
-            }
+            const int points = st ? TotalPoints(*st) : 0;
             Healer healer;
             if (caster) {
                 healer.caster = caster->GetHandle();
@@ -701,7 +698,7 @@ namespace InjuryEngine
             using Flag = RE::ActiveEffect::Flag;
             target->VisitActiveEffects([&](RE::ActiveEffect* ae) {
                 if (ae && !ae->flags.any(Flag::kInactive, Flag::kDispelled) && IsHealing(ae->GetBaseObject(), ae->magnitude)) {
-                    Seen(id, st, ae->caster.get().get(), ae->spell, now);
+                    Seen(id, &st, ae->caster.get().get(), ae->spell, now);
                 }
                 return RE::BSContainer::ForEachResult::kContinue;
             });
@@ -1561,14 +1558,14 @@ namespace InjuryEngine
             return;
         }
         std::lock_guard lock(g_lock);
-        const auto it = g_actors.find(target->GetFormID());
-        if (it == g_actors.end()) {
-            SKSE::log::debug("healing effect on {:08X} ignored: not tracked", target->GetFormID());
+        if (target->IsDead()) {
             return;
         }
-        SKSE::log::debug("healing effect on {:08X} item:{:08X} caster:{:08X} magnitude:{:.1f}", it->first, item ? item->GetFormID() : 0,
-            caster ? caster->GetFormID() : 0, effect->effectItem.magnitude);
-        Seen(it->first, it->second, caster ? caster->As<RE::Actor>() : nullptr, item, NowSeconds());
+        const RE::FormID id = target->GetFormID();
+        const auto it = g_actors.find(id);
+        SKSE::log::debug("healing effect on {:08X} item:{:08X} caster:{:08X} magnitude:{:.1f} tracked:{}", id, item ? item->GetFormID() : 0,
+            caster ? caster->GetFormID() : 0, effect->effectItem.magnitude, it != g_actors.end());
+        Seen(id, it != g_actors.end() ? &it->second : nullptr, caster ? caster->As<RE::Actor>() : nullptr, item, NowSeconds());
         NotifyPapyrus();
     }
 
@@ -1637,6 +1634,10 @@ namespace InjuryEngine
                 PushEvent(id, kHealStopped, &it->second, percent);
                 g_healers.erase(it);
             }
+        }
+        // Heal sessions on unhurt (untracked) actors end silently once the source is gone.
+        for (auto it = g_healers.begin(); it != g_healers.end();) {
+            it = !g_actors.contains(it->first) && now - it->second.lastSeen >= kSourceLinger ? g_healers.erase(it) : std::next(it);
         }
 
         return DrainPendingEvents();
@@ -2008,10 +2009,12 @@ namespace InjuryEngine
             return {};
         }
         int conf;
+        bool unhurt;
         {
             std::lock_guard lock(g_lock);
             const auto it = g_actors.find(target->GetFormID());
             conf = HealEventsSource(it != g_actors.end() ? &it->second : nullptr);
+            unhurt = it == g_actors.end() || TotalPoints(it->second) <= 0;
         }
         auto vars = ActorVars(target);
         const std::string name = vars["name"];
@@ -2034,6 +2037,12 @@ namespace InjuryEngine
         switch (kind) {
         case kHealStart:
             key = casterCasts ? "start.caster_casts" : "start.other";
+            if (unhurt) {
+                const char* soft = casterCasts ? "start_unhurt.caster_casts" : "start_unhurt.other";
+                if (const auto text = InjuryConfig::Str(conf, std::string("narration.heal_events.") + soft); !text.empty()) {
+                    return InjuryConfig::Render(text, vars);
+                }
+            }
             break;
         case kPainGone:
             key = healingSource == kSourceNone ? "pain_gone.none" : "pain_gone.source";

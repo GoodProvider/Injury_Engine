@@ -126,7 +126,7 @@ narration.session  (torture) switch, end, hit_noun; shared hit / mixed_hit / no_
                    in injuries/session.json (not a source)
 narration.heal.level   (torture) high / mid / low: one heal-session sentence for the parts ({parts}) of this type
                    at that heal level, e.g. "The wounds on {name}'s {parts} have scabbed over." (low)
-narration.heal_events   (whipping and generic) spell / staff / potion healing: start, pain_gone, full, stopped
+narration.heal_events   (whipping and generic) spell / staff / potion healing: start, start_unhurt (target has no wounds), pain_gone, full, stopped
 death              (health files, and the health half of a "both" file) killing-blow narration, sent once when the
                    victim dies within a few seconds of a hit of this source (setting "Narrate killing blows"):
                    lead          "{attacker} kills {name} with {form}: " (an attacker other than the victim)
