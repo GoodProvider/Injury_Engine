@@ -144,9 +144,9 @@ Removing a scene phase (the torture "end" line) from `InjuryEngine::SceneText` a
 
 Every queued hit used to get its own `NarrateRealHits` → `NarrateHits` pass (HitText, scene StorageUtil, visibility, short-lived event). At about 2 hits a second (spell ticks, quick whipping) Papyrus fell behind and `torture:short` lines came 1 to 6 s after the hit, and several shorts with the same event id (same attacker, victim, method) landed in one second although SkyrimNet keeps only the last. Now the queue merges in C++: hits of one victim, attacker and source collapse into one entry (`count`, latest part and level) and `TakeHits` releases one per key per second; a real (health) hit also releases that victim's held torture hits. Scripted strikes (`OnLash`, `Torture`) go through `QueueHit` so they are gated the same way. A merged entry narrates as "again and again" (`count` > 1).
 
-## VisitActiveEffects off the game thread crashes on dying summons
+## VisitActiveEffects calls the wrong function on AE (2026-10-11)
 
-`MagicTarget::VisitActiveEffects` walked from the Papyrus thread (`Engine.SyncHealth` → `ScanActiveEffects`) read freed effect nodes on a Potent Flame Atronach whose summon was expiring (access violation, `mov rax,[rcx]`, crash 2026-10-11). Run the scan as an SKSE task on the game thread, re-look the actor up by FormID there, and skip dead / disabled / deleted actors.
+With `ENABLE_SKYRIM_VR` (our multi-runtime CommonLib build), `MagicTarget::VisitActiveEffects` / `ForEachActiveEffect` call `REL::ID(33756)`, the SE-only id. On AE (1.6.1170) that id is an unrelated function, so every scan crashed (`SkyrimSE.exe+0FAEDF5`, `mov rax,[rcx]`, same garbage rcx each time, call stack 82307 <- 33756 <- our DLL). It was first blamed on dying summons and off-thread walks; moving the scan into an SKSE task and adding null checks did not help. Fix: use `MagicTarget::VisitEffects(ForEachActiveEffectVisitor&)` (`RELOCATION_ID(33756, 34540)`) with our own visitor class. Never use `VisitActiveEffects` in this build. The scan still runs as an SKSE task on live actors only.
 
 ## Vanilla hit barks block SkyrimNet speech (2026-10-11)
 

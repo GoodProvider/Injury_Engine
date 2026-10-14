@@ -153,6 +153,8 @@ namespace InjuryEngine
         std::vector<std::string> g_deathSources;
         // Last release time per victim|attacker|source: TakeHits lets one hit per key through per kHitGap.
         std::unordered_map<std::string, std::chrono::steady_clock::time_point> g_hitReleased;
+        // Last VisitEffects scan per tracked actor (SyncHealth throttles to once per second).
+        std::unordered_map<RE::FormID, std::chrono::steady_clock::time_point> g_lastScan;
         constexpr std::chrono::milliseconds kHitGap{ 1000 };
 
         // Queues a hit for narration. A queued hit of the same victim, attacker and source absorbs it (latest mask / level win).
@@ -605,6 +607,7 @@ namespace InjuryEngine
             g_healers.erase(id);
             g_pained.erase(id);
             g_regenBank.erase(id);
+            g_lastScan.erase(id);
         }
 
         // Applies time to the actor's entry; drops it when every injury is healed (queuing kFullyHealed) or
@@ -695,13 +698,32 @@ namespace InjuryEngine
                 return;
             }
             // The engine's own walk: on VR GetActiveEffectList() is only a temporary snapshot.
-            using Flag = RE::ActiveEffect::Flag;
-            target->VisitActiveEffects([&](RE::ActiveEffect* ae) {
-                if (ae && !ae->flags.any(Flag::kInactive, Flag::kDispelled) && IsHealing(ae->GetBaseObject(), ae->magnitude)) {
-                    Seen(id, &st, ae->caster.get().get(), ae->spell, now);
+            // VisitEffects, not VisitActiveEffects: with ENABLE_SKYRIM_VR the latter calls the SE-only REL::ID(33756),
+            // which is an unrelated function on AE and crashes.
+            struct Visitor : RE::MagicTarget::ForEachActiveEffectVisitor
+            {
+                RE::FormID   id;
+                const State& st;
+                double       now;
+                Visitor(RE::FormID a_id, const State& a_st, double a_now) : id(a_id), st(a_st), now(a_now) {}
+
+                RE::BSContainer::ForEachResult Accept(RE::ActiveEffect* ae) override
+                {
+                    using Flag = RE::ActiveEffect::Flag;
+                    // Effects being torn down (short-lived torture / quiet spells) can hold stale pointers.
+                    if (!ae || !ae->effect || !ae->spell || ae->flags.any(Flag::kInactive, Flag::kDispelled)) {
+                        return RE::BSContainer::ForEachResult::kContinue;
+                    }
+                    const auto* mgef = ae->GetBaseObject();
+                    if (mgef && IsHealing(mgef, ae->magnitude)) {
+                        Seen(id, &st, ae->caster.get().get(), ae->spell, now);
+                    }
+                    return RE::BSContainer::ForEachResult::kContinue;
                 }
-                return RE::BSContainer::ForEachResult::kContinue;
-            });
+            };
+            SKSE::log::debug("scan effects {:08X}", id);
+            Visitor visitor(id, st, now);
+            target->VisitEffects(visitor);
         }
 
         // Health above the wounded level is healing: turn it into points on random parts (torture and real alike).
@@ -1598,17 +1620,23 @@ namespace InjuryEngine
             if (!st) {
                 continue;
             }
-            // The effect list is only safe to walk on the game thread, never on a dying actor (summons expiring).
+            bool scanQueued = false;
             if (!actor->IsDead() && !actor->IsDisabled() && !actor->IsDeleted()) {
-                SKSE::GetTaskInterface()->AddTask([id]() {
-                    std::lock_guard taskLock(g_lock);
-                    auto* a = RE::TESForm::LookupByID<RE::Actor>(id);
-                    const auto found = g_actors.find(id);
-                    if (!a || found == g_actors.end() || a->IsDead() || a->IsDisabled() || a->IsDeleted() || !a->Is3DLoaded()) {
-                        return;
-                    }
-                    ScanActiveEffects(a, id, found->second, NowSeconds());
-                });
+                const auto tick = std::chrono::steady_clock::now();
+                auto& last = g_lastScan[id];
+                if (tick - last >= std::chrono::seconds(1)) {
+                    last = tick;
+                    scanQueued = true;
+                    SKSE::GetTaskInterface()->AddTask([id]() {
+                        std::lock_guard taskLock(g_lock);
+                        auto* a = RE::TESForm::LookupByID<RE::Actor>(id);
+                        const auto found = g_actors.find(id);
+                        if (!a || found == g_actors.end() || a->IsDead() || a->IsDisabled() || a->IsDeleted() || !a->Is3DLoaded()) {
+                            return;
+                        }
+                        ScanActiveEffects(a, id, found->second, NowSeconds());
+                    });
+                }
             }
             const Healer* healer = ActiveHealer(id, now);
             ConvertHealth(actor, id, *st, nowHours, healer != nullptr);
@@ -1628,7 +1656,8 @@ namespace InjuryEngine
                 Erase(id);
                 continue;
             }
-            if (const auto it = g_healers.find(id); it != g_healers.end() && !healer) {
+            // A scan queued this pass may refresh lastSeen on the game thread; do not stop the session yet.
+            if (const auto it = g_healers.find(id); it != g_healers.end() && !healer && !scanQueued) {
                 const int percent = Percent(it->second, TotalPoints(*st));
                 SKSE::log::info("heal stopped {:08X} {}%", id, percent);
                 PushEvent(id, kHealStopped, &it->second, percent);
@@ -2414,6 +2443,7 @@ namespace InjuryEngine
         g_hits.clear();
         g_lastReal.clear();
         g_deaths.clear();
+        g_lastScan.clear();
         std::uint32_t count = 0;
         if (!intfc->ReadRecordData(count)) {
             return;
@@ -2449,6 +2479,7 @@ namespace InjuryEngine
         g_events.clear();
         g_hits.clear();
         g_hitReleased.clear();
+        g_lastScan.clear();
         g_syncActors.clear();
         g_syncCasters.clear();
         g_hitVictims.clear();
