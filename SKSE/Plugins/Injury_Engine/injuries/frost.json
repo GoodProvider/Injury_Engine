@@ -53,7 +53,7 @@
     "severe"
   ],
   "hook": {
-    "points_per_second": 2
+    "points_per_second": 8
   },
   "action": {
     "verb": "freezes",

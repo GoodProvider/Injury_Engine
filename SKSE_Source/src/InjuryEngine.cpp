@@ -516,7 +516,7 @@ namespace InjuryEngine
         }
 
         // One torture hit of `source` on `part` (-1 or a part the actor can't take: weighted random by the
-        // type's part_weights). Takes the health the part's new maximum holds down. Caller holds g_lock.
+        // type's part_weights, full parts skipped while another can take a point). Takes the health the part's new maximum holds down. Caller holds g_lock.
         // Returns the hit code; `index` gets the part.
         std::int32_t TortureHit(RE::Actor* actor, RE::Actor* attacker, State& st, int source, int part, double now, int& index, float amount);
 
@@ -916,10 +916,12 @@ namespace InjuryEngine
             const auto* conf = InjuryConfig::Find(source);
             const auto& body = GetBody();
             const char* partName = partIndex >= 0 && partIndex < kPartCount ? body.partName[partIndex].c_str() : "?";
-            const float maxHealth = victim->AsActorValueOwner()->GetPermanentActorValue(RE::ActorValue::kHealth);
-            LogEvent(kind, std::format("{} \xe2\x9e\xa4 {} | {} {} point:{}+{} level:{} amount:{:.1f} health:{} skipped:{}",
+            auto* av = victim->AsActorValueOwner();
+            const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
+            // `health` is the engine's value for this point; `actual` is the victim's live game health right now.
+            LogEvent(kind, std::format("{} \xe2\x9e\xa4 {} | {} {} point:{}+{} level:{} amount:{:.1f} health:{} actual:{:.1f}/{:.1f} skipped:{}",
                 LogActor(attacker), LogActor(victim), conf ? conf->id : "?", partName, pointBefore, pointAdded, LogLevelName(level),
-                amount, FormatHealthPercent(healthAfter, maxHealth), skipped));
+                amount, FormatHealthPercent(healthAfter, maxHealth), av->GetActorValue(RE::ActorValue::kHealth), maxHealth, skipped));
         }
 
         std::string NarrationForm(int source, bool unarmed)
@@ -1062,9 +1064,17 @@ namespace InjuryEngine
             const bool female = IsFemale(actor);
             const auto* conf = InjuryConfig::Find(source);
             const auto* weight = conf ? &conf->partWeight : &body.partWeight;
+            // Full parts are skipped while any part can still take a point (a point there adds nothing).
             for (int i = 0; i < ActiveParts(); ++i) {
-                if (PartFits(female, i) && (*weight)[i] > 0.0f) {
+                if (PartFits(female, i) && (*weight)[i] > 0.0f && !PartFull(st, i)) {
                     candidates[count++] = i;
+                }
+            }
+            if (count == 0) {
+                for (int i = 0; i < ActiveParts(); ++i) {
+                    if (PartFits(female, i) && (*weight)[i] > 0.0f) {
+                        candidates[count++] = i;
+                    }
                 }
             }
             if (count == 0) {

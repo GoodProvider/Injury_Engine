@@ -2,6 +2,10 @@
 
 Quirks and lessons for Injury_Engine. Read before changes; append a dated entry (newest first) after a session that found something non-obvious. Entries marked *(from SkyrimNet_SexLab)* were learned there and apply here too.
 
+## A lethal real hit at the floor kills before torture is replaced (accepted, 2026-10-15)
+
+A sword hit on Angi, held at the 10% floor by torture (15/150), killed her: `death ... under torture, last real hit: none`, no `health:` line. `HandleHealthDamage` reports health already taken, so a hit that is lethal by itself kills before the hook runs, and `OnDamage` returns early for a dead victim (nothing replaced or logged). Kill moves can do the same. Accepted for now. Possible fix if ever wanted: cap `HitData.totalDamage` to `health - 1` for tortured victims in the `ProcessHitData` call (37673 / 38627; verify the offsets) and settle the overflow in `HandleHealthDamage`.
+
 ## ValueModifierEffect::ModifyActorValue gets kNone as its actor value (2026-10-15)
 
 The vfunc 0x20 hook on `VTABLE_ValueModifierEffect` / `VTABLE_DualValueModifierEffect` is called on every tick, but its `a_actorValue` argument is always `kNone` (`av:-1` in the log). The effect's real value is the member `ValueModifierEffect::actorValue` (0x90, set by `SetActorValue`, slot 0x19): 24 (Health) for the torture MGEFs. Filtering on the argument let every tick through; read `a_av != kNone ? a_av : this->actorValue`. Confirmed in game (12:03 run): torture Flames / Frostbite / Sparks ticks were blocked (`change:+0.000`) with the real caster as attacker.
@@ -177,3 +181,7 @@ A whip or torture hit on a friendly or neutral NPC triggered vanilla combat bark
 The plugin, DLL, scripts, config and folders were renamed from `SkyrimNet_Whipped` to `Injury_Engine` before the first release, with no migration. The SKSE co-save record is keyed by plugin name, so injuries saved under the old DLL are not loaded. The Papyrus scripts also changed names (`Injury_Engine_*`), so quest state on the Main quest (StorageUtil scene / heal lists, `in_action`) starts empty. Local form ids `0x800`–`0x821` and `Seq/Injury_Engine.seq` (a rename only; it holds local ids) are unchanged. Old copies of `SkyrimNet_Whipped.dll`, `SkyrimNet_Whipped.esp` or `SkyrimNet_Whipped_*.pex` in MO2 overwrite or another mod would load next to the new files: remove them. Siblings that look up the plugin by name (SkyrimNet_Leashed, SkyrimNet_SexLab) must be rebuilt for `Injury_Engine.esp` / `Injury_Engine_Main` (see their `injury-engine-handoff.md`).
 
 The repo / MO2 folder itself was then renamed `mods\SkyrimNet_Whipped` → `mods\Injury_Engine` (MO2 profile `modlist.txt` entry too). After any folder move, delete `SKSE_Source\build\`: its CMakeCache holds absolute paths and will not reconfigure in the new location.
+
+## Random torture picks skip full parts (2026-10-15)
+
+`TortureHit` used to pick a weighted random part for every point, full or not. A point on a full part adds nothing (the cell is clamped to `partMax`), so filling the last parts took a long random tail: a held torture spell needed well over the 60 s that `points_per_second` 2 implies. Random picks now skip parts where `PartFull` (torture + real) while any other part can take a point; requested parts (`HitPart`, a melee hit's extra points) are unchanged. Time to full is now capacity / rate: fire / frost / shock ship `points_per_second` 8, so 120 points take about 15 s (about 19 s with sexual parts on). **Confirmed** (12:23 run): Flames (torture) took Angi from full to the 10% floor in about 15 s, and the floor held at 15.0/150 while casting continued.

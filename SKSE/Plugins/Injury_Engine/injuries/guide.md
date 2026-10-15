@@ -103,7 +103,7 @@ classify           (optional) how incoming damage picks this source. Highest `pr
                    falling          true: landing damage (no hit, no attacker, still falling)
                    fallback         true: anything that matched nothing else (generic.json)
 hook.points_per_second  (torture, optional, default 2) points per real second hooked spell damage (fire / frost /
-                   shock) adds, whatever the spell's own damage
+                   shock) adds, whatever the spell's own damage. fire / frost / shock ship 8: the 6-part body (120 points) is full in about 15 s
 hook.points_per_hit     (torture, optional, default 1) points one lash / punch / hand torture adds to the part it hits
 action.alias / action.order   (torture, optional) short name for Torture_Target ("whip", "pinch", ...) and its
                    place in the type list. The source id itself is always accepted too.
