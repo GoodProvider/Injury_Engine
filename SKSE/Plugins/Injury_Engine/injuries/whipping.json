@@ -1,0 +1,258 @@
+{
+  "id": "whipping",
+  "title": "Whip Wounds",
+  "model": "torture",
+  "requires": "whip",
+  "classify": [
+    {
+      "priority": 100,
+      "ignore_weapon_file": "Injury_Engine.esp",
+      "ignore_weapon_id": "0x803"
+    }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "hook": {
+    "points_per_hit": 2
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "defaults": {
+    "require_whip": true,
+    "give_to_player": true,
+    "max_strikes": 10,
+    "hours_per_point": 1.0,
+    "give_healing_hands": true,
+    "regen_rate": 10,
+    "narration_enabled": true,
+    "narration_cooldown": 8,
+    "health_narration_cooloff": 6,
+    "torture_narration_window_size": 30,
+    "torture_maximum_break": 3,
+    "torture_direct_narration_gap": 6,
+    "narration_max_distance": 15,
+    "event_ttl": 30,
+    "include_sexual_parts": false,
+    "overlay_enabled": true
+  },
+  "overlay": {
+    "title": "Torture Damage",
+    "order": [
+      0,
+      3,
+      2,
+      1,
+      5,
+      4
+    ],
+    "colors": {
+      "light": "#e8837a",
+      "medium": "#d0342c",
+      "severe": "#7a0c0c",
+      "replaced": "#3d0606",
+      "healing": "#8fd3ff"
+    }
+  },
+  "action": {
+    "alias": "whip",
+    "order": 1,
+    "description": "Torture {target} {strikes} times to punish, discipline or hurt them. {type} picks how: whip (lash them with the padded whip; needs a whip), pinch (pinch and twist their skin), slap (slap them with an open hand), pull (pull their hair, ears or limbs) or punch (beat them with your fists).",
+    "no_whip": "{speaker} reaches for a whip to punish {target}, but has none.",
+    "impact_nodes": [
+      "NPC Spine2 [Spn2]",
+      "NPC Spine1 [Spn1]",
+      "NPC Pelvis [Pelv]"
+    ]
+  },
+  "text": {
+    "looks_heading": "### Whip Wounds",
+    "feels_intro": "How {name}'s whip wounds feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a bright red diagonal welt crosses {his} cheek or forehead, raised and swollen; the skin is unbroken.",
+        "{name}'s face: a deep red-to-purple welt with thin splits of broken skin beaded with dark blood; swelling is starting to close one of {his} eyes. A sour smell of sweat clings to {him}.",
+        "{name}'s face: gaping lacerations with raw strands across the wound; dark blood pours down {his} jaw and neck; one eye is swollen shut and the rest of {his} face is deathly pale. {name} smells of sweat and fresh blood."
+      ],
+      "body": [
+        "{name}'s back: long, raised pink-red stripes cross {his} shoulder blades and ribs; no open wounds. {name} smells of fresh sweat.",
+        "{name}'s back: parallel tramline bruises, dark red-purple raised borders around paler strips, with small cuts and pinpoint bleeding. {name} smells of sweat with a faint tang of blood.",
+        "{name}'s back and torso: ragged, deep lacerations cut through the skin into the flesh beneath; huge purple-black bruises spread across {him}; dark blood soaks {his} clothing. The coppery smell of blood and sour sweat clings to {him}."
+      ],
+      "arm": [
+        "{name}'s {part}: a diagonal red welt across the forearm or upper arm with slight swelling.",
+        "{name}'s {part}: a wide purple bruise with pinpoint bleeding under the skin and scraped lines; the arm looks visibly thickened. It smells faintly of sweat and blood.",
+        "{name}'s {part}: gaping lacerations expose raw tissue; dark blood drips down the wrist and fingers; the hand is puffy and swollen. The smell of blood rises from the welts."
+      ],
+      "leg": [
+        "{name}'s {part}: a straight red welt across the thigh or calf, slightly raised, no bleeding.",
+        "{name}'s {part}: a broad purple bruise with distinct parallel red borders; the muscle is visibly swollen. It smells faintly of sweat and blood.",
+        "{name}'s {part}: a deep, jagged laceration into the muscle; dark blood runs down the shin into {his} boot; the leg is badly swollen. The smell of blood clings to {his} boot."
+      ]
+    },
+    "feels": {
+      "torture": {
+        "head": [
+          "{name}'s face burns with a sharp, hot sting that throbs with {his} pulse. {name} feels shock, indignity and a rush of adrenaline, and winces and squints whenever {he} speaks.",
+          "{name}'s face aches deeply under a searing cut; the skin feels stretched to bursting. {name} is torn between burning anger and fear; {his} vision on that side is blurred, and {he} holds {his} jaw rigid because opening {his} mouth pulls the cut wider.",
+          "{name}'s face is blinding, sickening agony; {he} is lightheaded and nauseous. {name} is in shock, terrified or dissociating; {he} cannot see on that side, {his} speech is slurred, and turning {his} head brings sharp, agonizing winces."
+        ],
+        "body": [
+          "{name}'s back burns like a concentrated sunburn, and clothing rubbing against it hurts at once. {name} is stunned and hyper-aware of {his} skin, breathing shallowly so {his} ribs do not stretch the welts.",
+          "{name}'s back throbs deep inside, sharper with every twist or step; clothing feels like sandpaper on raw nerves. {name} is resentful and enduring it stoically, unable to lean back, holding a rigid forward-leaning posture.",
+          "{name}'s back is tearing agony that spikes with every breath, and {he} shivers with cold from shock. {name} is helpless, horrified, close to collapse; {he} cannot stand straight, bend or twist, and gasps in quick shallow breaths."
+        ],
+        "arm": [
+          "{name}'s {part} stings with a sharp snap of pain fading into a lingering warm burn. {name} instinctively protects it and hesitates to bend it or carry anything.",
+          "{name}'s {part} throbs heavily deep in the muscle, flaring when {he} bends the elbow or grips. {name} is irritable and guarding; {his} grip is weak and {he} cradles the arm against {his} chest.",
+          "{name}'s {part} is searing, tearing pain with burning nerve shocks down into the fingers. {name} is in despair, shock or desperate rage; the arm is useless, and {he} cannot bend it, hold anything or make a fist."
+        ],
+        "leg": [
+          "{name}'s {part} stings hot on the surface with mild warmth. {name} is annoyed and shaken, with a brief hitch or slight limp in {his} stride.",
+          "{name}'s {part} aches deep in the thigh or calf, with sharp pain when {he} puts full weight on it. {name} feels frustrated and vulnerable and walks stiff-legged, avoiding bending the knee.",
+          "{name}'s {part} is excruciating with every step, full of deep pulsing pressure, the toes cold. {name} is panicked, in agony and exhausted; {he} cannot put weight on the leg and drags it or needs support to move."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal apart from an occasional phantom itch or ache in the cold. Touching the scar brings back a quiet memory of the whipping.",
+          "{name}'s facial scar is hypersensitive to touch, cold air and sweat, and pulls tight when {he} smiles or frowns. {name} flinches when anyone reaches toward {his} face.",
+          "{name}'s face itches maddeningly, and the scabs pull tight and crack whenever {he} moves it. {name} is frustrated and self-conscious about the disfigurement, and speaks and chews with small, guarded jaw movements."
+        ],
+        "body": [
+          "{name}'s back has its full movement and strength again. {name} startles badly if touched on the back or approached from behind.",
+          "{name}'s back pulls tight when {he} stretches or twists, with numb patches over the scars. {name} is wary of anyone behind {him}; sudden movements bring a sharp tug.",
+          "{name}'s back itches deep down where {he} cannot safely scratch, and the skin pulls tight when {he} reaches or bends. {name} is weary and on guard against being touched; {he} cannot lie on {his} back and moves slowly and carefully."
+        ],
+        "arm": [
+          "{name}'s {part} has its full feeling, strength and movement again. The scar is a quiet reminder of the whipping.",
+          "{name}'s {part} is tender when bumped and slightly tight at full extension. {name} has accepted the mark; the arm works, with minor stiffness in fine or heavy work.",
+          "{name}'s {part} is stiff, and straightening it threatens to split the scab; it itches constantly. {name} is frustrated at being limited and cannot reach far or carry heavy loads."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength and movement again; the scar aches faintly in cold weather, a quiet reminder of the whipping.",
+          "{name}'s {part} is slightly stiff in the morning or the cold, the scar less flexible than the skin around it. {name} is relieved and regaining confidence, walking almost normally but hesitating before jumping or running.",
+          "{name}'s {part} pulls tight and tears at the scab when {he} bends the knee or hip, and throbs heavily when {he} stands. {name} is weary of the slow recovery, limps, and needs to rest the leg raised."
+        ]
+      }
+    }
+  },
+  "narration": {
+    "form": "a biting leather lash",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is hit",
+      "verb_many": " are hit",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}'s whip",
+      "by_none": " with the whip",
+      "levels": [
+        ", a sudden, sharp slap of raw shock. The bite is clean and hot, an electric burst that rattles {his} nerves and makes {him} flinch, leaving a pulsing throb behind as {his} body scrambles to react.",
+        " across skin that is already tender. The dull ache spikes into a searing, white-hot flash as the lash digs into swollen, inflamed flesh, driving the breath from {his} lungs and turning a sore spot into radiating fire.",
+        ", and the blow tears open knitting skin and crushes half-healed muscle. The steady throb becomes a blinding, nauseating jolt that drops straight into {his} gut, breaking {his} composure and forcing an involuntary gasp or moan from {him}. The smell of sweat and blood rises from {him}.",
+        ", and it is too much. The strike feels less like pain than demolition, a whiteout of primal agony that throws {him} into shock: the blood drains from {his} face, cold sweat breaks out, {his} vision tunnels, and {he} loses all control of {his} body."
+      ]
+    },
+    "summary": {
+      "times": {
+        "once": "once",
+        "twice": "twice",
+        "several": "several times",
+        "many": "again and again"
+      }
+    },
+    "session": {
+      "switch": "switches to whipping",
+      "hit_noun": "lash"
+    },
+    "heal": {
+      "level": {
+        "high": "Only faint pink scar lines remain on {name}'s {parts}; those wounds have almost healed.",
+        "mid": "The scabs on {name}'s {parts} have fallen away, leaving pink scar tissue.",
+        "low": "The wounds on {name}'s {parts} have scabbed over."
+      }
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} welts, wounds, and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} welts, wounds, and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s welts is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} welts, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s whip wounds are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s whip wounds are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s whip wounds are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} wounds are {progress}."
+    }
+  }
+}

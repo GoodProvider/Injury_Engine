@@ -12,12 +12,12 @@ quad = v + ".0"
 comma = quad.replace(".", ",")
 
 CHECKS = [
-    ("SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/manifest.json",
+    ("SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine/manifest.json",
      r'"version"\s*:\s*"([^"]+)"', v),
-    ("SKSE/Plugins/SkyrimNet/config/plugins/SkyrimNet_Whipped/manifest.yaml",
+    ("SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml",
      r'^\s*version:\s*"([^"]+)"', v),
     ("SKSE_Source/CMakeLists.txt",
-     r'project\(SkyrimNet_Whipped\s+VERSION\s+([0-9.]+)', v),
+     r'project\(Injury_Engine\s+VERSION\s+([0-9.]+)', v),
     ("SKSE_Source/version.rc", r'FILEVERSION\s+([0-9,]+)', comma),
     ("SKSE_Source/version.rc", r'PRODUCTVERSION\s+([0-9,]+)', comma),
     ("SKSE_Source/version.rc", r'"FileVersion",\s*"([^"]+)"', quad),

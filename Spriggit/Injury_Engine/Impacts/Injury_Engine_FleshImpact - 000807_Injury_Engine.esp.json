@@ -1,0 +1,23 @@
+{
+  "FormKey": "000807:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_FleshImpact",
+  "Duration": 0.11,
+  "Orientation": "ProjectileVector",
+  "AngleThreshold": 85.0,
+  "PlacementRadius": 2.0,
+  "SoundLevel": "Normal",
+  "Decal": {
+    "MinWidth": 20.0,
+    "MaxWidth": 20.0,
+    "MinHeight": 20.0,
+    "MaxHeight": 20.0,
+    "Depth": 4.0,
+    "Shininess": 100000.0,
+    "ParallaxScale": 1.0,
+    "ParallaxPasses": 4,
+    "Unknown": 64,
+    "Color": "#00FFFFFF"
+  },
+  "TextureSet": "00080E:Injury_Engine.esp",
+  "Sound1": "00080B:Injury_Engine.esp"
+}

@@ -1,0 +1,211 @@
+{
+  "id": "fire",
+  "title": "Scorch Marks",
+  "model": "torture",
+  "requires": "",
+  "classify": [
+    { "priority": 90, "resist": "ResistFire", "effect_file": "Injury_Engine.esp", "effect_id": "0x813" }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "hook": {
+    "points_per_second": 2
+  },
+  "action": {
+    "verb": "scorches",
+    "animation": ""
+  },
+  "text": {
+    "looks_heading": "### Scorch Marks",
+    "feels_intro": "How {name}'s scorch marks feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a hot red flush where the flame was played across {his} cheek or brow, the skin tight and glossy; the tips of {his} eyebrows are curled and singed. A faint smell of burnt hair hangs about {him}.",
+        "{name}'s face: taut, shining blisters swell along the cheek and jaw, some already broken and weeping clear fluid; the eyebrow on that side is gone, the hairline frizzled to brittle stubble. {name} smells of scorched hair and cooked skin.",
+        "{name}'s face: the slow flame has done its worst; patches of skin are blackened and leathery, split at the edges into raw, weeping red; the eyelid is swollen shut and the hair above it is burnt away. The sickly-sweet stench of seared flesh clings to {him}."
+      ],
+      "body": [
+        "{name}'s back: blotches of angry red skin across {his} shoulder blades where the flame was trailed slowly over {him}, hot to the touch; the fine hairs there are singed away. A faint scorched smell rises from {his} skin.",
+        "{name}'s back: rows of fat, glistening blisters cluster where the flame lingered, several burst and weeping, the skin between them a deep, swollen red. The smell of singed hair and scalded skin clings to {him}.",
+        "{name}'s back: broad patches seared black and leathery, cracked open into raw, weeping flesh; blisters the size of a palm sag and drip, and nothing can be laid against it. The cloying stench of burnt flesh hangs around {him}."
+      ],
+      "arm": [
+        "{name}'s {part}: a reddened streak of skin along the forearm or upper arm, tight and hot, the fine hairs singed into tiny curls. A faint smell of burnt hair rises from it.",
+        "{name}'s {part}: swollen red skin raised in taut, watery blisters, a few broken and weeping, the hair burnt away entirely. It smells of singed skin.",
+        "{name}'s {part}: the skin is blackened and stiff in patches, split into raw, weeping cracks; the hand below is puffy and swollen. It reeks of seared flesh."
+      ],
+      "leg": [
+        "{name}'s {part}: a hot red patch across the thigh or calf where the flame was held, the skin tight and the hair singed short. A faint smell of burnt hair rises from it.",
+        "{name}'s {part}: blisters bubble up across the reddened skin, swollen and glistening, some broken and weeping down the leg. It smells of scorched skin and hair.",
+        "{name}'s {part}: patches burnt black and leathery, cracked through to raw, oozing flesh; the leg is swollen and angry red around them. The stench of seared flesh rises from it."
+      ]
+    },
+    "feels": {
+      "torture": {
+        "head": [
+          "{name}'s face stings with a hot, tight burn, as if {he} had stood too long at a forge, and every flush of blood makes it prickle. {name} is shaken and indignant, squinting, and keeps turning {his} face away from any warmth.",
+          "{name}'s face burns with a deep, pulsing heat, and the blisters throb and pull whenever {he} moves {his} mouth. {name} is frightened and furious at once, speaking stiffly through a barely open mouth and flinching from every candle and torch.",
+          "{name}'s face is searing, relentless agony that does not fade even when the flame is gone, and {he} is shivering and sick with it. {name} is in shock or close to panic, half blind on that side, words coming slurred and broken, and the sight of any flame makes {him} recoil."
+        ],
+        "body": [
+          "{name}'s back burns like a sunburn under a hot hand, and the brush of clothing makes it flare. {name} is jumpy and hyper-aware of {his} skin, holding {his} shoulders stiff and away from anything that might touch {him}.",
+          "{name}'s back is a pulsing, scalding ache, and the blisters pull and tear whenever {he} twists or breathes deep. {name} is resentful and enduring it through gritted teeth, holding a rigid, forward-leaning posture and unable to lean back.",
+          "{name}'s back is blazing agony that keeps burning long after the flame is gone, and {he} shakes with cold and nausea from the shock. {name} is helpless and horrified, close to collapse, gasping in shallow breaths and unable to bear the lightest touch."
+        ],
+        "arm": [
+          "{name}'s {part} stings with a hot, prickling burn, like skin held too close to a candle. {name} holds it away from {his} body and sleeves, wary of moving it.",
+          "{name}'s {part} burns with a throbbing heat, and the blisters ache and pull when {he} bends the elbow or grips. {name} is irritable and guarding, cradling the arm and unable to hold anything firmly.",
+          "{name}'s {part} is searing agony that pulses down into the fingers, the burn still raging long after the flame. {name} is in despair or desperate rage; the arm is useless and {he} cannot bear anything to touch it."
+        ],
+        "leg": [
+          "{name}'s {part} stings hot on the surface, prickling under cloth. {name} is annoyed and shaken, walking with a slight, careful hitch so nothing rubs it.",
+          "{name}'s {part} throbs with scalding heat, and the blisters pull with every step. {name} feels frustrated and vulnerable, walking stiff-legged and wincing as cloth drags across it.",
+          "{name}'s {part} is blazing agony with every step, the burn throbbing as if the flame were still on it. {name} is panicked, exhausted and shaking; {he} cannot put weight on the leg and needs support to move."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal again apart from a faint tightness in the cold. The warmth of a hearth on that cheek brings back a quiet memory of the flame, and {he} flinches a little near open fire.",
+          "{name}'s face is tight and tender where the new skin is, prickling in the cold and stinging under sweat. {name} shies away from the heat of a fire and from hands reaching toward {his} face.",
+          "{name}'s face itches maddeningly as the dead skin peels, and the scabs crack when {he} smiles or frowns. {name} is self-conscious and tired, moving {his} face as little as {he} can."
+        ],
+        "body": [
+          "{name}'s back has its full movement again; only a faint tightness lingers. The heat of a fire at {his} back makes {him} tense and flinch, a quiet memory of the flame.",
+          "{name}'s back feels tight and thin-skinned where the new skin is, stinging under sweat or a rough shirt. {name} is wary of anyone behind {him} and keeps clear of hot hearths.",
+          "{name}'s back itches deep under the peeling skin where {he} cannot scratch, and it pulls tight when {he} reaches or bends. {name} is weary and on guard, unable to lie on {his} back, moving slowly and carefully."
+        ],
+        "arm": [
+          "{name}'s {part} has its full feeling and strength again. Reaching toward a fire brings a small flinch and a quiet memory of the flame.",
+          "{name}'s {part} is tender and tight where the new skin is, stinging when bumped or warmed. {name} keeps it back from cooking fires and hot iron.",
+          "{name}'s {part} is stiff and itches as the skin peels, and straightening it cracks the crusts. {name} is frustrated at being limited and cannot reach far or carry much."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength and movement again; the old burn tightens faintly in the cold. Sitting near a fire brings a small flinch, a quiet memory of the flame.",
+          "{name}'s {part} is tender and tight where the new skin is, stinging in the cold or under rough cloth. {name} walks almost normally but keeps the leg back from the fire.",
+          "{name}'s {part} is tight and itching as the dead skin peels, cracking when {he} bends the knee. {name} is weary of the slow mending and limps, resting the leg whenever {he} can."
+        ]
+      }
+    }
+  },
+  "narration": {
+    "form": "burning hot flames",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is scorched",
+      "verb_many": " are scorched",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}'s flames",
+      "by_none": " with a slow, licking flame",
+      "levels": [
+        ", the small flame passed slowly over bare skin. The heat builds from a warm prickle to a sharp, biting sting, and {he} jerks and hisses as the skin reddens and the fine hairs curl. A smell of singed hair rises.",
+        " over skin that is already reddened and tight. The heat sinks into the tender burn and it flares into a scalding throb; {he} cries out as fresh blisters rise and {his} breath comes ragged. The smell of scorched hair and skin thickens.",
+        ", and the flame settles on blistered, weeping skin. Blisters swell and burst under the heat, and the pain becomes a sickening, unrelenting blaze that tears a scream from {him} and leaves {him} shaking. The smell of seared skin hangs in the air.",
+        ", and it is too much. The flame lingers on raw, seared flesh until the skin blackens and cracks; {he} howls and then goes grey and slack, cold sweat breaking out as shock takes {him} and {his} body stops obeying {him}. The stench of burnt flesh fills the air."
+      ]
+    },
+    "summary": {
+      "times": {
+        "once": "once",
+        "twice": "twice",
+        "several": "several times",
+        "many": "again and again"
+      }
+    },
+    "session": {
+      "switch": "switches to casting flames",
+      "hit_noun": "flame"
+    },
+    "heal": {
+      "level": {
+        "high": "The new skin on {name}'s {parts} is settling into a faint discoloration; the burns have almost healed.",
+        "mid": "The crusts and dead skin on {name}'s {parts} have peeled away, leaving shiny pink new skin.",
+        "low": "The burns on {name}'s {parts} have crusted over and begun to peel."
+      }
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to soothe {own} burns, blisters, and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to soothe {own} burns, blisters, and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The sting of {name}'s burns is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has drawn the heat and pain from {own} burns, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s scorch marks are now fully healed, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s scorch marks are now fully healed, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s scorch marks are now fully healed, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} burns are {progress}."
+    }
+  }
+}

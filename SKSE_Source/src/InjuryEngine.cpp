@@ -800,7 +800,7 @@ namespace InjuryEngine
         void NotifyPapyrus()
         {
             if (auto* source = SKSE::GetModCallbackEventSource()) {
-                SKSE::ModCallbackEvent event{ "SkyrimNet_Whipped_Injury", "", 0.0f, nullptr };
+                SKSE::ModCallbackEvent event{ "Injury_Engine_Injury", "", 0.0f, nullptr };
                 source->SendEvent(&event);
             }
         }

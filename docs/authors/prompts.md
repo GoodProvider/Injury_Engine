@@ -7,7 +7,7 @@ Contracts: [../reference/json-keys.md](../reference/json-keys.md).
 ## Paths
 
 ```
-SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/
+SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine/
   manifest.json            (id must equal the folder name)
   prompts/
     submodules/
@@ -24,7 +24,7 @@ SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/
 
 ## Injury text lives in JSON, not in prompts
 
-The two prompts are generic: they loop over `skyrimnet_whipped_injuries(uuid)` (`sources[]`, each with `looks_heading`, `feels_intro`, `feels_outro` and `parts[]` with ready-to-print `look` / `feel` strings, already resolved for the actor's name, pronouns and part). The wording, the stage tables and all narration (hit text, healing text, healing-source text, Torture_Target summary) are in `SKSE/Plugins/SkyrimNet_Whipped/injuries/<source>.json` and rendered by `SkyrimNet_Whipped.dll`; the JSON schema and writing rules are in `SKSE/Plugins/SkyrimNet_Whipped/injuries/guide.md`. Add a new injury type by adding a JSON file; the prompts need no change. Narration is no longer rendered through `RenderTemplate` / `ParseString`, so the inja limits noted in [KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md) apply only to these two small prompts.
+The two prompts are generic: they loop over `injury_engine_injuries(uuid)` (`sources[]`, each with `looks_heading`, `feels_intro`, `feels_outro` and `parts[]` with ready-to-print `look` / `feel` strings, already resolved for the actor's name, pronouns and part). The wording, the stage tables and all narration (hit text, healing text, healing-source text, Torture_Target summary) are in `SKSE/Plugins/Injury_Engine/injuries/<source>.json` and rendered by `Injury_Engine.dll`; the JSON schema and writing rules are in `SKSE/Plugins/Injury_Engine/injuries/guide.md`. Add a new injury type by adding a JSON file; the prompts need no change. Narration is no longer rendered through `RenderTemplate` / `ParseString`, so the inja limits noted in [KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md) apply only to these two small prompts.
 
 ## No numbers
 
@@ -35,4 +35,4 @@ LLM-facing text — prompts, DirectNarration, events — uses descriptive stages
 - [ ] Keys bare lowercase
 - [ ] No digits / percentages reach the LLM
 - [ ] Every `looks` / `feels` region array in the JSON has one entry per stage of that source
-- [ ] Narration-enabled smoke test in game (check `Papyrus.0.log` DirectNarration lines and `SkyrimNet_Whipped.log` `injuries:` lines)
+- [ ] Narration-enabled smoke test in game (check `Papyrus.0.log` DirectNarration lines and `Injury_Engine.log` `injuries:` lines)

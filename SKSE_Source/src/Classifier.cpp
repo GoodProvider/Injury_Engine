@@ -17,7 +17,7 @@ namespace Classifier
         constexpr double kHitWindow = 0.6;  // real seconds a hit event stays usable for the damage that follows it
         constexpr double kTortureWindow = 2.0;  // real seconds a "(torture)" effect stays current after it was last seen
         constexpr double kQuietRecast = 1.0;  // real seconds between QuietMarker casts on one victim (the marker lasts 3 s)
-        constexpr std::uint32_t kQuietSpellId = 0x81A;  // SPEL SkyrimNet_Whipped_QuietSpell
+        constexpr std::uint32_t kQuietSpellId = 0x81A;  // SPEL Injury_Engine_QuietSpell
 
         struct Recent
         {
@@ -553,7 +553,7 @@ namespace Classifier
             last = now;
         }
         tasks->AddTask([handle = victim->GetHandle()]() {
-            static auto* spell = skyrim_cast<RE::SpellItem*>(LookupForm("SkyrimNet_Whipped.esp", kQuietSpellId));
+            static auto* spell = skyrim_cast<RE::SpellItem*>(LookupForm("Injury_Engine.esp", kQuietSpellId));
             auto ref = handle.get();
             auto* actor = ref ? ref->As<RE::Actor>() : nullptr;
             auto* caster = actor && !actor->IsDead() ? actor->GetMagicCaster(RE::MagicSystem::CastingSource::kInstant) : nullptr;

@@ -1,0 +1,22 @@
+{
+  "SpriggitSource": {
+    "PackageName": "Spriggit.Json.Skyrim",
+    "Version": "0.38.6"
+  },
+  "ModKey": "Injury_Engine.esp",
+  "GameRelease": "SkyrimSE",
+  "ModHeader": {
+    "Flags": [
+      "Small"
+    ],
+    "Author": "goodprovider",
+    "Description": "Injury Engine",
+    "MasterReferences": [
+      {
+        "Master": "Skyrim.esm",
+        "FileSize": 0
+      }
+    ],
+    "INTV": 1
+  }
+}

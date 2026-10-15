@@ -6,7 +6,7 @@ Canonical rules for JSON that this mod emits for prompts and the overlay.
 
 Use **bare lowercase** keys only (`parts`, `stage`, `caster_is_target`). Do not invent Title Case or leading-`_` keys. Values shown to the LLM are words, never numbers — numeric fields are only for templates to turn into words ([../authors/prompts.md](../authors/prompts.md#no-numbers)).
 
-## Decorator `skyrimnet_whipped_injuries(uuid)`
+## Decorator `injury_engine_injuries(uuid)`
 
 `Main.Injuries_Decorator` -> native `GetStateJson` -> `InjuryEngine::StateJson`. One entry per source that has injuries; the text is already resolved from `injuries/<source>.json` for this actor (name, pronouns, part):
 
@@ -25,13 +25,13 @@ Use **bare lowercase** keys only (`parts`, `stage`, `caster_is_target`). Do not 
 
 ## Injury files `injuries/<source>.json`
 
-Keys and placeholders are documented for authors in `SKSE/Plugins/SkyrimNet_Whipped/injuries/guide.md`; code reads them by dotted path (`InjuryConfig::Str`, natives `Text` / `TextCount` / `Number`). Same bare-lowercase rule; values shown to the LLM contain no digits.
+Keys and placeholders are documented for authors in `SKSE/Plugins/Injury_Engine/injuries/guide.md`; code reads them by dotted path (`InjuryConfig::Str`, natives `Text` / `TextCount` / `Number`). Same bare-lowercase rule; values shown to the LLM contain no digits.
 
 ## Natives returning text
 
 `HitText`, `HealMapText`, `SourceHealText`, `ActionText`, `DeathText` render the JSON templates in C++ (placeholders `{name}`, `{he}`, `{him}`, `{his}`, `{part}`, `{parts}`, ... listed in `guide.md`). Codes passed in: hit code `fresh * 100000000 + source * 1000000 + part mask * 10 + level` (mask: bit per part, 11 parts); `HealMapText(actor)` takes no codes (it reads the actor's torture points); sync events `kind * 10000 + healing source * 1000 + percent` (kind 0 start, 1 pain gone, 2 fully healed, 3 stopped; healing source 0 none, 1 spell, 2 staff, 3 potion, 4 other).
 
-## Overlay (`whipUpdate`)
+## Overlay (`injuryEngineUpdate`)
 
 `InjuryEngine::OverlayJson`, pushed by `Overlay::Notify` when it changes:
 

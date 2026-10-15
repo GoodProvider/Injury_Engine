@@ -1,0 +1,11 @@
+{
+  "FormKey": "000808:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_MetalImpact",
+  "Duration": 0.1,
+  "Orientation": "ProjectileVector",
+  "AngleThreshold": 85.0,
+  "PlacementRadius": 16.0,
+  "SoundLevel": "Normal",
+  "NoDecalData": true,
+  "Sound1": "00080C:Injury_Engine.esp"
+}

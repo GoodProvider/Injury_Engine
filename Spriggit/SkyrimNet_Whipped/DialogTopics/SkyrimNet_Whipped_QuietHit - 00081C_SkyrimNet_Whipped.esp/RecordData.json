@@ -1,8 +1,0 @@
-{
-  "FormKey": "00081C:SkyrimNet_Whipped.esp",
-  "EditorID": "SkyrimNet_Whipped_QuietHit",
-  "Quest": "00081B:SkyrimNet_Whipped.esp",
-  "Category": "Combat",
-  "Subtype": "Hit",
-  "SubtypeName": "HIT_"
-}

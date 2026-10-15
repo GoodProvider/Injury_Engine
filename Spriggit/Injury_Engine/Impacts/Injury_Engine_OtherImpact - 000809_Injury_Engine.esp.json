@@ -1,0 +1,15 @@
+{
+  "FormKey": "000809:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_OtherImpact",
+  "Model": {
+    "File": "Effects\\ImpactEffects\\ImpactArrowDust01.nif",
+    "Data": "0x020000000000000000000000"
+  },
+  "Duration": 0.25,
+  "Orientation": "ProjectileReflection",
+  "AngleThreshold": 80.0,
+  "PlacementRadius": 16.0,
+  "SoundLevel": "Normal",
+  "NoDecalData": true,
+  "Sound1": "00080C:Injury_Engine.esp"
+}

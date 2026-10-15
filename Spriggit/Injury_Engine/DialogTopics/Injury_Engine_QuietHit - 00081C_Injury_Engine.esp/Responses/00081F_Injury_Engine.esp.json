@@ -1,0 +1,31 @@
+{
+  "FormKey": "00081F:Injury_Engine.esp",
+  "Flags": {},
+  "PreviousDialog": "Null",
+  "FavorLevel": "None",
+  "Responses": [
+    {
+      "EmotionValue": 50,
+      "ResponseNumber": 1,
+      "Unknown2": "0x000000",
+      "Flags": [],
+      "Unknown3": "0x000000",
+      "Text": {
+        "TargetLanguage": "English",
+        "Value": ""
+      },
+      "ScriptNotes": "",
+      "Edits": ""
+    }
+  ],
+  "Conditions": [
+    {
+      "MutagenObjectType": "ConditionFloat",
+      "Data": {
+        "MutagenObjectType": "HasMagicEffectConditionData",
+        "MagicEffect": "000819:Injury_Engine.esp"
+      },
+      "ComparisonValue": 1.0
+    }
+  ]
+}

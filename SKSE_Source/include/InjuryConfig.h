@@ -9,7 +9,7 @@
 
 #include <nlohmann/json.hpp>
 
-// Injury data files: SKSE/Plugins/SkyrimNet_Whipped/injuries/<source>.json (schema: injuries/guide.md).
+// Injury data files: SKSE/Plugins/Injury_Engine/injuries/<source>.json (schema: injuries/guide.md).
 // Every *.json is one injury source ("whipping", "slashing", ...). Loaded once at kDataLoaded.
 namespace InjuryConfig
 {

@@ -20,11 +20,11 @@ One release version. `make release` runs `python_scripts/check-version.py -v ${V
 | Source | Field | Role |
 |--------|-------|------|
 | [Makefile](Makefile) | `VERSION` | Authoritative; names the 7z |
-| `SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/manifest.json` | `version` | LLM plugin bundle |
-| `SKSE/Plugins/SkyrimNet/config/plugins/SkyrimNet_Whipped/manifest.yaml` | `version` | Dashboard settings |
+| `SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine/manifest.json` | `version` | LLM plugin bundle |
+| `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml` | `version` | Dashboard settings |
 | `SKSE_Source/CMakeLists.txt` | `project(... VERSION)` | DLL |
 | `SKSE_Source/version.rc` | FILEVERSION / PRODUCTVERSION / strings (`x,y,z,0`, `x.y.z.0`) | DLL resource |
-| `SKSE/Plugins/SkyrimNet_Whipped/info.json` | `version` | Written by `make release` (`python_scripts/info.py`) |
+| `SKSE/Plugins/Injury_Engine/info.json` | `version` | Written by `make release` (`python_scripts/info.py`) |
 | `FOMOD/info.xml`, `FOMOD/ModuleConfig.xml` | `Version` | Generated from `FOMOD_source/` by `fomod-update-name-version.py` (git-ignored) |
 | git tag | bare `VERSION` (e.g. `0.1.0`) | Created only when the maintainer ships |
 
@@ -71,6 +71,6 @@ Bullets only: the player-facing items of `CHANGELOG.md` (no build, license, docs
 
 Prereqs: `Scripts/*.pex` current (`pyro skyrimse.ppj`); `VCPKG_ROOT` set; `Spriggit/` JSON is the ESP source of truth; `7z`, `python3`, `powershell` on PATH.
 
-`make release` = `check-version.py` → `info.json` → `FOMOD/*.xml` from `FOMOD_source/` → `make dll` → `make esp` → stage `core/` (Scripts, SKSE, meshes, textures, Sound, PrismaUI, `SkyrimNet_Whipped.esp`, `CHANGELOG-player.md`) → `7z a "versions/SkyrimNet_Whipped ${VERSION}.7z" FOMOD core` → remove `core/`. The FOMOD installs `core` unconditionally (no options); PrismaUI is a documented requirement, not an installer step.
+`make release` = `check-version.py` → `info.json` → `FOMOD/*.xml` from `FOMOD_source/` → `make dll` → `make esp` → stage `core/` (Scripts, SKSE, meshes, textures, Sound, PrismaUI, `Injury_Engine.esp`, `CHANGELOG-player.md`) → `7z a "versions/Injury_Engine ${VERSION}.7z" FOMOD core` → remove `core/`. The FOMOD installs `core` unconditionally (no options); PrismaUI is a documented requirement, not an installer step.
 
 Ship order: bump version sources → changelogs → commit → `pyro` → `make release` → inspect `7z l` output → git tag `VERSION` → GitHub Release (attach the 7z, body = `CHANGELOG-player.md`).

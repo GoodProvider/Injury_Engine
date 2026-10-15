@@ -1,0 +1,12 @@
+{
+  "FormKey": "00081B:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_QuietDialogue",
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Injury Engine quiet barks"
+  },
+  "Flags": [
+    "StartGameEnabled"
+  ],
+  "Priority": 100
+}

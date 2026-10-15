@@ -6,7 +6,7 @@ See also: [prompts.md](prompts.md), [../developers/papyrus.md](../developers/pap
 
 ## Registration
 
-`Torture_Target` is registered from Papyrus (`SkyrimNet_Whipped_Actions.Setup` → `SkyrimNetApi.RegisterAction`), **not** from action YAML, so eligibility can check the NPC's inventory. There is no `actions/` folder in the plugin tree. The action description is `action.description` in `SKSE/Plugins/SkyrimNet_Whipped/injuries/whipping.json` (keep the `{target}`, `{type}` and `{strikes}` placeholders); the "has no whip" event is `whipping.json` `action.no_whip`; the summary narration is `narration.summary` of the chosen type's file.
+`Torture_Target` is registered from Papyrus (`Injury_Engine_Actions.Setup` → `SkyrimNetApi.RegisterAction`), **not** from action YAML, so eligibility can check the NPC's inventory. There is no `actions/` folder in the plugin tree. The action description is `action.description` in `SKSE/Plugins/Injury_Engine/injuries/whipping.json` (keep the `{target}`, `{type}` and `{strikes}` placeholders); the "has no whip" event is `whipping.json` `action.no_whip`; the summary narration is `narration.summary` of the chosen type's file.
 
 | Part | Function |
 |------|----------|
@@ -14,13 +14,13 @@ See also: [prompts.md](prompts.md), [../developers/papyrus.md](../developers/pap
 | Execution | `Torture_Execute(speaker, contextJson, paramsJson)` |
 | Parameters | `target` (Actor), `type` (`whip\|pinch\|slap\|pull\|punch` → `whipping`, `pinching`, `slapping`, `pulling`, `punching`), `strikes` (`1\|2\|…\|max_strikes`) |
 
-`whip.action.max_strikes` is baked into the parameter list at registration, so a change needs a save and reload. Fire / frost / shock torture is not an action type: it comes from the Flames / Frostbite / Sparks (torture) spells and from `External_Torture`.
+`injury_engine.action.max_strikes` is baked into the parameter list at registration, so a change needs a save and reload. Fire / frost / shock torture is not an action type: it comes from the Flames / Frostbite / Sparks (torture) spells and from `External_Torture`.
 
 ## Execution
 
 The NPC walks to the target and tortures it `strikes` times.
 
-- `whip`: equips the padded whip and swings (`attackStart`); each strike is `Main.Lash` (impact effect + sound → `Main.OnLash`). `skyrimnet_whipped.in_action` stops the enchantment from counting the same hit twice. With `require_whip` on and no whip, a `whip_lash` event says so and nothing happens; with it off, a whip is handed over and taken back afterwards.
+- `whip`: equips the padded whip and swings (`attackStart`); each strike is `Main.Lash` (impact effect + sound → `Main.OnLash`). `injury_engine.in_action` stops the enchantment from counting the same hit twice. With `require_whip` on and no whip, a `whip_lash` event says so and nothing happens; with it off, a whip is handed over and taken back afterwards.
 - `pinch`, `slap`, `pull`, `punch`: no weapon and no real swing (an unarmed attack would land as real damage through the hooks and start a fight). Each strike is `Main.Torture`, which plays the type's `action.animation` event when the JSON sets one (empty by default: vanilla has no fitting idles) and calls `Engine.Hit`.
 
 One summary narration follows (DirectNarration, or event `torture_hit`).

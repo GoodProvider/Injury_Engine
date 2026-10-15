@@ -22,7 +22,7 @@ if a == None
 
 Default args are filled **at the caller's compile**, not at runtime. Adding a parameter (even with a default) requires recompiling **every** caller. Cross-script calls (`Actions` → `Main`, `LashEffect` → `Main`) should pass every argument explicitly so a stale `.pex` cannot log `Expected N, got M` and return None.
 
-The same holds for natives in `SkyrimNet_Whipped_Engine.psc`: a changed signature needs the `.psc`, every caller and the DLL rebuilt together.
+The same holds for natives in `Injury_Engine_Engine.psc`: a changed signature needs the `.psc`, every caller and the DLL rebuilt together.
 
 ## Naming
 
@@ -47,7 +47,7 @@ On the maintainer's machine Documents is OneDrive-redirected (`%USERPROFILE%\One
 | Log | Path |
 |-----|------|
 | Crash Logger | `Documents\my games\Skyrim Special Edition\SKSE\crash-*.log` |
-| SkyrimNet_Whipped (DLL) | `Documents\my games\Skyrim Special Edition\SKSE\SkyrimNet_Whipped.log` |
+| Injury_Engine (DLL) | `Documents\my games\Skyrim Special Edition\SKSE\Injury_Engine.log` |
 | Papyrus (traces, None / stack) | `Documents\my games\Skyrim Special Edition\Logs\Script\Papyrus.0.log` |
 | SkyrimNet (last resort; ask first) | `Documents\my games\Skyrim Special Edition\SKSE\SkyrimNet.log` |
 

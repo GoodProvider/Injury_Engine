@@ -1,0 +1,98 @@
+{
+  "FormKey": "000800:Injury_Engine.esp",
+  "EditorID": "Injury_Engine",
+  "VirtualMachineAdapter": {
+    "Scripts": [
+      {
+        "Name": "Injury_Engine_Main",
+        "Properties": [
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "PaddedWhip",
+            "Object": "000803:Injury_Engine.esp"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "ImpactSet",
+            "Object": "000805:Injury_Engine.esp"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "require_whip_global",
+            "Object": "000801:Injury_Engine.esp"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "HealingHands",
+            "Object": "04D3F2:Skyrim.esm"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "TortureFlames",
+            "Object": "000816:Injury_Engine.esp"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "TortureFrostbite",
+            "Object": "000817:Injury_Engine.esp"
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "TortureSparks",
+            "Object": "000818:Injury_Engine.esp"
+          }
+        ]
+      },
+      {
+        "Name": "Injury_Engine_Actions",
+        "Properties": [
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "main",
+            "Object": "000800:Injury_Engine.esp"
+          }
+        ]
+      }
+    ],
+    "FileName": "",
+    "Aliases": [
+      {
+        "Property": {
+          "Name": "",
+          "Object": "000800:Injury_Engine.esp",
+          "Alias": 0
+        },
+        "Scripts": [
+          {
+            "Name": "Injury_Engine_PlayerRef",
+            "Properties": [
+              {
+                "MutagenObjectType": "ScriptObjectProperty",
+                "Name": "main",
+                "Object": "000800:Injury_Engine.esp"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Injury Engine"
+  },
+  "Flags": [
+    "StartGameEnabled",
+    "0x10",
+    "RunOnce"
+  ],
+  "NextAliasID": 1,
+  "Aliases": [
+    {
+      "Name": "PlayerRef",
+      "Flags": [],
+      "ForcedReference": "000014:Skyrim.esm",
+      "VoiceTypes": "Null"
+    }
+  ]
+}

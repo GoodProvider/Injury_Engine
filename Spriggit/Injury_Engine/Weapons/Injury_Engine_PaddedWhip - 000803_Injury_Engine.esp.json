@@ -1,0 +1,67 @@
+{
+  "FormKey": "000803:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_PaddedWhip",
+  "ObjectBounds": {
+    "First": "-1, -15, 0",
+    "Second": "0, 81, 0"
+  },
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Padded whip"
+  },
+  "Model": {
+    "File": "weapons\\SNW\\whip.nif",
+    "Data": "0x020000000000000000000000"
+  },
+  "ObjectEffect": "000811:Injury_Engine.esp",
+  "EnchantmentAmount": 100,
+  "EquipmentType": "013F42:Skyrim.esm",
+  "BlockBashImpact": "0C190F:Skyrim.esm",
+  "AlternateBlockMaterial": "0774C1:Skyrim.esm",
+  "Keywords": [
+    "08F958:Skyrim.esm",
+    "000812:Injury_Engine.esp"
+  ],
+  "Description": {
+    "TargetLanguage": "English",
+    "Value": "A leather whip with a padded grip. It stings and welts the skin without crippling."
+  },
+  "ImpactDataSet": "000805:Injury_Engine.esp",
+  "FirstPersonModel": "000804:Injury_Engine.esp",
+  "AttackSound": "00080D:Injury_Engine.esp",
+  "AttackFailSound": "00080D:Injury_Engine.esp",
+  "EquipSound": "03DE2C:Skyrim.esm",
+  "UnequipSound": "03DE2D:Skyrim.esm",
+  "BasicStats": {
+    "Value": 2500,
+    "Weight": 1.0,
+    "Damage": 1
+  },
+  "Data": {
+    "AnimationType": "OneHandSword",
+    "Unused": "0x000000",
+    "Speed": 1.8,
+    "Reach": 1.0,
+    "Flags": [
+      "IgnoresNormalWeaponResistance",
+      "MinorCrime",
+      "NotUsedInNormalCombat",
+      "NonHostile"
+    ],
+    "NumProjectiles": 1,
+    "AnimationAttackMult": 1.0,
+    "Unknown2": 1061997773,
+    "RumbleLeftMotorStrength": 0.5,
+    "RumbleRightMotorStrength": 1.0,
+    "RumbleDuration": 0.33,
+    "Unknown3": "0x000000000000000000000000"
+  },
+  "Critical": {
+    "PercentMult": 1.0,
+    "Flags": [
+      "OnDeath"
+    ],
+    "Unused2": "0x000000"
+  },
+  "DetectionSoundLevel": "Normal"
+}

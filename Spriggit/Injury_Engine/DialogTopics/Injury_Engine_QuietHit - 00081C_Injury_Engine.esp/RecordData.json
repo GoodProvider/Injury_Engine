@@ -1,0 +1,8 @@
+{
+  "FormKey": "00081C:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_QuietHit",
+  "Quest": "00081B:Injury_Engine.esp",
+  "Category": "Combat",
+  "Subtype": "Hit",
+  "SubtypeName": "HIT_"
+}

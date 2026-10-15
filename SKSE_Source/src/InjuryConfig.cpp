@@ -100,9 +100,9 @@ namespace InjuryConfig
 
         std::filesystem::path InjuryDir()
         {
-            auto dir = DllDir() / "SkyrimNet_Whipped" / "injuries";
+            auto dir = DllDir() / "Injury_Engine" / "injuries";
             if (!std::filesystem::exists(dir)) {
-                auto fallback = std::filesystem::current_path() / "Data" / "SKSE" / "Plugins" / "SkyrimNet_Whipped" / "injuries";
+                auto fallback = std::filesystem::current_path() / "Data" / "SKSE" / "Plugins" / "Injury_Engine" / "injuries";
                 if (std::filesystem::exists(fallback)) {
                     return fallback;
                 }

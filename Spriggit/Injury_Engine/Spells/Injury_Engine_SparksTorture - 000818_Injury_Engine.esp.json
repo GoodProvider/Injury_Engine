@@ -1,0 +1,35 @@
+{
+  "FormKey": "000818:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_SparksTorture",
+  "Version2": 8,
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Sparks (torture)"
+  },
+  "MenuDisplayObject": "09FA64:Skyrim.esm",
+  "EquipmentType": "013F44:Skyrim.esm",
+  "Description": {
+    "TargetLanguage": "English",
+    "Value": ""
+  },
+  "BaseCost": 19,
+  "CastType": "Concentration",
+  "TargetType": "Aimed",
+  "HalfCostPerk": "0F2CA8:Skyrim.esm",
+  "Effects": [
+    {
+      "BaseEffect": "000815:Injury_Engine.esp",
+      "Data": {
+        "Magnitude": 8.0,
+        "Duration": 1
+      }
+    },
+    {
+      "BaseEffect": "0F3F0C:Skyrim.esm",
+      "Data": {
+        "Magnitude": 200.0,
+        "Duration": 1
+      }
+    }
+  ]
+}

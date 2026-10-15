@@ -1,7 +1,7 @@
 ---
 name: release
 description: >-
-  Align SkyrimNet_Whipped release docs and version metadata for next_version.
+  Align Injury_Engine release docs and version metadata for next_version.
   Use when preparing a release, writing CHANGELOG.md, CHANGELOG-developer.md or CHANGELOG-player.md,
   bumping the version, updating release-checkpoint.xml, or documenting the
   delta since the last tag. Does not tag, publish, or run make release unless asked.

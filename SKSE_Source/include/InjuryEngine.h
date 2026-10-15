@@ -159,7 +159,7 @@ namespace InjuryEngine
     void SetRegenRate(float percent);
     void Forget(RE::Actor* actor);
 
-    // Writes a narration line to SkyrimNet_Whipped.log: "[hh:mm:ss] <category>:<narrationType> <text>"
+    // Writes a narration line to Injury_Engine.log: "[hh:mm:ss] <category>:<narrationType> <text>"
     // (category torture / heal / health; narrationType direct / event / short; empty text is ignored).
     void LogLine(std::string_view category, std::string_view narrationType, std::string_view sessionType, std::string_view text);
 

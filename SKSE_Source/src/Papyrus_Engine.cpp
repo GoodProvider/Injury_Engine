@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-// Natives for Scripts/Source/SkyrimNet_Whipped_Engine.psc
+// Natives for Scripts/Source/Injury_Engine_Engine.psc
 namespace
 {
     std::int32_t Hit(RE::StaticFunctionTag*, RE::Actor* actor, RE::Actor* attacker, RE::BSFixedString sourceId)
@@ -318,7 +318,7 @@ namespace
         Overlay::Notify();
     }
 
-    // "Verbose logging": debug lines in SkyrimNet_Whipped.log (SKSE::log::debug is dropped at info level).
+    // "Verbose logging": debug lines in Injury_Engine.log (SKSE::log::debug is dropped at info level).
     void SetVerboseLogging(RE::StaticFunctionTag*, bool enabled)
     {
         const auto level = enabled ? spdlog::level::debug : spdlog::level::info;
@@ -342,7 +342,7 @@ namespace
 
 bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
 {
-    constexpr std::string_view s = "SkyrimNet_Whipped_Engine";
+    constexpr std::string_view s = "Injury_Engine_Engine";
     a_vm->RegisterFunction("Hit", s, Hit);
     a_vm->RegisterFunction("HitPart", s, HitPart);
     a_vm->RegisterFunction("RealHit", s, RealHit);

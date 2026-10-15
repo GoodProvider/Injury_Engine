@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-    "name": "skyrimnet-whipped-plugin",
+    "name": "injury-engine-plugin",
     "version-string": "1.0.0",
     "builtin-baseline": "cc288af760054fa489574bd8e22d05aa8fa01e5c",
     "dependencies": [

@@ -1,0 +1,26 @@
+{
+  "FormKey": "000811:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_LashEnch",
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Lash"
+  },
+  "Flags": [
+    "NoAutoCalc"
+  ],
+  "CastType": "FireAndForget",
+  "TargetType": "Touch",
+  "EnchantType": "Enchantment",
+  "Effects": [
+    {
+      "BaseEffect": "000810:Injury_Engine.esp",
+      "Data": {}
+    },
+    {
+      "BaseEffect": "000819:Injury_Engine.esp",
+      "Data": {
+        "Duration": 3
+      }
+    }
+  ]
+}

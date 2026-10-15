@@ -1,0 +1,10 @@
+{
+  "FormKey": "000804:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_1stPerson",
+  "Model": {
+    "File": "weapons\\SNW\\whip1st.nif",
+    "Data": "0x020000000000000000000000"
+  },
+  "MaxAngle": 90.0,
+  "Unused": "0x000000"
+}

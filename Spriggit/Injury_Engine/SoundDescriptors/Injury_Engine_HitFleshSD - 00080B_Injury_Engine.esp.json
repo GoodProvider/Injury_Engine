@@ -1,0 +1,19 @@
+{
+  "FormKey": "00080B:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_HitFleshSD",
+  "Type": "Standard",
+  "Category": "0172A1:Skyrim.esm",
+  "AlternateSoundFor": "00080D:Injury_Engine.esp",
+  "SoundFiles": [
+    "data\\Sound\\fx\\SNW\\whiphitflesh01.wav",
+    "data\\Sound\\fx\\SNW\\whiphitflesh02.wav"
+  ],
+  "OutputModel": "0E324B:Skyrim.esm",
+  "LoopAndRumble": {
+    "Unknown": 1,
+    "RumbleValues": 80
+  },
+  "PercentFrequencyVariance": 16,
+  "Priority": 64,
+  "Variance": 15
+}

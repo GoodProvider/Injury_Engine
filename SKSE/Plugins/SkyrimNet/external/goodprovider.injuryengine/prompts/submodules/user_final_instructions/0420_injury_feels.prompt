@@ -1,0 +1,18 @@
+{# Injuries: how the speaker's wounded body parts feel right now, for every injury source. Data:                         #}
+{# injury_engine_injuries(uuid) from Injury_Engine.dll (InjuryEngine); text from injuries/<source>.json.        #}
+{% set injuries = injury_engine_injuries(npc.UUID) %}
+{% if existsIn(injuries, "sources") and length(injuries.sources) > 0 %}
+{% for source in injuries.sources %}
+
+{{ source.feels_intro }}
+{% for part in source.parts %}
+{% if part.feel != "" %}
+- {{ part.feel }}
+{% endif %}
+{% endfor %}
+{% if loop.is_last %}
+
+{{ source.feels_outro }}
+{% endif %}
+{% endfor %}
+{% endif %}

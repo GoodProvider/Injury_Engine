@@ -18,7 +18,7 @@ namespace
         if (!dir) {
             return;
         }
-        auto path = *dir / "SkyrimNet_Whipped.log";
+        auto path = *dir / "Injury_Engine.log";
         auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path.string(), true);
         auto logger = std::make_shared<spdlog::logger>("log", sink);
         logger->set_level(spdlog::level::info);
@@ -76,7 +76,7 @@ SKSEPluginLoad(const SKSE::LoadInterface* skse)
 {
     SKSE::Init(skse);
     InitLog();
-    SKSE::log::info("SkyrimNet_Whipped loading");
+    SKSE::log::info("Injury_Engine loading");
 
     if (auto* ser = SKSE::GetSerializationInterface()) {
         ser->SetUniqueID(kCoSaveId);

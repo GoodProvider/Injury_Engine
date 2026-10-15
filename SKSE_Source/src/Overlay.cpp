@@ -91,7 +91,7 @@ namespace Overlay
                 return;
             }
             // Resolves under Data/PrismaUI/views/.
-            g_view = g_prisma->CreateView("SkyrimNet_Whipped/overlay.html", [](PrismaView view) {
+            g_view = g_prisma->CreateView("Injury_Engine/overlay.html", [](PrismaView view) {
                 g_view = view;
                 g_domReady = true;
                 SKSE::log::info("Overlay: DomReady");
@@ -103,7 +103,7 @@ namespace Overlay
                 }
             });
             if (!g_prisma->IsValid(g_view)) {
-                SKSE::log::error("Overlay: CreateView failed (missing PrismaUI/views/SkyrimNet_Whipped/overlay.html?)");
+                SKSE::log::error("Overlay: CreateView failed (missing PrismaUI/views/Injury_Engine/overlay.html?)");
                 g_prisma = nullptr;
                 return;
             }
@@ -146,7 +146,7 @@ namespace Overlay
             g_lastPush = json;
         }
         SKSE::log::debug("Overlay: push {} bytes", json.size());
-        Invoke("whipUpdate(" + json + ");");
+        Invoke("injuryEngineUpdate(" + json + ");");
     }
 
     void Reset()

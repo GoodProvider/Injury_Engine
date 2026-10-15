@@ -1,0 +1,26 @@
+{
+  "FormKey": "00081A:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_QuietSpell",
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Torture quiet"
+  },
+  "Description": {
+    "TargetLanguage": "English",
+    "Value": ""
+  },
+  "Flags": [
+    "ManualCostCalc",
+    "NoDualCastModification"
+  ],
+  "CastType": "FireAndForget",
+  "TargetType": "Touch",
+  "Effects": [
+    {
+      "BaseEffect": "000819:Injury_Engine.esp",
+      "Data": {
+        "Duration": 3
+      }
+    }
+  ]
+}

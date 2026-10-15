@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- release-checkpoint.xml: durable release-doc state for SkyrimNet_Whipped. Per-change detail lives in CHANGELOG.md. -->
+<!-- release-checkpoint.xml: durable release-doc state for Injury_Engine. Per-change detail lives in CHANGELOG.md. -->
 <checkpoint>
   <metadata>
-    <project>SkyrimNet_Whipped</project>
+    <project>Injury_Engine</project>
     <summary>Standalone padded whip for SkyrimNet with per-part wound and healing tracking.</summary>
     <repository_root>c:\Skyrim\dev\mods\SkyrimNet_Whip</repository_root>
     <updated>2026-10-04</updated>

@@ -1,0 +1,20 @@
+{
+  "FormKey": "00080C:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_HitOtherSD",
+  "Type": "Standard",
+  "Category": "0172A1:Skyrim.esm",
+  "AlternateSoundFor": "00080D:Injury_Engine.esp",
+  "SoundFiles": [
+    "data\\Sound\\fx\\SNW\\whiphitwood01.wav",
+    "data\\Sound\\fx\\SNW\\whiphitwood02.wav",
+    "data\\Sound\\fx\\SNW\\whiphitwood03.wav"
+  ],
+  "OutputModel": "0E324B:Skyrim.esm",
+  "LoopAndRumble": {
+    "Unknown": 1,
+    "RumbleValues": 80
+  },
+  "PercentFrequencyVariance": 16,
+  "Priority": 64,
+  "Variance": 15
+}

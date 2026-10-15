@@ -1,0 +1,43 @@
+{
+  "FormKey": "000810:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_LashEffect",
+  "VirtualMachineAdapter": {
+    "Scripts": [
+      {
+        "Name": "Injury_Engine_LashEffect",
+        "Properties": [
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "main",
+            "Object": "000800:Injury_Engine.esp"
+          }
+        ]
+      }
+    ]
+  },
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Whip lash"
+  },
+  "Flags": [
+    "NoHitEvent",
+    "NoDuration",
+    "NoMagnitude",
+    "NoArea",
+    "HideInUI",
+    "Painless"
+  ],
+  "TaperWeight": 1.0,
+  "Archetype": {
+    "MutagenObjectType": "MagicEffectArchetype",
+    "Type": "Script"
+  },
+  "CastType": "FireAndForget",
+  "TargetType": "Touch",
+  "DualCastScale": 1.0,
+  "Sounds": [],
+  "Description": {
+    "TargetLanguage": "English",
+    "Value": ""
+  }
+}

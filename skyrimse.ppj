@@ -8,7 +8,7 @@
     Zip="false"
     Final="false">
     <Variables>
-        <Variable Name="ModName" Value="SkyrimNet Whipped" />
+        <Variable Name="ModName" Value="Injury Engine" />
         <Variable Name="ModsFolder" Value="C:\Skyrim\dev\mods" />
     </Variables>
 

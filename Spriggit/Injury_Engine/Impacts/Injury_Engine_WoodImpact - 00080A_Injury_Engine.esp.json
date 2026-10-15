@@ -1,0 +1,26 @@
+{
+  "FormKey": "00080A:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_WoodImpact",
+  "Model": {
+    "File": "Effects\\ImpactEffects\\ImpactArrowWood.nif",
+    "Data": "0x020000000000000000000000"
+  },
+  "Duration": 0.25,
+  "Orientation": "ProjectileReflection",
+  "AngleThreshold": 15.0,
+  "PlacementRadius": 16.0,
+  "SoundLevel": "Normal",
+  "Decal": {
+    "MinWidth": 8.0,
+    "MaxWidth": 32.0,
+    "MinHeight": 8.0,
+    "MaxHeight": 32.0,
+    "Depth": 32.0,
+    "Shininess": 4.0,
+    "ParallaxScale": 1.0,
+    "ParallaxPasses": 4,
+    "Unknown": 15709,
+    "Color": "#00FFFFFF"
+  },
+  "Sound1": "00080C:Injury_Engine.esp"
+}

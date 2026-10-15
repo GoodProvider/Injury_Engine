@@ -1,22 +1,22 @@
 # AGENTS.md
 
-Agent guidance for SkyrimNet_Whipped (torture damage and a padded whip for SkyrimNet).
+Agent guidance for Injury_Engine (torture damage and a padded whip for SkyrimNet).
 
 ## General instructions
 The agent's job is not finished until the latest changes are ready for testing in Skyrim.
 If this is possible step by step instructions should be left for the developer.
 
-**Deploy before you stop.** This repo is the MO2 mod folder (`SkyrimNet_Whipped`). After C++, Papyrus, or injury JSON work, always ship the files the game loads:
+**Deploy before you stop.** This repo is the MO2 mod folder (`Injury_Engine`). After C++, Papyrus, or injury JSON work, always ship the files the game loads:
 
-1. **DLL** — `make dll` → [SKSE/Plugins/SkyrimNet_Whipped.dll](SKSE/Plugins/SkyrimNet_Whipped.dll) (CMake copies the build output here; do not hand-copy from `build/` elsewhere).
-2. **Injuries** — [SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json](SKSE/Plugins/SkyrimNet_Whipped/injuries/) (edit in place; no separate packaging step).
+1. **DLL** — `make dll` → [SKSE/Plugins/Injury_Engine.dll](SKSE/Plugins/Injury_Engine.dll) (CMake copies the build output here; do not hand-copy from `build/` elsewhere).
+2. **Injuries** — [SKSE/Plugins/Injury_Engine/injuries/*.json](SKSE/Plugins/Injury_Engine/injuries/) (edit in place; no separate packaging step).
 3. **Papyrus** — `pyro skyrimse.ppj` or VS Code **`compile: pyro`** → [Scripts/*.pex](Scripts/) (Pyro writes into this repo, not into overwrite).
 
-If a fix “does nothing” in-game, confirm MO2 is loading this folder (not a disabled release copy) and that overwrite has no stale `SkyrimNet_Whipped` DLL or `.pex` shadowing it. See [KNOWLEDGEBASE.md](KNOWLEDGEBASE.md) (.pex vs .dll deploy).
+If a fix “does nothing” in-game, confirm MO2 is loading this folder (not a disabled release copy) and that overwrite has no stale `Injury_Engine` DLL or `.pex` shadowing it. See [KNOWLEDGEBASE.md](KNOWLEDGEBASE.md) (.pex vs .dll deploy).
 
 ## What this is
 
-Standalone torture damage and padded whip for SkyrimNet. Each torture hit (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock) wounds a body part; `SkyrimNet_Whipped.dll` (`InjuryEngine`) tracks injury per source (torture types, each part counting its worst type, plus classified slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / generic damage) per part (co-saved), reads all wound data and text from `SKSE/Plugins/SkyrimNet_Whipped/injuries/*.json`, Papyrus narrates hits and healing, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
+Standalone torture damage and padded whip for SkyrimNet. Each torture hit (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock) wounds a body part; `Injury_Engine.dll` (`InjuryEngine`) tracks injury per source (torture types, each part counting its worst type, plus classified slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / generic damage) per part (co-saved), reads all wound data and text from `SKSE/Plugins/Injury_Engine/injuries/*.json`, Papyrus narrates hits and healing, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
 
 ## Key paths
 
@@ -25,13 +25,13 @@ Standalone torture damage and padded whip for SkyrimNet. Each torture hit (whipp
 | `Scripts/Source/` | Papyrus source |
 | `Scripts/` | Compiled `.pex` |
 | `skyrimse.ppj` | Pyro project |
-| `SKSE_Source/` | C++ SKSE plugin → `SKSE/Plugins/SkyrimNet_Whipped.dll` |
-| `Scripts/Source/SkyrimNet_Whipped_Engine.psc` | Papyrus natives of the DLL |
-| `Spriggit/SkyrimNet_Whipped/` | ESP source of truth (`SkyrimNet_Whipped.esp` is built) |
-| `SKSE/Plugins/SkyrimNet_Whipped/injuries/` | Injury data + text per source (`whipping.json`, `slashing.json`, ...; schema in `guide.md`) |
-| `SKSE/Plugins/SkyrimNet/external/goodprovider.whipped/` | Beta 25 LLM plugin (prompts; folder name = `manifest.json` `id`) |
-| `SKSE/Plugins/SkyrimNet/config/plugins/SkyrimNet_Whipped/manifest.yaml` | Dashboard settings schema (`Plugin_SkyrimNet_Whipped`, `whip.*`) |
-| `PrismaUI/views/SkyrimNet_Whipped/overlay.html` | Whipping overlay page |
+| `SKSE_Source/` | C++ SKSE plugin → `SKSE/Plugins/Injury_Engine.dll` |
+| `Scripts/Source/Injury_Engine_Engine.psc` | Papyrus natives of the DLL |
+| `Spriggit/Injury_Engine/` | ESP source of truth (`Injury_Engine.esp` is built) |
+| `SKSE/Plugins/Injury_Engine/injuries/` | Injury data + text per source (`whipping.json`, `slashing.json`, ...; schema in `guide.md`) |
+| `SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine/` | Beta 25 LLM plugin (prompts; folder name = `manifest.json` `id`) |
+| `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml` | Dashboard settings schema (`Plugin_Injury_Engine`, `whip.*`) |
+| `PrismaUI/views/Injury_Engine/overlay.html` | Whipping overlay page |
 
 Repo root: `c:\Skyrim\dev\mods\SkyrimNet_Whip`.
 
@@ -42,7 +42,7 @@ Documents is OneDrive-redirected — not `%USERPROFILE%\Documents\...`.
 | Log | Path |
 |-----|------|
 | Crash Logger | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\crash-*.log` |
-| SkyrimNet_Whipped (DLL, `plugin.cpp` spdlog) | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\SkyrimNet_Whipped.log` |
+| Injury_Engine (DLL, `plugin.cpp` spdlog) | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\Injury_Engine.log` |
 | Papyrus (`Trace` → `Debug.Trace`) | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\Logs\Script\Papyrus.0.log` |
 | SkyrimNet conversation (dialogue history) | `C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\conversation_log.log` |
 | SkyrimNet LLM requests (full prompts sent) | `C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\openrouter_input.log` (rotated: `openrouter_input.<timestamp>.log`) |
@@ -79,7 +79,7 @@ Relative paths for other machines: [docs/reference/papyrus-rules.md](docs/refere
 - Papyrus: `pyro skyrimse.ppj` (VS Code task **`compile: pyro`** when present).
 - SKSE: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it, ~6 min). See [docs/developers/overlay.md](docs/developers/overlay.md).
 - ESP: `make esp` (Spriggit → `.esp`); `make serialize` after xEdit edits.
-- Release: `make release` (version check, `info.json`, FOMOD, dll, esp, pack) → `versions/SkyrimNet_Whipped <version>.7z`. See [release-guide.md](release-guide.md).
+- Release: `make release` (version check, `info.json`, FOMOD, dll, esp, pack) → `versions/Injury_Engine <version>.7z`. See [release-guide.md](release-guide.md).
 
 Tools: Pyro, Spriggit (`SpriggitCLI/`, fetched by `updateSpriggit.bat`), `tools/patch_nif_paths.py`.
 

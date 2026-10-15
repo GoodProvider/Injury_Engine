@@ -1,0 +1,211 @@
+{
+  "id": "shock",
+  "title": "Shock Burns",
+  "model": "torture",
+  "requires": "",
+  "classify": [
+    { "priority": 90, "resist": "ResistShock", "effect_file": "Injury_Engine.esp", "effect_id": "0x815" }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "hook": {
+    "points_per_second": 2
+  },
+  "action": {
+    "verb": "shocks",
+    "animation": ""
+  },
+  "text": {
+    "looks_heading": "### Shock Burns",
+    "feels_intro": "How {name}'s shock burns feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a blush of pink flushes the cheek and temple where the sparks played, the skin unbroken; tiny muscles beside the eye and mouth flicker on their own, and the fine hairs on {his} brow stand on end. A thin, sharp smell of ozone hangs about {him}.",
+        "{name}'s face: delicate, fern-like red tracery branches across the cheek and jaw, with pinpoint grey-white burns where the sparks bit in; the eyelid on that side keeps fluttering and the corner of the mouth twitches. {name} smells of ozone and singed hair.",
+        "{name}'s face: deep, blistered entry burns ringed in black pit the cheek and brow, the branching marks swollen dark red; the whole side of {his} face jerks in uneven spasms, the lips are pale and the eyes glassy and unfocused. The acrid stench of scorched skin and burnt hair clings to {him}."
+      ],
+      "body": [
+        "{name}'s back: a faint pink flush spreads across the shoulder blades, the skin raised in gooseflesh; the muscles beneath it ripple and quiver in small, uncontrolled twitches. {name} smells of fresh sweat and a sharp trace of ozone.",
+        "{name}'s back: red, fern-like burn patterns branch across the shoulders and down the spine, dotted with pinpoint entry burns; the long muscles bunch and jump in cramping knots under the skin. {name} smells of ozone, sweat and singed cloth.",
+        "{name}'s back: deep, black-rimmed entry burns are seared into the skin, the branching marks swollen and blistered; the muscles clench in hard, rolling cramps, and {his} whole body shudders in fits, drenched in cold sweat. The acrid smell of burnt flesh and sour sweat clings to {him}."
+      ],
+      "arm": [
+        "{name}'s {part}: the skin is flushed pink along the forearm, the hairs standing on end; the fingers curl and twitch on their own.",
+        "{name}'s {part}: red, fern-like burns branch from the wrist toward the elbow, with pinpoint grey-white burns where the sparks bit; the forearm muscles cramp in visible knots and the hand trembles. It smells of ozone and singed hair.",
+        "{name}'s {part}: deep, blistered entry burns ringed in black are seared into the arm, the branching marks swollen and weeping; the hand is locked in a clawed cramp and the whole arm jerks in spasms. It gives off the acrid smell of scorched skin."
+      ],
+      "leg": [
+        "{name}'s {part}: a pink flush spreads over the thigh or calf, the skin pebbled with gooseflesh; the muscle beneath it flickers and twitches.",
+        "{name}'s {part}: red, fern-like burns branch across the thigh or calf, with pinpoint grey-white entry burns; the muscle cramps into a hard, visible knot. It smells of ozone and singed skin.",
+        "{name}'s {part}: deep, black-ringed entry burns blister the thigh and calf, the branching marks swollen dark red; the muscle is seized in a rigid cramp and the leg jerks in fits. An acrid stench of seared flesh rises from it."
+      ]
+    },
+    "feels": {
+      "torture": {
+        "head": [
+          "{name}'s face prickles and crawls as if ants were running under the skin, and {his} teeth buzz with a metallic taste. {name} is jumpy and indignant, blinking hard against the twitch in {his} eyelid.",
+          "{name}'s face burns in sharp, needle-point stings, and the muscles of the cheek and jaw cramp and jump without warning. {name} is frightened and humiliated; {his} words come out clipped and uneven as {his} mouth twitches mid-sentence.",
+          "{name}'s face is searing, jolting agony, numb in patches and on fire in others, {his} vision flashing white and {his} heart racing hard. {name} is in shock and barely coherent; {his} jaw clenches in spasms and {he} can hardly shape a word."
+        ],
+        "body": [
+          "{name}'s back prickles and tingles, the muscles twitching in small, maddening jumps. {name} is tense and hyper-alert, {his} shoulders drawn up, {his} breath catching at every flicker.",
+          "{name}'s back stings with needle-point burns and the long muscles cramp in hard, aching knots, while {his} heart beats fast and shallow. {name} is shaken and resentful, holding {reflexive} stiff and hunched, {his} breath coming in jerks.",
+          "{name}'s back is deep, searing burns and cramps that wrack {his} whole body in convulsions, {his} heart pounding and stumbling in {his} chest. {name} is terrified and close to collapse, unable to straighten, shaking uncontrollably and gasping."
+        ],
+        "arm": [
+          "{name}'s {part} prickles and buzzes from the shoulder to the fingertips, the fingers jumping on their own. {name} is startled and shakes the arm out, keeping it close.",
+          "{name}'s {part} burns in sharp pinpoint stings, and the forearm cramps so the grip keeps failing. {name} is shaken and irritable, cradling the arm and fumbling anything {he} holds.",
+          "{name}'s {part} is searing agony, numb and burning at once, the hand locked in a cramp that will not let go. {name} is in shock and despair; the arm is useless and jerks in spasms {he} cannot stop."
+        ],
+        "leg": [
+          "{name}'s {part} prickles and buzzes, the muscle twitching in small jumps. {name} is unsettled and shifts {his} weight, with a brief hitch in {his} stride.",
+          "{name}'s {part} stings in sharp pinpoints and the calf or thigh cramps into a hard knot. {name} is shaken and vulnerable, walking stiff-legged and stopping to wait out the cramps.",
+          "{name}'s {part} is searing burns and a rigid, wrenching cramp, the leg jerking in fits that will not hold weight. {name} is panicked and exhausted, {his} heart racing; {he} cannot stand on it and needs support to move."
+        ]
+      },
+      "heal": {
+        "head": [
+          "{name}'s face feels normal again apart from an occasional faint prickle or a lone twitch. The crackle of magic nearby makes {him} flinch, a quiet memory of the sparks.",
+          "{name}'s face is oversensitive where the burns were, prickling at a touch or a cold wind. {name} flinches when a hand comes near {his} face.",
+          "{name}'s face itches and stings around the scabbed burns, and a stray twitch still tugs at {his} eyelid or lip. {name} is self-conscious and tired, speaking carefully in case {his} mouth jumps."
+        ],
+        "body": [
+          "{name}'s back has its full strength and ease again, with only an occasional lone twitch. The crackle of a spell nearby still makes {him} tense, a quiet memory of the sparks.",
+          "{name}'s back feels tight and tingly over the old burns, with a stray twitch when {he} is tired. {name} is wary and keeps anyone from standing too close behind {him}.",
+          "{name}'s back itches around the scabbed burns, and the muscles still cramp or twitch when {he} turns too fast. {name} is weary and careful, moving slowly and wincing at sudden jolts."
+        ],
+        "arm": [
+          "{name}'s {part} has its full feeling and strength again, with only a rare stray twitch. The crackle of magic still makes {him} flinch, a quiet memory of the sparks.",
+          "{name}'s {part} tingles faintly over the old burns, and the hand trembles a little when tired. {name} has accepted it; the arm works with only minor clumsiness.",
+          "{name}'s {part} is stiff and itchy around the scabs, and the fingers still twitch when {he} grips hard. {name} is frustrated and avoids heavy or fine work."
+        ],
+        "leg": [
+          "{name}'s {part} has its full strength and movement again, with only a lone twitch now and then. The crackle of magic still makes {him} flinch, a quiet memory of the sparks.",
+          "{name}'s {part} tingles over the old burns, with a stray twitch at night or in the cold. {name} is regaining confidence, walking almost normally.",
+          "{name}'s {part} itches around the scabs and cramps when {he} walks too far. {name} is weary of the slow recovery and limps a little, resting the leg when {he} can."
+        ]
+      }
+    }
+  },
+  "narration": {
+    "form": "shocking electric arcs",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is shocked",
+      "verb_many": " are shocked",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}'s sparks",
+      "by_none": " with crackling sparks",
+      "levels": [
+        ", a sudden crackle of sparks dancing over bare skin. The prickling sting snaps through {his} nerves and the muscle jumps on its own, leaving a buzzing tingle behind and the sharp smell of ozone in the air.",
+        " over skin that is already prickling and raw. The sparks bite into the fresh burns, and the twitching muscle knots into a hard, aching cramp that drives the breath from {him}.",
+        ", and the sparks dig into blistered burns. The cramp becomes a wrenching spasm that rolls through {his} body, {his} heart lurches and races, and an involuntary cry is torn from {him}. The smell of ozone and scorched skin rises.",
+        ", and it is too much. The current floods already-ruined flesh; {he} convulses helplessly, cold sweat pouring, {his} heart hammering and stumbling, {his} vision whiting out as {he} loses all control of {his} body."
+      ]
+    },
+    "summary": {
+      "times": {
+        "once": "once",
+        "twice": "twice",
+        "several": "several times",
+        "many": "again and again"
+      }
+    },
+    "session": {
+      "switch": "switches to casting sparks",
+      "hit_noun": "spark"
+    },
+    "heal": {
+      "level": {
+        "high": "The marks on {name}'s {parts} are fading to a few pale pinprick scars.",
+        "mid": "The scabs on {name}'s {parts} have fallen away, leaving glossy pink pits and a faint branching pattern.",
+        "low": "The burn points on {name}'s {parts} have scabbed over, though the muscle still gives a lingering twitch."
+      }
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, soothing the twitching muscles and beginning to heal {own} burns and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, soothing the twitching muscles and beginning to heal {own} burns and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The prickling pain and cramps from {name}'s shock burns are gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has eased the prickling and cramps from {own} shock burns, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s shock burns are now fully healed, the twitching stilled, leaving {him} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s shock burns are now fully healed, the twitching stilled, leaving {him} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s shock burns are now fully healed, the twitching stilled, leaving {him} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} shock burns are {progress}."
+    }
+  }
+}

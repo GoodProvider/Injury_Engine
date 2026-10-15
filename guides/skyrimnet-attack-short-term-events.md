@@ -61,7 +61,7 @@ Vanilla Flames. Two attacks.
 
 ## Sparks (torture), 07:53
 
-`SkyrimNet_Whipped_SparksTorture`, weapon `0xFE050818`, projectile `0x00034190`. Cast `07:53:44.235`. Short-lived `spell_cast` at `07:53:44.261` (`spell_id` `4261742616`).
+`Injury_Engine_SparksTorture`, weapon `0xFE050818`, projectile `0x00034190`. Cast `07:53:44.235`. Short-lived `spell_cast` at `07:53:44.261` (`spell_id` `4261742616`).
 
 Two `hit` events on Bob → Nia, same id, second one an overwrite:
 
@@ -70,7 +70,7 @@ Two `hit` events on Bob → Nia, same id, second one an overwrite:
 | `07:53:44.252` | 17 ms after the cast line |
 | `07:53:45.350` | 1.098 s |
 
-No further `Hit event:` lines in that log. Shock damage kept landing: `SkyrimNet_Whipped.log` records 31 shock applications on Nia across `07:53:44`–`07:53:46` (9, then 1, then 21). Those ticks did not become SkyrimNet `hit` events.
+No further `Hit event:` lines in that log. Shock damage kept landing: `Injury_Engine.log` records 31 shock applications on Nia across `07:53:44`–`07:53:46` (9, then 1, then 21). Those ticks did not become SkyrimNet `hit` events.
 
 ## Damage ticks are a different stream
 
