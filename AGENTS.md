@@ -33,7 +33,7 @@ Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real 
 | `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml` | Dashboard settings schema (`Plugin_Injury_Engine`, `injury_engine.*`) |
 | `PrismaUI/views/Injury_Engine/overlay.html` | Injury overlay page |
 
-Repo root: `c:\Skyrim\dev\mods\SkyrimNet_Whipped` (the folder keeps its old name).
+Repo root: `c:\Skyrim\dev\mods\Injury_Engine`.
 
 ### Logs (this machine)
 

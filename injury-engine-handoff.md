@@ -6,7 +6,7 @@ Pre-release rename of **SkyrimNet_Whipped** to **Injury_Engine** across three MO
 
 | Path | Role |
 |------|------|
-| `c:\Skyrim\dev\mods\SkyrimNet_Whipped` | Primary mod (this folder; do not rename the git/MO2 directory) |
+| `c:\Skyrim\dev\mods\Injury_Engine` | Primary mod (this folder; was `SkyrimNet_Whipped`) |
 | `c:\Skyrim\dev\mods\SkyrimNet_Leashed` | Soft dependency: fall/drag injuries, VM dispatch |
 | `c:\Skyrim\dev\mods\SkyrimNet_SexLab` | Soft dependency: Punish, Aid, HUD sexual-parts gate |
 
