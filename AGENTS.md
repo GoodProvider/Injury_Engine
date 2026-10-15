@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Agent guidance for Injury_Engine (torture damage and a padded whip for SkyrimNet).
+Agent guidance for Injury_Engine (per-body-part injury tracking for SkyrimNet: real damage by type, torture damage, and a padded whip).
 
 ## General instructions
 The agent's job is not finished until the latest changes are ready for testing in Skyrim.
@@ -16,7 +16,7 @@ If a fix “does nothing” in-game, confirm MO2 is loading this folder (not a d
 
 ## What this is
 
-Standalone torture damage and padded whip for SkyrimNet. Each torture hit (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock) wounds a body part; `Injury_Engine.dll` (`InjuryEngine`) tracks injury per source (torture types, each part counting its worst type, plus classified slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / generic damage) per part (co-saved), reads all wound data and text from `SKSE/Plugins/Injury_Engine/injuries/*.json`, Papyrus narrates hits and healing, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
+Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real damage is classified by type (slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / falling / generic, plus types other mods ship as injury JSON) and torture (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock; the padded whip is one torture source) holds health down without killing. `Injury_Engine.dll` (`InjuryEngine`) tracks injury per source per part (co-saved; each part counts its worst torture type), reads all wound data and text from `SKSE/Plugins/Injury_Engine/injuries/*.json`, Papyrus narrates hits, torture scenes, healing and killing blows, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
 
 ## Key paths
 
@@ -30,10 +30,10 @@ Standalone torture damage and padded whip for SkyrimNet. Each torture hit (whipp
 | `Spriggit/Injury_Engine/` | ESP source of truth (`Injury_Engine.esp` is built) |
 | `SKSE/Plugins/Injury_Engine/injuries/` | Injury data + text per source (`whipping.json`, `slashing.json`, ...; schema in `guide.md`) |
 | `SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine/` | Beta 25 LLM plugin (prompts; folder name = `manifest.json` `id`) |
-| `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml` | Dashboard settings schema (`Plugin_Injury_Engine`, `whip.*`) |
-| `PrismaUI/views/Injury_Engine/overlay.html` | Whipping overlay page |
+| `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml` | Dashboard settings schema (`Plugin_Injury_Engine`, `injury_engine.*`) |
+| `PrismaUI/views/Injury_Engine/overlay.html` | Injury overlay page |
 
-Repo root: `c:\Skyrim\dev\mods\SkyrimNet_Whip`.
+Repo root: `c:\Skyrim\dev\mods\SkyrimNet_Whipped` (the folder keeps its old name).
 
 ### Logs (this machine)
 

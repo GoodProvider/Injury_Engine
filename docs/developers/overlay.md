@@ -1,15 +1,15 @@
 # SKSE plugin + PrismaUI overlay
 
-C++ plugin `Injury_Engine.dll` (injury engine, damage classification and healing hooks, Papyrus natives) and the PrismaUI whipping overlay.
+C++ plugin `Injury_Engine.dll` (injury engine, damage classification and healing hooks, Papyrus natives) and the PrismaUI torture overlay.
 
-Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/json-keys.md](../reference/json-keys.md#overlay-whipupdate).
+Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/json-keys.md](../reference/json-keys.md#overlay-injuryengineupdate).
 
 ## Paths
 
 | Path | Role |
 |------|------|
 | `SKSE_Source/src/plugin.cpp` | Entry, logger (`SKSE\Injury_Engine.log`), messaging, co-save registration |
-| `SKSE_Source/src/InjuryEngine.cpp`, `include/InjuryEngine.h` | Per-actor, per-part, per-source injury (whip and health models), real-damage replacement of whip points, health link, co-save v2, narration text, `StateJson`, `OverlayJson` |
+| `SKSE_Source/src/InjuryEngine.cpp`, `include/InjuryEngine.h` | Per-actor, per-part, per-source injury (torture and health models), real-damage replacement of torture points, health link, co-save, narration text, `StateJson`, `OverlayJson` |
 | `SKSE_Source/src/InjuryConfig.cpp`, `include/InjuryConfig.h` | Loads `SKSE/Plugins/Injury_Engine/injuries/*.json` at kDataLoaded (nlohmann-json), dotted-path lookup, `{token}` rendering |
 | `SKSE_Source/src/Classifier.cpp`, `include/Classifier.h` | TESHitEvent sink. Which source a hit becomes is the `classify` array in `injuries/*.json` |
 | `SKSE/Plugins/Injury_Engine/injuries/` | Injury data and text per source; `guide.md` is the agent-facing editing guide |
@@ -34,11 +34,11 @@ Declared in `Scripts/Source/Injury_Engine_Engine.psc`, registered in `Papyrus_En
 
 ## Overlay
 
-- Setting `injury_engine.overlay.enabled` ("Show whipping overlay").
+- Setting `injury_engine.overlay.enabled` ("Show torture overlay").
 - `Overlay::Init` on `kDataLoaded`: PrismaUI API, `CreateView("Injury_Engine/overlay.html")`. PrismaUI is a listed requirement; if it is missing anyway → no overlay, everything else works.
 - The natives `Hit`, `SyncHealth`, `TakeHits` and `Forget` call `Overlay::Notify`, which pushes `OverlayJson` to JS `injuryEngineUpdate(json)` only when it differs from the last push.
 - The view is shown, never focused (no pause, no cursor).
-- Page: `#InjuryEnginePanel` with a white title ("Whip Damage", from `whipping.json` `overlay.title`) above `.actor-injuryengine-damage-bars`: one name-only bar per whipped actor, most recently hit first; width = whole-body torture points, red fill by average stage, light blue (`overlay.colors.healing`) while a healing source works on the actor (heal session). Real damage replacing whip damage grows a darker red segment (`overlay.colors.replaced`) from the left while the whip fill shrinks; an actor with no whip damage left is dropped and the panel hides when nobody has whip damage; the whole overlay fades 3 s after the last change. Numbers, thresholds and colors come from the JSON in every push (the page has no copies).
+- Page: `#InjuryEnginePanel` with a white title ("Torture Damage", from `whipping.json` `overlay.title`) above `.actor-injuryengine-damage-bars`: one name-only bar per tortured actor, most recently hit first; width = whole-body torture points, red fill by average stage, light blue (`overlay.colors.healing`) while a healing source works on the actor (heal session). Real damage replacing torture damage grows a darker red segment (`overlay.colors.replaced`) from the left while the torture fill shrinks; an actor with no torture damage left is dropped and the panel hides when nobody has torture damage; the whole overlay fades 3 s after the last change. Numbers, thresholds and colors come from the JSON in every push (the page has no copies).
 
 ## Lifecycle
 

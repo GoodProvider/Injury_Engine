@@ -1,5 +1,6 @@
 ## Unreleased
 
+- **Renamed to Injury Engine.** The mod now tracks injuries from all damage (combat, spells, creatures, falls and torture), not just whipping. Old saves start fresh: wounds and settings from SkyrimNet_Whipped are not carried over.
 - Injury narration now says who hits whom and with what (a lash, a blade, flames, and so on). The mod log records each wound point and the narration or short-lived event text SkyrimNet receives.
 
 - **Continuous torture narration.** Torture is narrated as it starts, every few seconds while it goes on, when the torturer changes method, and when it stops. Everyone torturing at the same time is combined into one narration. Nothing is narrated out of sight; a memory is stored when it ends. New settings: Torture maximum break, Torture direct narration gap.

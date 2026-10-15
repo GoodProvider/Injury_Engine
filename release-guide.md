@@ -53,7 +53,7 @@ Ground truth is the git delta since `base_tag` (none before 0.1.0) plus working-
 ## [VERSION](https://github.com/GoodProvider/SkyrimNet_Whip/releases/tag/VERSION) — since [BASE](https://github.com/GoodProvider/SkyrimNet_Whip/releases/tag/BASE)
 ```
 
-H3 themes, only when non-empty: Whip / action, Wounds / healing, Narration / prompts, Papyrus, SKSE / overlay, Install / settings, Docs. Prefer concrete identifiers (`whip.*` keys, prompt files, StorageUtil keys, form names).
+H3 themes, only when non-empty: Torture / action, Wounds / healing, Narration / prompts, Papyrus, SKSE / overlay, Install / settings, Docs. Prefer concrete identifiers (`injury_engine.*` keys, prompt files, StorageUtil keys, form names).
 
 ### `CHANGELOG-developer.md`
 

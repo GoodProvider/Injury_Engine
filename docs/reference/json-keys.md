@@ -36,7 +36,7 @@ Keys and placeholders are documented for authors in `SKSE/Plugins/Injury_Engine/
 `InjuryEngine::OverlayJson`, pushed by `Overlay::Notify` when it changes:
 
 ```json
-{"title":"Whip Damage","max":120,"part_max":[20,20,20,20,20,20],"medium":4,"severe":11,
+{"title":"Torture Damage","max":120,"part_max":[20,20,20,20,20,20],"medium":4,"severe":11,
  "colors":{"light":"#e8837a","healing":"#8fd3ff","replaced":"#3d0606"},
  "actors":[{"id":20,"name":"Nina","replaced":6,"healing":false,"parts":[3,0]}]}
 ```

@@ -1,45 +1,85 @@
 # Injury Engine
 
-![image of person whipping, healing, and injured](images/injury-engine.jpg)
+![image of injured and healing characters](images/injury-engine.jpg)
 
-A standalone padded whip for [SkyrimNet](https://github.com/MinLL/SkyrimNet-GamePlugin). Each lash wounds a random body part (face, back, left/right arm, left/right leg). The hit is narrated to the LLM, and while the wounds heal, every character who looks at the victim knows what they look like and the victim knows how they feel.
+Per-body-part injuries for [SkyrimNet](https://github.com/MinLL/SkyrimNet-GamePlugin). Damage from any source (swords, arrows, spells, creatures, falls and torture) wounds a body part, and the wound gets worse from light to medium to severe. While the wounds heal, every character who looks at the victim knows what they look like, and the victim knows how they feel. Hits, healing and killing blows are narrated to the LLM, and an overlay shows each tortured actor's damage.
 
-The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This mod does not need DOM.
+Torture is built in: whipping (with a padded whip), pinching, slapping, pulling, punching, and fire, frost and shock torture spells. Torture hurts but cannot kill. NPCs can torture someone with the Torture_Target LLM action.
 
 ## Features
 
-- **Padded whip** (`Injury_Engine_PaddedWhip`): craftable at the forge with DOM's recipe (leather strips plus one other vanilla item), or `help "Padded whip"` → `player.additem`.
-- **Welt decal on hit**: the same engine impact chain as DOM (weapon → impact data set → flesh impact → `SNW_WhipMarkDecal.dds`).
-- **Direct Narration on hit**: "Nina's face is hit by Ulfric's whip, a sudden, sharp slap of raw shock…", worded by how damaged that part already was (undamaged, light, medium, severe). After the first hit, a hit more than the torture narration window after the last one is narrated on its own, hits between the interval and the window are combined into one narration, and quicker hits are recorded as events; a busy speech queue or a distance limit also turns a narration into an event.
-- **Wound prompts**: a character-bio section with what each wounded part looks like, and a final-instructions section with how it feels to the speaker. The look follows each part through light, medium and severe damage; the feeling does too, and while a spell, staff or potion is healing the actor it switches to how the healing feels (low, mid, high).
-- **Torture_Target LLM action**: an NPC walks to the target and whips, pinches, slaps, pulls or punches them 1–N times, followed by one summary narration. Whipping needs the padded whip.
-- **Torture damage**: whipping, pinching, slapping, pulling and punching (fists outside combat), plus fire, frost and shock torture from the spells Flames (torture), Frostbite (torture) and Sparks (torture) (given to you by "Add gear to player"; the normal spells stay real damage). Torture holds health down but never below 10%, so it can't kill. Each type is tracked per body part, but a part counts only its worst type; healing a part heals every type on it at once.
+- **Injuries from all damage**: each hit is classified by what caused it: slashing, piercing, bludgeoning, burning, freezing, shocking, mauling, falling, generic, or one of the torture types. The wound lands on a body part: face, back, left or right arm, left or right leg, plus optional sexual parts. Each part moves through light, medium and severe.
+- **Healing**: wounds heal over game time, with healing spells, staffs and potions, and slowly with natural regeneration. When a healing source starts working on someone, a heal session begins: it is narrated, and the wounds are described by how far they have healed.
+- **Narration**: real-damage hits, torture, healing and killing blows are narrated to the LLM, or recorded as short-lived events when narration isn't allowed. A narration isn't allowed when it is turned off, when the victim is out of sight, or when someone is already speaking. Continuous torture is combined into one narration every few seconds, covering everyone torturing at the same time. A change of method is narrated at once.
+- **Wound prompts**: a character-bio section says what each wounded part looks like. A final-instructions section tells the speaker how their wounds feel, or how the healing feels while a spell, staff or potion is working.
+- **Torture damage**: torture types are whipping, pinching, slapping, pulling and punching (fists outside combat), plus fire, frost and shock torture. Fire, frost and shock come from the spells Flames (torture), Frostbite (torture) and Sparks (torture); the normal spells stay real damage. Torture holds health down but never below 10%, so it can't kill. Each type is tracked per body part, but a part counts only its worst type, and healing a part heals every type on it at once.
+- **Torture_Target LLM action**: an NPC walks to the target and whips, pinches, slaps, pulls or punches them 1–N times. Whipping needs the padded whip.
+- **Padded whip** (`Injury_Engine_PaddedWhip`): every real hit with it is a lash. To get one:
+  - craft it at the forge with DOM's recipe (leather strips plus one other vanilla item);
+  - use "Add gear to player";
+  - or type `help "Padded whip"` → `player.additem` in the console.
+
+  A lash leaves the same welt decal as DOM.
+- **Torture overlay**: a "Torture Damage" bar per tortured actor. It is light blue while the actor is being healed and darker red where real damage has replaced torture. It fades out by itself.
+- **Extensible**: other mods can add their own injury types as `injuries/<id>.json`; SkyrimNet_Leashed adds leash dragging. Other mods can also wound or heal a chosen body part through the External API ([docs/developers/papyrus.md](docs/developers/papyrus.md)).
+
+The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This mod does not need DOM.
 
 ## Settings (SkyrimNet dashboard → Injury_Engine)
 
-| Key | Default | Meaning |
-|-----|---------|---------|
-| `injury_engine.action.require_whip` | on | The NPC must already carry the padded whip to whip with Torture_Target. Off: one is handed over for the lashing. |
-| `injury_engine.action.max_strikes` | 10 | Most strikes per action (applies after a reload) |
-| `injury_engine.healing.hours_per_point` | 1 | Game hours per torture point healed |
-| `injury_engine.narration.enabled` | on | Narrate lashes (off = events only) |
-| `injury_engine.narration.torture_narration_window_size` | 30 s | Currently unused (passive healing is no longer narrated) |
-| `injury_engine.narration.cooldown` | 8 s | Per-victim healing narration cooldown |
-| `injury_engine.narration.max_distance` | 15 m | Farther lashes become events |
-| `injury_engine.body.include_sexual_parts` | off | Include sexual body parts (nipples, pussy, penis, lips, and ass hole): small parts, hit less often and holding less damage, but still wounded light, medium and severe. Pussy only on women, penis only on men. |
-| `injury_engine.debug.verbose_logging` | off | Extra debug lines in `Injury_Engine.log` and `Papyrus.0.log` (for troubleshooting) |
+| Key | Dashboard name | Default | Meaning |
+|-----|----------------|---------|---------|
+| `injury_engine.narration.injury_mode` | Injury Narration | Direct Narration | Real-damage hits: Direct Narration (when allowed, else an event), Event, or Silent |
+| `injury_engine.narration.healing_mode` | Healing Narration | Direct Narration | Healing by spells, staffs and potions, same choices |
+| `injury_engine.narration.death_mode` | Death Narration | Direct Narration | Killing blows from real damage, same choices |
+| `injury_engine.narration.torture_mode` | Torture Narration | Direct Narration | Torture, same choices |
+| `injury_engine.action.require_whip` | NPC must already carry a whip | on | Only NPCs carrying the padded whip can whip with Torture_Target. Off: one is handed over for the lashing. |
+| `injury_engine.action.give_to_player` | Add gear to player | on | Give the player the padded whip and the three torture spells |
+| `injury_engine.action.max_strikes` | Maximum lashes per action | 10 | Most strikes per Torture_Target action (applies after a reload) |
+| `injury_engine.healing.hours_per_point` | Game hours per heal point | 1 | Game hours per torture point healed |
+| `injury_engine.healing.regen_rate` | Natural regen vs. torture wounds (%) | 10 | How fast natural regeneration heals torture wounds |
+| `injury_engine.healing.give_healing_hands` | Add Healing Hands to player | on | Teach the player Healing Hands |
+| `injury_engine.narration.enabled` | Narrate lashes | on | Direct Narrations for torture and healing (off = events only) |
+| `injury_engine.narration.torture_narration_window_size` | Torture narration window | 30 s | Passive healing is not reported for this long after a torture hit |
+| `injury_engine.narration.torture_maximum_break` | Torture maximum break | 3 s | A pause this long ends a torture session |
+| `injury_engine.narration.torture_direct_narration_gap` | Torture direct narration gap | 6 s | How often continuous torture is narrated |
+| `injury_engine.narration.health_narration_cooloff` | Health narration cooloff | 6 s | At most one real-damage narration this often |
+| `injury_engine.narration.cooldown` | Narration cooldown | 8 s | Per-actor healing narration cooldown |
+| `injury_engine.narration.max_distance` | Narration max distance | 15 m | Farther hits and healing become events |
+| `injury_engine.narration.event_ttl` | Lash event lifetime | 30 s | How long a short-lived hit event stays in the scene context |
+| `injury_engine.body.include_sexual_parts` | Include sexual body parts | off | Also wound the nipples, pussy (women), penis (men), lips and ass hole. These parts are hit less often and hold less damage, but still go through light, medium and severe. |
+| `injury_engine.overlay.enabled` | Show torture overlay | on | Show the torture overlay |
+| `injury_engine.debug.verbose_logging` | Verbose logging | off | Extra debug lines in `Injury_Engine.log` and `Papyrus.0.log` (for troubleshooting) |
 
 ## Requirements
 
-SKSE, Address Library for SKSE Plugins, SkyrimNet (Beta 25+), PapyrusUtil SE, and **PrismaUI** (required: the whipping overlay is built on it).
+SKSE, Address Library for SKSE Plugins, SkyrimNet (Beta 25+), PapyrusUtil SE, and **PrismaUI** (required: the overlay is built on it).
 
 ## Install
 
 Install `Injury_Engine <version>.7z` with your mod manager (it is a FOMOD with no options; everything is required). Enable `Injury_Engine.esp`.
 
-## How wounds are tracked
+## How injuries are tracked
 
-The engine owns decals: they can vanish on a cell change or reload, and scripts can't query them. So `Injury_Engine.dll` (InjuryEngine, saved in the SKSE co-save) tracks each actor's six body parts, per injury source (whip wounds plus classified real damage, see below):
+The game engine owns decals: they can vanish on a cell change or reload, and scripts can't query them. So `Injury_Engine.dll` (InjuryEngine, saved in the SKSE co-save) tracks every actor's body parts itself, per injury source. An actor is forgotten once every part is healed. Decorator `injury_engine_injuries(uuid)` returns the injuries of every source, with their descriptions already written for that actor.
+
+### Real damage
+
+Ordinary damage is classified by what hit the actor:
+
+| Source | Caused by |
+|---|---|
+| slashing | swords, axes |
+| piercing | daggers, arrows |
+| bludgeoning | maces, hammers, staves, fists |
+| burning, freezing, shocking | fire, frost and shock spells |
+| mauling | creatures |
+| falling | landing from a height |
+| generic | anything else |
+
+Each health point lost becomes damage on a body part, so all parts at maximum means no health left. Damage goes through the same light, medium and severe stages as torture. Health regained heals random injuries one point at a time, and a type, a body part and the whole body are each reported as they finish healing. A killing blow is narrated with the wound that caused it.
+
+### Torture
 
 | Torture points | Torture stage | Heal level (while healing) |
 |---|---|---|
@@ -47,19 +87,29 @@ The engine owns decals: they can vanish on a cell change or reload, and scripts 
 | 4–10 | medium | mid |
 | 11+ | severe | low |
 
-Each lash adds points to a random part and healing takes them away again: every `hours_per_point` game hours a part loses 1 point, and health restored by spells, potions or regeneration heals random parts one point at a time. When a healing spell, staff or potion starts working on someone, a heal session begins: their overlay bar turns light blue and the narration describes each wounded part at its heal level (a part at 15 points is "low", healed down to 9 it is "mid"); a new hit ends the session and the bar turns red again. An actor is forgotten once every part is back at 0. Decorator `injury_engine_injuries(uuid)` returns the injuries of every source with their descriptions already written for that actor.
+Each torture hit adds points to a body part, and healing takes them away again:
+- every `hours_per_point` game hours, a part loses 1 point;
+- health restored by spells, potions or regeneration heals random parts one point at a time.
 
-### Other injuries
+While a heal session is open, the overlay bar turns light blue and the narration describes each wounded part at its heal level. For example, a part at 15 points is "low", and once it has healed down to 9 it is "mid". A new hit ends the session.
 
-Ordinary damage is tracked too, classified by what hit the actor: slashing (swords, axes), piercing (daggers, arrows), bludgeoning (maces, hammers, staves, fists), burning, freezing and shocking (fire, frost and shock spells), mauling (creatures), falling (landing from a height) and generic (anything else). Each health point lost becomes damage on a random body part (all parts at maximum = no health left) with the same light / medium / severe stages, and health regained heals random injuries one point at a time; a type, a body part and the whole body are each reported as they finish healing. Real damage first replaces torture damage: while an actor still carries torture wounds the hit does not lower health (the part's worst type drops and the others are clamped to it), and the overlay shows the replaced part as a darker red bar; once all torture is replaced, further damage is normal and can kill. Torture wounds themselves keep their special rules (they heal over time and never take health below 10%).
+### Real damage replaces torture
 
-### Editing the injury text and numbers
+Real damage first replaces torture damage. While an actor still has torture wounds, a real hit does not lower health: the part's worst torture type drops, and the other types are clamped to it. The overlay shows the replaced part as a darker red bar. Once all torture is replaced, further damage is normal and can kill. Torture wounds keep their own rules: they heal over time and never take health below 10%.
 
-Everything the LLM reads about injuries, the Torture_Target text, the overlay title and colors and the setting defaults are in `SKSE/Plugins/Injury_Engine/injuries/*.json` (one file per source). `injuries/guide.md` is a ready-made instruction sheet you can give to a chat assistant to improve or extend them.
+### Editing and adding injury types
+
+Everything about injuries lives in `SKSE/Plugins/Injury_Engine/injuries/*.json`, one file per source:
+- what the LLM reads about injuries;
+- the Torture_Target text;
+- the overlay title and colors;
+- the setting defaults.
+
+Other mods can ship their own `<id>.json` there, and it loads like the built-in ones. `injuries/guide.md` explains the format and is a ready-made instruction sheet you can give to a chat assistant to improve or extend the files.
 
 ## Building
 
-- SKSE plugin: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it, ~6 min). The .dll is copied to `SKSE/Plugins/`.
+- SKSE plugin: run `make dll`. It needs CMake and vcpkg, with `VCPKG_ROOT` set. CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT), taken from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it in about 6 min. The .dll is copied to `SKSE/Plugins/`.
 - Scripts: `pyro skyrimse.ppj` (VS Code task "compile: pyro").
 - ESP: `make esp` builds `Injury_Engine.esp` from `Spriggit/Injury_Engine/`. After editing in xEdit, run `make serialize`.
 - Release: `make release` → `versions/Injury_Engine <version>.7z` (FOMOD + core). Procedure: [release-guide.md](release-guide.md).
