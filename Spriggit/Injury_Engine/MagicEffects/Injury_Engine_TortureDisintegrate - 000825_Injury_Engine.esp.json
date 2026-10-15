@@ -1,0 +1,122 @@
+{
+  "FormKey": "000825:Injury_Engine.esp",
+  "EditorID": "Injury_Engine_TortureDisintegrate",
+  "Version2": 9,
+  "VirtualMachineAdapter": {
+    "Scripts": [
+      {
+        "Name": "magicAttachAshPileOnDeath",
+        "Properties": [
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "ImmunityList",
+            "Object": "0F6534:Skyrim.esm"
+          },
+          {
+            "MutagenObjectType": "ScriptFloatProperty",
+            "Name": "ShaderDuration",
+            "Data": 4.0
+          },
+          {
+            "MutagenObjectType": "ScriptObjectProperty",
+            "Name": "MagicEffectShader",
+            "Object": "0D22FB:Skyrim.esm"
+          },
+          {
+            "MutagenObjectType": "ScriptFloatProperty",
+            "Name": "fDelay",
+            "Data": 1.25
+          }
+        ]
+      }
+    ]
+  },
+  "Name": {
+    "TargetLanguage": "English",
+    "Value": "Disintegrate"
+  },
+  "MenuDisplayObject": "0435A5:Skyrim.esm",
+  "Keywords": [
+    "01CEAF:Skyrim.esm"
+  ],
+  "Flags": [
+    "Detrimental",
+    "NoArea",
+    "FXPersist",
+    "HideInUI",
+    "PowerAffectsMagnitude",
+    "NoDeathDispel"
+  ],
+  "MagicSkill": "Destruction",
+  "ResistValue": "ResistShock",
+  "CastingLight": "057C68:Skyrim.esm",
+  "TaperWeight": 1.0,
+  "Archetype": {
+    "MutagenObjectType": "MagicEffectArchetype",
+    "ActorValue": "Health"
+  },
+  "Projectile": "034190:Skyrim.esm",
+  "CastType": "Concentration",
+  "TargetType": "Aimed",
+  "CastingArt": "058E9B:Skyrim.esm",
+  "ImpactData": "038B05:Skyrim.esm",
+  "DualCastScale": 1.0,
+  "Sounds": [
+    {
+      "Sound": "03F208:Skyrim.esm"
+    },
+    {
+      "Type": "Release",
+      "Sound": "03F206:Skyrim.esm"
+    },
+    {
+      "Type": "ConcentrationCastLoop",
+      "Sound": "03F205:Skyrim.esm"
+    }
+  ],
+  "Description": {
+    "TargetLanguage": "English",
+    "Value": ""
+  },
+  "Conditions": [
+    {
+      "MutagenObjectType": "ConditionFloat",
+      "Data": {
+        "MutagenObjectType": "HasPerkConditionData",
+        "RunOnType": "Target",
+        "Perk": "0F3F0E:Skyrim.esm"
+      },
+      "ComparisonValue": 1.0
+    },
+    {
+      "MutagenObjectType": "ConditionFloat",
+      "CompareOperator": "LessThan",
+      "Data": {
+        "MutagenObjectType": "GetActorValuePercentConditionData",
+        "ActorValue": "Health"
+      },
+      "ComparisonValue": 0.15
+    },
+    {
+      "MutagenObjectType": "ConditionFloat",
+      "Data": {
+        "MutagenObjectType": "HasKeywordConditionData",
+        "Keyword": "013797:Skyrim.esm"
+      }
+    },
+    {
+      "MutagenObjectType": "ConditionFloat",
+      "Data": {
+        "MutagenObjectType": "HasKeywordConditionData",
+        "Keyword": "035D59:Skyrim.esm"
+      }
+    },
+    {
+      "MutagenObjectType": "ConditionFloat",
+      "Data": {
+        "MutagenObjectType": "HasKeywordConditionData",
+        "Keyword": "000EDF:Skyrim.esm"
+      }
+    }
+  ]
+}

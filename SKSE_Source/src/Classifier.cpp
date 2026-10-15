@@ -18,6 +18,8 @@ namespace Classifier
         constexpr double kTortureWindow = 2.0;  // real seconds a "(torture)" effect stays current after it was last seen
         constexpr double kQuietRecast = 1.0;  // real seconds between QuietMarker casts on one victim (the marker lasts 3 s)
         constexpr std::uint32_t kQuietSpellId = 0x81A;  // SPEL Injury_Engine_QuietSpell
+        constexpr double kCalmWindow = 3.0;  // real seconds a torture hit keeps its victim from fighting back
+        constexpr double kCombatPending = 1.0;  // real seconds a combat start waits for the torture hit that caused it
 
         struct Recent
         {
@@ -45,6 +47,18 @@ namespace Classifier
         // the active-effect list: they run inside the engine's own effect update, where a nested walk crashes.
         std::unordered_map<RE::FormID, TortureSeen> g_torture;
         std::unordered_map<RE::FormID, double> g_quiet;  // victim -> last QuietMarker cast
+
+        struct Pair
+        {
+            RE::FormID other = 0;  // torture attacker / combat target
+            double when = 0.0;
+        };
+        std::unordered_map<RE::FormID, Pair> g_calm;  // victim -> latest torture hit (attacker)
+        std::unordered_map<RE::FormID, Pair> g_combatStart;  // actor -> latest combat start (target)
+        // victim -> last whip lash, for the kIgnoreFriendlyHits flags SuppressFriendHits set (own lock: the fight
+        // reaction hook runs inside the engine's hit handling)
+        std::mutex g_friendLock;
+        std::unordered_map<RE::FormID, double> g_friendFlag;
         // classify effect_file / effect_id -> runtime MGEF form id (ESL light masters need explicit resolution)
         std::unordered_map<std::string, RE::FormID> g_classifyEffectForms;
 
@@ -387,6 +401,81 @@ namespace Classifier
             return controller->fallTime > 0.0f ? falling : -2;
         }
 
+        // The padded whip (a classify rule's ignore weapon).
+        bool IsIgnoredWeapon(RE::FormID source)
+        {
+            const auto* weapon = source ? RE::TESForm::LookupByID<RE::TESObjectWEAP>(source) : nullptr;
+            if (!weapon) {
+                return false;
+            }
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (rule.hasIgnore && LookupForm(rule.ignoreFile, rule.ignoreId) == weapon) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Ends the combat a torture hit started: the victim (and its alarm on the player) stands down. SKSE task,
+        // because combat and hit events arrive inside the engine's own update.
+        void StopCombatLater(RE::FormID victimId, RE::FormID attackerId)
+        {
+            auto* tasks = SKSE::GetTaskInterface();
+            if (!tasks) {
+                return;
+            }
+            tasks->AddTask([victimId, attackerId]() {
+                auto* actor = RE::TESForm::LookupByID<RE::Actor>(victimId);
+                if (!actor || actor->IsDead()) {
+                    return;
+                }
+                actor->StopCombat();
+                if (auto* lists = RE::ProcessLists::GetSingleton()) {
+                    lists->StopCombatAndAlarmOnActor(actor, false);
+                }
+                SKSE::log::debug("calm: victim {:08X} stops fighting torture attacker {:08X}", victimId, attackerId);
+            });
+        }
+
+        // Caller holds g_lock. A combat start that came before this hit (same attacker) is ended now.
+        void NoteCalmLocked(RE::FormID victimId, RE::FormID attackerId, double now)
+        {
+            if (g_calm.size() > 512) {
+                g_calm.clear();
+            }
+            g_calm[victimId] = { attackerId, now };
+            if (const auto it = g_combatStart.find(victimId);
+                it != g_combatStart.end() && it->second.other == attackerId && now - it->second.when <= kCombatPending) {
+                g_combatStart.erase(it);
+                StopCombatLater(victimId, attackerId);
+            }
+        }
+
+        class CombatSink : public RE::BSTEventSink<RE::TESCombatEvent>
+        {
+        public:
+            RE::BSEventNotifyControl ProcessEvent(const RE::TESCombatEvent* event, RE::BSTEventSource<RE::TESCombatEvent>*) override
+            {
+                if (!event || !event->actor || !event->targetActor || *event->newState != RE::ACTOR_COMBAT_STATE::kCombat) {
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                const RE::FormID actorId = event->actor->GetFormID();
+                const RE::FormID targetId = event->targetActor->GetFormID();
+                const double now = NowSeconds();
+                std::lock_guard lock(g_lock);
+                if (const auto it = g_calm.find(actorId); it != g_calm.end() && it->second.other == targetId && now - it->second.when <= kCalmWindow) {
+                    StopCombatLater(actorId, targetId);
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                // The torture hit may be reported after the combat start: keep it for NoteCalmLocked.
+                if (g_combatStart.size() > 512) {
+                    g_combatStart.clear();
+                }
+                g_combatStart[actorId] = { targetId, now };
+                return RE::BSEventNotifyControl::kContinue;
+            }
+        };
+
         class HitSink : public RE::BSTEventSink<RE::TESHitEvent>
         {
         public:
@@ -401,7 +490,13 @@ namespace Classifier
                             }
                         }
                     }
+                    const bool whip = torture < 0 && IsIgnoredWeapon(event->source);
+                    SKSE::log::debug("hit event target:{:08X} source:{:08X} cause:{:08X} torture:{} whip:{}", event->target->GetFormID(),
+                        event->source, event->cause ? event->cause->GetFormID() : 0, IdOf(torture), whip);
                     std::lock_guard lock(g_lock);
+                    if ((torture >= 0 || whip) && event->cause && event->target->Is(RE::FormType::ActorCharacter)) {
+                        NoteCalmLocked(event->target->GetFormID(), event->cause->GetFormID(), NowSeconds());
+                    }
                     if (g_recent.size() > 512) {
                         g_recent.clear();
                     }
@@ -427,9 +522,87 @@ namespace Classifier
             }
         }
         static HitSink sink;
+        static CombatSink combatSink;
         if (auto* holder = RE::ScriptEventSourceHolder::GetSingleton()) {
             holder->AddEventSink<RE::TESHitEvent>(&sink);
-            SKSE::log::info("Classifier: hit event sink registered");
+            holder->AddEventSink<RE::TESCombatEvent>(&combatSink);
+            SKSE::log::info("Classifier: hit and combat event sinks registered");
+        }
+    }
+
+    void NoteCalm(RE::Actor* victim, RE::Actor* attacker)
+    {
+        if (!victim || !attacker) {
+            return;
+        }
+        std::lock_guard lock(g_lock);
+        NoteCalmLocked(victim->GetFormID(), attacker->GetFormID(), NowSeconds());
+    }
+
+    bool IsWhipAttacker(RE::Actor* attacker)
+    {
+        if (!attacker) {
+            return false;
+        }
+        for (const bool left : { false, true }) {
+            if (const auto* equipped = attacker->GetEquippedObject(left); equipped && IsIgnoredWeapon(equipped->GetFormID())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void SuppressFriendHits(RE::Actor* victim)
+    {
+        if (!victim) {
+            return;
+        }
+        constexpr auto kFlag = static_cast<std::uint32_t>(RE::TESObjectREFR::RecordFlags::kIgnoreFriendlyHits);
+        std::lock_guard lock(g_friendLock);
+        const RE::FormID victimId = victim->GetFormID();
+        if (const auto it = g_friendFlag.find(victimId); it != g_friendFlag.end()) {
+            it->second = NowSeconds();
+            victim->formFlags |= kFlag;
+            return;
+        }
+        if (victim->formFlags & kFlag) {
+            return;  // set by the game or another mod: not ours to clear
+        }
+        victim->formFlags |= kFlag;
+        g_friendFlag[victimId] = NowSeconds();
+        SKSE::log::debug("calm: victim {:08X} ignores friendly hits while whipped", victimId);
+    }
+
+    void ReleaseFriendHits(bool all)
+    {
+        const auto release = [](bool everything) {
+            constexpr auto kFlag = static_cast<std::uint32_t>(RE::TESObjectREFR::RecordFlags::kIgnoreFriendlyHits);
+            std::lock_guard lock(g_friendLock);
+            const double now = NowSeconds();
+            for (auto it = g_friendFlag.begin(); it != g_friendFlag.end();) {
+                if (!everything && now - it->second <= kCalmWindow) {
+                    ++it;
+                    continue;
+                }
+                if (auto* actor = RE::TESForm::LookupByID<RE::Actor>(it->first)) {
+                    actor->formFlags &= ~kFlag;
+                }
+                SKSE::log::debug("calm: victim {:08X} counts friendly hits again", it->first);
+                it = g_friendFlag.erase(it);
+            }
+        };
+        if (all) {
+            release(true);
+            return;
+        }
+        {
+            std::lock_guard lock(g_friendLock);
+            if (g_friendFlag.empty()) {
+                return;
+            }
+        }
+        if (auto* tasks = SKSE::GetTaskInterface()) {
+            tasks->AddTask([release]() { release(false); });
         }
     }
 
@@ -448,6 +621,25 @@ namespace Classifier
                 SKSE::log::info("torture effect: victim {:08X} source {}", victimId, IdOf(index));
             }
         }
+    }
+
+    int TortureSourceOfEffect(const RE::EffectSetting* mgef)
+    {
+        const int source = TortureSourceOf(mgef);
+        return source >= 0 ? source : -1;
+    }
+
+    int TortureSourceOfSpell(const RE::MagicItem* item)
+    {
+        if (!item) {
+            return -1;
+        }
+        for (const auto* effect : item->effects) {
+            if (const int source = effect ? TortureSourceOf(effect->baseEffect) : -2; source >= 0) {
+                return source;
+            }
+        }
+        return -1;
     }
 
     int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee, bool* unarmedForm)
@@ -495,18 +687,40 @@ namespace Classifier
             }
         }
         if (attacker) {
-            for (const bool left : { false, true }) {
-                auto* equipped = attacker->GetEquippedObject(left);
-                const Match hit = ClassifyForm(equipped, attacker);
-                if (hit.source != -2) {
-                    SKSE::log::debug("classify {:08X}: attacker {:08X} equipped {:08X} -> {}", victimId, attacker->GetFormID(),
-                        equipped ? equipped->GetFormID() : 0, IdOf(hit.source));
-                    // an equipped spell (Sparks (torture), ...) ticks every frame: only a weapon is a melee hit
-                    return take(hit, equipped && equipped->IsWeapon());
+            // Both hands first: a Padded Whip in one hand must not swallow the beam of a "(torture)" spell in the
+            // other (the whip's ignore result lets the game apply the spell damage untouched, so torture could kill).
+            RE::TESForm* hands[2] = { attacker->GetEquippedObject(false), attacker->GetEquippedObject(true) };
+            Match matches[2] = { ClassifyForm(hands[0], attacker), ClassifyForm(hands[1], attacker) };
+            const int active = ClassifyActiveTorture(victim);
+            int pick = -1;
+            for (int i = 0; i < 2 && pick < 0; ++i) {
+                // the victim burns from this hand's torture spell right now: a beam tick
+                if (active >= 0 && matches[i].source == active && hands[i] && !hands[i]->IsWeapon()) {
+                    pick = i;
                 }
             }
-            if (!attacker->GetEquippedObject(false) && !attacker->GetEquippedObject(true)) {
-                if (const int active = ClassifyActiveTorture(victim); active != -2) {
+            for (int i = 0; i < 2 && pick < 0; ++i) {
+                if (matches[i].source >= 0) {
+                    pick = i;
+                }
+            }
+            if (pick >= 0) {
+                SKSE::log::debug("classify {:08X}: attacker {:08X} equipped {:08X} -> {}", victimId, attacker->GetFormID(),
+                    hands[pick]->GetFormID(), IdOf(matches[pick].source));
+                // an equipped spell (Sparks (torture), ...) ticks every frame: only a weapon is a melee hit
+                return take(matches[pick], hands[pick]->IsWeapon());
+            }
+            if (matches[0].source == -1 || matches[1].source == -1) {
+                if (active != -2) {
+                    SKSE::log::debug("classify {:08X}: attacker {:08X} holds the padded whip but torture effect -> {}", victimId,
+                        attacker->GetFormID(), IdOf(active));
+                    return take({ active, false }, false);
+                }
+                SKSE::log::debug("classify {:08X}: attacker {:08X} padded whip -> ignore", victimId, attacker->GetFormID());
+                return take({ -1, false }, true);
+            }
+            if (!hands[0] && !hands[1]) {
+                if (active != -2) {
                     SKSE::log::debug("classify {:08X}: attacker {:08X} unarmed but torture effect -> {}", victimId, attacker->GetFormID(),
                         IdOf(active));
                     return take({ active, false }, false);

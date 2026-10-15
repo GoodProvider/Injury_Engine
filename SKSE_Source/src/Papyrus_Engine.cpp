@@ -1,3 +1,4 @@
+#include "Classifier.h"
 #include "InjuryConfig.h"
 #include "InjuryEngine.h"
 #include "Overlay.h"
@@ -61,6 +62,7 @@ namespace
     {
         auto result = InjuryEngine::TakeHits();
         Overlay::Notify();
+        Classifier::ReleaseFriendHits(false);  // whip victims count friendly hits again after the lashes stop
         return result;
     }
 

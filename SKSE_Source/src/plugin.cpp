@@ -66,6 +66,9 @@ namespace
         case SKSE::MessagingInterface::kPostLoadGame:
             Overlay::Reset();
             break;
+        case SKSE::MessagingInterface::kSaveGame:
+            Classifier::ReleaseFriendHits(true);  // the temporary whip flag is never saved
+            break;
         default:
             break;
         }

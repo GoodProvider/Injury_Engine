@@ -48,6 +48,10 @@ namespace InjuryEngine
     // True while the engine itself is changing health: the damage hooks must ignore it.
     bool IsInternalDamage();
 
+    // Gives back health the game already took (HandleHealthDamage reports damage after it is applied), as internal
+    // damage so the hooks ignore it. No-op on a dead actor or a non-positive amount.
+    void RestoreHealth(RE::Actor* actor, float amount);
+
     // Torture hit on a random part (source model "torture"). Takes the matching health (never below the floor).
     // Returns a hit code, or -1 for None/dead actors and unknown / non-torture sources.
     std::int32_t Hit(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId);

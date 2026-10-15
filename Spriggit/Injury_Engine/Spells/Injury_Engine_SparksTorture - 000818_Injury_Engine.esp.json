@@ -25,7 +25,7 @@
       }
     },
     {
-      "BaseEffect": "0F3F0C:Skyrim.esm",
+      "BaseEffect": "000825:Injury_Engine.esp",
       "Data": {
         "Magnitude": 200.0,
         "Duration": 1

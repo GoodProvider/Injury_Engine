@@ -1117,6 +1117,15 @@ namespace InjuryEngine
         return g_internal > 0;
     }
 
+    void RestoreHealth(RE::Actor* actor, float amount)
+    {
+        if (!actor || amount <= 0.0f || actor->IsDead()) {
+            return;
+        }
+        InternalScope scope;
+        actor->AsActorValueOwner()->RestoreActorValue(RE::ActorValue::kHealth, amount);
+    }
+
     namespace
     {
         std::int32_t HitPoints(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId, int part, bool configPoints)
@@ -1899,6 +1908,14 @@ namespace InjuryEngine
                 LastReal rec;
                 {
                     std::lock_guard lock(g_lock);
+                    // torture must never kill: say so even without verbose logging
+                    if (const auto st = g_actors.find(victim->GetFormID()); !event->dead && st != g_actors.end() && HasTorture(st->second)) {
+                        const auto last = g_lastReal.find(victim->GetFormID());
+                        auto* killer = event->actorKiller ? event->actorKiller->As<RE::Actor>() : nullptr;
+                        SKSE::log::info("death {} under torture, killer {}, last real hit: {}", LogActor(victim), LogActor(killer),
+                            last != g_lastReal.end() ? std::format("{} {:.1f}s ago", SourceId(last->second.source), NowSeconds() - last->second.when)
+                                                     : std::string("none"));
+                    }
                     const auto it = g_lastReal.find(victim->GetFormID());
                     if (it == g_lastReal.end()) {
                         return RE::BSEventNotifyControl::kContinue;
