@@ -69,7 +69,6 @@
     "narration_enabled": true,
     "narration_cooldown": 8,
     "health_narration_cooloff": 6,
-    "death_narration": true,
     "torture_narration_window_size": 30,
     "torture_maximum_break": 3,
     "torture_direct_narration_gap": 6,

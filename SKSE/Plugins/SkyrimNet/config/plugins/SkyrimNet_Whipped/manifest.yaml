@@ -6,6 +6,50 @@ plugin:
 
 schema:
   fields:
+    - name: "Injury Narration"
+      path: "whip.narration.injury_mode"
+      type: "select"
+      description: "Real-damage hits (slashing, piercing, burning, ...). Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      defaultValue: "Direct Narration"
+      options:
+        - "Direct Narration"
+        - "Event"
+        - "Silent"
+      category: "Narration"
+
+    - name: "Healing Narration"
+      path: "whip.narration.healing_mode"
+      type: "select"
+      description: "Healing of wounds (spells, staffs, potions): start, progress, pain gone, fully healed. Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      defaultValue: "Direct Narration"
+      options:
+        - "Direct Narration"
+        - "Event"
+        - "Silent"
+      category: "Narration"
+
+    - name: "Death Narration"
+      path: "whip.narration.death_mode"
+      type: "select"
+      description: "Killing blows from real damage: the killing wound and the last moment. Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      defaultValue: "Direct Narration"
+      options:
+        - "Direct Narration"
+        - "Event"
+        - "Silent"
+      category: "Narration"
+
+    - name: "Torture Narration"
+      path: "whip.narration.torture_mode"
+      type: "select"
+      description: "Torture (whipping, pinching, slapping, pulling, punching, fire / frost / shock). Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      defaultValue: "Direct Narration"
+      options:
+        - "Direct Narration"
+        - "Event"
+        - "Silent"
+      category: "Narration"
+
     - name: "NPC must already carry a whip"
       path: "whip.action.require_whip"
       type: "bool"
@@ -95,13 +139,6 @@ schema:
       min: 0
       max: 120
       defaultValue: 6.0
-      category: "Narration"
-
-    - name: "Narrate killing blows"
-      path: "whip.narration.death"
-      type: "bool"
-      description: "When real damage kills someone, describe the killing wound (what it looks and smells like, the last moment). In sight with narration on: a Direct Narration; otherwise a short-lived event."
-      defaultValue: true
       category: "Narration"
 
     - name: "Narration cooldown (sec)"

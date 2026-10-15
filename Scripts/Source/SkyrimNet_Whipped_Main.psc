@@ -64,7 +64,11 @@ Float Property narration_cooldown = 8.0 Auto Hidden
 Float Property health_narration_cooloff = 6.0 Auto Hidden
 Float Property last_health_narration = -1000.0 Auto Hidden
 ; Killing blows of real damage: narrate the death line (death block of the source's injuries JSON)
-Bool Property death_narration = True Auto Hidden
+; Narration mode per category (whip.narration.*_mode): 0 Direct Narration, 1 Event (short-lived only), 2 Silent
+int Property injury_mode = 0 Auto Hidden
+int Property healing_mode = 0 Auto Hidden
+int Property death_mode = 0 Auto Hidden
+int Property torture_mode = 0 Auto Hidden
 Float Property torture_narration_window_size = 30.0 Auto Hidden
 ; A pause this long between hits ends the torture (end narration); this often one combined line during it
 Float Property torture_maximum_break = 3.0 Auto Hidden
@@ -230,6 +234,34 @@ Bool Function DefaultBool(String setting)
     return SkyrimNet_Whipped_Engine.Number(SOURCE_WHIP, "defaults." + setting, 1.0) > 0.5
 EndFunction
 
+; A narration mode select: "Direct Narration" 0, "Event" 1, "Silent" 2 (anything else: 0).
+int Function NarrationMode(String path)
+    String v = SkyrimNetApi.GetConfigString(PLUGIN_CONFIG, path, "Direct Narration")
+    if v == "Silent"
+        return 2
+    elseif v == "Event"
+        return 1
+    endif
+    return 0
+EndFunction
+
+; Mode for an event kind: "health" injury, "torturing" torture, "death" death, else healing.
+int Function ModeOf(String kind)
+    if kind == "health"
+        return injury_mode
+    elseif kind == "torturing"
+        return torture_mode
+    elseif kind == "death"
+        return death_mode
+    endif
+    return healing_mode
+EndFunction
+
+; Direct Narration allowed for kind: narration on and the kind's mode is Direct Narration.
+Bool Function DirectAllowed(String kind)
+    return narration_enabled && ModeOf(kind) == 0
+EndFunction
+
 Function ApplyPluginConfig()
     require_whip = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.action.require_whip", DefaultBool("require_whip"))
     give_gear = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.action.give_to_player", DefaultBool("give_to_player"))
@@ -240,7 +272,10 @@ Function ApplyPluginConfig()
     narration_enabled = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.narration.enabled", DefaultBool("narration_enabled"))
     narration_cooldown = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.cooldown", DefaultNumber("narration_cooldown", 8.0))
     health_narration_cooloff = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.health_narration_cooloff", DefaultNumber("health_narration_cooloff", 6.0))
-    death_narration = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "whip.narration.death", DefaultBool("death_narration"))
+    injury_mode = NarrationMode("whip.narration.injury_mode")
+    healing_mode = NarrationMode("whip.narration.healing_mode")
+    death_mode = NarrationMode("whip.narration.death_mode")
+    torture_mode = NarrationMode("whip.narration.torture_mode")
     torture_narration_window_size = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_narration_window_size", DefaultNumber("torture_narration_window_size", 30.0))
     torture_maximum_break = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_maximum_break", DefaultNumber("torture_maximum_break", 3.0))
     torture_direct_narration_gap = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "whip.narration.torture_direct_narration_gap", DefaultNumber("torture_direct_narration_gap", 6.0))
@@ -263,7 +298,7 @@ Function ApplyPluginConfig()
     endif
     Trace("ApplyPluginConfig", "require_whip:" + require_whip + " give_gear:" + give_gear + " max_strikes:" + max_strikes + " hours_per_point:" + hours_per_point \
         + " give_healing_hands:" + give_healing_hands + " regen_rate:" + regen_rate \
-        + " narration:" + narration_enabled + " death:" + death_narration + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
+        + " narration:" + narration_enabled + " modes injury/heal/death/torture:" + injury_mode + "/" + healing_mode + "/" + death_mode + "/" + torture_mode + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
 EndFunction
 
 ;----------------------------------------------------------------------------------------------------
@@ -379,7 +414,7 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         if msg != ""
             Float now = Utility.GetCurrentRealTime()
             Bool cooled = now < last_health_narration || now - last_health_narration >= health_narration_cooloff
-            if narration_enabled && cooled && SkyrimNetApi.GetSpeechQueueSize() == 0
+            if DirectAllowed(kind) && cooled && SkyrimNetApi.GetSpeechQueueSize() == 0
                 last_health_narration = now
                 DirectNarrate(msg, attacker, victim, "health", "start")
             else
@@ -604,7 +639,7 @@ EndFunction
 
 ; DirectNarration when the speech queue is empty, otherwise a short-lived event.
 Function OptionalDirectNarrate(String msg, Actor speaker, Actor target, String session = "start")
-    if SkyrimNetApi.GetSpeechQueueSize() == 0
+    if DirectAllowed("torturing") && SkyrimNetApi.GetSpeechQueueSize() == 0
         DirectNarrate(msg, speaker, target, "torture", session)
     else
         Trace("OptionalDirectNarrate", "speech queue busy, event: " + msg)
@@ -663,7 +698,9 @@ Function SceneSend(String phase, int[] picked, Bool purge)
     Actor speaker = SceneAttacker(picked[0])
     Actor target = SceneVictim(picked[0])
     Trace("SceneSend", phase + " pairs:" + picked.Length + " player:" + involved + ": " + msg)
-    if !narration_enabled
+    if torture_mode == 2
+        return
+    elseif !DirectAllowed("torturing")
         String method = StorageUtil.StringListGet(self, KEY_SC_SRC, picked[0])
         if method == ""
             method = SOURCE_WHIP
@@ -774,7 +811,7 @@ String Function InjuryLogCategory(String kind) global
 EndFunction
 
 Function RegisterInjuryShortEvent(String msg, Actor speaker, Actor target, String kind, String method, Actor torturer, Actor victim, String session = "start")
-    if msg == ""
+    if msg == "" || ModeOf(kind) == 2
         return
     endif
     String eventType = "whip_heal"
@@ -996,7 +1033,9 @@ Function HealSend(String phase, int i, String lead)
     endif
     Actor player = Game.GetPlayer()
     Trace("HealSend", phase + " " + target.GetDisplayName() + " caster:" + NameOf(caster) + ": " + msg)
-    if !narration_enabled
+    if healing_mode == 2
+        return
+    elseif !DirectAllowed("healing")
         RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target, SessionOf(phase))
     elseif target == player || caster == player
         SkyrimNetApi.PurgeDialogue(true)
@@ -1111,7 +1150,7 @@ Event OnUpdate()
 EndEvent
 
 ; Killing blows queued by the DLL (a death soon after a real hit): one death line each. In sight with narration on:
-; DirectNarration (once per death, no cooloff); otherwise a short-lived injury_death event. Setting off: nothing.
+; DirectNarration (once per death, no cooloff); otherwise a short-lived injury_death event. Mode Event: always the event; Silent: nothing.
 Function NarrateDeaths()
     String[] texts = SkyrimNet_Whipped_Engine.TakeDeaths()
     if texts.Length == 0
@@ -1123,10 +1162,10 @@ Function NarrateDeaths()
     int i = 0
     while i < texts.Length && i < victims.Length && i < attackers.Length && i < sources.Length
         Actor victim = victims[i]
-        if victim != None && death_narration && texts[i] != ""
+        if victim != None && death_mode != 2 && texts[i] != ""
             ClearTortureScene(victim)
             ClearHealBatch(victim)
-            if narration_enabled && PairVisible(attackers[i], victim)
+            if DirectAllowed("death") && PairVisible(attackers[i], victim)
                 DirectNarrate(texts[i], attackers[i], victim, "health", "death")
             else
                 Trace("NarrateDeaths", sources[i] + " short-lived event: " + texts[i])
