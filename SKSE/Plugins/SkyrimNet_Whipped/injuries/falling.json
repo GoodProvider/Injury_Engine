@@ -142,6 +142,21 @@
     },
     "narration": {
       "form": "the rough ground",
+      "session": {
+        "clause": "{target} {what}",
+        "hit": {
+          "start": "hits {form}",
+          "start_many": "hits {form}",
+          "again": "hits {form} again and again",
+          "again_many": "hits {form} again and again"
+        },
+        "no_attacker_hit": {
+          "start": "hits {form}",
+          "again": "hits {form} again and again"
+        },
+        "switch": "trips {target} to the ground",
+        "hit_noun": "fall"
+      },
       "list": {
         "and": " and ",
         "comma": ", ",

@@ -989,6 +989,13 @@ namespace InjuryEngine
             return dot != std::string::npos ? text.substr(dot + 2) : text;
         }
 
+        // session.json wording, overridden per source by its narration.session.<key> (falling: "{target} hits {form}").
+        std::string SceneStr(int source, const std::string& key, std::string_view fallback = {})
+        {
+            const std::string own = InjuryConfig::Str(source, "narration.session." + key);
+            return own.empty() ? InjuryConfig::SessionStr(key, fallback) : own;
+        }
+
         // One attacker, one victim. The words come from session.json (hit.* / clause / inline.*) and the
         // source's narration.form and narration.hit.levels. Short events and the scene's start / again line share this.
         std::string AttackLine(int source, RE::Actor* attacker, RE::Actor* victim, int mask, int level, bool again, bool unarmed,
@@ -1000,10 +1007,10 @@ namespace InjuryEngine
             vars["attackers"] = NameOf(attacker);
             vars["form"] = NarrationForm(source, unarmed);
             vars["parts"] = PartsText(source, mask);
-            const std::string what = InjuryConfig::SessionStr(std::string("hit.") + phase,
+            const std::string what = SceneStr(source, std::string("hit.") + phase,
                 again ? "hits {target} again and again with {form}" : "hits {target} with {form}");
             vars["what"] = InjuryConfig::Render(what, vars);
-            const std::string sentence = InjuryConfig::Render(InjuryConfig::SessionStr("clause", "{attackers} {what}"), vars);
+            const std::string sentence = InjuryConfig::Render(SceneStr(source, "clause", "{attackers} {what}"), vars);
             const std::string feeling = InjuryConfig::Render(
                 InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), ActorVars(victim));
             if (sceneStart && !again) {
@@ -2204,7 +2211,7 @@ namespace InjuryEngine
                     const int first = group.front()->source;
                     std::string what;
                     if (same) {
-                        what = InjuryConfig::SessionStr(std::string("hit.") + ph + (many ? "_many" : ""));
+                        what = SceneStr(first, std::string("hit.") + ph + (many ? "_many" : ""));
                     } else {
                         what = InjuryConfig::SessionStr("mixed_hit." + ph);
                     }
@@ -2215,13 +2222,14 @@ namespace InjuryEngine
                         vars["form"] = NarrationForm(first, false);
                     }
                     vars["what"] = InjuryConfig::Render(what, vars);
-                    sentences.push_back(InjuryConfig::Render(InjuryConfig::SessionStr("clause"), vars));
+                    sentences.push_back(InjuryConfig::Render(
+                        same ? SceneStr(first, "clause") : InjuryConfig::SessionStr("clause"), vars));
                 }
                 for (const auto* p : alone) {
                     auto vars = ActorVars(victim);
                     vars["target"] = target;
                     vars["form"] = NarrationForm(p->source, false);
-                    sentences.push_back(target + " " + InjuryConfig::Render(InjuryConfig::SessionStr("no_attacker_hit." + ph), vars));
+                    sentences.push_back(target + " " + InjuryConfig::Render(SceneStr(p->source, "no_attacker_hit." + ph), vars));
                 }
             }
         }

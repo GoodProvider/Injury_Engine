@@ -123,7 +123,8 @@ narration.hit      hit narration: lead + verb + times + by when no attacker is n
                    (0 undamaged, 1 light, 2 medium, 3 severe)
 narration.summary  (torture) times words (once / twice / several / many)
 narration.session  (torture) switch, end, hit_noun; shared hit / mixed_hit / no_attacker_hit / inline templates
-                   in injuries/session.json (not a source)
+                   in injuries/session.json (not a source); a source may override clause, hit.* and
+                   no_attacker_hit.* here (falling: "{target} {what}" + "hits {form}" = "Nia hits the rough ground")
 narration.heal.level   (torture) high / mid / low: one heal-session sentence for the parts ({parts}) of this type
                    at that heal level, e.g. "The wounds on {name}'s {parts} have scabbed over." (low)
 narration.heal_events   (whipping and generic) spell / staff / potion healing: start, start_unhurt (target has no wounds), pain_gone, full, stopped
