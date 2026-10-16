@@ -28,7 +28,7 @@ One release version. `make release` runs `python_scripts/check-version.py -v ${V
 | `FOMOD/info.xml`, `FOMOD/ModuleConfig.xml` | `Version` | Generated from `FOMOD_source/` by `fomod-update-name-version.py` (git-ignored) |
 | git tag | bare `VERSION` (e.g. `0.1.0`) | Created only when the maintainer ships |
 
-Releases URL: `https://github.com/GoodProvider/SkyrimNet_Whip/releases/tag/{VERSION}` (matches the current `origin`; update if the repo is renamed).
+Releases URL: `https://github.com/GoodProvider/Injury_Engine/releases/tag/{VERSION}` (the GitHub repo is `Injury_Engine`; update `origin` if it still points at `SkyrimNet_Whipped`).
 
 ## Freshness matrix
 
@@ -50,7 +50,7 @@ Ground truth is the git delta since `base_tag` (none before 0.1.0) plus working-
 ### `CHANGELOG.md`
 
 ```markdown
-## [VERSION](https://github.com/GoodProvider/SkyrimNet_Whip/releases/tag/VERSION) — since [BASE](https://github.com/GoodProvider/SkyrimNet_Whip/releases/tag/BASE)
+## [VERSION](https://github.com/GoodProvider/Injury_Engine/releases/tag/VERSION) — since [BASE](https://github.com/GoodProvider/Injury_Engine/releases/tag/BASE)
 ```
 
 H3 themes, only when non-empty: Torture / action, Wounds / healing, Narration / prompts, Papyrus, SKSE / overlay, Install / settings, Docs. Prefer concrete identifiers (`injury_engine.*` keys, prompt files, StorageUtil keys, form names).

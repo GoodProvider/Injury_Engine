@@ -1,32 +1,44 @@
 # Changelog
 
-## Unreleased
+## [0.1.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.0) — initial release
 
-- New `Injury_Engine_Engine.PartPointsJson(Actor)` native (`InjuryEngine::PartPointsJson`, time applied) and `Injury_Engine_Main.External_PartPoints(Actor)`: torture points per part (`{"total","max","parts":[{"name","points","max"}]}`), used by SkyrimNet_SexLab's Aid / Punish torture bar.
-- Build against MinLL/CommonLibVR 4.39.5 (MIT, SE 1.7.99 / 1.7.104) through the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` (copy of SkyrimNet_SexLab's) instead of SexLab's alandtse/CommonLibSSE-NG v11.0.0 checkout (GPL-3.0). `find_package(CommonLibSSE)`; the colorglass registry and `-DCommonLibPath` are gone. No plugin code changes.
-- `LICENSE` added (MIT); README gains a License section.
-
-## [0.1.0](https://github.com/GoodProvider/SkyrimNet_Whip/releases/tag/0.1.0) — initial release
-
-### Whip / action
-- Padded whip `Injury_Engine_PaddedWhip` (WEAP 0x803) with COBJ recipe, enchantment `Injury_Engine_LashEnch` and effect `Injury_Engine_LashEffect` (`OnEffectStart` → `Main.OnLash`); weapon, impact data and welt decal `SNW_WhipMarkDecal.dds` come from PAH Diary Of Mine
-- LLM action `Whip_Target`, registered in Papyrus so eligibility can check inventory (`injury_engine.action.require_whip`, `injury_engine.action.give_to_player`, `injury_engine.action.max_strikes`). The `injury_engine.in_action` StorageUtil flag stops double counting. See [docs/authors/actions.md](docs/authors/actions.md)
+### Torture / action
+- Torture types `whipping`, `pinching`, `slapping`, `pulling`, `punching`, `fire`, `frost`, `shock` (`injuries/*.json`, `model: "torture"`). One value per (type, part); a part counts only its worst type; healing a part lowers every type on it.
+- Padded whip `Injury_Engine_PaddedWhip` (WEAP 0x803, COBJ recipe, `NonHostile`); a real hit runs `Injury_Engine_LashEnch` → `Injury_Engine_LashEffect` → `Main.OnLash`. Weapon, impact data, sounds and welt decal come from PAH Diary Of Mine (DOM not required).
+- Spells Flames / Frostbite / Sparks (torture) (SPEL 0x816–0x818, MGEF 0x813–0x815, non-hostile copies 0x822–0x825) cause `fire` / `frost` / `shock`; vanilla spells stay real damage. Unarmed hits by an attacker out of combat are `punching` (in combat too unless `injury_engine.body.punch_combat_health`).
+- Torture can't kill: `ValueModifierEffect::ModifyActorValue` and `ProcessHitData` hooks turn torture health ticks and punches into torture points, and health is never taken below 10% by torture. Torture bleedout (`injury_engine.body.torture_bleedout`): a victim at 15% health collapses until healed.
+- Torture is not aggression: lashes and out-of-combat punches start no combat (`GetFactionFightReaction` hook, `kIgnoreFriendlyHits`), and a combat start within 3 s of a torture hit is stopped. Vanilla hit barks are silenced on torture victims (`Injury_Engine_QuietMarker`, `Injury_Engine_QuietDialogue`).
+- LLM actions ship as SkyrimNet YAML (`external/goodprovider.injuryengine/actions/`). See [docs/authors/actions.md](docs/authors/actions.md).
+  - `Torture_Target` (target, type `whip|pinch|slap|pull|punch`, strikes capped by `injury_engine.action.max_strikes`); whipping needs the padded whip (`injury_engine.action.require_whip`).
+  - `Stop_Fighting` / `Stop_Fighting_by_Yielding`: the target decides through SkyrimNet's decision model (templates `prompts/decisions/injury_engine/accept_truce` / `accept_surrender`, API v12+); with the player as target a vanilla Yes / No box asks. Accepted: both stand down and Aggression is 0 for 24 game hours, guarded against new combat between the pair (`Classifier::NoteTruce`).
+  - `Start_Fighting`: restores Aggression, drops the torture calm and truce guard, then starts combat.
 
 ### Wounds / healing
-- `Injury_Engine.dll` (`DamageHealing_Engine`, co-saved) tracks six body parts per actor; each lash damages a random part, then damage drains and healing accrues over game time (`injury_engine.healing.hours_per_point`)
-- Wounds hold health down by deficit; health regained above the wounded level converts back into healing (`injury_engine.healing.regen_rate` for natural regeneration). Healing sources are detected by a `MagicTarget::AddTarget` hook plus an active-effect scan; `injury_engine.healing.give_healing_hands` adds Healing Hands to the player
-- Natives in `Injury_Engine_Engine.psc`: `HasOpenWounds`, `Hit`, `SyncHealth`, `TakeHealedActors`, `TakeHealed`, `Forget`
+- Real damage by type: `slashing`, `piercing`, `bludgeoning`, `burning`, `freezing`, `shocking`, `mauling`, `falling`, `generic` (`model: "health"`; `HandleHealthDamage` / `ModActorValue` hooks, `Classifier`). Health capacity is the sum of the actor's parts.
+- `model: "both"` files hold a torture and a health source (`falling.json`; the health half is `falling_real`). Other mods can ship their own `injuries/<id>.json` (SkyrimNet_Leashed: leash dragging). Schema: `injuries/guide.md`.
+- Six body parts (face, back, arms, legs) plus optional sexual parts (`injury_engine.body.include_sexual_parts`, `injuries/sexual_parts.json`).
+- Real damage replaces torture damage on its part first, so a tortured actor dies only after its torture wounds are replaced.
+- Healing over game time (`injury_engine.healing.hours_per_point`), by natural regeneration (`injury_engine.healing.regen_rate`) and by healing spells, staffs and potions, which open a heal session; `injury_engine.healing.give_healing_hands`.
+- `Injury_Engine.dll` (`InjuryEngine`) tracks every actor per part and source in the SKSE co-save (version 5).
 
 ### Narration / prompts
-- Batched hit narration per victim (`NarrateLash`, StorageUtil `injury_engine.pending_*`) and healing narration (`NarrateHealing`, `NarrateSourceHeal`, `injury_engine.heal_*`); settings `injury_engine.narration.enabled`, `.cooldown`, `.max_distance`, `.event_ttl`
-- Prompts `character_bio/0420_whip_welts.prompt`, `user_final_instructions/0420_whip_pain.prompt` and `helpers/healing.prompt` (rendered by `Main.RenderHealPrompt`) under `external/goodprovider.injuryengine/`; decorator `injury_engine_welts(uuid)`. See [docs/authors/prompts.md](docs/authors/prompts.md) and [docs/reference/json-keys.md](docs/reference/json-keys.md)
+- All narration text is rendered in C++ from the injury JSON (`HitText`, `SceneText`, `HealMapText`, `DeathText`); no numbers reach the LLM ([docs/authors/prompts.md](docs/authors/prompts.md#no-numbers)).
+- Torture scene: one combined line for all (attacker, victim) pairs in sight: `start`, `again` every `injury_engine.narration.torture_direct_narration_gap`, `switch` on a change of method; dropped after `injury_engine.narration.torture_maximum_break`.
+- Heal sessions narrate start and progress by heal level; real hits and killing blows are narrated per `injury_engine.narration.injury_mode` / `healing_mode` / `death_mode` / `torture_mode` (Direct Narration, Event, Silent).
+- Reply gate: each automatic narration waits for SkyrimNet's spoken reply to the last one, or `injury_engine.narration.reply_timeout`.
+- Prompts `character_bio/0420_injury_looks.prompt` and `user_final_instructions/0420_injury_feels.prompt` over decorator `injury_engine_injuries(uuid)`. See [docs/reference/json-keys.md](docs/reference/json-keys.md).
+
+### Papyrus
+- External API on `Injury_Engine_Main`: `External_Damage` (preferred), `External_Injure`, `External_Torture`, `External_TortureText`, `External_Strike`, `External_Heal`, `External_PartPoints`, `External_SexualParts`, `External_SetSexualParts`. See [docs/developers/papyrus.md](docs/developers/papyrus.md).
 
 ### SKSE / overlay
-- PrismaUI overlay `PrismaUI/views/Injury_Engine/overlay.html` (`injury_engine.overlay.enabled`): one bar per tracked actor, fades 3 s after the last change. See [docs/developers/overlay.md](docs/developers/overlay.md)
+- PrismaUI overlay `PrismaUI/views/Injury_Engine/overlay.html` (`injury_engine.overlay.enabled`): a "Torture Damage" bar per tortured actor in the last torture type's color, light blue while healing, red where real damage replaced torture; fades 3 s after the last change. See [docs/developers/overlay.md](docs/developers/overlay.md).
+- Built against MinLL/CommonLibVR 4.39.5 (MIT) through the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`.
 
 ### Install / settings
-- Packaged as a FOMOD (core only) by `make release`; `python_scripts/check-version.py` verifies the version in the Makefile, both manifests, `CMakeLists.txt` and `version.rc`. Requires SkyrimNet Beta 25 (0.25.0), SKSE, Address Library, PapyrusUtil SE and PrismaUI
-- Dashboard settings under `config/plugins/Injury_Engine/manifest.yaml` (`whip.*`)
+- FOMOD (core only) built by `make release`; `python_scripts/check-version.py` checks the version in the Makefile, both manifests, `CMakeLists.txt` and `version.rc`.
+- Requires SkyrimNet Beta 25 (0.25.0) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
+- Dashboard settings `injury_engine.*` (`config/plugins/Injury_Engine/manifest.yaml`); full list in the README. `injury_engine.debug.verbose_logging` for troubleshooting.
 
 ### Docs
-- README, AGENTS.md, KNOWLEDGEBASE.md, `docs/`, [release-guide.md](release-guide.md)
+- README, AGENTS.md, KNOWLEDGEBASE.md, `docs/`, [release-guide.md](release-guide.md); MIT `LICENSE`.

@@ -2,7 +2,7 @@
   <!-- this file is generated from $source -->
   <Name>$name</Name>
   <Version>$version</Version>
-  <Description>Padded whip for SkyrimNet: lashes wound body parts that heal over time</Description>
+  <Description>Per-body-part injuries for SkyrimNet: real damage and torture wound body parts that heal over time</Description>
   <Author>Good Provider</Author>
   <Groups>
         <element>Optional</element>

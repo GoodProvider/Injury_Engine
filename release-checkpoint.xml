@@ -3,12 +3,12 @@
 <checkpoint>
   <metadata>
     <project>Injury_Engine</project>
-    <summary>Standalone padded whip for SkyrimNet with per-part wound and healing tracking.</summary>
-    <repository_root>c:\Skyrim\dev\mods\SkyrimNet_Whip</repository_root>
-    <updated>2026-10-04</updated>
+    <summary>Per-body-part injury tracking for SkyrimNet: real damage by type, torture damage and a padded whip, with healing, narration, prompts and an overlay.</summary>
+    <repository_root>c:\Skyrim\dev\mods\Injury_Engine</repository_root>
+    <updated>2026-10-16</updated>
     <base_tag>none (first release)</base_tag>
     <next_version>0.1.0</next_version>
-    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.0 (check-version.py); info.json and FOMOD written by make release; no git tag yet</version_status>
+    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.0 (check-version.py); changelogs cover 0.1.0 (Unreleased folded in); info.json and FOMOD written by make release; no git tag yet; GitHub repo to be Injury_Engine (origin still SkyrimNet_Whipped)</version_status>
     <related_artifacts>
       <artifact role="release rules">release-guide.md</artifact>
       <artifact role="release skill">.claude/skills/release/SKILL.md</artifact>
