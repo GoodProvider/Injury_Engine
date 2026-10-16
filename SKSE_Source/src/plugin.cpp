@@ -64,7 +64,12 @@ namespace
             TruceDecision::Init();
             Overlay::Init();
             break;
+        case SKSE::MessagingInterface::kPreLoadGame:
+            Classifier::ResetTruces();  // a later truce must not outlive loading an earlier save
+            break;
         case SKSE::MessagingInterface::kNewGame:
+            Classifier::ResetTruces();
+            [[fallthrough]];
         case SKSE::MessagingInterface::kPostLoadGame:
             Overlay::Reset();
             TruceDecision::Reset();

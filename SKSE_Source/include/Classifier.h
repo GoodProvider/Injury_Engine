@@ -34,12 +34,27 @@ namespace Classifier
     // "(torture)" spells; the damage hook calls this for every torture-classified hit (punches).
     void NoteCalm(RE::Actor* victim, RE::Actor* attacker);
 
-    // Start_Fighting: drops the torture calm between `a` and `b` (both directions, and a pending combat start) and
-    // releases the friendly-hits flag on both, so a fight the LLM starts right after a torture is not stopped.
+    // Start_Fighting: drops the torture calm and the truce guard between `a` and `b` (both directions, and a pending
+    // combat start) and releases the friendly-hits flag on both, so a fight the LLM starts right after is not stopped.
     void ForgetCalm(RE::Actor* a, RE::Actor* b);
 
-    // Stop_Fighting: the calm's stop for any actor (StopCombat + StopCombatAndAlarmOnActor), as an SKSE task.
+    // Stop_Fighting: the calm's stop for any actor (StopCombat + StopCombatAndAlarmOnActor, and the actor is no longer
+    // angry with the player), as an SKSE task.
     void StopFighting(RE::Actor* actor);
+
+    // Accepted truce / surrender: until game time `untilGameDays` a combat start between `a` and `b` (either way) is
+    // stopped right away (not saved; Papyrus notes active truces again on load).
+    void NoteTruce(RE::Actor* a, RE::Actor* b, float untilGameDays);
+
+    // Load / new game: drops every truce guard (Papyrus notes the save's active truces again).
+    void ResetTruces();
+
+    // Start_Fighting: drops every truce guard `actor` holds (with anyone), matching the Papyrus truce keys it clears.
+    void ForgetTruces(RE::Actor* actor);
+
+    // A downed actor stood up: an actor under an active truce stands down again (a StopCombat during bleedout may not
+    // last).
+    void OnStoodUp(RE::Actor* actor);
 
     // True when `attacker` holds the Padded Whip (a classify rule's ignore weapon) in either hand.
     bool IsWhipAttacker(RE::Actor* attacker);

@@ -46,6 +46,8 @@ The outcome lines are in `Injury_Engine_Actions.psc` (`ApplyTruce`, `StartFighti
 - **Accepted**: the target stands down and gets Aggression 0 too.
 - **Refused** (also when no decision can be asked): the target is left alone and may keep attacking. The calmed speaker may still defend itself when hit.
 
+Truce guard (any accepted truce or surrender): `Engine.NoteTruce(speaker, target, until)` tells the DLL that for `TRUCE_HOURS` any combat start between the pair, either way, is stopped right away (`Classifier` combat sink). A downed actor under a truce that stands up from torture bleedout stands down again (a `StopCombat` during bleedout may not last). Each truce stop also clears the actor's `kAngryWithPlayer` flag. Aggression 0 alone doesn't do this, because an actor that is already hostile to the player fights again. The guard isn't saved: `Setup` notes active truces again from StorageUtil (`injury_engine.truce_with`). `Start_Fighting` drops it (`ForgetCalm`).
+
 The decision context: both names and uuids, the relationship rank as a word, each side's health as a word, whether each is a follower, whether the target is fighting the speaker, and the target's recent events (hits, combat and spells left out). Truce: the question leans yes when the target is losing, hurt, a friend or ally, or the fight looks like a misunderstanding, and no for enemies, a winning target, or a grudge. Surrender: it leans yes for a merciful target, friends or followers, or a helpless speaker, and no for sworn foes, bloodthirsty bandits or monsters, or a grudge.
 
 ## Events

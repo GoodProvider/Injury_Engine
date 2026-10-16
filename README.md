@@ -114,7 +114,7 @@ Other mods can ship their own `<id>.json` there, and it loads like the built-in 
 ## Building
 
 - SKSE plugin: run `make dll`. It needs CMake and vcpkg, with `VCPKG_ROOT` set. CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT), taken from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it in about 6 min. The .dll is copied to `SKSE/Plugins/`.
-- Scripts: `pyro skyrimse.ppj` (VS Code task "compile: pyro").
+- Scripts: VS Code task "compile: papyrus" (`.vscode/tasks.json`, papyrus-compiler `papyrus.exe`).
 - ESP: `make esp` builds `Injury_Engine.esp` from `Spriggit/Injury_Engine/`. After editing in xEdit, run `make serialize`.
 - Release: `make release` → `versions/Injury_Engine <version>.7z` (FOMOD + core). Procedure: [release-guide.md](release-guide.md).
 - `tools/patch_nif_paths.py` repoints copied DOM meshes to `textures\weapons\SNW\` (already applied).

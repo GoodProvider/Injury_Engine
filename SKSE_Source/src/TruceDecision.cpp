@@ -7,10 +7,11 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
+#include <chrono>
 #include <cctype>
 #include <mutex>
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 namespace TruceDecision
@@ -36,7 +37,15 @@ namespace TruceDecision
 
         bool g_apiFound = false;  // FindFunctions at kDataLoaded
         // Game thread only:
-        std::unordered_set<RE::FormID> g_inFlight;  // speakers waiting for an answer
+        struct Waiting
+        {
+            RE::FormID target = 0;
+            double since = 0.0;  // real seconds
+        };
+        std::unordered_map<RE::FormID, Waiting> g_inFlight;  // speakers waiting for an answer
+        // A request older than this no longer blocks its speaker (a player box closed without a callback, a lost
+        // decision reply).
+        constexpr double kInFlightTimeout = 60.0;
         bool g_noRoute = false;  // no decisions provider: stop asking until the next load
         bool g_noRouteWarned = false;
         bool g_apiWarned = false;
@@ -204,6 +213,45 @@ namespace TruceDecision
             }
         }
 
+        double NowSeconds()
+        {
+            using namespace std::chrono;
+            return duration<double>(steady_clock::now().time_since_epoch()).count();
+        }
+
+        void Push(RE::FormID speaker, RE::FormID target, bool accepted, bool yield);
+
+        // Game thread. False when the request can go out (and marks `speaker` as waiting). A speaker still waiting on
+        // another target gets an immediate refusal for this one, since Papyrus has already acted on it; a repeat for
+        // the same target is ignored (its answer is coming).
+        bool Busy(RE::FormID speaker, RE::FormID target, bool yield)
+        {
+            const double now = NowSeconds();
+            if (const auto it = g_inFlight.find(speaker); it != g_inFlight.end()) {
+                if (now - it->second.since <= kInFlightTimeout) {
+                    if (it->second.target == target) {
+                        SKSE::log::info("truce: {:08X} already waiting for an answer from {:08X}; duplicate ignored", speaker, target);
+                    } else {
+                        SKSE::log::info("truce: {:08X} still waiting on {:08X}; request to {:08X} refused", speaker,
+                            it->second.target, target);
+                        Push(speaker, target, false, yield);
+                    }
+                    return true;
+                }
+                SKSE::log::warn("truce: {:08X} request to {:08X} never answered; dropped", speaker, it->second.target);
+            }
+            g_inFlight[speaker] = { target, now };
+            return false;
+        }
+
+        // Game thread. The request from `speaker` to `target` is answered (a newer one to another target stays).
+        void Done(RE::FormID speaker, RE::FormID target)
+        {
+            if (const auto it = g_inFlight.find(speaker); it != g_inFlight.end() && it->second.target == target) {
+                g_inFlight.erase(it);
+            }
+        }
+
         // Game thread.
         void Push(RE::FormID speaker, RE::FormID target, bool accepted, bool yield)
         {
@@ -237,7 +285,7 @@ namespace TruceDecision
         void OnAnswer(RE::FormID speaker, RE::FormID target, bool yield, int success, const std::string& answer,
             const std::string& json)
         {
-            g_inFlight.erase(speaker);
+            Done(speaker, target);
             if (!success) {
                 NoteFailure(speaker, json);
                 Push(speaker, target, false, yield);
@@ -263,7 +311,7 @@ namespace TruceDecision
                 const bool yield = _yield;
                 const bool accepted = a_button == 0;
                 SKSE::GetTaskInterface()->AddTask([speaker, target, yield, accepted]() {
-                    g_inFlight.erase(speaker);
+                    Done(speaker, target);
                     SKSE::log::info("{}: player {} {:08X}", yield ? "surrender" : "truce", accepted ? "accepted" : "refused", speaker);
                     Push(speaker, target, accepted, yield);
                 });
@@ -331,14 +379,11 @@ namespace TruceDecision
         const RE::FormID targetId = target->GetFormID();
         if (target->IsPlayerRef()) {
             // The player answers with a Yes / No box; no decision model involved.
-            if (g_inFlight.contains(speakerId)) {
-                SKSE::log::info("truce: {:08X} already waiting for an answer; refused", speakerId);
-                Push(speakerId, targetId, false, yield);
+            if (Busy(speakerId, targetId, yield)) {
                 return;
             }
-            g_inFlight.insert(speakerId);
             if (!ShowPlayerBox(speaker, targetId, yield)) {
-                g_inFlight.erase(speakerId);
+                Done(speakerId, targetId);
                 Push(speakerId, targetId, false, yield);
                 return;
             }
@@ -357,13 +402,10 @@ namespace TruceDecision
             Push(speakerId, targetId, false, yield);
             return;
         }
-        if (g_inFlight.contains(speakerId)) {
-            SKSE::log::info("truce: {:08X} already waiting for an answer; refused", speakerId);
-            Push(speakerId, targetId, false, yield);
+        if (Busy(speakerId, targetId, yield)) {
             return;
         }
         const std::string ctx = BuildContext(speaker, target);
-        g_inFlight.insert(speakerId);
         const bool queued = PublicSendCustomDecisionToLLM(yield ? kSurrenderTemplate : kTruceTemplate, ctx.c_str(),
             kMaxProbabilities, [speakerId, targetId, yield](const char* answer, const char* resultJson, int success) {
                 // SkyrimNet ThreadPool: copy, then do the work on the game thread.
@@ -374,7 +416,7 @@ namespace TruceDecision
                 });
             });
         if (!queued) {
-            g_inFlight.erase(speakerId);
+            Done(speakerId, targetId);
             SKSE::log::warn("truce: {:08X} request not queued; refused", speakerId);
             Push(speakerId, targetId, false, yield);
             return;

@@ -412,6 +412,16 @@ namespace
         Classifier::StopFighting(actor);
     }
 
+    void NoteTruce(RE::StaticFunctionTag*, RE::Actor* a, RE::Actor* b, float untilGameTime)
+    {
+        Classifier::NoteTruce(a, b, untilGameTime);
+    }
+
+    void ForgetTruces(RE::StaticFunctionTag*, RE::Actor* actor)
+    {
+        Classifier::ForgetTruces(actor);
+    }
+
     void Forget(RE::StaticFunctionTag*, RE::Actor* actor)
     {
         InjuryEngine::Forget(actor);
@@ -446,6 +456,8 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("TruceYields", s, TruceYields);
     a_vm->RegisterFunction("ForgetCalm", s, ForgetCalm);
     a_vm->RegisterFunction("StopFighting", s, StopFighting);
+    a_vm->RegisterFunction("NoteTruce", s, NoteTruce);
+    a_vm->RegisterFunction("ForgetTruces", s, ForgetTruces);
     a_vm->RegisterFunction("TakeSyncEvents", s, TakeSyncEvents);
     a_vm->RegisterFunction("SyncHealth", s, SyncHealth);
     a_vm->RegisterFunction("SyncActors", s, SyncActors);

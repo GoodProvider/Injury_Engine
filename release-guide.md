@@ -8,7 +8,7 @@ Agents: use the project `release` skill (`.claude/skills/release/SKILL.md`). Ses
 
 | Actor | Owns | Does not do unless asked |
 |-------|------|--------------------------|
-| Agent | Changelogs, freshness-matrix docs, version bump in all sources, checkpoint | `pyro`, `make release`, git tag, GitHub Release, feature work |
+| Agent | Changelogs, freshness-matrix docs, version bump in all sources, checkpoint | `compile: papyrus`, `make release`, git tag, GitHub Release, feature work |
 | Maintainer | Compile, package, tag, publish | Inventing changelog bullets the tree does not support |
 
 **Agent done-when:** `CHANGELOG.md`, `CHANGELOG-developer.md` and `CHANGELOG-player.md` cover `next_version`; freshness-matrix files match the delta; `check-version.py` passes; checkpoint is current. Packaging is not part of done.
@@ -69,8 +69,8 @@ Bullets only: the player-facing items of `CHANGELOG.md` (no build, license, docs
 
 ## Packaging (maintainer)
 
-Prereqs: `Scripts/*.pex` current (`pyro skyrimse.ppj`); `VCPKG_ROOT` set; `Spriggit/` JSON is the ESP source of truth; `7z`, `python3`, `powershell` on PATH.
+Prereqs: `Scripts/*.pex` current (VS Code task `compile: papyrus`); `VCPKG_ROOT` set; `Spriggit/` JSON is the ESP source of truth; `7z`, `python3`, `powershell` on PATH.
 
 `make release` = `check-version.py` → `info.json` → `FOMOD/*.xml` from `FOMOD_source/` → `make dll` → `make esp` → stage `core/` (Scripts, SKSE, meshes, textures, Sound, PrismaUI, `Injury_Engine.esp`, `CHANGELOG-player.md`) → `7z a "versions/Injury_Engine ${VERSION}.7z" FOMOD core` → remove `core/`. The FOMOD installs `core` unconditionally (no options); PrismaUI is a documented requirement, not an installer step.
 
-Ship order: bump version sources → changelogs → commit → `pyro` → `make release` → inspect `7z l` output → git tag `VERSION` → GitHub Release (attach the 7z, body = `CHANGELOG-player.md`).
+Ship order: bump version sources → changelogs → commit → `compile: papyrus` → `make release` → inspect `7z l` output → git tag `VERSION` → GitHub Release (attach the 7z, body = `CHANGELOG-player.md`).

@@ -13,6 +13,8 @@ Float Property TRUCE_HOURS = 24.0 AutoReadOnly
 String Property KEY_TRUCE_AGGRESSION = "injury_engine.truce_aggression" AutoReadOnly
 String Property KEY_TRUCE_UNTIL = "injury_engine.truce_until" AutoReadOnly
 String Property KEY_TRUCE_LIST = "injury_engine.truce_actors" AutoReadOnly
+; StorageUtil: the truce partner per calmed actor (the DLL's truce guard is noted again from it on load)
+String Property KEY_TRUCE_WITH = "injury_engine.truce_with" AutoReadOnly
 ; TakeTruces / TruceSpeakers / ... share one C++ buffer: only one drain at a time.
 Bool Property truces_draining = False Auto Hidden
 
@@ -27,7 +29,7 @@ Function Setup()
     truces_draining = False
     UnRegisterForModEvent("Injury_Engine_Truce")
     RegisterForModEvent("Injury_Engine_Truce", "OnTruce")
-    RestoreExpiredTruces() ; a truce that ran out while the game was not running
+    RestoreExpiredTruces(True) ; a truce that ran out while the game was not running; the guard for the others
 EndFunction
 
 Injury_Engine_Actions Function GetActions() global
@@ -161,12 +163,13 @@ Function StopFightingByYielding(Actor speaker, Actor target)
     endif
     Trace("StopFightingByYielding", speaker.GetDisplayName() + " yields to " + target.GetDisplayName())
     Injury_Engine_Engine.StopFighting(speaker)
-    Calm(speaker)
+    Calm(speaker, target)
     speaker.SheatheWeapon()
     Injury_Engine_Engine.AskTruce(speaker, target, true) ; answer: mod event Injury_Engine_Truce
 EndFunction
 
-; Truce and surrender answers from the DLL (one per AskTruce; refused when no decision could be asked).
+; Truce and surrender answers from the DLL (one per answered AskTruce; a repeat to the same target while one is
+; waiting is ignored, one to another target is refused; refused when no decision could be asked).
 Event OnTruce(String eventName, String strArg, Float numArg, Form sender)
     if truces_draining
         return
@@ -201,10 +204,13 @@ Function ApplyTruce(Actor speaker, Actor target, Bool accepted, Bool yielded)
     String text
     if yielded
         if accepted
+            ; the first stop came before the answer (maybe while downed, where it may not last)
+            Injury_Engine_Engine.StopFighting(speaker)
             if targetNpc
                 Injury_Engine_Engine.StopFighting(target)
-                Calm(target)
+                Calm(target, speaker)
             endif
+            GuardTruce(speaker, target)
             text = speaker.GetDisplayName() + " yields to " + target.GetDisplayName() + ", and " + target.GetDisplayName() + " accepts the surrender."
         else
             text = speaker.GetDisplayName() + " yields to " + target.GetDisplayName() + ", but " + target.GetDisplayName() + " refuses the surrender."
@@ -215,10 +221,11 @@ Function ApplyTruce(Actor speaker, Actor target, Bool accepted, Bool yielded)
             Injury_Engine_Engine.StopFighting(target)
         endif
         if accepted
-            Calm(speaker)
+            Calm(speaker, target)
             if targetNpc
-                Calm(target)
+                Calm(target, speaker)
             endif
+            GuardTruce(speaker, target)
             text = speaker.GetDisplayName() + " offers to stop fighting, and " + target.GetDisplayName() + " accepts. They lower their weapons."
         else
             text = speaker.GetDisplayName() + " offers to stop fighting, but " + target.GetDisplayName() + " refuses."
@@ -232,8 +239,29 @@ Function ApplyTruce(Actor speaker, Actor target, Bool accepted, Bool yielded)
     Injury_Engine_Main.ShortEvent(text, speaker, target, "combat", id + speaker.GetFormID() + "_to_" + target.GetFormID(),         "injury_truce", (main.event_ttl * 1000.0) as int)
 EndFunction
 
-; Aggression 0 until TRUCE_HOURS pass (or Start_Fighting involves the actor). The first saved value is kept.
-Function Calm(Actor a)
+; Accepted truce or surrender: one end time for the DLL guard and both actors' saved truce (KEY_TRUCE_WITH /
+; KEY_TRUCE_UNTIL, which RestoreExpiredTruces notes again on load). A refused surrender never gets here, so it leaves
+; no guard behind.
+Function GuardTruce(Actor speaker, Actor target)
+    Float untilTime = Utility.GetCurrentGameTime() + TRUCE_HOURS / 24.0
+    Actor[] pair = new Actor[2]
+    pair[0] = speaker
+    pair[1] = target
+    int i = 0
+    while i < 2
+        Actor a = pair[i]
+        if a != Game.GetPlayer() && StorageUtil.HasFloatValue(a, KEY_TRUCE_AGGRESSION)
+            StorageUtil.SetFormValue(a, KEY_TRUCE_WITH, pair[1 - i])
+            StorageUtil.SetFloatValue(a, KEY_TRUCE_UNTIL, untilTime)
+        endif
+        i += 1
+    endwhile
+    Injury_Engine_Engine.NoteTruce(speaker, target, untilTime)
+EndFunction
+
+; Aggression 0 until TRUCE_HOURS pass (or Start_Fighting involves the actor). The first saved value is kept. `other`
+; is only for the trace: the guard partner is saved by GuardTruce once the truce is accepted.
+Function Calm(Actor a, Actor other)
     if a == None || a == Game.GetPlayer()
         return
     endif
@@ -244,7 +272,7 @@ Function Calm(Actor a)
     a.SetActorValue("Aggression", 0.0)
     StorageUtil.FormListAdd(self, KEY_TRUCE_LIST, a, false)
     if main.verbose_logging
-        Trace("Calm", "[v] " + a.GetDisplayName() + " aggression 0, was " + StorageUtil.GetFloatValue(a, KEY_TRUCE_AGGRESSION))
+        Trace("Calm", "[v] " + a.GetDisplayName() + " aggression 0 toward " + other + ", was " + StorageUtil.GetFloatValue(a, KEY_TRUCE_AGGRESSION))
     endif
 EndFunction
 
@@ -256,12 +284,14 @@ Function RestoreAggression(Actor a)
     a.SetActorValue("Aggression", value)
     StorageUtil.UnsetFloatValue(a, KEY_TRUCE_AGGRESSION)
     StorageUtil.UnsetFloatValue(a, KEY_TRUCE_UNTIL)
+    StorageUtil.UnsetFormValue(a, KEY_TRUCE_WITH)
     StorageUtil.FormListRemove(self, KEY_TRUCE_LIST, a, true)
     Trace("RestoreAggression", a.GetDisplayName() + " aggression back to " + value)
 EndFunction
 
-; From Setup (every load) and Main.OnUpdateGameTime (every hours_per_point game hours).
-Function RestoreExpiredTruces()
+; From Setup (every load; `noteGuard`: the DLL's truce guard is noted again for active truces) and
+; Main.OnUpdateGameTime (every hours_per_point game hours).
+Function RestoreExpiredTruces(Bool noteGuard = False)
     Float now = Utility.GetCurrentGameTime()
     int i = StorageUtil.FormListCount(self, KEY_TRUCE_LIST) - 1
     while i >= 0
@@ -270,6 +300,11 @@ Function RestoreExpiredTruces()
             StorageUtil.FormListRemoveAt(self, KEY_TRUCE_LIST, i)
         elseif StorageUtil.GetFloatValue(a, KEY_TRUCE_UNTIL, 0.0) <= now
             RestoreAggression(a)
+        elseif noteGuard
+            Actor other = StorageUtil.GetFormValue(a, KEY_TRUCE_WITH) as Actor
+            if other != None
+                Injury_Engine_Engine.NoteTruce(a, other, StorageUtil.GetFloatValue(a, KEY_TRUCE_UNTIL))
+            endif
         endif
         i -= 1
     endwhile
@@ -289,6 +324,9 @@ Function StartFighting(Actor speaker, Actor target)
     endif
     RestoreAggression(speaker)
     RestoreAggression(target)
+    ; RestoreAggression drops both actors' saved truces with anyone: drop the DLL guards to match
+    Injury_Engine_Engine.ForgetTruces(speaker)
+    Injury_Engine_Engine.ForgetTruces(target)
     Injury_Engine_Engine.ForgetCalm(speaker, target)
     speaker.StartCombat(target)
     String text = speaker.GetDisplayName() + " attacks " + target.GetDisplayName() + "."

@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        /* Header dirs: on duplicate scripts the LAST -h wins (reverse of Pyro imports), so vanilla comes first and SKSE overrides it. Keep in sync with skyrimse.ppj imports. */
+        {
+            "label": "compile: papyrus",
+            "type": "shell",
+            "command": "c:/Skyrim/tools/papyrus-compiler/papyrus.exe",
+            "args": [
+                "compile",
+                "-nocache",
+                "-i", "${workspaceFolder}/Scripts/Source",
+                "-o", "${workspaceFolder}/Scripts",
+                "-h", "C:/Skyrim/dev/skyrim/Data/Source/Scripts",
+                "-h", "C:/Skyrim/dev/mods/PapyrusUtil SE - Modders Scripting Utility Functions/Scripts/Source",
+                "-h", "C:/Skyrim/dev/mods/SkyrimNet/Source/Scripts",
+                "-h", "C:/Skyrim/dev/mods/SKSE64/Scripts/Source"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

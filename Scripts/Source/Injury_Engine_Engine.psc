@@ -109,10 +109,15 @@ Actor[] Function TruceSpeakers() global native
 Actor[] Function TruceTargets() global native
 Int[] Function TruceAccepted() global native
 Int[] Function TruceYields() global native
-; Start_Fighting: drops the torture calm between a and b (it would stop a fight right after a torture).
+; Start_Fighting: drops the torture calm and the truce guard between a and b (they would stop a fight right after).
 Function ForgetCalm(Actor a, Actor b) global native
-; The torture calm's stop (StopCombat + StopCombatAndAlarmOnActor), as an SKSE task.
+; The torture calm's stop (StopCombat + StopCombatAndAlarmOnActor, no longer angry with the player), as an SKSE task.
 Function StopFighting(Actor akActor) global native
+; Accepted truce / surrender: until game time untilGameTime (days) a combat start between a and b (either way) is
+; stopped at once, and a downed one of them that stands up stands down again. Not saved: Actions notes it again on load.
+Function NoteTruce(Actor a, Actor b, Float untilGameTime) global native
+; Start_Fighting: drops every truce guard akActor holds, with anyone.
+Function ForgetTruces(Actor akActor) global native
 String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false, Bool unarmedForm = false) global native
 ; Parallel to the last TakeHits() result (same index).
 Bool Function HitUnarmed(Int index) global native

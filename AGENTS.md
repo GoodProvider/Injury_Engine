@@ -10,7 +10,7 @@ If this is possible step by step instructions should be left for the developer.
 
 1. **DLL** — `make dll` → [SKSE/Plugins/Injury_Engine.dll](SKSE/Plugins/Injury_Engine.dll) (CMake copies the build output here; do not hand-copy from `build/` elsewhere).
 2. **Injuries** — [SKSE/Plugins/Injury_Engine/injuries/*.json](SKSE/Plugins/Injury_Engine/injuries/) (edit in place; no separate packaging step).
-3. **Papyrus** — `pyro skyrimse.ppj` or VS Code **`compile: pyro`** → [Scripts/*.pex](Scripts/) (Pyro writes into this repo, not into overwrite).
+3. **Papyrus** — VS Code task **`compile: papyrus`** ([.vscode/tasks.json](.vscode/tasks.json); agents run its `papyrus.exe compile ...` line from the repo root) → [Scripts/*.pex](Scripts/) (writes into this repo, not into overwrite).
 
 If a fix “does nothing” in-game, confirm MO2 is loading this folder (not a disabled release copy) and that overwrite has no stale `Injury_Engine` DLL or `.pex` shadowing it. See [KNOWLEDGEBASE.md](KNOWLEDGEBASE.md) (.pex vs .dll deploy).
 
@@ -24,7 +24,7 @@ Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real 
 |------|------|
 | `Scripts/Source/` | Papyrus source |
 | `Scripts/` | Compiled `.pex` |
-| `skyrimse.ppj` | Pyro project |
+| `skyrimse.ppj` | Pyro project (fallback only; its imports are mirrored as `-h` dirs in `.vscode/tasks.json`) |
 | `SKSE_Source/` | C++ SKSE plugin → `SKSE/Plugins/Injury_Engine.dll` |
 | `Scripts/Source/Injury_Engine_Engine.psc` | Papyrus natives of the DLL |
 | `Spriggit/Injury_Engine/` | ESP source of truth (`Injury_Engine.esp` is built) |
@@ -76,12 +76,12 @@ Relative paths for other machines: [docs/reference/papyrus-rules.md](docs/refere
 
 ## Compile
 
-- Papyrus: `pyro skyrimse.ppj` (VS Code task **`compile: pyro`** when present).
+- Papyrus: VS Code task **`compile: papyrus`** (`c:/Skyrim/tools/papyrus-compiler/papyrus.exe compile -nocache -i Scripts/Source -o Scripts -h ...`, header dirs in [.vscode/tasks.json](.vscode/tasks.json); later `-h` wins). Not Pyro.
 - SKSE: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it, ~6 min). See [docs/developers/overlay.md](docs/developers/overlay.md).
 - ESP: `make esp` (Spriggit → `.esp`); `make serialize` after xEdit edits.
 - Release: `make release` (version check, `info.json`, FOMOD, dll, esp, pack) → `versions/Injury_Engine <version>.7z`. See [release-guide.md](release-guide.md).
 
-Tools: Pyro, Spriggit (`SpriggitCLI/`, fetched by `updateSpriggit.bat`), `tools/patch_nif_paths.py`.
+Tools: papyrus-compiler (`c:/Skyrim/tools/papyrus-compiler/papyrus.exe`), Spriggit (`SpriggitCLI/`, fetched by `updateSpriggit.bat`), `tools/patch_nif_paths.py`.
 
 ## Commit messages
 

@@ -2,6 +2,10 @@
 
 Quirks and lessons for Injury_Engine. Read before changes; append a dated entry (newest first) after a session that found something non-obvious. Entries marked *(from SkyrimNet_SexLab)* were learned there and apply here too.
 
+## Freeze: g_lock held across VisitEffects (2026-10-16, needs in-game verification)
+
+The game froze (no crash log) while Bob held Flames (torture) on Angi just after she went into torture bleedout. `Injury_Engine.log` and `Papyrus.0.log` stopped at the same second, but `SkyrimNet.log` threads kept writing for 15 s, so the game thread was blocked rather than crashed. Likely an ABBA deadlock. The 1 s healing scan task (`SyncHealth` → SKSE task) took `InjuryEngine::g_lock` and then walked the actor's effects (`MagicTarget::VisitEffects`, the engine's effect list lock). A torture tick runs inside the engine's effect update and waits for `g_lock` in the `ModifyEffectActorValue` hook (`OnDamage`). Fix: `CollectHealingEffects` walks the effects without `g_lock` and copies caster handle + item, and only then does the task lock and call `Seen`. `NoteHealingSource` also sends its mod event after unlocking. Rule: never hold `g_lock` (or Classifier's locks) across an engine call that takes engine locks (effect walks, casting, `SendEvent`). If a freeze happens again, turn on verbose logging and check the last line; the next suspects are `ConvertHealth` / `TakeHealth` changing health under `g_lock`.
+
 ## Padded Whip weapon hits are zeroed in ProcessHitData (2026-10-15, needs in-game verification)
 
 The whip's own weapon hit was real damage: `Classify` returns `-1` (ignore) for it, so `ProcessHitData` skipped it and `HandleHealthDamage` kept all of it. Base damage is 1, but perks, power attacks and sneak attacks multiply it, and it lands below the torture floor, so a tortured victim could be whipped to death the same way Angi was punched to death in v07. Fix (v09): `ProcessHitData` also zeroes a hit with ignore result + `physicalMelee` (no `OnDamage`; the lash ENCH → `OnLash` brings the torture), and `HandleHealthDamage` gives back anything that still lands (`HandledByProcessHit`). Not verified: whether the lash ENCH still applies when `totalDamage` is 0 before the original call. If lashes stop landing, remove the zeroing and keep only the restore.
@@ -88,7 +92,7 @@ Natives take `RE::Actor*`, `RE::BSFixedString`, etc. Mismatched types fail to bi
 
 ## The .pex and the .dll deploy in opposite directions (from SkyrimNet_SexLab, 2026-09-23)
 
-Pyro writes `.pex` into this repo's `Scripts/`; the DLL build copies into this repo's `SKSE/Plugins/`. Whatever the game loads comes from the MO2 mod folder — confirm the game is reading this folder (not an installed release copy) before concluding a fix "did not work".
+`compile: papyrus` writes `.pex` into this repo's `Scripts/`; the DLL build copies into this repo's `SKSE/Plugins/`. Whatever the game loads comes from the MO2 mod folder — confirm the game is reading this folder (not an installed release copy) before concluding a fix "did not work".
 
 ## Action eligibility cannot use Papyrus decorators (from SkyrimNet_SexLab, 2026-09-14)
 
@@ -160,7 +164,7 @@ Each hooked hit called `StartSync` → `RegisterForSingleUpdate(0.2)`, which res
 
 ## Removed Papyrus-to-DLL contract needs both rebuilt (stale .pex)
 
-Removing a scene phase (the torture "end" line) from `InjuryEngine::SceneText` and `Main.psc` only works if `pyro` is rerun as well as `make dll`. A stale `.pex` still calls `SceneText("end", ...)`; the new DLL has no such branch, so the generic path rendered `"Bob , and it is too much. ..."` (empty `hit.end` / `inline.end` plus the level text) about 13 s after the last hit. `SceneText` now returns an empty string with a warning for any phase other than start / again / switch, and `SceneSend` skips empty lines. Symptom of a stale `.pex`: half-rendered scene lines; compare `Scripts/*.pex` timestamps with `Scripts/Source/*.psc`.
+Removing a scene phase (the torture "end" line) from `InjuryEngine::SceneText` and `Main.psc` only works if `compile: papyrus` is rerun as well as `make dll`. A stale `.pex` still calls `SceneText("end", ...)`; the new DLL has no such branch, so the generic path rendered `"Bob , and it is too much. ..."` (empty `hit.end` / `inline.end` plus the level text) about 13 s after the last hit. `SceneText` now returns an empty string with a warning for any phase other than start / again / switch, and `SceneSend` skips empty lines. Symptom of a stale `.pex`: half-rendered scene lines; compare `Scripts/*.pex` timestamps with `Scripts/Source/*.psc`.
 
 ## Injury point log lines are throttled (skipped:N)
 
@@ -210,3 +214,14 @@ This CommonLib fork has no `MessageBoxData::QueueMessage` member. `TruceDecision
 
 ## The speech queue is empty while SkyrimNet is still answering (2026-10-15)
 `GetSpeechQueueSize() == 0` right after a DirectNarration does not mean SkyrimNet is free. The LLM is still generating the reply, and nothing is queued until the reply text arrives. Narrating again then stacks lines with no dialogue between them. The player path's `PurgeDialogue(true)` made it worse, because it dropped the reply to the line before (22:43–22:47 log: four torture directs in 30 s and the same start sent twice in one second, from `NarrateHits` and `SceneTick` racing on one pending pair). The reply signal is `GetTimeSinceLastAudioEnded()` (ms): a line that ended at least `REPLY_MIN_DELAY` after our narration, with the queue empty, is the answer. With TTS off no audio ends, so only `reply_timeout` (silence) opens the gate. See `Main.ClaimNarration`. **Unconfirmed in game.**
+
+## An accepted surrender does not end the fight by itself (2026-10-16)
+Log from 08:36–08:41: Angi (`Start_Fighting` → player) was punched into torture bleedout, yielded while downed, and the player accepted. The one `StopCombat` came during bleedout. When the player healed her she stood up (`downed ... recovered`) and punched again 3 s later. Aggression 0 only keeps an actor from *starting* fights. It doesn't end hostility it already has toward the player (combat memory, `kAngryWithPlayer`). Fix: the truce guard (`Classifier::NoteTruce`). The combat sink stops any combat start between the pair, `OnStoodUp` stops combat again after bleedout ends, and truce stops clear `kAngryWithPlayer`. **Unconfirmed in game.** The `truce:` lines in `Injury_Engine.log` will show which path caught it.
+
+Truce guard rules after the 2026-10-16 review: `g_truce` is keyed by the pair (lower id, higher id), so an actor can hold several truces and every guard works both ways. Expired pairs are pruned; the map is never cleared wholesale except on kPreLoadGame / kNewGame, because a later truce must not outlive loading an earlier save. Papyrus saves the partner (`KEY_TRUCE_WITH`) only in `GuardTruce`, on acceptance, with the same end time as `NoteTruce`, so a refused surrender leaves no guard after a load. StorageUtil still keeps one partner per NPC, so only the latest truce of an NPC is noted again on load. `Start_Fighting` calls `ForgetTruces` on both actors, matching `RestoreAggression`. `AskTruce` from a speaker that is already waiting: same target is ignored, another target gets an immediate refusal; a waiting request stops blocking after 60 real seconds.
+
+Torture bleedout: when the last torture is gone (healed or replaced by real damage) the actor is released, except at health 0 or below. That bleedout belongs to the game (an essential actor), and a `BleedOutStop` would stand it up.
+
+## papyrus-compiler header order (2026-10-16)
+
+Papyrus is compiled with `c:/Skyrim/tools/papyrus-compiler/papyrus.exe` (VS Code task `compile: papyrus`, `.vscode/tasks.json`), not Pyro. When a script exists in several `-h` dirs, the **last** `-h` wins, the reverse of Pyro's import order. With SKSE64 first and vanilla `Data/Source/Scripts` last, the vanilla `Math` / `Form` / `Actor` hid the SKSE functions: 93 errors (`undefined identifier Math`, `undefined function GetDisplayName` / `RegisterForModEvent`). Order: vanilla, PapyrusUtil, SkyrimNet, SKSE64. A failed compile writes no `.pex`.

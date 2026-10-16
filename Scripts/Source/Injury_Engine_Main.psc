@@ -461,7 +461,9 @@ EndFunction
 ;   - a pair's first hit (pending start) or a method change: NarrateHits sends "start" / "switch" as soon as the reply gate
 ;     (ClaimNarration) is open; until then the pair waits and SceneTick sends it
 ;   - a hit after that is a short-lived event; every torture_direct_narration_gap seconds, gate open, one combined "again" line
-;   - a pair whose last hit is torture_maximum_break seconds old is dropped with no line (stops "again")
+;   - an open pair whose last hit is torture_maximum_break seconds old is dropped with no line (stops "again");
+;     pending starts and unsent switches wait for the reply gate up to torture_maximum_break + reply_timeout instead;
+;     hidden pairs and pairs whose victim died are not narrated and drop at the break
 ;   - only pairs in sight of the player are narrated
 Function NarrateInjury(Actor attacker, Actor victim, int code, Bool unarmedForm = False)
     NarrateHits(attacker, victim, SourceOfCode(code), MaskOf(code), LevelOf(code), 1, "", unarmedForm)
@@ -655,20 +657,27 @@ Function ClearTortureScene(Actor victim)
 EndFunction
 
 ; Does pair i belong to the selection: SC_SEL_START pending starts, SC_SEL_SWITCH method switches, SC_SEL_AGAIN running
-; pairs with more than one hit, the last within torture_again_recent. Starts, switches and again lines skip pairs whose
-; break already elapsed.
+; pairs with more than one hit, the last within torture_again_recent. Pending starts and unsent switches are not cut
+; off by torture_maximum_break (the reply gate can hold longer; SceneTick drops them after break + reply_timeout); the
+; break only ends an open scene's again lines.
 Bool Function SceneMatches(int i, int mode, float now)
     int st = StorageUtil.IntListGet(self, KEY_SC_STATE, i)
     float sinceHit = now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i)
-    if sinceHit >= torture_maximum_break
-        return false
-    endif
     if mode == SC_SEL_START
         return st == SC_PENDING
     elseif mode == SC_SEL_SWITCH
         return st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 1
     endif
+    if sinceHit >= torture_maximum_break
+        return false
+    endif
     return sinceHit <= torture_again_recent && st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 0 && StorageUtil.IntListGet(self, KEY_SC_COUNT, i) >= 2
+EndFunction
+
+; Pair i still has an unsent start or switch line (hidden pairs have none: they are not narrated).
+Bool Function SceneWaiting(int i)
+    int st = StorageUtil.IntListGet(self, KEY_SC_STATE, i)
+    return st == SC_PENDING || (st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 1)
 EndFunction
 
 ; Indices of the pairs of a selection (empty array when none).
@@ -807,7 +816,8 @@ Function SceneTick()
     int i = 0
     while i < total
         int st = StorageUtil.IntListGet(self, KEY_SC_STATE, i)
-        Bool visible = PairVisible(SceneAttacker(i), SceneVictim(i))
+        Actor vic = SceneVictim(i)
+        Bool visible = vic != None && !vic.IsDead() && PairVisible(SceneAttacker(i), vic) ; a dead victim gets no torture line
         if visible && st == SC_HIDDEN
             StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_RUNNING)
         elseif !visible && st != SC_HIDDEN
@@ -843,7 +853,11 @@ Function SceneTick()
     total = StorageUtil.FormListCount(self, KEY_SC_VIC)
     i = total - 1
     while i >= 0
-        if now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i) >= torture_maximum_break
+        float limit = torture_maximum_break
+        if SceneWaiting(i)
+            limit += reply_timeout ; a held start / switch line gets one reply timeout more, then it is stale
+        endif
+        if now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i) >= limit
             SceneRemove(i)
         endif
         i -= 1

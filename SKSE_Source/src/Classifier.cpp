@@ -55,6 +55,8 @@ namespace Classifier
         };
         std::unordered_map<RE::FormID, Pair> g_calm;  // victim -> latest torture hit (attacker)
         std::unordered_map<RE::FormID, Pair> g_combatStart;  // actor -> latest combat start (target)
+        // truce pair (TruceKey: lower id, higher id) -> game days the truce ends; an actor may hold several
+        std::unordered_map<std::uint64_t, double> g_truce;
         // victim -> last whip lash, for the kIgnoreFriendlyHits flags SuppressFriendHits set (own lock: the fight
         // reaction hook runs inside the engine's hit handling)
         std::mutex g_friendLock;
@@ -424,7 +426,8 @@ namespace Classifier
         // Ends the combat a torture hit started: the victim (and its alarm on the player) stands down. SKSE task,
         // because combat and hit events arrive inside the engine's own update.
         // Main thread. The actor (and its alarm on the player) stands down.
-        bool StopCombatNow(RE::FormID actorId)
+        // `clearAnger` (truces only): the actor is no longer angry with the player either, else it may fight again.
+        bool StopCombatNow(RE::FormID actorId, bool clearAnger = false)
         {
             auto* actor = RE::TESForm::LookupByID<RE::Actor>(actorId);
             if (!actor || actor->IsDead()) {
@@ -433,6 +436,10 @@ namespace Classifier
             actor->StopCombat();
             if (auto* lists = RE::ProcessLists::GetSingleton()) {
                 lists->StopCombatAndAlarmOnActor(actor, false);
+            }
+            if (clearAnger && actor->IsAngryWithPlayer()) {
+                actor->GetActorRuntimeData().boolFlags.reset(RE::Actor::BOOL_FLAGS::kAngryWithPlayer);
+                SKSE::log::info("truce: {:08X} no longer angry with the player", actorId);
             }
             return true;
         }
@@ -447,6 +454,31 @@ namespace Classifier
                 if (StopCombatNow(victimId)) {
                     SKSE::log::debug("calm: victim {:08X} stops fighting torture attacker {:08X}", victimId, attackerId);
                 }
+            });
+        }
+
+        double GameDays()
+        {
+            const auto* calendar = RE::Calendar::GetSingleton();
+            return calendar ? calendar->GetCurrentGameTime() : 0.0;
+        }
+
+        std::uint64_t TruceKey(RE::FormID a, RE::FormID b)
+        {
+            const auto [lo, hi] = std::minmax(a, b);
+            return (static_cast<std::uint64_t>(lo) << 32) | hi;
+        }
+
+        // Caller holds g_lock. True while `actorId` has an unexpired truce with `otherId` (0: with anyone).
+        bool InTruceLocked(RE::FormID actorId, RE::FormID otherId)
+        {
+            const double today = GameDays();
+            std::erase_if(g_truce, [today](const auto& entry) { return today > entry.second; });
+            if (otherId != 0) {
+                return g_truce.contains(TruceKey(actorId, otherId));
+            }
+            return std::ranges::any_of(g_truce, [actorId](const auto& entry) {
+                return static_cast<RE::FormID>(entry.first >> 32) == actorId || static_cast<RE::FormID>(entry.first) == actorId;
             });
         }
 
@@ -476,6 +508,13 @@ namespace Classifier
                 const RE::FormID targetId = event->targetActor->GetFormID();
                 const double now = NowSeconds();
                 std::lock_guard lock(g_lock);
+                if (InTruceLocked(actorId, targetId)) {
+                    SKSE::log::info("truce: {:08X} kept from fighting {:08X}", actorId, targetId);
+                    if (auto* tasks = SKSE::GetTaskInterface()) {
+                        tasks->AddTask([actorId]() { StopCombatNow(actorId, true); });
+                    }
+                    return RE::BSEventNotifyControl::kContinue;
+                }
                 if (const auto it = g_calm.find(actorId); it != g_calm.end() && it->second.other == targetId && now - it->second.when <= kCalmWindow) {
                     StopCombatLater(actorId, targetId);
                     return RE::BSEventNotifyControl::kContinue;
@@ -656,6 +695,7 @@ namespace Classifier
             erase(g_calm, bId, aId);
             erase(g_combatStart, aId, bId);
             erase(g_combatStart, bId, aId);
+            g_truce.erase(TruceKey(aId, bId));
         }
         constexpr auto kFlag = static_cast<std::uint32_t>(RE::TESObjectREFR::RecordFlags::kIgnoreFriendlyHits);
         std::lock_guard lock(g_friendLock);
@@ -675,10 +715,65 @@ namespace Classifier
             return;
         }
         tasks->AddTask([id = actor->GetFormID()]() {
-            if (StopCombatNow(id)) {
+            if (StopCombatNow(id, true)) {
                 SKSE::log::info("truce: {:08X} stops fighting", id);
             }
         });
+    }
+
+    void NoteTruce(RE::Actor* a, RE::Actor* b, float untilGameDays)
+    {
+        if (!a || !b || a == b) {
+            return;
+        }
+        const RE::FormID aId = a->GetFormID();
+        const RE::FormID bId = b->GetFormID();
+        {
+            std::lock_guard lock(g_lock);
+            const double today = GameDays();
+            std::erase_if(g_truce, [today](const auto& entry) { return today > entry.second; });
+            g_truce[TruceKey(aId, bId)] = untilGameDays;
+        }
+        SKSE::log::info("truce: {:08X} and {:08X} until game day {:.2f}", aId, bId, untilGameDays);
+    }
+
+    void ResetTruces()
+    {
+        std::lock_guard lock(g_lock);
+        g_truce.clear();
+    }
+
+    void ForgetTruces(RE::Actor* actor)
+    {
+        if (!actor) {
+            return;
+        }
+        const RE::FormID id = actor->GetFormID();
+        std::size_t dropped = 0;
+        {
+            std::lock_guard lock(g_lock);
+            dropped = std::erase_if(g_truce, [id](const auto& entry) {
+                return static_cast<RE::FormID>(entry.first >> 32) == id || static_cast<RE::FormID>(entry.first) == id;
+            });
+        }
+        if (dropped > 0) {
+            SKSE::log::info("truce: {:08X} drops {} truce(s)", id, dropped);
+        }
+    }
+
+    void OnStoodUp(RE::Actor* actor)
+    {
+        if (!actor) {
+            return;
+        }
+        {
+            std::lock_guard lock(g_lock);
+            if (!InTruceLocked(actor->GetFormID(), 0)) {
+                return;
+            }
+        }
+        SKSE::log::info("truce: {:08X} stood up, standing down again", actor->GetFormID());
+        StopFighting(actor);
     }
 
     void NoteEffect(RE::Actor* victim, RE::Effect* effect)

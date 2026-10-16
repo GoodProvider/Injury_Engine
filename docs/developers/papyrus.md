@@ -14,12 +14,13 @@ Contracts: [../reference/papyrus-rules.md](../reference/papyrus-rules.md), [../r
 | `Scripts/Source/Injury_Engine_PlayerRef.psc` | Player alias (load game → setup) |
 | `Scripts/Source/Injury_Engine_Engine.psc` | Natives in `Injury_Engine.dll` |
 | `Scripts/` | Compiled `.pex` |
-| `skyrimse.ppj` | Pyro project (imports SKSE, SkyrimNet, PapyrusUtil sources) |
+| `skyrimse.ppj` | Pyro project (fallback only; imports SKSE, SkyrimNet, PapyrusUtil sources) |
+| `.vscode/tasks.json` | VS Code task `compile: papyrus` |
 | `Spriggit/Injury_Engine/` | ESP ↔ JSON |
 
 ## Compile
 
-`pyro skyrimse.ppj` (VS Code task **`compile: pyro`** when present). Do not invent Caprica / `papyrus.exe` one-offs unless asked.
+VS Code task **`compile: papyrus`** (`.vscode/tasks.json`): `c:/Skyrim/tools/papyrus-compiler/papyrus.exe compile -nocache -i Scripts/Source -o Scripts` with `-h` header dirs for vanilla `Data/Source/Scripts`, PapyrusUtil, SkyrimNet and SKSE64. On a script found in several header dirs the **last** `-h` wins, so vanilla goes first and SKSE last (the reverse of Pyro's import order). Agents run the same command from the repo root. Add new dependencies to both the task and `skyrimse.ppj`. Pyro (`skyrimse.ppj`) is a fallback only; do not invent Caprica one-offs.
 
 ## Settings
 

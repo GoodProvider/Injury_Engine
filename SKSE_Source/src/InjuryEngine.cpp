@@ -1,5 +1,6 @@
 #include "InjuryEngine.h"
 
+#include "Classifier.h"
 #include "InjuryConfig.h"
 
 #include <spdlog/spdlog.h>
@@ -778,22 +779,29 @@ namespace InjuryEngine
                 caster ? caster->GetFormID() : 0, points);
         }
 
-        // Healing effects still running on the actor (concentration beams, heal over time).
-        void ScanActiveEffects(RE::Actor* actor, RE::FormID id, const State& st, double now)
+        struct HealingEffect
         {
+            RE::ActorHandle  caster;
+            RE::MagicItem*   item = nullptr;
+        };
+
+        // Healing effects still running on the actor (concentration beams, heal over time). Game thread, g_lock NOT
+        // held: effect ticks run with the effect list in use and wait for g_lock in the hooks, so holding g_lock
+        // across VisitEffects deadlocks (game freeze). The caller hands the result to Seen under g_lock.
+        std::vector<HealingEffect> CollectHealingEffects(RE::Actor* actor)
+        {
+            std::vector<HealingEffect> found;
             auto* target = actor->AsMagicTarget();
             if (!target) {
-                return;
+                return found;
             }
             // The engine's own walk: on VR GetActiveEffectList() is only a temporary snapshot.
             // VisitEffects, not VisitActiveEffects: with ENABLE_SKYRIM_VR the latter calls the SE-only REL::ID(33756),
             // which is an unrelated function on AE and crashes.
             struct Visitor : RE::MagicTarget::ForEachActiveEffectVisitor
             {
-                RE::FormID   id;
-                const State& st;
-                double       now;
-                Visitor(RE::FormID a_id, const State& a_st, double a_now) : id(a_id), st(a_st), now(a_now) {}
+                std::vector<HealingEffect>& found;
+                explicit Visitor(std::vector<HealingEffect>& a_found) : found(a_found) {}
 
                 RE::BSContainer::ForEachResult Accept(RE::ActiveEffect* ae) override
                 {
@@ -804,14 +812,15 @@ namespace InjuryEngine
                     }
                     const auto* mgef = ae->GetBaseObject();
                     if (mgef && IsHealing(mgef, ae->magnitude)) {
-                        Seen(id, &st, ae->caster.get().get(), ae->spell, now);
+                        found.push_back({ ae->caster, ae->spell });
                     }
                     return RE::BSContainer::ForEachResult::kContinue;
                 }
             };
-            SKSE::log::debug("scan effects {:08X}", id);
-            Visitor visitor(id, st, now);
+            SKSE::log::debug("scan effects {:08X}", actor->GetFormID());
+            Visitor visitor(found);
             target->VisitEffects(visitor);
+            return found;
         }
 
         // Health above the wounded level is healing: turn it into points on random parts (torture and real alike).
@@ -1686,15 +1695,18 @@ namespace InjuryEngine
         if (!target || !effect || !IsHealing(effect->baseEffect, effect->effectItem.magnitude)) {
             return;
         }
-        std::lock_guard lock(g_lock);
         if (target->IsDead()) {
             return;
         }
-        const RE::FormID id = target->GetFormID();
-        const auto it = g_actors.find(id);
-        SKSE::log::debug("healing effect on {:08X} item:{:08X} caster:{:08X} magnitude:{:.1f} tracked:{}", id, item ? item->GetFormID() : 0,
-            caster ? caster->GetFormID() : 0, effect->effectItem.magnitude, it != g_actors.end());
-        Seen(id, it != g_actors.end() ? &it->second : nullptr, caster ? caster->As<RE::Actor>() : nullptr, item, NowSeconds());
+        {
+            std::lock_guard lock(g_lock);
+            const RE::FormID id = target->GetFormID();
+            const auto it = g_actors.find(id);
+            SKSE::log::debug("healing effect on {:08X} item:{:08X} caster:{:08X} magnitude:{:.1f} tracked:{}", id, item ? item->GetFormID() : 0,
+                caster ? caster->GetFormID() : 0, effect->effectItem.magnitude, it != g_actors.end());
+            Seen(id, it != g_actors.end() ? &it->second : nullptr, caster ? caster->As<RE::Actor>() : nullptr, item, NowSeconds());
+        }
+        // Outside g_lock: other plugins' mod event sinks run inside SendEvent.
         NotifyPapyrus();
     }
 
@@ -1727,9 +1739,18 @@ namespace InjuryEngine
                 }
                 return;
             }
-            if (!g_bleedoutEnabled.load() || health > threshold) {
+            if (!g_bleedoutEnabled.load() || health > threshold || !HasTorture(st)) {
+                // Real damage that replaced the last torture can leave health at zero: that bleedout is the game's own
+                // (an essential actor), so drop ours without standing the actor up.
+                if (health <= 0.0f) {
+                    g_collapsePending.erase(id);
+                    g_downed.erase(id);
+                    SKSE::log::info("downed {} handed to the game's bleedout at {:.1f}/{:.1f}", LogActor(actor), health, maxHealth);
+                    return;
+                }
                 ReleaseDowned(id);
-                SKSE::log::info("downed {} recovered at {:.1f}/{:.1f}", LogActor(actor), health, maxHealth);
+                SKSE::log::info("downed {} recovered at {:.1f}/{:.1f} (torture:{})", LogActor(actor), health, maxHealth, HasTorture(st));
+                Classifier::OnStoodUp(actor);
                 return;
             }
             if (recheck) {
@@ -1780,13 +1801,24 @@ namespace InjuryEngine
                     last = tick;
                     scanQueued = true;
                     SKSE::GetTaskInterface()->AddTask([id]() {
-                        std::lock_guard taskLock(g_lock);
                         auto* a = RE::TESForm::LookupByID<RE::Actor>(id);
-                        const auto found = g_actors.find(id);
-                        if (!a || found == g_actors.end() || a->IsDead() || a->IsDisabled() || a->IsDeleted() || !a->Is3DLoaded()) {
+                        if (!a || a->IsDead() || a->IsDisabled() || a->IsDeleted() || !a->Is3DLoaded()) {
                             return;
                         }
-                        ScanActiveEffects(a, id, found->second, NowSeconds());
+                        const auto effects = CollectHealingEffects(a);  // without g_lock (see there)
+                        if (effects.empty()) {
+                            return;
+                        }
+                        std::lock_guard taskLock(g_lock);
+                        const auto found = g_actors.find(id);
+                        if (found == g_actors.end()) {
+                            return;
+                        }
+                        const double now = NowSeconds();
+                        for (const auto& e : effects) {
+                            auto caster = e.caster.get();
+                            Seen(id, &found->second, caster.get(), e.item, now);
+                        }
                     });
                 }
             }
