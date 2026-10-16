@@ -69,7 +69,7 @@ Bullets only: the player-facing items of `CHANGELOG.md` (no build, license, docs
 
 ## Packaging (maintainer)
 
-Prereqs: `Scripts/*.pex` current (VS Code task `compile: papyrus`); `VCPKG_ROOT` set; `Spriggit/` JSON is the ESP source of truth; `7z`, `python3`, `powershell` on PATH.
+Prereqs: `Scripts/*.pex` current (VS Code task `compile: papyrus`); `VCPKG_ROOT` set; `Spriggit/` JSON is the ESP source of truth; `7z`, `python3`, `powershell` on PATH. The Makefile recipes are cmd syntax: from Git Bash (where make picks `sh`) run `make release SHELL=cmd.exe`, or run it from PowerShell / cmd the same way.
 
 `make release` = `check-version.py` → `info.json` → `FOMOD/*.xml` from `FOMOD_source/` → `make dll` → `make esp` → stage `core/` (Scripts, SKSE, meshes, textures, Sound, PrismaUI, `Injury_Engine.esp`, `CHANGELOG-player.md`) → `7z a "versions/Injury_Engine ${VERSION}.7z" FOMOD core` → remove `core/`. The FOMOD installs `core` unconditionally (no options); PrismaUI is a documented requirement, not an installer step.
 
