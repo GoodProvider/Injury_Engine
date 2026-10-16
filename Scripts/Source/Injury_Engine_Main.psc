@@ -1402,7 +1402,7 @@ Function External_SetSexualParts(Bool enabled) global
     if enabled
         value = "true"
     endif
-    Bool ok = SkyrimNetApi.PatchConfig(main.PLUGIN_CONFIG, "{\"whip\":{\"body\":{\"include_sexual_parts\":" + value + "}}}")
+    Bool ok = SkyrimNetApi.PatchConfig(main.PLUGIN_CONFIG, "{\"injury_engine\":{\"body\":{\"include_sexual_parts\":" + value + "}}}")
     main.include_sexual_parts = enabled
     Injury_Engine_Engine.SetIncludeSexualParts(enabled)
     Trace("External_SetSexualParts", "enabled:" + enabled + " patched:" + ok)

@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Fixed SkyrimNet_SexLab's "enable torture sexual parts" Yes only lasting until the next load; it now saves the setting.
 - **Renamed to Injury Engine.** The mod now tracks injuries from all damage (combat, spells, creatures, falls and torture), not just whipping. Old saves start fresh: wounds and settings from SkyrimNet_Whipped are not carried over.
 - Injury narration now says who hits whom and with what (a lash, a blade, flames, and so on). The mod log records each wound point and the narration or short-lived event text SkyrimNet receives.
 
