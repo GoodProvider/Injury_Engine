@@ -2,6 +2,7 @@
 #include "InjuryConfig.h"
 #include "InjuryEngine.h"
 
+#include <chrono>
 #include <cmath>
 
 // Vtable hooks on Character and PlayerCharacter:
@@ -15,9 +16,12 @@
 //   ModifyActorValue (0x20)         the per-tick change of a value-modifier effect; "(torture)" Health ticks are
 //                                   blocked here before they land (the AV argument is kNone, the effect's own AV is
 //                                   the member `actorValue`), and the dual Stamina / Magicka drain is applied by us
-// Call hook (SE / AE):
+// Call hooks (SE / AE):
 //   GetFactionFightReaction         in the victim's hit handling (the Simple Offence Suppression site): a Padded
 //                                   Whip lash on a neutral victim reads as an ally hit, so it starts no combat
+//   ProcessHitData                  in the melee hit handler, before health is taken: a torture melee hit (a punch)
+//                                   becomes torture points and its damage is zeroed, so it can't kill; a Padded Whip
+//                                   hit is zeroed too (its lash ENCH brings the torture)
 // Damage is classified (Classifier) and handed to InjuryEngine::OnDamage, which may reduce it (torture wounds
 // absorb their share; torture damage itself is taken whole). HandleHealthDamage's own nested ModActorValue calls are not counted twice.
 namespace
@@ -30,6 +34,16 @@ namespace
     constexpr std::size_t kHandleHealthDamageIdx = 0x104;  // Actor::HandleHealthDamage (SE / AE); CommonLib slot comments are hex
 
     thread_local int g_inHandle = 0;
+
+    // The last torture melee hit ProcessHitData turned into points (victim, when): a HandleHealthDamage call for the
+    // same hit that still carries damage only gives the health back.
+    thread_local RE::FormID g_handledVictim = 0;
+    thread_local std::chrono::steady_clock::time_point g_handledWhen{};
+
+    bool HandledByProcessHit(RE::Actor* victim)
+    {
+        return victim && g_handledVictim == victim->GetFormID() && std::chrono::steady_clock::now() - g_handledWhen < std::chrono::milliseconds(100);
+    }
 
     bool Verbose()
     {
@@ -103,7 +117,9 @@ namespace
                 Classifier::MarkQuiet(a_this);  // no vanilla hit bark over the torture narration
                 Classifier::NoteCalm(a_this, a_attacker);  // and no fight back
             }
-            const float kept = source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source, physicalMelee, unarmedForm) : amount;
+            // torture melee hits and Padded Whip hits zeroed by ProcessHitData: only give back what still landed
+            const bool handled = ((source >= 0 && InjuryConfig::IsTorture(source)) || (source == -1 && physicalMelee)) && HandledByProcessHit(a_this);
+            const float kept = handled ? 0.0f : source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source, physicalMelee, unarmedForm) : amount;
             auto* av = a_this->AsActorValueOwner();
             const float before = av->GetActorValue(RE::ActorValue::kHealth);
             {
@@ -213,22 +229,80 @@ namespace
     };
 
     // The hit handler asks how the victim feels about its attacker; neutral means the hit is an attack (combat,
-    // assault). A whip lash is torture, not aggression: report an ally and ignore the friendly hit as well.
+    // assault). A whip lash or torture punch is torture, not aggression: report an ally and ignore the friendly hit as well.
     struct FightReaction
     {
         static RE::FIGHT_REACTION thunk(RE::Actor* a_subject, RE::Actor* a_attacker)
         {
             const auto reaction = func(a_subject, a_attacker);
-            if (reaction == RE::FIGHT_REACTION::kNeutral && a_subject && a_attacker && Classifier::IsWhipAttacker(a_attacker) &&
+            if (reaction == RE::FIGHT_REACTION::kNeutral && a_subject && a_attacker && Classifier::IsTortureAttacker(a_attacker) &&
                 !a_subject->IsHostileToActor(a_attacker)) {
                 Classifier::SuppressFriendHits(a_subject);
-                SKSE::log::debug("[hook] fight reaction {:08X} -> {:08X}: whip lash, ally", a_subject->GetFormID(), a_attacker->GetFormID());
+                SKSE::log::debug("[hook] fight reaction {:08X} -> {:08X}: torture hit, ally", a_subject->GetFormID(), a_attacker->GetFormID());
                 return RE::FIGHT_REACTION::kAlly;
             }
             return reaction;
         }
         static inline REL::Relocation<decltype(thunk)> func;
     };
+
+    // The melee hit handler hands its HitData to the victim before any health is taken. A torture melee hit
+    // (a punch) becomes torture points here and its damage is zeroed, so a punch can't kill: HandleHealthDamage only
+    // reports health already taken, too late for a hit that is lethal by itself.
+    struct ProcessHitData
+    {
+        static void thunk(RE::Actor* a_victim, RE::HitData& a_hit)
+        {
+            if (a_victim && !a_victim->IsDead() && a_hit.totalDamage > 0.0f && !InjuryEngine::IsInternalDamage()) {
+                auto attackerPtr = a_hit.aggressor.get();
+                auto* attacker = attackerPtr.get();
+                bool physicalMelee = false;
+                bool unarmedForm = false;
+                const int source = Classifier::Classify(a_victim, attacker, &physicalMelee, &unarmedForm);
+                if (source >= 0 && physicalMelee && InjuryConfig::IsTorture(source)) {
+                    const float damage = a_hit.totalDamage;
+                    Classifier::MarkQuiet(a_victim);
+                    Classifier::NoteCalm(a_victim, attacker);
+                    InjuryEngine::OnDamage(a_victim, attacker, damage, source, true, unarmedForm);
+                    a_hit.totalDamage = 0.0f;
+                    a_hit.physicalDamage = 0.0f;
+                    a_hit.bonusHealthDamageMult = 0.0f;
+                    g_handledVictim = a_victim->GetFormID();
+                    g_handledWhen = std::chrono::steady_clock::now();
+                    SKSE::log::debug("[hook] ProcessHitData torture victim:{:08X} attacker:{:08X} source:{} damage:{:.2f} -> 0",
+                        a_victim->GetFormID(), attacker ? attacker->GetFormID() : 0, InjuryEngine::SourceId(source), damage);
+                } else if (source == -1 && physicalMelee) {
+                    // The Padded Whip: its lash ENCH brings the torture (OnLash), the weapon hit itself must not take health.
+                    const float damage = a_hit.totalDamage;
+                    a_hit.totalDamage = 0.0f;
+                    a_hit.physicalDamage = 0.0f;
+                    a_hit.bonusHealthDamageMult = 0.0f;
+                    g_handledVictim = a_victim->GetFormID();
+                    g_handledWhen = std::chrono::steady_clock::now();
+                    SKSE::log::debug("[hook] ProcessHitData padded whip victim:{:08X} attacker:{:08X} damage:{:.2f} -> 0", a_victim->GetFormID(),
+                        attacker ? attacker->GetFormID() : 0, damage);
+                }
+            }
+            func(a_victim, a_hit);
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+    };
+
+    void InstallProcessHitData()
+    {
+        if (REL::Module::IsVR()) {
+            SKSE::log::warn("ProcessHitData hook skipped on VR (call site not verified); punches are restored after the hit");
+            return;
+        }
+        REL::Relocation<std::uintptr_t> target{ REL::RelocationID(37673, 38627), REL::VariantOffset(0x3C0, 0x4A8, 0) };
+        if (*reinterpret_cast<const std::uint8_t*>(target.address()) != 0xE8) {
+            SKSE::log::warn("ProcessHitData hook skipped: no call at {:X}; punches are restored after the hit", target.offset());
+            return;
+        }
+        SKSE::AllocTrampoline(14);
+        ProcessHitData::func = SKSE::GetTrampoline().write_call<5>(target.address(), ProcessHitData::thunk);
+        SKSE::log::info("ProcessHitData hook installed");
+    }
 
     void InstallFightReaction()
     {
@@ -270,6 +344,7 @@ void Install_Hooks()
     SKSE::log::info("ValueModifierEffect::ModifyActorValue hooks installed (plain and dual{})", REL::Module::IsVR() ? ", VR: unverified" : "");
 
     InstallFightReaction();
+    InstallProcessHitData();
 
     if (REL::Module::IsVR()) {
         SKSE::log::warn("Actor::HandleHealthDamage hook skipped on VR (vtable slot not verified); melee damage is seen through ModActorValue only");

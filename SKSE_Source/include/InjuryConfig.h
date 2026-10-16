@@ -25,6 +25,7 @@ namespace InjuryConfig
         int severe = 11;         // ... "severe"
         float woundShare = 0.9f; // torture wounds hold health down by this share of max health
         float floor = 0.1f;      // torture wounds never take health below this share of max
+        float bleedoutBelow = 0.15f;  // torture at or below this share of max health holds the actor in bleedout
         std::array<std::string, kPartCount> partName{ "face", "left arm", "right arm", "back", "left leg", "right leg",
             "nipples", "pussy", "penis", "lips", "ass hole" };
         std::array<int, kPartCount> partRegion{ 0, 2, 2, 1, 3, 3, 4, 5, 6, 7, 8 };

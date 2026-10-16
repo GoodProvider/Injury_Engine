@@ -15,6 +15,7 @@
 #include <mutex>
 #include <random>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace InjuryEngine
@@ -155,6 +156,12 @@ namespace InjuryEngine
         std::unordered_map<std::string, std::chrono::steady_clock::time_point> g_hitReleased;
         // Last VisitEffects scan per tracked actor (SyncHealth throttles to once per second).
         std::unordered_map<RE::FormID, std::chrono::steady_clock::time_point> g_lastScan;
+        // Torture bleedout (setting injury_engine.body.torture_bleedout): actors held in the bleedout idle while torture
+        // keeps them at or below body.bleedout_below of max health, and those whose collapse the next scene line still
+        // has to mention. Not saved: the next SyncHealth after a load puts them down again.
+        std::unordered_set<RE::FormID> g_downed;
+        std::unordered_set<RE::FormID> g_collapsePending;
+        std::atomic<bool> g_bleedoutEnabled{ true };
         constexpr std::chrono::milliseconds kHitGap{ 1000 };
 
         // Queues a hit for narration. A queued hit of the same victim, attacker and source absorbs it (latest mask / level win).
@@ -601,8 +608,40 @@ namespace InjuryEngine
             g_events.push_back(e);
         }
 
+        // Sends BleedOutStart / BleedOutStop to a living actor's behavior graph on the game thread. `hold`: only
+        // when the graph says the actor is no longer bleeding out (the AI stood it up).
+        void SendBleedout(RE::FormID id, bool start, bool hold = false)
+        {
+            if (auto* tasks = SKSE::GetTaskInterface()) {
+                tasks->AddTask([id, start, hold]() {
+                    auto* actor = RE::TESForm::LookupByID<RE::Actor>(id);
+                    if (!actor || actor->IsDead() || !actor->Is3DLoaded()) {
+                        return;
+                    }
+                    if (hold) {
+                        bool down = false;
+                        if (!actor->GetGraphVariableBool("IsBleedingOut", down) || down) {
+                            return;
+                        }
+                        SKSE::log::debug("downed {:08X} stood up, back into bleedout", id);
+                    }
+                    actor->NotifyAnimationGraph(start ? "BleedOutStart" : "BleedOutStop");
+                });
+            }
+        }
+
+        // Lets a downed actor get up (healed above the threshold, forgotten, setting off). Caller holds g_lock.
+        void ReleaseDowned(RE::FormID id)
+        {
+            g_collapsePending.erase(id);
+            if (g_downed.erase(id)) {
+                SendBleedout(id, false);
+            }
+        }
+
         void Erase(RE::FormID id)
         {
+            ReleaseDowned(id);
             g_actors.erase(id);
             g_healers.erase(id);
             g_pained.erase(id);
@@ -1623,6 +1662,51 @@ namespace InjuryEngine
         return DrainPendingEvents();
     }
 
+    namespace
+    {
+        // Torture at or below body.bleedout_below of max health puts the actor into bleedout (once a second it is put
+        // back down if the AI stood it up: `recheck`); health above it lets the actor get up. Caller holds g_lock.
+        void UpdateBleedout(RE::Actor* actor, RE::FormID id, const State& st, bool recheck)
+        {
+            const bool downed = g_downed.contains(id);
+            if (actor->IsDead() || actor->IsDisabled() || actor->IsDeleted()) {
+                return;
+            }
+            auto* av = actor->AsActorValueOwner();
+            const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
+            const float health = av->GetActorValue(RE::ActorValue::kHealth);
+            const float threshold = GetBody().bleedoutBelow * maxHealth;
+            if (!downed) {
+                if (g_bleedoutEnabled.load() && maxHealth > 0.0f && HasTorture(st) && health <= threshold) {
+                    g_downed.insert(id);
+                    g_collapsePending.insert(id);
+                    SendBleedout(id, true);
+                    SKSE::log::info("downed {} at {:.1f}/{:.1f}: bleedout", LogActor(actor), health, maxHealth);
+                }
+                return;
+            }
+            if (!g_bleedoutEnabled.load() || health > threshold) {
+                ReleaseDowned(id);
+                SKSE::log::info("downed {} recovered at {:.1f}/{:.1f}", LogActor(actor), health, maxHealth);
+                return;
+            }
+            if (recheck) {
+                SendBleedout(id, true, true);
+            }
+        }
+    }
+
+    void SetTortureBleedout(bool enabled)
+    {
+        g_bleedoutEnabled.store(enabled);
+        if (!enabled) {
+            std::lock_guard lock(g_lock);
+            for (const auto id : std::vector<RE::FormID>(g_downed.begin(), g_downed.end())) {
+                ReleaseDowned(id);
+            }
+        }
+    }
+
     std::vector<std::int32_t> SyncHealth()
     {
         std::lock_guard lock(g_lock);
@@ -1667,6 +1751,7 @@ namespace InjuryEngine
             const Healer* healer = ActiveHealer(id, now);
             ConvertHealth(actor, id, *st, nowHours, healer != nullptr);
             ClearTortureIfDone(*st);
+            UpdateBleedout(actor, id, *st, scanQueued);
 
             const bool pained = HasOpenDamage(*st);
             if (auto [it, inserted] = g_pained.try_emplace(id, pained); !inserted) {
@@ -2131,7 +2216,43 @@ namespace InjuryEngine
                 { "times", InjuryConfig::Str(source, std::string("narration.summary.times.") + times) } });
     }
 
+    namespace
+    {
+        std::string SceneLine(std::string_view phase, const std::vector<RE::Actor*>& attackers, const std::vector<RE::Actor*>& victims,
+            const std::vector<std::string>& sources, const std::vector<int>& masks, const std::vector<int>& levels);
+    }
+
     std::string SceneText(std::string_view phase, const std::vector<RE::Actor*>& attackers, const std::vector<RE::Actor*>& victims,
+        const std::vector<std::string>& sources, const std::vector<int>& masks, const std::vector<int>& levels)
+    {
+        std::string text = SceneLine(phase, attackers, victims, sources, masks, levels);
+        if (text.empty()) {
+            return text;
+        }
+        // A victim that collapsed into bleedout since the last scene line: say so once (session.json "collapse").
+        std::vector<RE::Actor*> collapsed;
+        {
+            std::lock_guard lock(g_lock);
+            for (auto* victim : victims) {
+                if (victim && std::ranges::find(collapsed, victim) == collapsed.end() && g_collapsePending.erase(victim->GetFormID())) {
+                    collapsed.push_back(victim);
+                }
+            }
+        }
+        for (auto* victim : collapsed) {
+            auto vars = ActorVars(victim);
+            vars["target"] = NameOf(victim);
+            const std::string line = InjuryConfig::Render(InjuryConfig::SessionStr("collapse", "{target} collapses."), vars);
+            if (!line.empty()) {
+                text += " " + line;
+            }
+        }
+        return text;
+    }
+
+    namespace
+    {
+    std::string SceneLine(std::string_view phase, const std::vector<RE::Actor*>& attackers, const std::vector<RE::Actor*>& victims,
         const std::vector<std::string>& sources, const std::vector<int>& masks, const std::vector<int>& levels)
     {
         const std::size_t n = std::min({ attackers.size(), victims.size(), sources.size(), masks.size(), levels.size() });
@@ -2271,6 +2392,7 @@ namespace InjuryEngine
             out += finish(inlineHit(p)) + " ";
         }
         return finish(out);
+    }
     }
 
     void SetIncludeSexualParts(bool enabled)
@@ -2479,6 +2601,8 @@ namespace InjuryEngine
         g_lastReal.clear();
         g_deaths.clear();
         g_lastScan.clear();
+        g_downed.clear();
+        g_collapsePending.clear();
         std::uint32_t count = 0;
         if (!intfc->ReadRecordData(count)) {
             return;
@@ -2515,6 +2639,8 @@ namespace InjuryEngine
         g_hits.clear();
         g_hitReleased.clear();
         g_lastScan.clear();
+        g_downed.clear();
+        g_collapsePending.clear();
         g_syncActors.clear();
         g_syncCasters.clear();
         g_hitVictims.clear();

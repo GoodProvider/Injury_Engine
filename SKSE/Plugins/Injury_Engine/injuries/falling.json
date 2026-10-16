@@ -9,7 +9,8 @@
   },
   "health_link": {
     "wound_share": 0.9,
-    "floor": 0.1
+    "floor": 0.1,
+    "bleedout_below": 0.15
   },
   "regions": [
     "head",

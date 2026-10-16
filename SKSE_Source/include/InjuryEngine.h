@@ -158,6 +158,9 @@ namespace InjuryEngine
     // Setting "include sexual parts": new hits and prompts use the 5 extra small parts; existing wounds on them
     // keep healing while it is off.
     void SetIncludeSexualParts(bool enabled);
+    // Setting injury_engine.body.torture_bleedout: torture at or below body.bleedout_below of max health holds the
+    // actor in the bleedout idle until health is above it again; off lets every downed actor get up.
+    void SetTortureBleedout(bool enabled);
     void SetHoursPerPoint(float hours);
     // Percent of natural regeneration that heals torture wounds (the rest of the regen is taken back).
     void SetRegenRate(float percent);

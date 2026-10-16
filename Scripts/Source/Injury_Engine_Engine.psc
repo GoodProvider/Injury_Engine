@@ -134,6 +134,13 @@ Function SetOverlayEnabled(Bool enabled) global native
 ; "Include sexual body parts": new hits, prompts and the overlay use parts 6..10 too.
 Function SetIncludeSexualParts(Bool enabled) global native
 
+; "Punching during combat is health not torture": off = unarmed punching stays torture in combat.
+Function SetPunchCombatHealth(Bool enabled) global native
+
+; "Tortured victims collapse into bleedout until healed": torture at or below 15% health (body.bleedout_below)
+; holds the victim in the bleedout idle until health is above it again.
+Function SetTortureBleedout(Bool enabled) global native
+
 ; "Verbose logging": debug lines in Injury_Engine.log.
 Function SetVerboseLogging(Bool enabled) global native
 

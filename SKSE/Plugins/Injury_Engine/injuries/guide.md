@@ -86,6 +86,10 @@ requires           "whip" | "sexlab" | ""   (metadata only; stored, not enforced
 damage_max, thresholds, health_link, regions, parts
                    BODY BLOCK: must be identical in every file (only the first loaded file is read, whipping first).
                    Do not change numbers or part order without asking the user; the overlay and decorators depend on it.
+                   health_link: wound_share (share of max health torture holds down), floor (torture never takes
+                   health below it), bleedout_below (torture at or below it holds the victim in bleedout until health
+                   is above it again; setting injury_engine.body.torture_bleedout). session.json "collapse" is added
+                   once to the next scene line after a victim goes down.
 stages             damage stage names: light, medium, severe.
 part_weights       (torture, optional) {"part name": weight}: chance of the type landing there; 0 = never; missing parts keep
                    the body's weight (main parts one, sexual parts their sexual_parts.json weight)

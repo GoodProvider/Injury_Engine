@@ -152,6 +152,7 @@ namespace InjuryConfig
             if (const auto h = j.find("health_link"); h != j.end() && h->is_object()) {
                 b.woundShare = h->value("wound_share", b.woundShare);
                 b.floor = h->value("floor", b.floor);
+                b.bleedoutBelow = h->value("bleedout_below", b.bleedoutBelow);
             }
             if (const auto r = j.find("regions"); r != j.end() && r->is_array() && !r->empty()) {
                 b.regionName.clear();

@@ -175,6 +175,20 @@ schema:
       defaultValue: false
       category: "Body"
 
+    - name: "Punching during combat is health not torture"
+      path: "injury_engine.body.punch_combat_health"
+      type: "bool"
+      description: "Off: bare-fist punches by people are torture in and out of combat: they hold health down but cannot kill. On: punches thrown while the attacker is in combat are real bludgeoning damage and can kill."
+      defaultValue: false
+      category: "Body"
+
+    - name: "Tortured victims collapse into bleedout until healed"
+      path: "injury_engine.body.torture_bleedout"
+      type: "bool"
+      description: "On: when torture brings someone down to 15% health they collapse to the ground in the bleedout pose and stay down until their health has recovered above 15% (healing magic, potions, rest). The next torture narration says that they collapse. Off: they stay on their feet."
+      defaultValue: true
+      category: "Body"
+
     - name: "Show torture overlay"
       path: "injury_engine.overlay.enabled"
       type: "bool"

@@ -36,6 +36,12 @@ namespace Classifier
 
     // True when `attacker` holds the Padded Whip (a classify rule's ignore weapon) in either hand.
     bool IsWhipAttacker(RE::Actor* attacker);
+    // Padded Whip, or bare fists whose unarmed rule is a torture source (punching out of combat).
+    bool IsTortureAttacker(RE::Actor* attacker);
+
+    // Setting injury_engine.body.punch_combat_health: true = a torture unarmed rule limited to out of combat
+    // (punching) does not match during combat (punches fall to bludgeoning); false (default) = it matches anyway.
+    void SetPunchCombatHealth(bool enabled);
 
     // A whip lash is a friendly hit, not an attack (GetFactionFightReaction hook): `victim` gets the ref flag
     // kIgnoreFriendlyHits, so the lashes neither count as friend hits nor start combat. Only a flag this set is

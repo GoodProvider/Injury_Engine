@@ -58,6 +58,7 @@ namespace Classifier
         // victim -> last whip lash, for the kIgnoreFriendlyHits flags SuppressFriendHits set (own lock: the fight
         // reaction hook runs inside the engine's hit handling)
         std::mutex g_friendLock;
+        std::atomic<bool> g_punchCombatHealth{ false };
         std::unordered_map<RE::FormID, double> g_friendFlag;
         // classify effect_file / effect_id -> runtime MGEF form id (ESL light masters need explicit resolution)
         std::unordered_map<std::string, RE::FormID> g_classifyEffectForms;
@@ -251,7 +252,11 @@ namespace Classifier
                 return false;
             }
             if (rule.combat == 0 && combat) {
-                return false;
+                // Setting injury_engine.body.punch_combat_health off: torture punches stay torture in combat.
+                const auto* conf = g_punchCombatHealth.load() ? nullptr : InjuryConfig::Find(rule.source);
+                if (!conf || !conf->IsTorture()) {
+                    return false;
+                }
             }
             return true;
         }
@@ -550,6 +555,25 @@ namespace Classifier
             }
         }
         return false;
+    }
+
+    void SetPunchCombatHealth(bool enabled)
+    {
+        g_punchCombatHealth.store(enabled);
+    }
+
+    bool IsTortureAttacker(RE::Actor* attacker)
+    {
+        if (IsWhipAttacker(attacker)) {
+            return true;
+        }
+        if (!attacker || attacker->GetEquippedObject(false) || attacker->GetEquippedObject(true)) {
+            return false;
+        }
+        // out-of-combat fists (punching): the same unarmed rule Classify uses
+        const Match hit = MatchUnarmed(attacker);
+        const auto* conf = hit.source >= 0 ? InjuryConfig::Find(hit.source) : nullptr;
+        return conf && conf->IsTorture();
     }
 
     void SuppressFriendHits(RE::Actor* victim)

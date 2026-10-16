@@ -290,6 +290,8 @@ Function ApplyPluginConfig()
     Injury_Engine_Engine.SetHoursPerPoint(hours_per_point)
     Injury_Engine_Engine.SetRegenRate(regen_rate)
     Injury_Engine_Engine.SetIncludeSexualParts(include_sexual_parts)
+    Injury_Engine_Engine.SetPunchCombatHealth(SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "injury_engine.body.punch_combat_health", false))
+    Injury_Engine_Engine.SetTortureBleedout(SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "injury_engine.body.torture_bleedout", true))
     Injury_Engine_Engine.SetOverlayEnabled(show_overlay)
     Injury_Engine_Engine.SetVerboseLogging(verbose_logging)
     RegisterForSingleUpdateGameTime(hours_per_point) ; healing poll follows the heal rate
