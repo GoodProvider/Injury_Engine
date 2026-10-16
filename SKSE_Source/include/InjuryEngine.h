@@ -137,6 +137,11 @@ namespace InjuryEngine
     //  "actors":[{"id","name","source","max","replaced","healing","parts":[points x active parts in overlay order]}]}
     std::string OverlayJson();
 
+    // Torture points per part (time applied): each part the actor's sex has, points = the part's torture (largest type),
+    // out of its part max; total = torture points over all parts, out of max = the active parts' capacity.
+    // {"total","max","parts":[{"name","points","max"}]}
+    std::string PartPointsJson(RE::Actor* actor);
+
     // Narration text rendered from the JSON files.
     std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count,
         bool noCause = false, bool unarmedForm = false);

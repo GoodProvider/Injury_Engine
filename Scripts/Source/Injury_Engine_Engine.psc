@@ -85,6 +85,10 @@ String Function ActionAliases() global native
 ; {"sources":[{"id","looks_heading","feels_intro","feels_outro","parts":[{"part","region","stage","look","feel"}]}]}
 String Function GetStateJson(Actor akActor) global native
 
+; Torture points per part (time applied), parts the actor's sex has; total over all parts, out of max:
+; {"total","max","parts":[{"name","points","max"}]}
+String Function PartPointsJson(Actor akActor) global native
+
 ; Narration text rendered from the JSON files. noCause leaves out narration.hit.by_* (the caller's cause leads instead).
 ; Killing blows (a death within a few seconds of a real hit): the rendered death lines. DeathVictims / DeathAttackers /
 ; DeathSources are parallel to the last result.

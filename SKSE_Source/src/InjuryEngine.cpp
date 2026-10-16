@@ -1969,6 +1969,27 @@ namespace InjuryEngine
         return out.dump();
     }
 
+    std::string PartPointsJson(RE::Actor* actor)
+    {
+        if (!actor) {
+            return {};
+        }
+        const auto& body = GetBody();
+        const bool female = IsFemale(actor);
+        std::lock_guard lock(g_lock);
+        const State* st = Current(actor, NowHours());
+        nlohmann::json parts = nlohmann::json::array();
+        for (int i = 0; i < kPartCount; ++i) {
+            if (!PartFits(female, i)) {
+                continue;
+            }
+            parts.push_back({ { "name", body.partName[i] }, { "points", st ? PartTorture(*st, i) : 0 },
+                { "max", body.partMax[i] } });
+        }
+        const nlohmann::json out = { { "total", st ? Deficit(*st) : 0 }, { "max", CapacityDamage() }, { "parts", parts } };
+        return out.dump();
+    }
+
     std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count, bool noCause,
         bool unarmedForm)
     {

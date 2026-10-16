@@ -215,6 +215,11 @@ namespace
         return InjuryEngine::StateJson(actor);
     }
 
+    RE::BSFixedString PartPointsJson(RE::StaticFunctionTag*, RE::Actor* actor)
+    {
+        return InjuryEngine::PartPointsJson(actor);
+    }
+
     RE::BSFixedString HitText(RE::StaticFunctionTag*, RE::BSFixedString sourceId, RE::Actor* attacker, RE::Actor* victim,
         std::int32_t mask, std::int32_t level, std::int32_t count, bool noCause, bool unarmedForm)
     {
@@ -383,6 +388,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("SourceOfAlias", s, SourceOfAlias);
     a_vm->RegisterFunction("ActionAliases", s, ActionAliases);
     a_vm->RegisterFunction("GetStateJson", s, GetStateJson);
+    a_vm->RegisterFunction("PartPointsJson", s, PartPointsJson);
     a_vm->RegisterFunction("HitText", s, HitText);
     a_vm->RegisterFunction("HitUnarmed", s, HitUnarmed);
     a_vm->RegisterFunction("HitCount", s, HitCount);

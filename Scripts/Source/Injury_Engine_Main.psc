@@ -1387,6 +1387,14 @@ Int Function External_Heal(Actor caster, Actor target, String text, Float health
     return healed
 EndFunction
 
+; Torture points per part of target (Injury_Engine_Engine.PartPointsJson); "" when not ready.
+String Function External_PartPoints(Actor target) global
+    if Get() == None || target == None
+        return ""
+    endif
+    return Injury_Engine_Engine.PartPointsJson(target)
+EndFunction
+
 Bool Function External_SexualParts() global
     Injury_Engine_Main main = Get()
     return main != None && main.include_sexual_parts

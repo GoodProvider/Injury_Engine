@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- New `Injury_Engine_Engine.PartPointsJson(Actor)` native (`InjuryEngine::PartPointsJson`, time applied) and `Injury_Engine_Main.External_PartPoints(Actor)`: torture points per part (`{"total","max","parts":[{"name","points","max"}]}`), used by SkyrimNet_SexLab's Aid / Punish torture bar.
 - Build against MinLL/CommonLibVR 4.39.5 (MIT, SE 1.7.99 / 1.7.104) through the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` (copy of SkyrimNet_SexLab's) instead of SexLab's alandtse/CommonLibSSE-NG v11.0.0 checkout (GPL-3.0). `find_package(CommonLibSSE)`; the colorglass registry and `-DCommonLibPath` are gone. No plugin code changes.
 - `LICENSE` added (MIT); README gains a License section.
 
