@@ -33,8 +33,9 @@ Schema: `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml`. `Ma
 | `injury_engine.narration.enabled`, `.cooldown`, `.max_distance`, `.event_ttl` | Narration gate (`cooldown`: healing only) |
 | `injury_engine.narration.torture_narration_window_size` | Unused since passive heals are no longer narrated (was `InTortureSession`); torture narration itself is a session (`NarrateHits`: start narration, summary 2 s after the last hit) |
 | `injury_engine.narration.torture_maximum_break` | Seconds without a hit that end the torture session (no line; stops \"again\"), default 3 |
-| `injury_engine.narration.health_narration_cooloff` | Seconds between spoken (DirectNarration) real-damage narrations, default 6; hits in between, or while the speech queue is busy, are short-lived events |
+| `injury_engine.narration.health_narration_cooloff` | Seconds between spoken (DirectNarration) real-damage narrations, default 6; hits in between, or while the reply gate is closed, are short-lived events |
 | `injury_engine.narration.torture_direct_narration_gap` | Seconds between combined "again" narrations during continuous torture, default 6 |
+| `injury_engine.narration.reply_timeout` | Reply gate (`Main.ClaimNarration`): after any DirectNarration, the next automatic one (torture start / switch / again, heal start / again, real hit, death) waits until an audio line has ended at least 1.5 s after it with the speech queue empty, or until this many seconds pass with no dialogue; default 15. Waiting torture starts / switches and heal starts are sent when the gate opens; real hits and deaths fall back to short-lived events. External API narrations are never held back but do close the gate |
 | `injury_engine.overlay.enabled` | Overlay on/off |
 | `injury_engine.debug.verbose_logging` | `Main.verbose_logging`; passed to the DLL (`SetVerboseLogging`) |
 

@@ -44,6 +44,7 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 | `injury_engine.narration.torture_narration_window_size` | Torture narration window | 30 s | Passive healing is not reported for this long after a torture hit |
 | `injury_engine.narration.torture_maximum_break` | Torture maximum break | 3 s | A pause this long ends a torture session |
 | `injury_engine.narration.torture_direct_narration_gap` | Torture direct narration gap | 6 s | How often continuous torture is narrated |
+| `injury_engine.narration.reply_timeout` | Wait for reply | 15 s | After a narration, the next one waits for SkyrimNet's spoken reply, or this long without any dialogue |
 | `injury_engine.narration.health_narration_cooloff` | Health narration cooloff | 6 s | At most one real-damage narration this often |
 | `injury_engine.narration.cooldown` | Narration cooldown | 8 s | Per-actor healing narration cooldown |
 | `injury_engine.narration.max_distance` | Narration max distance | 15 m | Farther hits and healing become events |

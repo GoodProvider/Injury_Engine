@@ -132,6 +132,15 @@ schema:
       defaultValue: 6.0
       category: "Narration"
 
+    - name: "Wait for reply (sec)"
+      path: "injury_engine.narration.reply_timeout"
+      type: "float"
+      description: "After a narration, the next one waits until SkyrimNet has spoken a reply, or until there has been no dialogue for this long. Hits in between are short-lived events."
+      min: 3
+      max: 120
+      defaultValue: 15.0
+      category: "Narration"
+
     - name: "Health narration cooloff (sec)"
       path: "injury_engine.narration.health_narration_cooloff"
       type: "float"

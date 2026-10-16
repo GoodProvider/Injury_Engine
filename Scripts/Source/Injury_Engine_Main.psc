@@ -48,6 +48,7 @@ String Property KEY_HS_CASTER = "injury_engine.hs_caster" AutoReadOnly
 String Property KEY_HS_LAST = "injury_engine.hs_last" AutoReadOnly
 String Property KEY_HS_NARR = "injury_engine.hs_narr" AutoReadOnly
 String Property KEY_HS_TEXT = "injury_engine.hs_text" AutoReadOnly
+String Property KEY_HS_PEND = "injury_engine.hs_pend" AutoReadOnly
 
 Float Property UNITS_PER_METER = 70.0 AutoReadOnly
 
@@ -75,6 +76,13 @@ Float Property torture_maximum_break = 3.0 Auto Hidden
 Float Property torture_direct_narration_gap = 6.0 Auto Hidden
 ; An again line only while hits are still landing: the pair's last hit at most this many seconds ago
 Float Property torture_again_recent = 1.0 AutoReadOnly
+; Reply gate (ClaimNarration): after a DirectNarration the next automatic one waits until SkyrimNet has spoken
+; a reply (an audio line ended at least REPLY_MIN_DELAY after it, speech queue empty), or reply_timeout of silence.
+Float Property reply_timeout = 15.0 Auto Hidden
+Float Property REPLY_MIN_DELAY = 1.5 AutoReadOnly
+Float Property last_direct_time = -1000.0 Auto Hidden
+; Set by ClaimNarration while a caller holds the gate; DirectNarrate releases it. Stops two threads sending at once.
+Bool narration_claim = False
 Float Property narration_max_distance = 15.0 Auto Hidden
 Float Property event_ttl = 30.0 Auto Hidden
 Bool Property include_sexual_parts = False Auto Hidden
@@ -107,10 +115,64 @@ Function Verbose(String func, String msg)
 EndFunction
 
 ; Every DirectNarration goes through here so the exact text sent is in Injury_Engine.log ([hh:mm:ss] torture:direct / heal:direct / health:direct).
+; Every DirectNarration (ours and the External API's) also stamps the reply gate, see ClaimNarration.
 Function DirectNarrate(String msg, Actor speaker, Actor target, String category = "torture", String session = "start") global
     Trace("DirectNarration", NameOf(speaker) + " -> " + NameOf(target) + ": " + msg)
+    Injury_Engine_Main main = Get()
+    if main
+        main.NoteDirect()
+    endif
     Injury_Engine_Engine.LogLine(category, "direct", session, msg)
     SkyrimNetApi.DirectNarration(msg, speaker, target)
+EndFunction
+
+Float claim_time = -1000.0
+
+Function NoteDirect()
+    last_direct_time = Utility.GetCurrentRealTime()
+    narration_claim = False
+EndFunction
+
+; A claim taken but not used (nothing to send after all).
+Function ReleaseNarration()
+    narration_claim = False
+EndFunction
+
+; Reply gate for every automatic DirectNarration: true when SkyrimNet has answered our last one (an audio line
+; ended at least REPLY_MIN_DELAY after it and the speech queue is empty) or nothing was said for reply_timeout.
+; The speech queue alone is no signal: it stays empty while the LLM is still generating the reply.
+; True also takes the gate: the caller sends (DirectNarrate releases it) or calls ReleaseNarration.
+Bool Function ClaimNarration()
+    if narration_claim ; test and set with no external call in between: one thread wins
+        float t = Utility.GetCurrentRealTime()
+        if t >= claim_time && t - claim_time < 2.0
+            return false
+        endif
+        ; a claim older than 2 s was never used: take it over
+    endif
+    narration_claim = True
+    float now = Utility.GetCurrentRealTime()
+    claim_time = now
+    float since = now - last_direct_time
+    if last_direct_time < 0.0 || since < 0.0 ; never narrated, or real time restarted after a load
+        return true
+    endif
+    int queue = SkyrimNetApi.GetSpeechQueueSize()
+    float audio = SkyrimNetApi.GetTimeSinceLastAudioEnded() / 1000.0
+    String why = ""
+    if queue == 0 && audio > 0.0 && audio < since - REPLY_MIN_DELAY
+        why = "replied"
+    elseif since >= reply_timeout && (audio <= 0.0 || audio >= reply_timeout)
+        why = "silence"
+    endif
+    if verbose_logging && why != ""
+        Verbose("ClaimNarration", "since:" + since + " audio_ended:" + audio + " queue:" + queue + " -> " + why)
+    endif
+    if why == ""
+        narration_claim = False
+        return false
+    endif
+    return true
 EndFunction
 
 Function ShortEvent(String msg, Actor speaker, Actor target, String category, String eventId, String eventType, int ttlMs, String session = "start") global
@@ -279,6 +341,7 @@ Function ApplyPluginConfig()
     torture_narration_window_size = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.torture_narration_window_size", DefaultNumber("torture_narration_window_size", 30.0))
     torture_maximum_break = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.torture_maximum_break", DefaultNumber("torture_maximum_break", 3.0))
     torture_direct_narration_gap = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.torture_direct_narration_gap", DefaultNumber("torture_direct_narration_gap", 6.0))
+    reply_timeout = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.reply_timeout", DefaultNumber("reply_timeout", 15.0))
     narration_max_distance = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.max_distance", DefaultNumber("narration_max_distance", 15.0))
     event_ttl = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.event_ttl", DefaultNumber("event_ttl", 30.0))
     include_sexual_parts = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "injury_engine.body.include_sexual_parts", DefaultNumber("include_sexual_parts", 0.0) > 0.5)
@@ -300,7 +363,7 @@ Function ApplyPluginConfig()
     endif
     Trace("ApplyPluginConfig", "require_whip:" + require_whip + " give_gear:" + give_gear + " max_strikes:" + max_strikes + " hours_per_point:" + hours_per_point \
         + " give_healing_hands:" + give_healing_hands + " regen_rate:" + regen_rate \
-        + " narration:" + narration_enabled + " modes injury/heal/death/torture:" + injury_mode + "/" + healing_mode + "/" + death_mode + "/" + torture_mode + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
+        + " narration:" + narration_enabled + " modes injury/heal/death/torture:" + injury_mode + "/" + healing_mode + "/" + death_mode + "/" + torture_mode + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " reply_timeout:" + reply_timeout + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
 EndFunction
 
 ;----------------------------------------------------------------------------------------------------
@@ -395,8 +458,9 @@ EndFunction
 
 ; Real-damage hits are a short-lived event each: never narrated, no batch, no cooldown change.
 ; Torture hits (whipping, slapping, ...) form one scene of (attacker, victim) pairs, see "Torture scene" below:
-;   - a pair's first hit (pending start) or a method change: NarrateHits sends "start" immediately; player in batch: purge + DirectNarration, else OptionalDirectNarrate
-;   - a hit after that is a short-lived event; every torture_direct_narration_gap seconds one combined "again" line
+;   - a pair's first hit (pending start) or a method change: NarrateHits sends "start" / "switch" as soon as the reply gate
+;     (ClaimNarration) is open; until then the pair waits and SceneTick sends it
+;   - a hit after that is a short-lived event; every torture_direct_narration_gap seconds, gate open, one combined "again" line
 ;   - a pair whose last hit is torture_maximum_break seconds old is dropped with no line (stops "again")
 ;   - only pairs in sight of the player are narrated
 Function NarrateInjury(Actor attacker, Actor victim, int code, Bool unarmedForm = False)
@@ -416,7 +480,7 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         if msg != ""
             Float now = Utility.GetCurrentRealTime()
             Bool cooled = now < last_health_narration || now - last_health_narration >= health_narration_cooloff
-            if DirectAllowed(kind) && cooled && SkyrimNetApi.GetSpeechQueueSize() == 0
+            if DirectAllowed(kind) && cooled && ClaimNarration()
                 last_health_narration = now
                 DirectNarrate(msg, attacker, victim, "health", "start")
             else
@@ -439,13 +503,12 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         SceneUpdate(i, source, part_mask, level, hits, cause, visible)
         StartSync()
     endif
-    Bool needStart = false
+    String phase = ""
     if StorageUtil.IntListGet(self, KEY_SC_STATE, i) == SC_PENDING
-        needStart = true
+        phase = "start"
     elseif StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 1
-        needStart = true
+        phase = "switch"
         session = "switch"
-        StorageUtil.IntListSet(self, KEY_SC_SWITCH, i, 0)
     endif
     if msg != ""
         Trace("NarrateInjury", source + " short-lived event: " + msg)
@@ -455,11 +518,26 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         Verbose("NarrateInjury", source + " " + victim.GetDisplayName() + " pair:" + i + " state:" + StorageUtil.IntListGet(self, KEY_SC_STATE, i) \
             + " hits:" + StorageUtil.IntListGet(self, KEY_SC_COUNT, i) + " level:" + level + " " + GateText(victim))
     endif
-    if needStart && visible
+    ; The start / switch line waits for SkyrimNet's reply to the last narration: while the gate is closed the pair
+    ; stays pending (or flagged) and SceneTick sends it once the gate opens.
+    if phase != "" && visible && ClaimNarration()
+        i = SceneFind(attacker, victim) ; another thread may have changed the lists meanwhile
+        if i < 0
+            ReleaseNarration()
+            return
+        endif
+        if phase == "start" && StorageUtil.IntListGet(self, KEY_SC_STATE, i) != SC_PENDING
+            ReleaseNarration() ; already sent
+            return
+        elseif phase == "switch" && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) != 1
+            ReleaseNarration()
+            return
+        endif
         StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_RUNNING)
+        StorageUtil.IntListSet(self, KEY_SC_SWITCH, i, 0)
         int[] picked = Utility.CreateIntArray(1)
         picked[0] = i
-        SceneSend("start", picked, true)
+        SceneSend(phase, picked, true)
     endif
 EndFunction
 
@@ -639,24 +717,6 @@ String Function SceneLine(String phase, int[] picked)
     return Injury_Engine_Engine.SceneText(phase, attackers, victims, sources, masks, levels)
 EndFunction
 
-; DirectNarration when the speech queue is empty, otherwise a short-lived event.
-Function OptionalDirectNarrate(String msg, Actor speaker, Actor target, String session = "start")
-    if DirectAllowed("torturing") && SkyrimNetApi.GetSpeechQueueSize() == 0
-        DirectNarrate(msg, speaker, target, "torture", session)
-    else
-        Trace("OptionalDirectNarrate", "speech queue busy, event: " + msg)
-        int pi = SceneFind(speaker, target)
-        String method = SOURCE_WHIP
-        if pi >= 0
-            method = StorageUtil.StringListGet(self, KEY_SC_SRC, pi)
-            if method == ""
-                method = SOURCE_WHIP
-            endif
-        endif
-        RegisterInjuryShortEvent(msg, speaker, target, "torturing", method, speaker, target, session)
-    endif
-EndFunction
-
 ; Log session type of a scene / heal phase.
 String Function SessionOf(String phase) global
     if phase == "again"
@@ -667,11 +727,12 @@ String Function SessionOf(String phase) global
     return phase
 EndFunction
 
-; One combined line for the picked pairs. If the player is attacker or victim of any pair in the batch and purge is true,
-; clear the speech queue then DirectNarration; otherwise OptionalDirectNarrate (DirectNarration only when the queue is empty).
-; Narration off: a short-lived event. A cause from External_Damage leads start and switch lines.
+; One combined line for the picked pairs. The caller holds the reply gate (ClaimNarration); every way out sends or
+; releases it. DirectNarration; if the player is attacker or victim of any pair and purge is true, queued lines are
+; cleared first. Narration off: a short-lived event. A cause from External_Damage leads start and switch lines.
 Function SceneSend(String phase, int[] picked, Bool purge)
     if picked.Length == 0
+        ReleaseNarration()
         return
     endif
     String msg = SceneLine(phase, picked)
@@ -695,30 +756,44 @@ Function SceneSend(String phase, int[] picked, Bool purge)
     endwhile
     msg = CauseText(cause) + msg
     if msg == ""
+        ReleaseNarration()
         return
     endif
     Actor speaker = SceneAttacker(picked[0])
     Actor target = SceneVictim(picked[0])
     Trace("SceneSend", phase + " pairs:" + picked.Length + " player:" + involved + ": " + msg)
     if torture_mode == 2
-        return
+        ReleaseNarration()
     elseif !DirectAllowed("torturing")
+        ReleaseNarration()
         String method = StorageUtil.StringListGet(self, KEY_SC_SRC, picked[0])
         if method == ""
             method = SOURCE_WHIP
         endif
         RegisterInjuryShortEvent(msg, speaker, target, "torturing", method, speaker, target, SessionOf(phase))
-    elseif involved
-        if purge
-            SkyrimNetApi.PurgeDialogue(true) ; the torture comes first: drop queued lines, let the current one finish
+    else
+        if involved && purge
+            ; the gate opened (reply heard or silence), so this only drops lines stuck in the queue after a silence
+            SkyrimNetApi.PurgeDialogue(true)
         endif
         DirectNarrate(msg, speaker, target, "torture", SessionOf(phase))
-    else
-        OptionalDirectNarrate(msg, speaker, target, SessionOf(phase))
     endif
 EndFunction
 
-; Called by OnUpdate: visibility, then switches, new pairs, the periodic line; drop pairs past torture_maximum_break.
+; An again line is due: a running pair still being hit was last narrated torture_direct_narration_gap ago.
+Bool Function AgainDue(float now)
+    int[] again = SceneSelect(SC_SEL_AGAIN)
+    int i = 0
+    while i < again.Length
+        if now - StorageUtil.FloatListGet(self, KEY_SC_NARR, again[i]) >= torture_direct_narration_gap
+            return true
+        endif
+        i += 1
+    endwhile
+    return false
+EndFunction
+
+; Called by OnUpdate: visibility, then one of switches, new pairs, the periodic line; drop pairs past torture_maximum_break.
 Function SceneTick()
     if scene_tick_active
         return
@@ -740,34 +815,32 @@ Function SceneTick()
         endif
         i += 1
     endwhile
-    int[] switches = SceneSelect(SC_SEL_SWITCH)
-    if switches.Length > 0
-        i = 0
-        while i < switches.Length
-            StorageUtil.IntListSet(self, KEY_SC_SWITCH, switches[i], 0)
-            i += 1
-        endwhile
-        SceneSend("switch", switches, true)
+    ; At most one line per tick, and only once SkyrimNet has answered the last narration (ClaimNarration):
+    ; switches first, then new pairs, then the periodic again line. The rest wait for the next reply.
+    if (SceneSelect(SC_SEL_SWITCH).Length > 0 || SceneSelect(SC_SEL_START).Length > 0 || AgainDue(now)) && ClaimNarration()
+        int[] switches = SceneSelect(SC_SEL_SWITCH) ; select again: the lists may have changed during the claim
+        int[] starts = SceneSelect(SC_SEL_START)
+        if switches.Length > 0
+            i = 0
+            while i < switches.Length
+                StorageUtil.IntListSet(self, KEY_SC_SWITCH, switches[i], 0)
+                i += 1
+            endwhile
+            SceneSend("switch", switches, true)
+        elseif starts.Length > 0
+            i = 0
+            while i < starts.Length
+                StorageUtil.IntListSet(self, KEY_SC_STATE, starts[i], SC_RUNNING)
+                i += 1
+            endwhile
+            SceneSend("start", starts, true)
+        elseif AgainDue(Utility.GetCurrentRealTime())
+            SceneSend("again", SceneSelect(SC_SEL_AGAIN), true)
+        else
+            ReleaseNarration()
+        endif
     endif
-    int[] starts = SceneSelect(SC_SEL_START)
-    if starts.Length > 0
-        i = 0
-        while i < starts.Length
-            StorageUtil.IntListSet(self, KEY_SC_STATE, starts[i], SC_RUNNING)
-            i += 1
-        endwhile
-        SceneSend("start", starts, true) ; player-involved first-hit batch always may purge (see SceneSend)
-    endif
-    int[] again = SceneSelect(SC_SEL_AGAIN)
-    Bool due = false
-    i = 0
-    while i < again.Length && !due
-        due = now - StorageUtil.FloatListGet(self, KEY_SC_NARR, again[i]) >= torture_direct_narration_gap
-        i += 1
-    endwhile
-    if due
-        SceneSend("again", again, true)
-    endif
+    total = StorageUtil.FormListCount(self, KEY_SC_VIC)
     i = total - 1
     while i >= 0
         if now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i) >= torture_maximum_break
@@ -951,7 +1024,7 @@ EndFunction
 
 ;----------------------------------------------------------------------------------------------------
 ; Heal session, mirroring the torture scene: a healing source starting on an actor opens it with a start
-; line at once; while the source keeps working, one "again" line every torture_direct_narration_gap; after
+; line at once (or once SkyrimNet has answered the last narration, see ClaimNarration); while the source keeps working, one "again" line every torture_direct_narration_gap; after
 ; torture_maximum_break with no healing it is dropped with no line. Every line is HealMapText: each part's
 ; torture points at their heal level (high / mid / low). Lines go out like SceneSend.
 ;----------------------------------------------------------------------------------------------------
@@ -987,6 +1060,7 @@ int Function HealOpen(Actor target, Actor caster, String lead)
     StorageUtil.FloatListAdd(self, KEY_HS_LAST, now, true)
     StorageUtil.FloatListAdd(self, KEY_HS_NARR, now, true)
     StorageUtil.StringListAdd(self, KEY_HS_TEXT, "", true)
+    StorageUtil.StringListAdd(self, KEY_HS_PEND, "", true)
     int i = StorageUtil.FormListCount(self, KEY_HS_TGT) - 1
     HealSend("start", i, lead)
     StartSync()
@@ -999,6 +1073,7 @@ Function HealRemove(int i)
     StorageUtil.FloatListRemoveAt(self, KEY_HS_LAST, i)
     StorageUtil.FloatListRemoveAt(self, KEY_HS_NARR, i)
     StorageUtil.StringListRemoveAt(self, KEY_HS_TEXT, i)
+    StorageUtil.StringListRemoveAt(self, KEY_HS_PEND, i)
 EndFunction
 
 String Function JoinText(String a, String b) global
@@ -1012,25 +1087,42 @@ EndFunction
 
 ; One heal line for session i: lead (source text, start only) + the heal map. An "again" line equal to the last
 ; line sent is skipped. Out of sight: nothing. Narration off: a short-lived event with one id per (caster, target).
-; Player involved: purge + DirectNarration, otherwise DirectNarration when the speech queue is empty, else that event.
+; Otherwise DirectNarration once SkyrimNet has answered the last narration (ClaimNarration; player involved: queued
+; lines are purged first). Gate closed: a start line waits in KEY_HS_PEND for HealTick, an again line is skipped.
 Function HealSend(String phase, int i, String lead)
     Actor target = HealTarget(i)
     Actor caster = HealCaster(i)
-    if target == None
+    if target == None || healing_mode == 2
         return
     endif
     if !PairVisible(caster, target)
         Verbose("HealSend", phase + " " + target.GetDisplayName() + " out of sight")
         return
     endif
+    Bool direct = DirectAllowed("healing")
+    if direct && !ClaimNarration()
+        if phase == "start"
+            StorageUtil.StringListSet(self, KEY_HS_PEND, i, lead)
+            Verbose("HealSend", "start of " + target.GetDisplayName() + " waits for a reply")
+        endif
+        return
+    endif
+    i = HealFind(target) ; the lists may have changed during the claim
+    if i < 0
+        ReleaseNarration()
+        return
+    endif
+    StorageUtil.StringListSet(self, KEY_HS_PEND, i, "")
     String map = Injury_Engine_Engine.HealMapText(target)
     if phase == "again" && map == StorageUtil.StringListGet(self, KEY_HS_TEXT, i)
+        ReleaseNarration()
         return
     endif
     StorageUtil.StringListSet(self, KEY_HS_TEXT, i, map)
     StorageUtil.FloatListSet(self, KEY_HS_NARR, i, Utility.GetCurrentRealTime())
     String msg = JoinText(lead, map)
     if msg == ""
+        ReleaseNarration()
         return
     endif
     Actor toward = caster
@@ -1039,18 +1131,13 @@ Function HealSend(String phase, int i, String lead)
     endif
     Actor player = Game.GetPlayer()
     Trace("HealSend", phase + " " + target.GetDisplayName() + " caster:" + NameOf(caster) + ": " + msg)
-    if healing_mode == 2
-        return
-    elseif !DirectAllowed("healing")
+    if !direct
         RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target, SessionOf(phase))
-    elseif target == player || caster == player
-        SkyrimNetApi.PurgeDialogue(true)
-        DirectNarrate(msg, target, toward, "heal", SessionOf(phase))
-    elseif SkyrimNetApi.GetSpeechQueueSize() == 0
-        DirectNarrate(msg, target, toward, "heal", SessionOf(phase))
     else
-        Trace("HealSend", "speech queue busy, event: " + msg)
-        RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target, SessionOf(phase))
+        if target == player || caster == player
+            SkyrimNetApi.PurgeDialogue(true)
+        endif
+        DirectNarrate(msg, target, toward, "heal", SessionOf(phase))
     endif
 EndFunction
 
@@ -1071,8 +1158,11 @@ Function HealTick()
         if target != None && Injury_Engine_Engine.IsHealing(target)
             StorageUtil.FloatListSet(self, KEY_HS_LAST, i, now)
         endif
+        String pend = StorageUtil.StringListGet(self, KEY_HS_PEND, i)
         if target == None || target.IsDead() || now - StorageUtil.FloatListGet(self, KEY_HS_LAST, i) >= torture_maximum_break
             HealRemove(i)
+        elseif pend != ""
+            HealSend("start", i, pend) ; the start line held back until SkyrimNet answered
         elseif now - StorageUtil.FloatListGet(self, KEY_HS_LAST, i) <= torture_again_recent && now - StorageUtil.FloatListGet(self, KEY_HS_NARR, i) >= torture_direct_narration_gap
             HealSend("again", i, "")
         endif
@@ -1156,7 +1246,8 @@ Event OnUpdate()
 EndEvent
 
 ; Killing blows queued by the DLL (a death soon after a real hit): one death line each. In sight with narration on:
-; DirectNarration (once per death, no cooloff); otherwise a short-lived injury_death event. Mode Event: always the event; Silent: nothing.
+; DirectNarration (once per death, no cooloff) when SkyrimNet has answered the last narration (ClaimNarration);
+; otherwise a short-lived injury_death event. Mode Event: always the event; Silent: nothing.
 Function NarrateDeaths()
     String[] texts = Injury_Engine_Engine.TakeDeaths()
     if texts.Length == 0
@@ -1171,7 +1262,7 @@ Function NarrateDeaths()
         if victim != None && death_mode != 2 && texts[i] != ""
             ClearTortureScene(victim)
             ClearHealBatch(victim)
-            if DirectAllowed("death") && PairVisible(attackers[i], victim)
+            if DirectAllowed("death") && PairVisible(attackers[i], victim) && ClaimNarration()
                 DirectNarrate(texts[i], attackers[i], victim, "health", "death")
             else
                 Trace("NarrateDeaths", sources[i] + " short-lived event: " + texts[i])

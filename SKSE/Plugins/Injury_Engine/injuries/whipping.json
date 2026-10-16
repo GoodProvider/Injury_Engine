@@ -73,6 +73,7 @@
     "torture_narration_window_size": 30,
     "torture_maximum_break": 3,
     "torture_direct_narration_gap": 6,
+    "reply_timeout": 15,
     "narration_max_distance": 15,
     "event_ttl": 30,
     "include_sexual_parts": false,
