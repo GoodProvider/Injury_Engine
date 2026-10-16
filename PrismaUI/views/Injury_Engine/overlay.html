@@ -6,17 +6,19 @@
     <title>Injury Engine Overlay</title>
     <!--
         Whip damage overlay (C++ Overlay.cpp). Shown without Focus: no cursor, no input, game keeps running.
-        C++ pushes injuryEngineUpdate({title, max, part_max, medium, severe, colors,
-                               actors:[{id, name, replaced, healing, parts:[points x6 or x11]}]})
-        whenever the engine state changes (numbers and colors come from injuries/whipping.json); parts are head, body,
-        right arm, left arm, right leg, left leg, then (with "include sexual parts") nipples, pussy, penis, lips,
-        ass hole; part_max is each part's damage points in that order. whipReset() drops everything (new game / load / overlay turned off).
+        C++ pushes injuryEngineUpdate({title, max, part_max, medium, severe, colors, source_colors,
+                               actors:[{id, name, source, max, replaced, healing, parts:[points x6 or x11]}]})
+        whenever the engine state changes (numbers from injuries/whipping.json, bar colors per torture type from each
+        injuries/<type>.json overlay_colors); parts are head, body, right arm, left arm, right leg, left leg, then
+        (with "include sexual parts") nipples, pussy, penis, lips, ass hole; part_max is each part's damage points in
+        that order. whipReset() drops everything (new game / load / overlay turned off).
         Layout: #InjuryEnginePanel holds the title ("Torture Damage", white) above .actor-injuryengine-damage-bars, one bar per
-        tortured actor, most recently hit first. Each part counts only its worst torture type's points. Width = total
-        torture points over the whole body. Colored by the average points of the wounded parts (light / medium /
-        severe), or light blue while a healing source works on the actor (`healing`: its heal session); a hit turns
-        it red again. Real damage replaces whip damage: `replaced` points grow as a darker red segment from the left
-        while the whip fill shrinks. Bars show only the actor's name.
+        tortured actor, most recently hit first. Each bar shows the actor's latest torture type (`source`) alone:
+        width = that type's points out of the actor's `max` (the parts the type reaches). Colored in the type's own
+        hue (source_colors[source]) by the average points of its wounded parts (light / medium / severe), or light
+        blue while a healing source works on the actor (`healing`: its heal session); a hit brings the type's color
+        back. Real damage replaces torture damage: `replaced` points grow as a red segment from the left
+        while the fill shrinks. Bars show only the actor's name.
         An actor whose whip damage is fully replaced (or healed, dead, unloaded) is dropped; with no bars the panel is
         hidden. The whole overlay fades IDLE_MS after the last change and comes back on the next one.
     -->
@@ -27,11 +29,11 @@
             --font-ui: 'Segoe UI', 'Microsoft YaHei UI', 'Meiryo', system-ui, sans-serif;
             --bar-width: 220px;
             --bar-height: 34px;
-            --light: #e8837a;
-            --medium: #d0342c;
-            --severe: #7a0c0c;
+            --light: #a8dc8c;
+            --medium: #4caf3a;
+            --severe: #1f5e17;
             --healing: #8fd3ff;
-            --replaced: #3d0606;
+            --replaced: #c8201e;
         }
         html, body {
             margin: 0;
@@ -114,13 +116,14 @@
         const FADE_MS = 600;
         // Replaced by the numbers in every push (injuries/whipping.json), these only cover the first frame.
         // partMax: damage points per part in `parts` order (6 parts, 11 with "include sexual parts").
-        const cfg = { max: 120, partMax: [20, 20, 20, 20, 20, 20], medium: 4, severe: 11 };
+        // sourceColors: torture type id -> {light, medium, severe}; a type without colors uses the CSS ones.
+        const cfg = { max: 120, partMax: [20, 20, 20, 20, 20, 20], medium: 4, severe: 11, sourceColors: {} };
 
         const overlay = document.getElementById('overlay');
         const panel = document.getElementById('InjuryEnginePanel');
         const title = panel.querySelector('.panel-title');
         const root = panel.querySelector('.actor-injuryengine-damage-bars');
-        const actors = new Map();  // id -> {bar, fill, replacedBar, label, name, parts, replaced, healing, sum, lastHit, gone}
+        const actors = new Map();  // id -> {bar, fill, replacedBar, label, name, source, max, parts, replaced, healing, sum, lastHit, gone}
         let lastChange = 0;
 
         const noParts = () => cfg.partMax.map(() => 0);
@@ -133,8 +136,8 @@
             return 'light';
         }
 
-        // Whole-body summary: {state: hurting|healed, width %, cls, damage total}.
-        function summarize(parts, healing) {
+        // Summary of the shown torture type: {state: hurting|healed, width % of max, cls, damage total}.
+        function summarize(parts, healing, max) {
             let damage = 0, damaged = 0;
             for (const [i, p] of parts.entries()) {
                 if (p > 0) {
@@ -143,15 +146,18 @@
                 }
             }
             if (!damaged) return { state: 'healed', width: 0, cls: '', damage: 0 };
-            return { state: 'hurting', width: damage / cfg.max * 100,
+            return { state: 'hurting', width: Math.min(damage / (max || cfg.max) * 100, 100),
                 cls: healing ? 'healing' : damageStage(damage / damaged), damage };
         }
 
         function paint(a, sum) {
-            // The replaced segment sits at the left, the whip fill follows it; the total width stays the same.
-            const replaced = sum.state === 'hurting' ? Math.min(a.replaced / cfg.max * 100, 100) : 0;
+            // The replaced segment sits at the left, the torture fill follows it; together they stay within the bar.
+            const replaced = sum.state === 'hurting' ? Math.min(a.replaced / (a.max || cfg.max) * 100, 100 - sum.width) : 0;
             a.replacedBar.style.width = replaced + '%';
             a.fill.className = 'fill ' + sum.cls;
+            // The type's own hue; healing (and a type without colors) falls back to the CSS class color.
+            const hue = !a.healing && cfg.sourceColors[a.source];
+            a.fill.style.backgroundColor = (hue && hue[sum.cls]) || '';
             a.fill.style.left = replaced + '%';
             a.fill.style.width = sum.width + '%';
             a.label.textContent = a.name;
@@ -173,23 +179,27 @@
             const parts = noParts();
             const a = {
                 bar, fill, replacedBar, label, name: '',
-                parts, replaced: 0, healing: false, sum: summarize(parts, false),
+                source: '', max: cfg.max, parts, replaced: 0, healing: false, sum: summarize(parts, false, cfg.max),
                 lastHit: 0, gone: 0,
             };
             actors.set(id, a);
             return a;
         }
 
-        // Returns true when the actor's parts, replaced count or heal session changed.
-        function apply(a, parts, replaced, healing, now) {
-            if (replaced === a.replaced && healing === a.healing && JSON.stringify(parts) === JSON.stringify(a.parts)) return false;
+        // Returns true when the shown type, its parts, the replaced count or the heal session changed.
+        function apply(a, source, max, parts, replaced, healing, now) {
+            if (source === a.source && max === a.max && replaced === a.replaced && healing === a.healing &&
+                JSON.stringify(parts) === JSON.stringify(a.parts)) return false;
             const prev = a.sum;
-            const sum = summarize(parts, healing);
+            const switched = source !== a.source && source !== '';
+            const sum = summarize(parts, healing, max);
+            a.source = source;
+            a.max = max;
             a.parts = parts.slice();
             a.replaced = replaced;
             a.healing = healing;
             a.sum = sum;
-            if (sum.damage > prev.damage) a.lastHit = now;
+            if (sum.damage > prev.damage || (switched && sum.damage > 0)) a.lastHit = now;
             paint(a, sum);
             return true;
         }
@@ -218,6 +228,7 @@
             if (typeof state.medium === 'number') cfg.medium = state.medium;
             if (typeof state.severe === 'number') cfg.severe = state.severe;
             if (state.title) title.textContent = state.title;
+            if (state.source_colors && typeof state.source_colors === 'object') cfg.sourceColors = state.source_colors;
             const style = document.documentElement.style;
             for (const [name, value] of Object.entries(state.colors || {})) {
                 style.setProperty('--' + name.replace(/_/g, '-'), value);
@@ -239,13 +250,14 @@
                 }
                 a = a || create(id);
                 a.name = s.name || '';
-                if (apply(a, s.parts || noParts(), s.replaced || 0, !!s.healing, now)) lastChange = now;
+                const max = typeof s.max === 'number' && s.max > 0 ? s.max : cfg.max;
+                if (apply(a, s.source || '', max, s.parts || noParts(), s.replaced || 0, !!s.healing, now)) lastChange = now;
                 if (a.sum.state === 'healed') retire(id, a, now, false);
             }
             for (const [id, a] of actors) {
                 if (seen.has(id) || a.gone) continue;
                 const replacedAway = a.sum.state === 'hurting' && a.replaced > 0;
-                if (apply(a, noParts(), 0, false, now)) lastChange = now;
+                if (apply(a, a.source, a.max, noParts(), 0, false, now)) lastChange = now;
                 retire(id, a, now, replacedAway);
             }
             render();

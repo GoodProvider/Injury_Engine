@@ -131,9 +131,10 @@ namespace InjuryEngine
     // and text.feels.heal.
     std::string StateJson(RE::Actor* actor);
 
-    // Torture overlay snapshot (no time applied), each part from its largest torture type:
-    // {"title","max","part_max","medium","severe","colors":{...},
-    //  "actors":[{"id","name","replaced","healing","parts":[points x active parts in overlay order]}]}
+    // Torture overlay snapshot (no time applied). Each bar shows the actor's latest torture type ("source") alone:
+    // its points per part, out of "max" = the part max of the parts that type reaches.
+    // {"title","max","part_max","medium","severe","colors":{...},"source_colors":{"<id>":{light,medium,severe}},
+    //  "actors":[{"id","name","source","max","replaced","healing","parts":[points x active parts in overlay order]}]}
     std::string OverlayJson();
 
     // Narration text rendered from the JSON files.

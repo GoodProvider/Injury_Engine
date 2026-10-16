@@ -3,6 +3,11 @@
   "title": "Pulling Injuries",
   "model": "torture",
   "requires": "",
+  "overlay_colors": {
+    "light": "#f5c97a",
+    "medium": "#e09a1e",
+    "severe": "#8a5a0a"
+  },
   "damage_max": 20,
   "thresholds": {
     "medium": 4,

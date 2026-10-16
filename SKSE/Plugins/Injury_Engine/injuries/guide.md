@@ -67,7 +67,7 @@ and the mod manager merges that folder with this one at runtime (nothing to regi
   and nothing is narrated per stage.
 - **Real damage replaces torture damage** first, on the same part the attack lands on (health is not lowered by that part): the
   part's worst type drops by one per point and every other type above it is clamped down to it, so a tortured actor only dies
-  after the torture is all replaced; the overlay shows replaced points as a darker bar.
+  after the torture is all replaced; the overlay shows replaced points as a red bar.
 
 ## File format
 
@@ -113,7 +113,10 @@ action.alias / action.order   (torture, optional) short name for Torture_Target 
                    place in the type list. The source id itself is always accepted too.
 action.verb, action.animation   (torture) log verb; animation event the NPC plays per Torture_Target strike ("" = none)
 defaults           (whipping only) default values for dashboard settings; manifest.yaml must mirror them
-overlay            (whipping only) title, bar order, colors (hex) incl. "replaced" and "healing" (heal session bar)
+overlay            (whipping only) title, bar order, colors (hex) incl. "replaced" and "healing" (heal session bar);
+                   colors.light / medium / severe are also whipping's bar colors
+overlay_colors     (torture, optional) this type's overlay bar colors (hex) light / medium / severe; the bar shows the
+                   type that hit last. Not named "overlay": that key marks the whipping file. Missing: whipping's green
 action             (whipping) Torture_Target description ({target}, {type} and {strikes} are literal SkyrimNet placeholders, keep them),
                    no_whip line, impact_nodes list
 text.looks_heading / looks   what each wounded part looks like  -> character bio ("### Whip Wounds" list)

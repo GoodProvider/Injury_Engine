@@ -3,6 +3,11 @@
   "title": "Slap Marks",
   "model": "torture",
   "requires": "",
+  "overlay_colors": {
+    "light": "#f4a6c8",
+    "medium": "#e0508f",
+    "severe": "#8c1f52"
+  },
   "damage_max": 20,
   "thresholds": {
     "medium": 4,

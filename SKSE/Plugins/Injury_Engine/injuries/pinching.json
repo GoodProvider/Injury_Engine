@@ -3,6 +3,11 @@
   "title": "Pinch Marks",
   "model": "torture",
   "requires": "",
+  "overlay_colors": {
+    "light": "#c9a0e8",
+    "medium": "#8e44c9",
+    "severe": "#4a1a73"
+  },
   "damage_max": 20,
   "thresholds": {
     "medium": 4,

@@ -3,6 +3,11 @@
   "title": "Frost Bites",
   "model": "torture",
   "requires": "",
+  "overlay_colors": {
+    "light": "#9fe8e0",
+    "medium": "#2fbfb0",
+    "severe": "#0e6b63"
+  },
   "classify": [
     { "priority": 90, "resist": "ResistFrost", "effect_file": "Injury_Engine.esp", "effect_id": "0x814" }
   ],

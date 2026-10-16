@@ -20,7 +20,7 @@ Torture is built in: whipping (with a padded whip), pinching, slapping, pulling,
   - or type `help "Padded whip"` → `player.additem` in the console.
 
   A lash leaves the same welt decal as DOM.
-- **Torture overlay**: a "Torture Damage" bar per tortured actor. It is light blue while the actor is being healed and darker red where real damage has replaced torture. It fades out by itself.
+- **Torture overlay**: a "Torture Damage" bar per tortured actor. It shows how much the last kind of torture (whip, pinch, fire, ...) has wounded the parts it can reach, each kind in its own color. It is light blue while the actor is being healed and red where real damage has replaced torture. It fades out by itself.
 - **Extensible**: other mods can add their own injury types as `injuries/<id>.json`; SkyrimNet_Leashed adds leash dragging. Other mods can also wound or heal a chosen body part through the External API ([docs/developers/papyrus.md](docs/developers/papyrus.md)).
 
 The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This mod does not need DOM.
@@ -97,7 +97,7 @@ While a heal session is open, the overlay bar turns light blue and the narration
 
 ### Real damage replaces torture
 
-Real damage first replaces torture damage. While an actor still has torture wounds, a real hit does not lower health: the part's worst torture type drops, and the other types are clamped to it. The overlay shows the replaced part as a darker red bar. Once all torture is replaced, further damage is normal and can kill. Torture wounds keep their own rules: they heal over time and never take health below 10%.
+Real damage first replaces torture damage. While an actor still has torture wounds, a real hit does not lower health: the part's worst torture type drops, and the other types are clamped to it. The overlay shows the replaced part as a red bar. Once all torture is replaced, further damage is normal and can kill. Torture wounds keep their own rules: they heal over time and never take health below 10%.
 
 ### Editing and adding injury types
 

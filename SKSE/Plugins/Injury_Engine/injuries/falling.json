@@ -2,6 +2,11 @@
   "id": "falling",
   "model": "both",
   "requires": "",
+  "overlay_colors": {
+    "light": "#c8c2b8",
+    "medium": "#8a8276",
+    "severe": "#4a443b"
+  },
   "damage_max": 20,
   "thresholds": {
     "medium": 4,

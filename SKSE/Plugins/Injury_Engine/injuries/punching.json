@@ -3,6 +3,11 @@
   "title": "Punch Bruises",
   "model": "torture",
   "requires": "",
+  "overlay_colors": {
+    "light": "#9fb4d6",
+    "medium": "#4f6fa8",
+    "severe": "#23355e"
+  },
   "classify": [
     { "priority": 80, "unarmed": true, "npc": true, "combat": false }
   ],

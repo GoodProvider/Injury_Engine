@@ -3,6 +3,11 @@
   "title": "Scorch Marks",
   "model": "torture",
   "requires": "",
+  "overlay_colors": {
+    "light": "#ffb27a",
+    "medium": "#ff6a1a",
+    "severe": "#a33500"
+  },
   "classify": [
     { "priority": 90, "resist": "ResistFire", "effect_file": "Injury_Engine.esp", "effect_id": "0x813" }
   ],

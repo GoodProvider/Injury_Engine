@@ -89,10 +89,10 @@
       4
     ],
     "colors": {
-      "light": "#e8837a",
-      "medium": "#d0342c",
-      "severe": "#7a0c0c",
-      "replaced": "#3d0606",
+      "light": "#a8dc8c",
+      "medium": "#4caf3a",
+      "severe": "#1f5e17",
+      "replaced": "#c8201e",
       "healing": "#8fd3ff"
     }
   },

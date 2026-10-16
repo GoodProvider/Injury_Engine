@@ -139,6 +139,8 @@ namespace InjuryEngine
         // forgotten, so small ticks on an unwounded actor still add up.
         std::unordered_map<RE::FormID, std::array<float, kMaxSources>> g_tortureCarry;
         std::unordered_map<TortureBatchKey, double, TortureBatchKeyHash> g_tortureBatchLast;  // last tick real time per batch
+        // Real seconds of each torture type's last hit per victim (overlay: the bar shows the latest type). Not saved.
+        std::unordered_map<RE::FormID, std::array<double, kMaxSources>> g_lastTorture;
         std::vector<Event> g_events;                        // not yet taken by SyncHealth
         std::vector<HitEntry> g_hits;                       // real hits not yet taken by Papyrus
         std::vector<RE::Actor*> g_syncActors;
@@ -522,6 +524,52 @@ namespace InjuryEngine
             }
         }
 
+        // The active parts a torture type lands on for this actor: the parts it fits with part_weights above 0;
+        // a type that lands on none of them reaches every part it fits, by the body's weights. `weight` gets the
+        // weights to pick by.
+        std::array<bool, kPartCount> SourceReach(int source, bool female, const std::array<float, kPartCount>*& weight)
+        {
+            const auto& body = GetBody();
+            const auto* conf = InjuryConfig::Find(source);
+            weight = conf ? &conf->partWeight : &body.partWeight;
+            std::array<bool, kPartCount> reach{};
+            bool any = false;
+            for (int i = 0; i < ActiveParts(); ++i) {
+                reach[i] = PartFits(female, i) && (*weight)[i] > 0.0f;
+                any = any || reach[i];
+            }
+            if (!any) {
+                weight = &body.partWeight;
+                for (int i = 0; i < ActiveParts(); ++i) {
+                    reach[i] = PartFits(female, i);
+                }
+            }
+            return reach;
+        }
+
+        // The torture type the overlay bar shows: the open type (points left) hit most recently; without hit
+        // times (after a load) the one with the most points. -1 when none is open.
+        int OverlaySource(const State& st, RE::FormID id)
+        {
+            const auto times = g_lastTorture.find(id);
+            int best = -1;
+            double bestTime = -1.0;
+            int bestPoints = 0;
+            for (int s = 0; s < kMaxSources; ++s) {
+                const int points = SourceDeficit(st, s);
+                if (!SourceHit(st, s) || points <= 0 || !InjuryConfig::Find(s)) {
+                    continue;
+                }
+                const double when = times != g_lastTorture.end() ? times->second[s] : 0.0;
+                if (best < 0 || when > bestTime || (when == bestTime && points > bestPoints)) {
+                    best = s;
+                    bestTime = when;
+                    bestPoints = points;
+                }
+            }
+            return best;
+        }
+
         // One torture hit of `source` on `part` (-1 or a part the actor can't take: weighted random by the
         // type's part_weights, full parts skipped while another can take a point). Takes the health the part's new maximum holds down. Caller holds g_lock.
         // Returns the hit code; `index` gets the part.
@@ -647,6 +695,7 @@ namespace InjuryEngine
             g_pained.erase(id);
             g_regenBank.erase(id);
             g_lastScan.erase(id);
+            g_lastTorture.erase(id);
         }
 
         // Applies time to the actor's entry; drops it when every injury is healed (queuing kFullyHealed) or
@@ -1096,30 +1145,22 @@ namespace InjuryEngine
             const bool fresh = !HasOpenDamage(st);
             const int deficitBefore = Deficit(st);
 
-            // Candidates: the active parts the actor has that this type lands on (part_weights above 0);
-            // a type that lands on none of them uses the body's weights.
+            // Candidates: the parts this type reaches; full parts are skipped while any can still take a point
+            // (a point there adds nothing).
             std::array<int, kPartCount> candidates{};
             int count = 0;
             const bool female = IsFemale(actor);
             const auto* conf = InjuryConfig::Find(source);
-            const auto* weight = conf ? &conf->partWeight : &body.partWeight;
-            // Full parts are skipped while any part can still take a point (a point there adds nothing).
+            const std::array<float, kPartCount>* weight = nullptr;
+            const auto reach = SourceReach(source, female, weight);
             for (int i = 0; i < ActiveParts(); ++i) {
-                if (PartFits(female, i) && (*weight)[i] > 0.0f && !PartFull(st, i)) {
+                if (reach[i] && !PartFull(st, i)) {
                     candidates[count++] = i;
                 }
             }
             if (count == 0) {
                 for (int i = 0; i < ActiveParts(); ++i) {
-                    if (PartFits(female, i) && (*weight)[i] > 0.0f) {
-                        candidates[count++] = i;
-                    }
-                }
-            }
-            if (count == 0) {
-                weight = &body.partWeight;
-                for (int i = 0; i < ActiveParts(); ++i) {
-                    if (PartFits(female, i)) {
+                    if (reach[i]) {
                         candidates[count++] = i;
                     }
                 }
@@ -1138,6 +1179,7 @@ namespace InjuryEngine
             }
             c.hit = true;
             c.deficit = std::min(body.partMax[index], std::max(0, c.deficit) + 1);
+            g_lastTorture[id][source] = NowRealSeconds();
             // A hit ends the victim's heal session (no event: Papyrus closes its side on the hit).
             g_healers.erase(id);
             g_pained[id] = true;
@@ -1874,10 +1916,24 @@ namespace InjuryEngine
         for (int i = 0; i < active; ++i) {
             partMax.push_back(body.partMax[body.overlayOrder[i]]);
         }
+        // Bar colors per torture type: its overlay_colors (light / medium / severe), whipping's overlay.colors.
+        nlohmann::json sourceColors = nlohmann::json::object();
+        for (int s = 0; s < InjuryConfig::SourceCount(); ++s) {
+            if (!InjuryConfig::IsTorture(s)) {
+                continue;
+            }
+            nlohmann::json colors = InjuryConfig::Json(s, "overlay_colors");
+            if (!colors.is_object()) {
+                colors = InjuryConfig::Json(s, "overlay.colors");
+            }
+            if (colors.is_object()) {
+                sourceColors[InjuryConfig::Find(s)->id] = colors;
+            }
+        }
         nlohmann::json out = { { "title", InjuryConfig::Str(whip, "overlay.title", "Torture Damage") },
             { "max", CapacityDamage() }, { "part_max", partMax }, { "medium", body.medium }, { "severe", body.severe },
             { "colors", whip >= 0 ? InjuryConfig::Json(whip, "overlay.colors") : nlohmann::json::object() },
-            { "actors", nlohmann::json::array() } };
+            { "source_colors", sourceColors }, { "actors", nlohmann::json::array() } };
         std::lock_guard lock(g_lock);
         for (const auto& [id, st] : g_actors) {
             if (!AnyTortureHit(st)) {
@@ -1887,14 +1943,28 @@ namespace InjuryEngine
             if (!actor || !actor->Is3DLoaded() || actor->IsDead()) {
                 continue;
             }
-            // Each part shows only its worst torture type's points.
+            // The bar shows the latest torture type alone: its points per part, out of the parts it reaches.
+            // No open type (healed or replaced away): empty parts, the page retires the bar.
+            const int source = OverlaySource(st, id);
             nlohmann::json parts = nlohmann::json::array();
-            for (int i = 0; i < active; ++i) {
-                parts.push_back(PartTorture(st, body.overlayOrder[i]));
+            int max = 0;
+            if (source >= 0) {
+                const std::array<float, kPartCount>* weight = nullptr;
+                const auto reach = SourceReach(source, IsFemale(actor), weight);
+                for (int i = 0; i < active; ++i) {
+                    const int part = body.overlayOrder[i];
+                    parts.push_back(reach[part] ? st.torture[source][part].deficit : 0);
+                    max += reach[part] ? body.partMax[part] : 0;
+                }
+            } else {
+                for (int i = 0; i < active; ++i) {
+                    parts.push_back(0);
+                }
             }
             const bool healing = ActiveHealer(id, NowSeconds()) != nullptr;
-            out["actors"].push_back(
-                { { "id", id }, { "name", NameOf(actor) }, { "replaced", st.replaced }, { "healing", healing }, { "parts", parts } });
+            out["actors"].push_back({ { "id", id }, { "name", NameOf(actor) },
+                { "source", source >= 0 ? InjuryConfig::Find(source)->id : std::string() }, { "max", max > 0 ? max : CapacityDamage() },
+                { "replaced", st.replaced }, { "healing", healing }, { "parts", parts } });
         }
         return out.dump();
     }
@@ -2596,6 +2666,7 @@ namespace InjuryEngine
         g_regenBank.clear();
         g_tortureCarry.clear();
         g_tortureBatchLast.clear();
+        g_lastTorture.clear();
         g_events.clear();
         g_hits.clear();
         g_lastReal.clear();
@@ -2635,6 +2706,7 @@ namespace InjuryEngine
         g_regenBank.clear();
         g_tortureCarry.clear();
         g_tortureBatchLast.clear();
+        g_lastTorture.clear();
         g_events.clear();
         g_hits.clear();
         g_hitReleased.clear();
