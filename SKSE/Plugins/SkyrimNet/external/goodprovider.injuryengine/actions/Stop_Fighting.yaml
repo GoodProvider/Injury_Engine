@@ -1,0 +1,23 @@
+name: Stop_Fighting
+label: Stop fighting
+description: "[speaker] lowers their weapon and offers [target] to stop fighting. [target] decides whether to accept; if they refuse, the fight may go on."
+questEditorId: Injury_Engine
+scriptName: Injury_Engine_Actions
+executionFunctionName: StopFighting
+defaultPriority: 5
+parameterMapping:
+  - type: speaker
+    name: speaker
+    description: Speaker Actor parameter (triggering entity)
+  - type: dynamic
+    name: target
+    description: Actor offered the truce
+eligibilityRules:
+  - conditions:
+      - decoratorName: is_in_combat
+        arguments:
+          - currentActor
+        comparisonOperator: "=="
+        expectedValue: true
+    logicalOperator: AND
+    required: true

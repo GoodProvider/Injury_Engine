@@ -67,7 +67,7 @@ schema:
     - name: "Maximum lashes per action"
       path: "injury_engine.action.max_strikes"
       type: "int"
-      description: "Most strikes (lashes, pinches, slaps, ...) the LLM can choose for one Torture_Target action. Changing it needs a save and reload to update the action."
+      description: "Most strikes (lashes, pinches, slaps, ...) the LLM can choose for one Torture_Target action. The action offers up to ten; this setting caps the count."
       min: 1
       max: 20
       defaultValue: 10

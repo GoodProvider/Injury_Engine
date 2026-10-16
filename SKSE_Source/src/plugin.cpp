@@ -4,6 +4,7 @@
 #include "InjuryConfig.h"
 #include "InjuryEngine.h"
 #include "Overlay.h"
+#include "TruceDecision.h"
 
 bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm);
 void Install_Hooks();
@@ -60,11 +61,13 @@ namespace
             InjuryConfig::Load();
             Classifier::Init();
             InjuryEngine::InitDeaths();
+            TruceDecision::Init();
             Overlay::Init();
             break;
         case SKSE::MessagingInterface::kNewGame:
         case SKSE::MessagingInterface::kPostLoadGame:
             Overlay::Reset();
+            TruceDecision::Reset();
             break;
         case SKSE::MessagingInterface::kSaveGame:
             Classifier::ReleaseFriendHits(true);  // the temporary whip flag is never saved

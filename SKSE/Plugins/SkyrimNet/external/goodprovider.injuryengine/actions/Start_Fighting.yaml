@@ -1,0 +1,14 @@
+name: Start_Fighting
+label: Attack
+description: "[speaker] attacks [target] and starts a fight with them, or turns on them in the middle of a fight."
+questEditorId: Injury_Engine
+scriptName: Injury_Engine_Actions
+executionFunctionName: StartFighting
+defaultPriority: 5
+parameterMapping:
+  - type: speaker
+    name: speaker
+    description: Speaker Actor parameter (triggering entity)
+  - type: dynamic
+    name: target
+    description: Actor to attack

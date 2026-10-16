@@ -1,0 +1,29 @@
+name: Torture_Target
+label: Torture
+description: "[speaker] tortures [target] [strikes] times to punish, discipline or hurt them. [type] picks how: whip (lash them with the padded whip; needs a whip), pinch (pinch and twist their skin), slap (slap them with an open hand), pull (pull their hair, ears or limbs) or punch (beat them with your fists)."
+questEditorId: Injury_Engine
+scriptName: Injury_Engine_Actions
+executionFunctionName: TortureTarget
+defaultPriority: 5
+parameterMapping:
+  - type: speaker
+    name: speaker
+    description: Speaker Actor parameter (triggering entity)
+  - type: dynamic
+    name: target
+    description: Actor being tortured
+  - type: dynamic
+    name: type
+    description: whip|pinch|slap|pull|punch
+  - type: dynamic
+    name: strikes
+    description: 1|2|3|4|5|6|7|8|9|10
+eligibilityRules:
+  - conditions:
+      - decoratorName: is_in_combat
+        arguments:
+          - currentActor
+        comparisonOperator: "=="
+        expectedValue: false
+    logicalOperator: AND
+    required: true

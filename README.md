@@ -14,6 +14,7 @@ Torture is built in: whipping (with a padded whip), pinching, slapping, pulling,
 - **Wound prompts**: a character-bio section says what each wounded part looks like. A final-instructions section tells the speaker how their wounds feel, or how the healing feels while a spell, staff or potion is working.
 - **Torture damage**: torture types are whipping, pinching, slapping, pulling and punching (fists outside combat), plus fire, frost and shock torture. Fire, frost and shock come from the spells Flames (torture), Frostbite (torture) and Sparks (torture); the normal spells stay real damage. Torture holds health down but never below 10%, so it can't kill. Each type is tracked per body part, but a part counts only its worst type, and healing a part heals every type on it at once.
 - **Torture_Target LLM action**: an NPC walks to the target and whips, pinches, slaps, pulls or punches them 1–N times. Whipping needs the padded whip.
+- **Stop_Fighting / Stop_Fighting_by_Yielding / Start_Fighting LLM actions**: an NPC in a fight can offer to stop, or yield (surrender: it puts its weapon away at once, and the other side may accept the surrender or keep attacking); SkyrimNet's decision model decides whether the other side accepts (needs a decision provider set up in SkyrimNet, otherwise the offer is refused). Accepted: both stand down and stay calm for a day. Refused: the NPC stands down, the other may fight on. When the offer or surrender is made to you, a Yes / No box asks whether you accept. Any NPC can also start a fight with someone, or switch targets mid-fight.
 - **Padded whip** (`Injury_Engine_PaddedWhip`): every real hit with it is a lash. To get one:
   - craft it at the forge with DOM's recipe (leather strips plus one other vanilla item);
   - use "Add gear to player";
@@ -35,7 +36,7 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 | `injury_engine.narration.torture_mode` | Torture Narration | Direct Narration | Torture, same choices |
 | `injury_engine.action.require_whip` | NPC must already carry a whip | on | Only NPCs carrying the padded whip can whip with Torture_Target. Off: one is handed over for the lashing. |
 | `injury_engine.action.give_to_player` | Add gear to player | on | Give the player the padded whip and the three torture spells |
-| `injury_engine.action.max_strikes` | Maximum lashes per action | 10 | Most strikes per Torture_Target action (applies after a reload) |
+| `injury_engine.action.max_strikes` | Maximum lashes per action | 10 | Most strikes per Torture_Target action (the action offers up to ten) |
 | `injury_engine.healing.hours_per_point` | Game hours per heal point | 1 | Game hours per torture point healed |
 | `injury_engine.healing.regen_rate` | Natural regen vs. torture wounds (%) | 10 | How fast natural regeneration heals torture wounds |
 | `injury_engine.healing.give_healing_hands` | Add Healing Hands to player | on | Teach the player Healing Hands |

@@ -1,0 +1,40 @@
+{# Decision template: does the target accept the speaker's offer to stop fighting? One yes/no question.
+   Sent by Injury_Engine.dll (TruceDecision.cpp) through PublicSendCustomDecisionToLLM when an NPC uses the
+   Stop_Fighting action on another NPC (the player as target is never asked). Rendered into a decisions request,
+   never into chat messages. Yes: both stand down and stay calm for a day. No: the speaker stands down, the target
+   may fight on.
+
+   Context pushed by the game (C++ snapshot): speaker_uuid, speaker_name, target_uuid, target_name, relationship
+   (Skyrim relationship rank: lovers .. archnemeses, or strangers), speaker_health / target_health (unhurt |
+   lightly hurt | badly hurt | near death), speaker_is_follower, target_is_follower, target_fights_speaker,
+   timeline [lines, oldest first: the target's recent speech, narrations and events; hits, combat and spells left out]. #}
+[ state target ]
+{{ target_name }}{% if target_is_follower %}, a follower of the player{% endif %}, is {{ target_health }}{% if target_fights_speaker %} and is fighting {{ speaker_name }}{% endif %}.
+{{ render_character_profile("short_inline", target_uuid) }}
+[ end state ]
+
+[ state speaker ]
+{{ speaker_name }}{% if speaker_is_follower %}, a follower of the player{% endif %}, is {{ speaker_health }} and offers to stop fighting.
+{{ render_character_profile("short_inline", speaker_uuid) }}
+[ end state ]
+
+[ state fight ]
+{{ target_name }} and {{ speaker_name }} are {{ relationship }}.
+{{ target_name }} is {{ target_health }}; {{ speaker_name }} is {{ speaker_health }}.
+[ end state ]
+
+[ state timeline ]
+{% if length(timeline) > 0 %}
+{% for line in timeline %}
+{{ line }}
+{% endfor %}
+{% else %}
+Nothing notable has happened recently.
+{% endif %}
+[ end state ]
+
+[ question accept noul ]
+Does {{ target_name }} accept {{ speaker_name }}'s offer to stop fighting right now?
+Leans yes: {{ target_name }} is losing or badly hurt, the two are friends, allies or lovers, both are followers of the player, or the fight looks like a misunderstanding (`timeline`).
+Leans no: they are enemies or sworn foes, {{ target_name }} is winning while {{ speaker_name }} is badly hurt, or `timeline` shows a grudge, an insult or a reason to keep fighting.
+[ end question ]

@@ -16,13 +16,14 @@ Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/js
 | `SKSE_Source/src/Papyrus_Engine.cpp` | Natives bound to `Injury_Engine_Engine.psc` |
 | `SKSE_Source/src/Hooks.cpp` | Vtable hooks: `MagicTarget::AddTarget` (healing sources), `Actor::HandleHealthDamage` (SE / AE) and `ActorValueOwner::ModActorValue` (damage intake, classify, `InjuryEngine::OnDamage`, may reduce the damage) |
 | `SKSE_Source/src/Overlay.cpp`, `include/Overlay.h` | PrismaUI view + push |
+| `SKSE_Source/src/TruceDecision.cpp`, `include/TruceDecision.h` | `Stop_Fighting` / `Stop_Fighting_by_Yielding`: asks SkyrimNet's decision model (`PublicSendCustomDecisionToLLM`, API v12+; template `accept_truce` or `accept_surrender`) whether the target accepts; answers queued for Papyrus (`TakeTruces`, mod event `Injury_Engine_Truce`). The only file that includes `PublicAPI.h` (it defines its globals) |
 | `SKSE_Source/lib/PrismaUI/` | Vendored PrismaUI API header |
 | `SKSE/Plugins/Injury_Engine.dll` | Built plugin (copied by the build) |
 | `PrismaUI/views/Injury_Engine/overlay.html` | Overlay page under `Data/PrismaUI/views/` |
 
 ## Build
 
-`make dll` → `cmake --preset release && cmake --build --preset build-release` in `SKSE_Source/`. Needs `VCPKG_ROOT`. CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` (`vcpkg-configuration.json` `overlay-ports`, `find_package(CommonLibSSE)`); a clean configure builds it, ~6 min. Do not edit `SKSE_Source/build/` or vendored `lib/`.
+`make dll` → `cmake --preset release && cmake --build --preset build-release` in `SKSE_Source/`. Needs `VCPKG_ROOT`. CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` (`vcpkg-configuration.json` `overlay-ports`, `find_package(CommonLibSSE)`); a clean configure builds it, ~6 min. Do not edit `SKSE_Source/build/` or vendored `lib/`. The SkyrimNet public API header comes from the devkit next to this repo: `../../SkyrimNet devkit/CppAPI` (`target_include_directories` in `CMakeLists.txt`, as in SkyrimNet_SexLab). The truce decision needs SkyrimNet API v12+ at run time and a release build (`_DEBUG` builds never touch SkyrimNet's `std::string` results); without it every `Stop_Fighting` offer is refused.
 
 ## Natives
 

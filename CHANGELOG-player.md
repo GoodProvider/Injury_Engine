@@ -1,5 +1,9 @@
 ## Unreleased
 
+- When an NPC offers you to stop fighting or yields to you, a Yes / No box asks whether you accept.
+- NPCs can now yield in a fight (Stop_Fighting_by_Yielding): they put their weapon away and surrender, and the other side decides whether to accept the surrender or keep attacking.
+- The mod's LLM actions now ship as SkyrimNet action files, so they show and can be tuned in SkyrimNet's action settings like other plugins' actions.
+- NPCs can now offer to stop a fight (Stop_Fighting). The other side decides whether to accept, using SkyrimNet's decision model (set up a decision provider in SkyrimNet, otherwise offers are refused). If they accept, both stand down and stay calm for a day; if not, the fight may go on. NPCs can also start a fight with someone, or turn on someone mid-fight (Start_Fighting).
 - Other mods can now read how hurt each body part is (SkyrimNet_SexLab's Aid and Punish panels show it as a bar).
 - Fixed SkyrimNet_SexLab's "enable torture sexual parts" Yes only lasting until the next load; it now saves the setting.
 - **Renamed to Injury Engine.** The mod now tracks injuries from all damage (combat, spells, creatures, falls and torture), not just whipping. Old saves start fresh: wounds and settings from SkyrimNet_Whipped are not carried over.

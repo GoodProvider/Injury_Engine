@@ -1,0 +1,40 @@
+{# Decision template: does the target accept the speaker's surrender? One yes/no question.
+   Sent by Injury_Engine.dll (TruceDecision.cpp) through PublicSendCustomDecisionToLLM when an NPC uses the
+   Stop_Fighting_by_Yielding action on another NPC (the player as target is never asked). Rendered into a decisions
+   request, never into chat messages. The speaker has already put its weapon away and stays calm for a day either
+   way. Yes: the target stops attacking and stays calm for a day too. No: the target may keep attacking.
+
+   Context pushed by the game (C++ snapshot): speaker_uuid, speaker_name, target_uuid, target_name, relationship
+   (Skyrim relationship rank: lovers .. archnemeses, or strangers), speaker_health / target_health (unhurt |
+   lightly hurt | badly hurt | near death), speaker_is_follower, target_is_follower, target_fights_speaker,
+   timeline [lines, oldest first: the target's recent speech, narrations and events; hits, combat and spells left out]. #}
+[ state target ]
+{{ target_name }}{% if target_is_follower %}, a follower of the player{% endif %}, is {{ target_health }}{% if target_fights_speaker %} and is fighting {{ speaker_name }}{% endif %}.
+{{ render_character_profile("short_inline", target_uuid) }}
+[ end state ]
+
+[ state speaker ]
+{{ speaker_name }}{% if speaker_is_follower %}, a follower of the player{% endif %}, is {{ speaker_health }}, has put away their weapon and yields.
+{{ render_character_profile("short_inline", speaker_uuid) }}
+[ end state ]
+
+[ state fight ]
+{{ target_name }} and {{ speaker_name }} are {{ relationship }}.
+{{ target_name }} is {{ target_health }}; {{ speaker_name }} is {{ speaker_health }}.
+[ end state ]
+
+[ state timeline ]
+{% if length(timeline) > 0 %}
+{% for line in timeline %}
+{{ line }}
+{% endfor %}
+{% else %}
+Nothing notable has happened recently.
+{% endif %}
+[ end state ]
+
+[ question accept noul ]
+Does {{ target_name }} accept {{ speaker_name }}'s surrender and stop attacking right now?
+Leans yes: {{ target_name }} is honourable or merciful, the two are friends, allies or lovers, either is a follower of the player, {{ speaker_name }} is helpless or near death, or the fight looks like a misunderstanding (`timeline`).
+Leans no: they are enemies or sworn foes, {{ target_name }} is a bloodthirsty bandit, monster or killer, or `timeline` shows a grudge, an insult or a reason to finish the fight.
+[ end question ]

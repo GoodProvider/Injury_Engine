@@ -9,7 +9,7 @@ Contracts: [../reference/papyrus-rules.md](../reference/papyrus-rules.md), [../r
 | Path | Role |
 |------|------|
 | `Scripts/Source/Injury_Engine_Main.psc` | Quest script: setup, settings, `OnLash`, narration batching, healing poll, `SyncHealth` loop, decorator |
-| `Scripts/Source/Injury_Engine_Actions.psc` | `Torture_Target` registration, eligibility, execution |
+| `Scripts/Source/Injury_Engine_Actions.psc` | Execution of the YAML actions `Torture_Target` (`TortureTarget`), `Stop_Fighting` (`StopFighting`), `Stop_Fighting_by_Yielding` (`StopFightingByYielding`), `Start_Fighting` (`StartFighting`): member functions with positional params; the YAML (`external/goodprovider.injuryengine/actions/`) holds names, descriptions and eligibility. Native `ActionAliases` is no longer used; truce answers (`OnTruce`) and the Aggression calm (`Calm`, `RestoreAggression`, `RestoreExpiredTruces`) |
 | `Scripts/Source/Injury_Engine_LashEffect.psc` | Enchantment effect on a real weapon hit → `Main.OnLash` |
 | `Scripts/Source/Injury_Engine_PlayerRef.psc` | Player alias (load game → setup) |
 | `Scripts/Source/Injury_Engine_Engine.psc` | Natives in `Injury_Engine.dll` |
@@ -70,6 +70,9 @@ Natives behind them: `Engine.RealHit(actor, attacker, source, points)` / `Engine
 | `OnInjury` / sync loop | `Injury_Engine_Injury` runs `DrainInjuryQueues` then `StartSync`. `StartSync` sets `sync_pending` and calls `RegisterForSingleUpdate(0.2)` only when no update is already pending (a second `RegisterForSingleUpdate` replaces the timer and delayed hooked hits). Native `TakeSyncEvents` drains the C++ event queue without applying game time or running `SyncHealth` conversion. |
 | `injury_engine.last_narration` | Real time of the last narration (cooldown) |
 | `injury_engine.last_torture` | Real time of the last torture hit (torture narration window / interval) |
+| `injury_engine.truce_aggression` | Float: the actor's base Aggression before an accepted `Stop_Fighting` set it to 0 (only the first value is kept) |
+| `injury_engine.truce_until` | Float: game time (days) when that truce ends and Aggression is restored |
+| `injury_engine.truce_actors` (form list on the Main quest) | Actors under a truce; `RestoreExpiredTruces` walks it on load and every `Main.OnUpdateGameTime` |
 
 ## ESP / Spriggit
 

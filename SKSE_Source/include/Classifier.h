@@ -34,6 +34,13 @@ namespace Classifier
     // "(torture)" spells; the damage hook calls this for every torture-classified hit (punches).
     void NoteCalm(RE::Actor* victim, RE::Actor* attacker);
 
+    // Start_Fighting: drops the torture calm between `a` and `b` (both directions, and a pending combat start) and
+    // releases the friendly-hits flag on both, so a fight the LLM starts right after a torture is not stopped.
+    void ForgetCalm(RE::Actor* a, RE::Actor* b);
+
+    // Stop_Fighting: the calm's stop for any actor (StopCombat + StopCombatAndAlarmOnActor), as an SKSE task.
+    void StopFighting(RE::Actor* actor);
+
     // True when `attacker` holds the Padded Whip (a classify rule's ignore weapon) in either hand.
     bool IsWhipAttacker(RE::Actor* attacker);
     // Padded Whip, or bare fists whose unarmed rule is a torture source (punching out of combat).

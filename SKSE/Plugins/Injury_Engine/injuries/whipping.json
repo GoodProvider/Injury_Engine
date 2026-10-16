@@ -99,7 +99,6 @@
   "action": {
     "alias": "whip",
     "order": 1,
-    "description": "Torture {target} {strikes} times to punish, discipline or hurt them. {type} picks how: whip (lash them with the padded whip; needs a whip), pinch (pinch and twist their skin), slap (slap them with an open hand), pull (pull their hair, ears or limbs) or punch (beat them with your fists).",
     "no_whip": "{speaker} reaches for a whip to punish {target}, but has none.",
     "impact_nodes": [
       "NPC Spine2 [Spn2]",

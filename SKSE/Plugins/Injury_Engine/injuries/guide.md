@@ -14,7 +14,7 @@ a file that fails to parse is skipped and named there.
 
 | File | Source | Fed by |
 |------|--------|--------|
-| `whipping.json` | model `torture`: damage then healing over game time, requires a Injury_Engine whip; also holds the body block, setting defaults, overlay and Torture_Target description | Torture_Target `whip`, real Padded Whip hits |
+| `whipping.json` | model `torture`: damage then healing over game time, requires a Injury_Engine whip; also holds the body block, setting defaults and overlay | Torture_Target `whip`, real Padded Whip hits |
 | `pinching`, `slapping`, `pulling` | model `torture` | Torture_Target `pinch` / `slap` / `pull`, `External_Torture` |
 | `punching` | model `torture` | Torture_Target `punch`, unarmed NPC / player hits while the attacker is out of combat |
 | `fire`, `frost`, `shock` | model `torture` | the spells Flames / Frostbite / Sparks (torture) (Injury_Engine.esp; vanilla spells are real damage) |
@@ -117,8 +117,8 @@ overlay            (whipping only) title, bar order, colors (hex) incl. "replace
                    colors.light / medium / severe are also whipping's bar colors
 overlay_colors     (torture, optional) this type's overlay bar colors (hex) light / medium / severe; the bar shows the
                    type that hit last. Not named "overlay": that key marks the whipping file. Missing: whipping's green
-action             (whipping) Torture_Target description ({target}, {type} and {strikes} are literal SkyrimNet placeholders, keep them),
-                   no_whip line, impact_nodes list
+action             (whipping) no_whip line, impact_nodes list (the Torture_Target description is in the SkyrimNet
+                   plugin's actions/Torture_Target.yaml)
 text.looks_heading / looks   what each wounded part looks like  -> character bio ("### Whip Wounds" list)
 text.feels_intro / feels / feels_outro   how it feels  -> final instructions
                    torture: feels.torture.<region> [light, medium, severe] and feels.heal.<region> [high, mid, low]

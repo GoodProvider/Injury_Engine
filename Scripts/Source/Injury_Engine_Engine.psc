@@ -98,6 +98,21 @@ Actor[] Function DeathAttackers() global native
 String[] Function DeathSources() global native
 ; Death line of a health source (death block of its injuries JSON); part -1 = random main part. "" when the file has none.
 String Function DeathText(String sourceId, Actor attacker, Actor victim, Int part = -1) global native
+; Stop_Fighting: asks SkyrimNet's decision model whether target accepts speaker's offer to stop fighting
+; (yield = True: Stop_Fighting_by_Yielding, whether target accepts speaker's surrender). The answer (refused when no
+; decision can be asked) comes later: mod event "Injury_Engine_Truce", then TakeTruces.
+Function AskTruce(Actor speaker, Actor target, Bool yield) global native
+; Truce answers since the last call (count). TruceSpeakers / TruceTargets / TruceAccepted (1 accepted, 0 refused) /
+; TruceYields (1 surrender, 0 truce offer) are parallel to it.
+Int Function TakeTruces() global native
+Actor[] Function TruceSpeakers() global native
+Actor[] Function TruceTargets() global native
+Int[] Function TruceAccepted() global native
+Int[] Function TruceYields() global native
+; Start_Fighting: drops the torture calm between a and b (it would stop a fight right after a torture).
+Function ForgetCalm(Actor a, Actor b) global native
+; The torture calm's stop (StopCombat + StopCombatAndAlarmOnActor), as an SKSE task.
+Function StopFighting(Actor akActor) global native
 String Function HitText(String sourceId, Actor attacker, Actor victim, Int mask, Int level, Int count, Bool noCause = false, Bool unarmedForm = false) global native
 ; Parallel to the last TakeHits() result (same index).
 Bool Function HitUnarmed(Int index) global native

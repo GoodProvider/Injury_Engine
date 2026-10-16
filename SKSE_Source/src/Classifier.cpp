@@ -423,6 +423,20 @@ namespace Classifier
 
         // Ends the combat a torture hit started: the victim (and its alarm on the player) stands down. SKSE task,
         // because combat and hit events arrive inside the engine's own update.
+        // Main thread. The actor (and its alarm on the player) stands down.
+        bool StopCombatNow(RE::FormID actorId)
+        {
+            auto* actor = RE::TESForm::LookupByID<RE::Actor>(actorId);
+            if (!actor || actor->IsDead()) {
+                return false;
+            }
+            actor->StopCombat();
+            if (auto* lists = RE::ProcessLists::GetSingleton()) {
+                lists->StopCombatAndAlarmOnActor(actor, false);
+            }
+            return true;
+        }
+
         void StopCombatLater(RE::FormID victimId, RE::FormID attackerId)
         {
             auto* tasks = SKSE::GetTaskInterface();
@@ -430,15 +444,9 @@ namespace Classifier
                 return;
             }
             tasks->AddTask([victimId, attackerId]() {
-                auto* actor = RE::TESForm::LookupByID<RE::Actor>(victimId);
-                if (!actor || actor->IsDead()) {
-                    return;
+                if (StopCombatNow(victimId)) {
+                    SKSE::log::debug("calm: victim {:08X} stops fighting torture attacker {:08X}", victimId, attackerId);
                 }
-                actor->StopCombat();
-                if (auto* lists = RE::ProcessLists::GetSingleton()) {
-                    lists->StopCombatAndAlarmOnActor(actor, false);
-                }
-                SKSE::log::debug("calm: victim {:08X} stops fighting torture attacker {:08X}", victimId, attackerId);
             });
         }
 
@@ -628,6 +636,49 @@ namespace Classifier
         if (auto* tasks = SKSE::GetTaskInterface()) {
             tasks->AddTask([release]() { release(false); });
         }
+    }
+
+    void ForgetCalm(RE::Actor* a, RE::Actor* b)
+    {
+        if (!a || !b) {
+            return;
+        }
+        const RE::FormID aId = a->GetFormID();
+        const RE::FormID bId = b->GetFormID();
+        {
+            std::lock_guard lock(g_lock);
+            const auto erase = [](std::unordered_map<RE::FormID, Pair>& map, RE::FormID key, RE::FormID other) {
+                if (const auto it = map.find(key); it != map.end() && it->second.other == other) {
+                    map.erase(it);
+                }
+            };
+            erase(g_calm, aId, bId);
+            erase(g_calm, bId, aId);
+            erase(g_combatStart, aId, bId);
+            erase(g_combatStart, bId, aId);
+        }
+        constexpr auto kFlag = static_cast<std::uint32_t>(RE::TESObjectREFR::RecordFlags::kIgnoreFriendlyHits);
+        std::lock_guard lock(g_friendLock);
+        for (auto* actor : { a, b }) {
+            if (const auto it = g_friendFlag.find(actor->GetFormID()); it != g_friendFlag.end()) {
+                actor->formFlags &= ~kFlag;
+                g_friendFlag.erase(it);
+            }
+        }
+        SKSE::log::debug("calm: forgotten between {:08X} and {:08X}", aId, bId);
+    }
+
+    void StopFighting(RE::Actor* actor)
+    {
+        auto* tasks = actor ? SKSE::GetTaskInterface() : nullptr;
+        if (!tasks) {
+            return;
+        }
+        tasks->AddTask([id = actor->GetFormID()]() {
+            if (StopCombatNow(id)) {
+                SKSE::log::info("truce: {:08X} stops fighting", id);
+            }
+        });
     }
 
     void NoteEffect(RE::Actor* victim, RE::Effect* effect)

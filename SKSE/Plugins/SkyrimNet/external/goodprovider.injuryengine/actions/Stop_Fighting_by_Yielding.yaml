@@ -1,0 +1,23 @@
+name: Stop_Fighting_by_Yielding
+label: Yield
+description: "[speaker] gives up the fight and surrenders to [target], putting their weapon away. [target] decides whether to accept the surrender; if they refuse, they may keep attacking."
+questEditorId: Injury_Engine
+scriptName: Injury_Engine_Actions
+executionFunctionName: StopFightingByYielding
+defaultPriority: 5
+parameterMapping:
+  - type: speaker
+    name: speaker
+    description: Speaker Actor parameter (triggering entity)
+  - type: dynamic
+    name: target
+    description: Actor the speaker surrenders to
+eligibilityRules:
+  - conditions:
+      - decoratorName: is_in_combat
+        arguments:
+          - currentActor
+        comparisonOperator: "=="
+        expectedValue: true
+    logicalOperator: AND
+    required: true

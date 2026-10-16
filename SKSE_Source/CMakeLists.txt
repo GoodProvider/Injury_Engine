@@ -29,6 +29,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/PrismaUI
+    # SkyrimNet public API (PublicAPI.h; the decision request needs API v12+)
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../SkyrimNet devkit/CppAPI"
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

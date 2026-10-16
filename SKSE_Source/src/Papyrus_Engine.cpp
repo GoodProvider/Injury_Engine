@@ -2,6 +2,7 @@
 #include "InjuryConfig.h"
 #include "InjuryEngine.h"
 #include "Overlay.h"
+#include "TruceDecision.h"
 
 #include <algorithm>
 #include <string>
@@ -350,6 +351,67 @@ namespace
         }
     }
 
+    // Stop_Fighting / Stop_Fighting_by_Yielding / Start_Fighting (Injury_Engine_Actions). Truce answers: TakeTruces
+    // fills the buffer that TruceSpeakers / TruceTargets / TruceAccepted / TruceYields read (parallel, same index).
+    std::vector<TruceDecision::Answer> g_truces;
+
+    void AskTruce(RE::StaticFunctionTag*, RE::Actor* speaker, RE::Actor* target, bool yield)
+    {
+        TruceDecision::Ask(speaker, target, yield);
+    }
+
+    std::int32_t TakeTruces(RE::StaticFunctionTag*)
+    {
+        g_truces = TruceDecision::Take();
+        return static_cast<std::int32_t>(g_truces.size());
+    }
+
+    std::vector<RE::Actor*> TruceSpeakers(RE::StaticFunctionTag*)
+    {
+        std::vector<RE::Actor*> out;
+        for (const auto& t : g_truces) {
+            out.push_back(RE::TESForm::LookupByID<RE::Actor>(t.speaker));
+        }
+        return out;
+    }
+
+    std::vector<RE::Actor*> TruceTargets(RE::StaticFunctionTag*)
+    {
+        std::vector<RE::Actor*> out;
+        for (const auto& t : g_truces) {
+            out.push_back(RE::TESForm::LookupByID<RE::Actor>(t.target));
+        }
+        return out;
+    }
+
+    std::vector<std::int32_t> TruceAccepted(RE::StaticFunctionTag*)
+    {
+        std::vector<std::int32_t> out;
+        for (const auto& t : g_truces) {
+            out.push_back(t.accepted ? 1 : 0);
+        }
+        return out;
+    }
+
+    std::vector<std::int32_t> TruceYields(RE::StaticFunctionTag*)
+    {
+        std::vector<std::int32_t> out;
+        for (const auto& t : g_truces) {
+            out.push_back(t.yielded ? 1 : 0);
+        }
+        return out;
+    }
+
+    void ForgetCalm(RE::StaticFunctionTag*, RE::Actor* a, RE::Actor* b)
+    {
+        Classifier::ForgetCalm(a, b);
+    }
+
+    void StopFighting(RE::StaticFunctionTag*, RE::Actor* actor)
+    {
+        Classifier::StopFighting(actor);
+    }
+
     void Forget(RE::StaticFunctionTag*, RE::Actor* actor)
     {
         InjuryEngine::Forget(actor);
@@ -376,6 +438,14 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("DeathAttackers", s, DeathAttackers);
     a_vm->RegisterFunction("DeathSources", s, DeathSources);
     a_vm->RegisterFunction("DeathText", s, DeathText);
+    a_vm->RegisterFunction("AskTruce", s, AskTruce);
+    a_vm->RegisterFunction("TakeTruces", s, TakeTruces);
+    a_vm->RegisterFunction("TruceSpeakers", s, TruceSpeakers);
+    a_vm->RegisterFunction("TruceTargets", s, TruceTargets);
+    a_vm->RegisterFunction("TruceAccepted", s, TruceAccepted);
+    a_vm->RegisterFunction("TruceYields", s, TruceYields);
+    a_vm->RegisterFunction("ForgetCalm", s, ForgetCalm);
+    a_vm->RegisterFunction("StopFighting", s, StopFighting);
     a_vm->RegisterFunction("TakeSyncEvents", s, TakeSyncEvents);
     a_vm->RegisterFunction("SyncHealth", s, SyncHealth);
     a_vm->RegisterFunction("SyncActors", s, SyncActors);

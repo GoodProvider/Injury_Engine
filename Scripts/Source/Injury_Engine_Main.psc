@@ -934,6 +934,10 @@ Event OnUpdateGameTime()
     if tracked > 0
         StartSync()
     endif
+    Injury_Engine_Actions actions = (self as Quest) as Injury_Engine_Actions
+    if actions != None
+        actions.RestoreExpiredTruces() ; Stop_Fighting truces end after TRUCE_HOURS
+    endif
     RegisterForSingleUpdateGameTime(hours_per_point)
 EndEvent
 
