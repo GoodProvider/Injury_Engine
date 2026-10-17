@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1) — since [0.1.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.0)
+
+### Install / settings
+- The FOMOD has two optional, pre-checked (Recommended) options:
+  - "Add fight/stop/yield actions" installs `Start_Fighting`, `Stop_Fighting` and `Stop_Fighting_by_Yielding` with the `accept_truce` / `accept_surrender` decision prompts (folder `fight_actions`). `Torture_Target` is always installed.
+  - "Show torture overlay" keeps `injury_engine.overlay.enabled` on by default (folder `overlay`); unchecked, the core copies of `manifest.yaml` and `whipping.json` default it to off (`python_scripts/fomod-overlay-off.py`). A value already saved in the dashboard is kept.
+- Installer image `images/injury-engine.jpg` on the module and both options.
+
 ## [0.1.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.0) — initial release
 
 ### Torture / action

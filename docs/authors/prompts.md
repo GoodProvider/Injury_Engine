@@ -30,6 +30,10 @@ The two prompts are generic: they loop over `injury_engine_injuries(uuid)` (`sou
 
 LLM-facing text — prompts, DirectNarration, events — uses descriptive stages ("light welts", "about half way healed"), never digits or percentages. Numeric JSON fields exist only for templates to choose words.
 
+## Names, not pronouns
+
+DirectNarration and event text names every actor, attacker and victim, in every sentence, and uses no pronouns: a follower reads "she is hit in the leg" about a fight it isn't in as the player being hit. The look / feel prompts describe one actor and may use pronouns. See `injuries/guide.md` (Placeholders).
+
 ## Checklist
 
 - [ ] Keys bare lowercase

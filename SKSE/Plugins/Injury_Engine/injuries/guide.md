@@ -163,7 +163,10 @@ The writing rules below apply; keep the prose about the wound and the pain, not 
 
 ### Placeholders
 
-Use `{name}`, `{part}`, `{he}`, `{him}`, `{his}` in text, plus `{reflexive}`. Hit narration also has `{parts}`, `{verb}`,
+Use `{name}`, `{part}`, `{he}`, `{him}`, `{his}` in text, plus `{reflexive}`. Pronouns are for `text.*` (looks / feels) only:
+narration, death and heal event text (everything under `narration` and `death`) names every actor (`{name}`, `{attacker}`,
+`{target}`, `{caster}`) and never uses a pronoun, because SkyrimNet followers read a bare "she" as the player. There the
+engine renders `{he}` / `{him}` / `{reflexive}` as the name and `{his}` as "name's" anyway. Hit narration also has `{parts}`, `{verb}`,
 `{times}`, `{by}`, `{attacker}`. Heal levels have `{parts}`. Heal events also have `{caster}`, `{noun}`, `{who}`, `{obj}`, `{own}`, `{owner}`,
 `{owner_lc}`, `{progress}`. Summary: `{speaker}`, `{target}`, `{times}`. Unknown `{tokens}` are left as typed, so do not
 invent new ones (the code cannot fill them).

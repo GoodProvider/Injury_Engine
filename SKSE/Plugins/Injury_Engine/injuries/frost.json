@@ -157,10 +157,10 @@
       "by_attacker": " by {attacker}'s frost-wreathed hand",
       "by_none": " by a frost-wreathed hand",
       "levels": [
-        ", a sudden, searing cold pressed against bare skin. The frost bites like a hot iron before the numbness spreads, and {he} gasps, flinches and starts to shiver.",
-        " over skin already white and stinging. The cold drives deeper into the frost-nipped flesh, the numb patch flaring into a burning ache, and {his} teeth begin to chatter.",
-        ", and the cold sinks into swollen, blistered flesh that had barely begun to thaw. A burning stab cuts through the numbness and drags a strangled cry from {him} as violent shivers take {his} whole body.",
-        ", and it is too much. The cold reaches the dying flesh beneath the blisters: {his} lips go blue, {his} breath rattles in short, misting gasps, and {his} limbs shake, then grow sluggish and refuse to answer."
+        ", a sudden, searing cold pressed against bare skin. The frost bites like a hot iron before the numbness spreads, and {name} gasps, flinches and starts to shiver.",
+        " over skin already white and stinging. The cold drives deeper into the frost-nipped flesh, the numb patch flaring into a burning ache, and {name}'s teeth begin to chatter.",
+        ", and the cold sinks into swollen, blistered flesh that had barely begun to thaw. A burning stab cuts through the numbness and drags a strangled cry from {name} as violent shivers take {name}'s whole body.",
+        ", and it is too much. The cold reaches the dying flesh beneath the blisters: {name}'s lips go blue, {name}'s breath rattles in short, misting gasps, and {name}'s limbs shake, then grow sluggish and refuse to answer."
       ]
     },
     "summary": {
@@ -207,9 +207,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} frost bites, but the healing continues."
       },
       "full": {
-        "none": "{name}'s frost bites are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s frost bites are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s frost bites are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s frost bites are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s frost bites are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s frost bites are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} frost bites are {progress}."
     }

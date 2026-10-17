@@ -172,10 +172,10 @@
       "by_attacker": " by {attacker}'s fist",
       "by_none": " with a closed fist",
       "levels": [
-        ", a hard, flat crack of knuckles on skin. The shock of it snaps {his} head or body aside, a hot sting blooming where it landed and a dull ringing in {his} ears.",
-        " where a bruise is already rising. The fist lands on tender, swollen flesh and the ache bursts into a deep, sick throb that knocks the breath out of {him}.",
-        ", and knuckles drive into flesh that is already black and swollen. Something gives under the blow; the pain is huge and nauseating, {his} knees sag and a groan is forced out of {him}. The smell of sweat and blood rises from {him}.",
-        ", and it is too much. The blow lands on battered, broken flesh and {his} body simply gives up: {his} legs fold, {his} vision goes grey, blood fills {his} mouth and {he} curls up, unable to protect {reflexive} any longer."
+        ", a hard, flat crack of knuckles on skin. The shock of it snaps {name}'s head or body aside, a hot sting blooming where it landed and a dull ringing in {name}'s ears.",
+        " where a bruise is already rising. The fist lands on tender, swollen flesh and the ache bursts into a deep, sick throb that knocks the breath out of {name}.",
+        ", and knuckles drive into flesh that is already black and swollen. Something gives under the blow; the pain is huge and nauseating, {name}'s knees sag and a groan is forced out of {name}. The smell of sweat and blood rises from {name}.",
+        ", and it is too much. The blow lands on battered, broken flesh and {name}'s body simply gives up: {name}'s legs fold, {name}'s vision goes grey, blood fills {name}'s mouth and {name} curls up, no longer able to shield any part of {name}'s body."
       ]
     },
     "summary": {
@@ -222,9 +222,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} bruises, but the healing continues."
       },
       "full": {
-        "none": "{name}'s bruises from the beating are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s bruises from the beating are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s bruises from the beating are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s bruises from the beating are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s bruises from the beating are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s bruises from the beating are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} bruises are {progress}."
     }

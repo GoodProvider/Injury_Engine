@@ -157,10 +157,10 @@
       "by_attacker": " by {attacker}'s sparks",
       "by_none": " with crackling sparks",
       "levels": [
-        ", a sudden crackle of sparks dancing over bare skin. The prickling sting snaps through {his} nerves and the muscle jumps on its own, leaving a buzzing tingle behind and the sharp smell of ozone in the air.",
-        " over skin that is already prickling and raw. The sparks bite into the fresh burns, and the twitching muscle knots into a hard, aching cramp that drives the breath from {him}.",
-        ", and the sparks dig into blistered burns. The cramp becomes a wrenching spasm that rolls through {his} body, {his} heart lurches and races, and an involuntary cry is torn from {him}. The smell of ozone and scorched skin rises.",
-        ", and it is too much. The current floods already-ruined flesh; {he} convulses helplessly, cold sweat pouring, {his} heart hammering and stumbling, {his} vision whiting out as {he} loses all control of {his} body."
+        ", a sudden crackle of sparks dancing over bare skin. The prickling sting snaps through {name}'s nerves and the muscle jumps on its own, leaving a buzzing tingle behind and the sharp smell of ozone in the air.",
+        " over skin that is already prickling and raw. The sparks bite into the fresh burns, and the twitching muscle knots into a hard, aching cramp that drives the breath from {name}.",
+        ", and the sparks dig into blistered burns. The cramp becomes a wrenching spasm that rolls through {name}'s body, {name}'s heart lurches and races, and an involuntary cry is torn from {name}. The smell of ozone and scorched skin rises.",
+        ", and it is too much. The current floods already-ruined flesh; {name} convulses helplessly, cold sweat pouring, {name}'s heart hammering and stumbling, {name}'s vision whiting out as {name} loses all control of {name}'s body."
       ]
     },
     "summary": {
@@ -207,9 +207,9 @@
         "source": "The warm light of {owner_lc} {noun} has eased the prickling and cramps from {own} shock burns, but the healing continues."
       },
       "full": {
-        "none": "{name}'s shock burns are now fully healed, the twitching stilled, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s shock burns are now fully healed, the twitching stilled, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s shock burns are now fully healed, the twitching stilled, leaving {him} without pain or blemish."
+        "none": "{name}'s shock burns are now fully healed, the twitching stilled, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s shock burns are now fully healed, the twitching stilled, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s shock burns are now fully healed, the twitching stilled, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} shock burns are {progress}."
     }

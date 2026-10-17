@@ -166,10 +166,10 @@
       "by_attacker": " by {attacker}'s open hand",
       "by_none": " with an open hand",
       "levels": [
-        ", a loud crack of skin on skin. The sting blooms hot and bright, more shock and insult than pain, and leaves {him} flushed, blinking and trembling as {his} body scrambles to react.",
-        " on skin already flushed and tender. The stinging warmth flares into a sharp, burning throb as the hand lands on the swollen handprint, and {he} gasps despite {reflexive}.",
-        ", and the blow lands squarely on swollen, bruised flesh. The hot ache bursts into a deep, sickening throb that rattles through {him}, breaking {his} composure and forcing a cry from {him}; {his} ears ring and {his} eyes stream.",
-        ", and it is too much. The slap lands on flesh already split and bruised black, a jarring, pounding blow that leaves {him} reeling: {his} head swims, {his} ears ring, cold sweat breaks out, and {he} can barely hold {reflexive} upright."
+        ", a loud crack of skin on skin. The sting blooms hot and bright, more shock and insult than pain, and leaves {name} flushed, blinking and trembling as {name}'s body scrambles to react.",
+        " on skin already flushed and tender. The stinging warmth flares into a sharp, burning throb as the hand lands on the swollen handprint, and {name} gasps despite trying not to.",
+        ", and the blow lands squarely on swollen, bruised flesh. The hot ache bursts into a deep, sickening throb that rattles through {name}, breaking {name}'s composure and forcing a cry from {name}; {name}'s ears ring and {name}'s eyes stream.",
+        ", and it is too much. The slap lands on flesh already split and bruised black, a jarring, pounding blow that leaves {name} reeling: {name}'s head swims, {name}'s ears ring, cold sweat breaks out, and {name} can barely stay upright."
       ]
     },
     "summary": {
@@ -216,9 +216,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the sting from {own} slap marks, but the healing continues."
       },
       "full": {
-        "none": "{name}'s slap marks are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s slap marks are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s slap marks are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s slap marks are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s slap marks are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s slap marks are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} bruises are {progress}."
     }

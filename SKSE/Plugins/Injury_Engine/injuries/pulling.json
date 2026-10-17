@@ -166,10 +166,10 @@
       "by_attacker": " by {attacker}'s grip",
       "by_none": " hard",
       "levels": [
-        ", a sudden, wrenching yank that tears a startled cry from {him}. Hot, prickling pain floods the spot and {his} eyes sting with tears as {his} body jerks to follow the pull.",
-        " where it is already sore. The tender ache flares into a sharp, tearing burn as strained skin and joints are wrenched again, and {he} gasps, straining against the grip.",
-        ", twisting bruised and strained flesh past its limit. The deep throb becomes a sickening, grinding jolt that drops into {his} gut, and {he} cries out, {his} composure breaking as {he} is dragged off balance.",
-        ", and it is too much. Something tears with a white-hot rip that throws {him} into shock: the blood drains from {his} face, cold sweat breaks out, {his} vision swims, and {he} sags helplessly in the grip."
+        ", a sudden, wrenching yank that tears a startled cry from {name}. Hot, prickling pain floods the spot and {name}'s eyes sting with tears as {name}'s body jerks to follow the pull.",
+        " where it is already sore. The tender ache flares into a sharp, tearing burn as strained skin and joints are wrenched again, and {name} gasps, straining against the grip.",
+        ", twisting bruised and strained flesh past its limit. The deep throb becomes a sickening, grinding jolt that drops into {name}'s gut, and {name} cries out, {name}'s composure breaking as {name} is dragged off balance.",
+        ", and it is too much. Something tears with a white-hot rip that throws {name} into shock: the blood drains from {name}'s face, cold sweat breaks out, {name}'s vision swims, and {name} sags helplessly in the grip."
       ]
     },
     "summary": {
@@ -216,9 +216,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} wrenched joints and torn scalp, but the healing continues."
       },
       "full": {
-        "none": "{name}'s pulled and wrenched injuries are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s pulled and wrenched injuries are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s pulled and wrenched injuries are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s pulled and wrenched injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s pulled and wrenched injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s pulled and wrenched injuries are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }

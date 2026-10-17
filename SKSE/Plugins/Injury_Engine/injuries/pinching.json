@@ -166,10 +166,10 @@
       "by_attacker": " by {attacker}'s fingers",
       "by_none": " hard",
       "levels": [
-        ", fingers and nails seizing a fold of skin and twisting it. The sharp, nipping smart catches {him} off guard, a hot little burst of pain that makes {him} jerk and gasp as it fades to a stinging throb.",
-        " right on skin that is already bruised. The nails dig into tender flesh and twist, turning a dull ache into a bright, tight spike of pain that makes {him} hiss and squirm to pull away.",
-        ", nails digging into swollen, blood-blistered flesh and wrenching it. The bruises burst with fresh pain, a deep, sickening throb that drives a cry from {him} and leaves {him} shaking. The smell of sweat rises from {him}.",
-        ", and the skin is already torn and swollen. The fingers wrench raw, ruined flesh, tearing it open again; the pain is so sharp and total that {he} goes rigid, cold sweat breaking out, {his} breath coming in broken sobs as {his} body tries to fold away from it."
+        ", fingers and nails seizing a fold of skin and twisting it. The sharp, nipping smart catches {name} off guard, a hot little burst of pain that makes {name} jerk and gasp as it fades to a stinging throb.",
+        " right on skin that is already bruised. The nails dig into tender flesh and twist, turning a dull ache into a bright, tight spike of pain that makes {name} hiss and squirm to pull away.",
+        ", nails digging into swollen, blood-blistered flesh and wrenching it. The bruises burst with fresh pain, a deep, sickening throb that drives a cry from {name} and leaves {name} shaking. The smell of sweat rises from {name}.",
+        ", and the skin is already torn and swollen. The fingers wrench raw, ruined flesh, tearing it open again; the pain is so sharp and total that {name} goes rigid, cold sweat breaking out, {name}'s breath coming in broken sobs as {name}'s body tries to fold away from it."
       ]
     },
     "summary": {
@@ -216,9 +216,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} pinch marks, but the healing continues."
       },
       "full": {
-        "none": "{name}'s pinch marks are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s pinch marks are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s pinch marks are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s pinch marks are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s pinch marks are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s pinch marks are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} bruises are {progress}."
     }

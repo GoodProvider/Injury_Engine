@@ -177,13 +177,13 @@
           "several": " several times",
           "many": " again and again"
         },
-        "by_attacker": " as {attacker} sends {him} sprawling",
+        "by_attacker": " as {attacker} sends {name} sprawling",
         "by_none": " by the fall",
         "levels": [
-          ", the ground rushing up as {he} goes down. The skin scrapes raw with a hot sting and {he} grunts as {he} hits the dirt.",
-          " where it is already scraped and sore. The ground grinds in again and {he} gasps, struggling to get {his} feet under {him}.",
-          ", landing on skin that is already torn and bruised. The pain is huge and burning, and {he} cries out as {he} hits the ground.",
-          ", and it is too much. {he} lands bloody and gasping, {his} vision tunneling as {his} body gives up trying to rise."
+          ", the ground rushing up as {name} goes down. The skin scrapes raw with a hot sting and {name} grunts as {name} hits the dirt.",
+          " where it is already scraped and sore. The ground grinds in again and {name} gasps, struggling to get {name}'s feet under {name}.",
+          ", landing on skin that is already torn and bruised. The pain is huge and burning, and {name} cries out as {name} hits the ground.",
+          ", and it is too much. {name} lands bloody and gasping, {name}'s vision tunneling as {name}'s body gives up trying to rise."
         ]
       },
       "summary": {
@@ -227,9 +227,9 @@
           "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} scrapes and bruises, but the healing continues."
         },
         "full": {
-          "none": "{name}'s scrapes and bruises from falling are now fully healed, leaving {him} without pain or blemish.",
-          "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s scrapes and bruises from falling are now fully healed, leaving {him} without pain or blemish.",
-          "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s scrapes and bruises from falling are now fully healed, leaving {him} without pain or blemish."
+          "none": "{name}'s scrapes and bruises from falling are now fully healed, leaving {name} without pain or blemish.",
+          "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s scrapes and bruises from falling are now fully healed, leaving {name} without pain or blemish.",
+          "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s scrapes and bruises from falling are now fully healed, leaving {name} without pain or blemish."
         },
         "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
       }
@@ -310,13 +310,13 @@
           "several": " several times",
           "many": " again and again"
         },
-        "by_attacker": " as {attacker} sends {him} crashing down",
+        "by_attacker": " as {attacker} sends {name} crashing down",
         "by_none": " of a hard fall",
         "levels": [
-          ", a jarring landing that knocks the breath out of {him}. The pain flares bright and hot, and {he} grunts as {he} hits the ground.",
-          ", landing on bruises that are already sore. The jolt shoots through {him} and {he} cries out, slow to get up.",
-          ", and something gives with a sickening crack as {he} lands on already battered limbs. The pain is huge and {he} curls up, gasping.",
-          ", and it is too much. {he} lands hard and lies still for a moment, broken and gasping, {his} vision tunneling."
+          ", a jarring landing that knocks the breath out of {name}. The pain flares bright and hot, and {name} grunts as {name} hits the ground.",
+          ", landing on bruises that are already sore. The jolt shoots through {name} and {name} cries out, slow to get up.",
+          ", and something gives with a sickening crack as {name} lands on already battered limbs. The pain is huge and {name} curls up, gasping.",
+          ", and it is too much. {name} lands hard and lies still for a moment, broken and gasping, {name}'s vision tunneling."
         ]
       },
       "heal_events": {
@@ -344,9 +344,9 @@
           "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
         },
         "full": {
-          "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-          "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-          "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+          "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+          "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+          "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
         },
         "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
       }
@@ -356,25 +356,25 @@
       "lead_none": "{name} dies in {form}: ",
       "regions": {
         "head": [
-          "{his} skull splits open on the stone; blood and grey brain spill from the crack, an eye is burst and blood runs from the hollow. {name} lies twisted and still, the warm smell of blood and brains rising from the rock.",
-          "{he} lands head first and the neck snaps; the face is crushed against the ground, nose and teeth broken, blood pouring from mouth and ears. {name} twitches once and dies, the iron reek of blood spreading beneath {him}."
+          "{name}'s skull splits open on the stone; blood and grey brain spill from the crack, an eye is burst and blood runs from the hollow. {name} lies twisted and still, the warm smell of blood and brains rising from the rock.",
+          "{name} lands head first and the neck snaps; the face is crushed against the ground, nose and teeth broken, blood pouring from mouth and ears. {name} twitches once and dies, the iron reek of blood spreading beneath {name}."
         ],
         "body": [
-          "{his} back breaks on impact and the ribs burst through {his} chest; jagged white bone juts from torn flesh and blood bubbles from {his} lips. {name} lies broken at an impossible angle, a last wet breath rattling out of {him} in the smell of blood.",
-          "the fall bursts {his} belly open against the rocks; torn flesh and grey loops of gut spill out, and a sour stench of opened bowel and half-digested food mixes with the blood. {name} gives a final, shuddering moan and goes still."
+          "{name}'s back breaks on impact and the ribs burst through {name}'s chest; jagged white bone juts from torn flesh and blood bubbles from {name}'s lips. {name} lies broken at an impossible angle, a last wet breath rattling out of {name} in the smell of blood.",
+          "the fall bursts {name}'s belly open against the rocks; torn flesh and grey loops of gut spill out, and a sour stench of opened bowel and half-digested food mixes with the blood. {name} gives a final, shuddering moan and goes still."
         ],
         "arm": [
-          "{his} {part} shatters beneath {him}, bent back on itself with splintered bone through the skin, and blood pours from the torn flesh. {name} lies crumpled and gasping until the breath stops, the smell of blood thick on the stone.",
-          "{his} {part} is torn half away on the jagged rock, a bleeding stump of bone and ripped muscle, the body broken around it. {name} moans once and dies, blood pooling beneath {him} in an iron-smelling slick."
+          "{name}'s {part} shatters beneath {name}, bent back on itself with splintered bone through the skin, and blood pours from the torn flesh. {name} lies crumpled and gasping until the breath stops, the smell of blood thick on the stone.",
+          "{name}'s {part} is torn half away on the jagged rock, a bleeding stump of bone and ripped muscle, the body broken around it. {name} moans once and dies, blood pooling beneath {name} in an iron-smelling slick."
         ],
         "leg": [
-          "{his} {part} snaps under {him} and the thigh bone is driven up through the flesh; blood spurts from the torn vessel across the ground. {name} screams once, then lies crumpled and bleeding out, the smell of blood rising around {him}.",
-          "{his} {part} is folded the wrong way at the knee, the shin bone jutting white through the skin and the foot twisted backward. {name} lies broken and still, {his} final cry fading as the coppery smell of blood fills the air."
+          "{name}'s {part} snaps under {name} and the thigh bone is driven up through the flesh; blood spurts from the torn vessel across the ground. {name} screams once, then lies crumpled and bleeding out, the smell of blood rising around {name}.",
+          "{name}'s {part} is folded the wrong way at the knee, the shin bone jutting white through the skin and the foot twisted backward. {name} lies broken and still, {name}'s final cry fading as the coppery smell of blood fills the air."
         ]
       },
       "soil": [
-        "As {his} body goes slack, the stink of {his} shit and piss mixes with the blood.",
-        "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+        "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the blood.",
+        "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
       ],
       "soil_chance": 0.4
     }

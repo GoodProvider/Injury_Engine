@@ -122,10 +122,10 @@
       "by_attacker": " by {attacker}",
       "by_none": "",
       "levels": [
-        ", a clean, hot line of pain. The edge bites and opens the skin, and {he} sucks in a sharp breath as the blood wells.",
-        " across flesh that is already cut. The blade finds the open wound again, and {he} cries out as the pain flares white-hot. The smell of blood thickens in the air.",
-        ", and the blade bites deep into the wound. The pain is huge and nauseating, and {his} composure breaks as the blood pours. The coppery smell of blood is everywhere.",
-        ", and it is too much. The blow cuts through muscle and tendon; {he} goes pale, {his} vision tunnels and {his} legs begin to give."
+        ", a clean, hot line of pain. The edge bites and opens the skin, and {name} sucks in a sharp breath as the blood wells.",
+        " across flesh that is already cut. The blade finds the open wound again, and {name} cries out as the pain flares white-hot. The smell of blood thickens in the air.",
+        ", and the blade bites deep into the wound. The pain is huge and nauseating, and {name}'s composure breaks as the blood pours. The coppery smell of blood is everywhere.",
+        ", and it is too much. The blow cuts through muscle and tendon; {name} goes pale, {name}'s vision tunnels and {name}'s legs begin to give."
       ]
     },
     "heal_events": {
@@ -153,9 +153,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
       },
       "full": {
-        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
@@ -165,25 +165,25 @@
     "lead_none": "{name} dies from {form}: ",
     "regions": {
       "head": [
-        "the edge splits {his} face from brow to jaw and bites into the skull beneath; one eye is cut through and blood runs from the empty socket. Grey matter shows in the wound, and the warm, wet smell of blood and opened brain hangs on the air as {he} drops without a sound.",
-        "a hewing blow cleaves through {his} skull above the ear and on into the neck; the head lolls and blood fountains from the opened throat. {name} falls with a wet gurgle where a scream should be, and the thick iron reek of blood and brains spreads around the body."
+        "the edge splits {name}'s face from brow to jaw and bites into the skull beneath; one eye is cut through and blood runs from the empty socket. Grey matter shows in the wound, and the warm, wet smell of blood and opened brain hangs on the air as {name} drops without a sound.",
+        "a hewing blow cleaves through {name}'s skull above the ear and on into the neck; the head lolls and blood fountains from the opened throat. {name} falls with a wet gurgle where a scream should be, and the thick iron reek of blood and brains spreads around the body."
       ],
       "body": [
-        "the blade opens {his} belly from side to side; {his} bowels slide out in grey, glistening loops and spill over {his} hands as {he} tries to hold them in. The air fills with the stench of blood, torn gut and half-digested food, and {name} sinks to {his} knees with a last, broken scream.",
-        "a deep slash cleaves through {his} back and ribs; the white bone is split and the lungs show pink and heaving, a red froth bubbling at the wound. {name} chokes on {his} own blood, the hot coppery smell of it everywhere, and falls with a final, drowning rasp."
+        "the blade opens {name}'s belly from side to side; {name}'s bowels slide out in grey, glistening loops and spill over {name}'s hands as {name} tries to hold them in. The air fills with the stench of blood, torn gut and half-digested food, and {name} sinks to {name}'s knees with a last, broken scream.",
+        "a deep slash cleaves through {name}'s back and ribs; the white bone is split and the lungs show pink and heaving, a red froth bubbling at the wound. {name} chokes on {name}'s own blood, the hot coppery smell of it everywhere, and falls with a final, drowning rasp."
       ],
       "arm": [
-        "{his} {part} is hewn off below the shoulder and falls to the ground; only a bleeding stump of white bone and torn red muscle is left, pumping blood in hard spurts. {name} screams as {he} falls, and as {he} bleeds out the smell of {his} blood fills the air along with {his} final cries.",
-        "the edge shears through {his} {part} at the elbow and on into {his} side; the forearm hangs by a strip of skin below a stump of bone and muscle. Blood pours out in a dark sheet, the iron stench of it thick on the air, and {name}'s screams fade to a whimper as {he} dies."
+        "{name}'s {part} is hewn off below the shoulder and falls to the ground; only a bleeding stump of white bone and torn red muscle is left, pumping blood in hard spurts. {name} screams as {name} falls, and as {name} bleeds out the smell of {name}'s blood fills the air along with {name}'s final cries.",
+        "the edge shears through {name}'s {part} at the elbow and on into {name}'s side; the forearm hangs by a strip of skin below a stump of bone and muscle. Blood pours out in a dark sheet, the iron stench of it thick on the air, and {name}'s screams fade to a whimper as {name} dies."
       ],
       "leg": [
-        "{his} {part} is cut off above the knee, and {he} falls beside it with only a bleeding stump of bone and muscle left. As {he} bleeds out, the smell of {his} blood fills the air along with {his} final screams.",
-        "the blade bites through {his} {part} at the hip and lays open the great vessel; bright blood gushes over the ground in a widening pool. {name} goes down screaming, then grey and quiet, the warm reek of blood rising from the spreading red."
+        "{name}'s {part} is cut off above the knee, and {name} falls beside it with only a bleeding stump of bone and muscle left. As {name} bleeds out, the smell of {name}'s blood fills the air along with {name}'s final screams.",
+        "the blade bites through {name}'s {part} at the hip and lays open the great vessel; bright blood gushes over the ground in a widening pool. {name} goes down screaming, then grey and quiet, the warm reek of blood rising from the spreading red."
       ]
     },
     "soil": [
-      "As {his} body goes slack, the stink of {his} shit and piss mixes with the blood.",
-      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+      "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the blood.",
+      "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
     ],
     "soil_chance": 0.4
   }

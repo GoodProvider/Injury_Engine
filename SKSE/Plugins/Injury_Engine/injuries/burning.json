@@ -121,10 +121,10 @@
       "by_attacker": " by {attacker}'s fire",
       "by_none": "",
       "levels": [
-        ", a sudden scorch of heat. The flame licks across {his} skin and {he} jerks away with a hiss of pain. A smell of singed hair rises.",
-        " over skin that is already scalded. The fire bites into the raw burn and {he} shrieks as the pain flares.",
-        ", and the flames eat into the burn. The pain is huge and nauseating, the smell of scorched flesh sharp, and {he} staggers.",
-        ", and it is too much. The fire engulfs {him}; {he} screams, {his} skin blackening, and {his} strength drains away. The stench of charred flesh fills the air."
+        ", a sudden scorch of heat. The flame licks across {name}'s skin and {name} jerks away with a hiss of pain. A smell of singed hair rises.",
+        " over skin that is already scalded. The fire bites into the raw burn and {name} shrieks as the pain flares.",
+        ", and the flames eat into the burn. The pain is huge and nauseating, the smell of scorched flesh sharp, and {name} staggers.",
+        ", and it is too much. The fire engulfs {name}; {name} screams, {name}'s skin blackening, and {name}'s strength drains away. The stench of charred flesh fills the air."
       ]
     },
     "heal_events": {
@@ -152,9 +152,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
       },
       "full": {
-        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
@@ -164,25 +164,25 @@
     "lead_none": "{name} dies from {form}: ",
     "regions": {
       "head": [
-        "the fire burns {his} face away; hair and skin flare and blacken, the eyes boil and burst in their sockets, and charred skull shows through the cracked flesh. The stench of burned hair and cooked flesh chokes the air as {name} falls with a last, smoke-strangled shriek.",
-        "the flames pour into {his} mouth and eyes; {his} lips shrivel back from blackened teeth and the hollow sockets weep a boiling fluid. {name} collapses, smoking, and the smell of roasting meat and burned fat hangs over the body."
+        "the fire burns {name}'s face away; hair and skin flare and blacken, the eyes boil and burst in their sockets, and charred skull shows through the cracked flesh. The stench of burned hair and cooked flesh chokes the air as {name} falls with a last, smoke-strangled shriek.",
+        "the flames pour into {name}'s mouth and eyes; {name}'s lips shrivel back from blackened teeth and the hollow sockets weep a boiling fluid. {name} collapses, smoking, and the smell of roasting meat and burned fat hangs over the body."
       ],
       "body": [
-        "the fire splits the skin of {his} back and belly; fat bubbles and drips, the flesh beneath cooks dark, and in places the ribs show black through the char. A thick, sweet stench of roasting meat and burned hair rolls off {him} as {name} falls writhing and screaming, then lies still and smoking.",
-        "the flames eat through {his} chest and back until the cooked organs show beneath the cracked, blackened skin, and the smell of burned fat and cooked gut is sickening. {name} dies curled in on {reflexive}, a final scream turning into a dry, smoky rattle."
+        "the fire splits the skin of {name}'s back and belly; fat bubbles and drips, the flesh beneath cooks dark, and in places the ribs show black through the char. A thick, sweet stench of roasting meat and burned hair rolls off {name} as {name} falls writhing and screaming, then lies still and smoking.",
+        "the flames eat through {name}'s chest and back until the cooked organs show beneath the cracked, blackened skin, and the smell of burned fat and cooked gut is sickening. {name} dies curled up tight, a final scream turning into a dry, smoky rattle."
       ],
       "arm": [
-        "{his} {part} is burned to nothing but a blackened stump, the hand gone and the charred bone poking from a crust of cooked flesh. {name} falls shrieking, rolling in the dirt, and the stench of burned meat and hair fills the air until {he} lies smoking and still.",
-        "the fire strips {his} {part} to the bone; the flesh hangs in cooked, blackened strips and the fingers are curled into charred claws. {name} collapses in the smoke and the reek of roasting flesh, {his} last scream thin and cracked."
+        "{name}'s {part} is burned to nothing but a blackened stump, the hand gone and the charred bone poking from a crust of cooked flesh. {name} falls shrieking, rolling in the dirt, and the stench of burned meat and hair fills the air until {name} lies smoking and still.",
+        "the fire strips {name}'s {part} to the bone; the flesh hangs in cooked, blackened strips and the fingers are curled into charred claws. {name} collapses in the smoke and the reek of roasting flesh, {name}'s last scream thin and cracked."
       ],
       "leg": [
-        "{his} {part} is charred to the bone, the skin burst and blackened, the fat running and spitting. {name} falls and cannot rise, still burning, the smell of cooked meat and burned leather thick on the air as {his} screams die away.",
-        "the flames burn {his} {part} down to a black, smoking stump; the flesh has cooked away from the shin and the foot is a twisted lump of char. {name} drops, writhing, and dies in a haze of smoke that stinks of burned hair and roasted flesh."
+        "{name}'s {part} is charred to the bone, the skin burst and blackened, the fat running and spitting. {name} falls and cannot rise, still burning, the smell of cooked meat and burned leather thick on the air as {name}'s screams die away.",
+        "the flames burn {name}'s {part} down to a black, smoking stump; the flesh has cooked away from the shin and the foot is a twisted lump of char. {name} drops, writhing, and dies in a haze of smoke that stinks of burned hair and roasted flesh."
       ]
     },
     "soil": [
-      "As {his} body goes slack, the stink of {his} shit and piss mixes with the reek of burned flesh.",
-      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smoke."
+      "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the reek of burned flesh.",
+      "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smoke."
     ],
     "soil_chance": 0.4
   }

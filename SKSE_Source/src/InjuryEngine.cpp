@@ -925,13 +925,23 @@ namespace InjuryEngine
 
         // ---- text --------------------------------------------------------------------------------------
 
+        // Never a vague "someone": SkyrimNet followers read an unnamed victim as the player. Unnamed actors fall back
+        // to their base name, then their race ("Wolf").
         std::string NameOf(RE::Actor* actor)
         {
             if (!actor) {
-                return "Someone";
+                return "an unknown attacker";
             }
-            const char* name = actor->GetDisplayFullName();
-            return name && *name ? name : "Someone";
+            if (const char* name = actor->GetDisplayFullName(); name && *name) {
+                return name;
+            }
+            if (const auto* base = actor->GetActorBase(); base && base->GetFullName() && *base->GetFullName()) {
+                return base->GetFullName();
+            }
+            if (const auto* race = actor->GetRace(); race && race->GetFullName() && *race->GetFullName()) {
+                return race->GetFullName();
+            }
+            return "an unknown person";
         }
 
         std::string LogActor(RE::Actor* actor)
@@ -1043,6 +1053,14 @@ namespace InjuryEngine
                 { "reflexive", female ? "herself" : "himself" } };
         }
 
+        // Narration and event text names actors, never "he" / "she": SkyrimNet followers attribute a bare pronoun to
+        // the player. Pronoun placeholders (from mod JSON) render as the name. Looks / feels prompts keep ActorVars.
+        std::map<std::string, std::string> NarrationVars(RE::Actor* actor)
+        {
+            const std::string name = NameOf(actor);
+            return { { "name", name }, { "he", name }, { "him", name }, { "his", name + "'s" }, { "reflexive", name } };
+        }
+
         const char* StageName(int source, int stage)
         {
             static const char* kFixed[] = { "light", "medium", "severe" };
@@ -1101,7 +1119,7 @@ namespace InjuryEngine
             bool sceneStart = false)
         {
             const std::string phase = again ? "again" : "start";
-            auto vars = ActorVars(victim);
+            auto vars = NarrationVars(victim);
             vars["target"] = NameOf(victim);
             vars["attackers"] = NameOf(attacker);
             vars["form"] = NarrationForm(source, unarmed);
@@ -1111,7 +1129,7 @@ namespace InjuryEngine
             vars["what"] = InjuryConfig::Render(what, vars);
             const std::string sentence = InjuryConfig::Render(SceneStr(source, "clause", "{attackers} {what}"), vars);
             const std::string feeling = InjuryConfig::Render(
-                InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), ActorVars(victim));
+                InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), NarrationVars(victim));
             if (sceneStart && !again) {
                 return sentence + ", " + LevelSensationTail(feeling);
             }
@@ -2034,7 +2052,7 @@ namespace InjuryEngine
         if (!noCause && attacker && attacker != victim) {
             return AttackLine(source, attacker, victim, mask, level, count > 1, unarmedForm);
         }
-        auto vars = ActorVars(victim);
+        auto vars = NarrationVars(victim);
         std::string by = noCause ? std::string() : InjuryConfig::Str(source, "narration.hit.by_none");
         if (!noCause && attacker && attacker != victim) {
             by = InjuryConfig::Render(InjuryConfig::Str(source, "narration.hit.by_attacker"), { { "attacker", NameOf(attacker) } });
@@ -2063,7 +2081,7 @@ namespace InjuryEngine
             return {};
         }
         return InjuryConfig::Render(
-            InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), ActorVars(victim));
+            InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), NarrationVars(victim));
     }
 
     std::string DeathText(int source, RE::Actor* attacker, RE::Actor* victim, int part, bool unarmedForm)
@@ -2086,7 +2104,7 @@ namespace InjuryEngine
         if (!lines.is_array() || lines.empty() || !lines[0].is_string()) {
             return {};
         }
-        auto vars = ActorVars(victim);
+        auto vars = NarrationVars(victim);
         vars["part"] = body.partName[part];
         vars["form"] = NarrationForm(source, unarmedForm);
         const bool named = attacker && attacker != victim;
@@ -2261,7 +2279,7 @@ namespace InjuryEngine
                 }
             }
         }
-        auto vars = ActorVars(victim);
+        auto vars = NarrationVars(victim);
         std::string text;
         for (const auto& g : groups) {
             vars["parts"] = PartsText(g.source, g.mask);
@@ -2287,18 +2305,18 @@ namespace InjuryEngine
             conf = HealEventsSource(it != g_actors.end() ? &it->second : nullptr);
             unhurt = it == g_actors.end() || TotalPoints(it->second) <= 0;
         }
-        auto vars = ActorVars(target);
+        auto vars = NarrationVars(target);
         const std::string name = vars["name"];
         const std::string casterName = caster ? NameOf(caster) : std::string{};
         const bool named = !casterName.empty() && (healingSource == kSourceSpell || healingSource == kSourceStaff);
-        const bool pron = named && caster == target;
         const bool casterCasts = healingSource == kSourceSpell && !casterName.empty();
         const char* nounKey = healingSource == kSourceSpell ? "spell" : healingSource == kSourceStaff ? "staff" : healingSource == kSourcePotion ? "potion" : "magic";
         vars["caster"] = casterName;
         vars["noun"] = InjuryConfig::Str(conf, std::string("narration.heal_events.nouns.") + nounKey, nounKey);
-        vars["who"] = pron ? vars["reflexive"] : name;
-        vars["obj"] = pron ? vars["him"] : name;
-        vars["own"] = pron ? vars["his"] : name + "'s";
+        // names even when healing oneself ("Angi casts ... around Angi"), see NarrationVars
+        vars["who"] = name;
+        vars["obj"] = name;
+        vars["own"] = name + "'s";
         vars["owner"] = named ? casterName + "'s" : "The";
         vars["owner_lc"] = named ? casterName + "'s" : "the";
         vars["progress"] = InjuryConfig::Str(conf, percent < 34 ? "narration.heal_events.progress.low"
@@ -2363,7 +2381,7 @@ namespace InjuryEngine
             }
         }
         for (auto* victim : collapsed) {
-            auto vars = ActorVars(victim);
+            auto vars = NarrationVars(victim);
             vars["target"] = NameOf(victim);
             const std::string line = InjuryConfig::Render(InjuryConfig::SessionStr("collapse", "{target} collapses."), vars);
             if (!line.empty()) {
@@ -2431,7 +2449,7 @@ namespace InjuryEngine
         };
         const auto hasAttacker = [](const Pair& p) { return p.attacker && p.attacker != p.victim; };
         const auto feeling = [&](const Pair& p) {
-            auto vars = ActorVars(p.victim);
+            auto vars = NarrationVars(p.victim);
             vars["target"] = NameOf(p.victim);
             vars["attacker"] = NameOf(p.attacker);
             vars["parts"] = PartsText(p.source, p.mask);
@@ -2440,7 +2458,7 @@ namespace InjuryEngine
                    LevelText(InjuryConfig::Find(p.source)->id, p.victim, p.level);
         };
         const auto inlineHit = [&](const Pair& p) {
-            auto vars = ActorVars(p.victim);
+            auto vars = NarrationVars(p.victim);
             vars["target"] = NameOf(p.victim);
             vars["parts"] = PartsText(p.source, p.mask);
             return InjuryConfig::Render(InjuryConfig::SessionStr("inline." + ph), vars) +
@@ -2451,7 +2469,7 @@ namespace InjuryEngine
         if (ph == "switch") {
             // one clause per pair: "Bob switches to punching"
             for (const auto& p : pairs) {
-                auto vars = ActorVars(p.victim);
+                auto vars = NarrationVars(p.victim);
                 vars["target"] = NameOf(p.victim);
                 sentences.push_back(NameOf(p.attacker) + " " + InjuryConfig::Render(sess(p.source, "switch"), vars));
             }
@@ -2486,7 +2504,7 @@ namespace InjuryEngine
                     } else {
                         what = InjuryConfig::SessionStr("mixed_hit." + ph);
                     }
-                    auto vars = ActorVars(victim);
+                    auto vars = NarrationVars(victim);
                     vars["target"] = target;
                     vars["attackers"] = join(names);
                     if (same) {
@@ -2497,7 +2515,7 @@ namespace InjuryEngine
                         same ? SceneStr(first, "clause") : InjuryConfig::SessionStr("clause"), vars));
                 }
                 for (const auto* p : alone) {
-                    auto vars = ActorVars(victim);
+                    auto vars = NarrationVars(victim);
                     vars["target"] = target;
                     vars["form"] = NarrationForm(p->source, false);
                     sentences.push_back(target + " " + InjuryConfig::Render(SceneStr(p->source, "no_attacker_hit." + ph), vars));

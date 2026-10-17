@@ -222,6 +222,9 @@ Truce guard rules after the 2026-10-16 review: `g_truce` is keyed by the pair (l
 
 Torture bleedout: when the last torture is gone (healed or replaced by real damage) the actor is released, except at health 0 or below. That bleedout belongs to the game (an essential actor), and a `BleedOutStop` would stand it up.
 
+## Pronouns in narration are read as the player (2026-10-17)
+Player report: a follower answered narrations of NPCs hurt in a fight the party was not in as if the player had been hurt ("someone was hit in the leg"). The lead clause named both actors, but the level / death / heal sentences after it used `{he}` / `{his}`, and `NameOf` returned "Someone" for an unnamed actor. Narration and event text now names actors only: injury JSON under `narration` / `death` uses `{name}`, `InjuryEngine.cpp` `NarrationVars` renders any pronoun placeholder as the name (for mod JSON), self-heals no longer switch to pronouns, and `NameOf` falls back to base name, then race. Real-damage DirectNarrations also need `PairVisible` now (out of sight: short-lived event). **Unconfirmed in game.**
+
 ## papyrus-compiler header order (2026-10-16)
 
 Papyrus is compiled with `c:/Skyrim/tools/papyrus-compiler/papyrus.exe` (VS Code task `compile: papyrus`, `.vscode/tasks.json`), not Pyro. When a script exists in several `-h` dirs, the **last** `-h` wins, the reverse of Pyro's import order. With SKSE64 first and vanilla `Data/Source/Scripts` last, the vanilla `Math` / `Form` / `Actor` hid the SKSE functions: 93 errors (`undefined identifier Math`, `undefined function GetDisplayName` / `RegisterForModEvent`). Order: vanilla, PapyrusUtil, SkyrimNet, SKSE64. A failed compile writes no `.pex`.

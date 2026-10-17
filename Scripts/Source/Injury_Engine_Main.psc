@@ -482,7 +482,8 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         if msg != ""
             Float now = Utility.GetCurrentRealTime()
             Bool cooled = now < last_health_narration || now - last_health_narration >= health_narration_cooloff
-            if DirectAllowed(kind) && cooled && ClaimNarration()
+            ; only fights in sight are narrated (like torture pairs and deaths); out of sight: the short-lived event
+            if DirectAllowed(kind) && cooled && PairVisible(attacker, victim) && ClaimNarration()
                 last_health_narration = now
                 DirectNarrate(msg, attacker, victim, "health", "start")
             else

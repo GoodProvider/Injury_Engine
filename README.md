@@ -61,7 +61,10 @@ SKSE, Address Library for SKSE Plugins, SkyrimNet (Beta 25+), PapyrusUtil SE, an
 
 ## Install
 
-Install `Injury_Engine <version>.7z` with your mod manager (it is a FOMOD with no options; everything is required). Enable `Injury_Engine.esp`.
+Install `Injury_Engine <version>.7z` with your mod manager (FOMOD). Enable `Injury_Engine.esp`. Two options, both checked by default:
+
+- **Add fight/stop/yield actions**: installs the `Start_Fighting`, `Stop_Fighting` and `Stop_Fighting_by_Yielding` actions. Unchecked, NPCs can't start, stop or yield fights through the LLM (`Torture_Target` is always installed).
+- **Show torture overlay**: unchecked, the dashboard setting "Show torture overlay" defaults to off (it can still be turned on in the dashboard). A value already saved in the SkyrimNet dashboard is kept.
 
 ## How injuries are tracked
 

@@ -157,10 +157,10 @@
       "by_attacker": " by {attacker}'s flames",
       "by_none": " with a slow, licking flame",
       "levels": [
-        ", the small flame passed slowly over bare skin. The heat builds from a warm prickle to a sharp, biting sting, and {he} jerks and hisses as the skin reddens and the fine hairs curl. A smell of singed hair rises.",
-        " over skin that is already reddened and tight. The heat sinks into the tender burn and it flares into a scalding throb; {he} cries out as fresh blisters rise and {his} breath comes ragged. The smell of scorched hair and skin thickens.",
-        ", and the flame settles on blistered, weeping skin. Blisters swell and burst under the heat, and the pain becomes a sickening, unrelenting blaze that tears a scream from {him} and leaves {him} shaking. The smell of seared skin hangs in the air.",
-        ", and it is too much. The flame lingers on raw, seared flesh until the skin blackens and cracks; {he} howls and then goes grey and slack, cold sweat breaking out as shock takes {him} and {his} body stops obeying {him}. The stench of burnt flesh fills the air."
+        ", the small flame passed slowly over bare skin. The heat builds from a warm prickle to a sharp, biting sting, and {name} jerks and hisses as the skin reddens and the fine hairs curl. A smell of singed hair rises.",
+        " over skin that is already reddened and tight. The heat sinks into the tender burn and it flares into a scalding throb; {name} cries out as fresh blisters rise and {name}'s breath comes ragged. The smell of scorched hair and skin thickens.",
+        ", and the flame settles on blistered, weeping skin. Blisters swell and burst under the heat, and the pain becomes a sickening, unrelenting blaze that tears a scream from {name} and leaves {name} shaking. The smell of seared skin hangs in the air.",
+        ", and it is too much. The flame lingers on raw, seared flesh until the skin blackens and cracks; {name} howls and then goes grey and slack, cold sweat breaking out as shock takes {name} and {name}'s body stops obeying {name}. The stench of burnt flesh fills the air."
       ]
     },
     "summary": {
@@ -207,9 +207,9 @@
         "source": "The warm light of {owner_lc} {noun} has drawn the heat and pain from {own} burns, but the healing continues."
       },
       "full": {
-        "none": "{name}'s scorch marks are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s scorch marks are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s scorch marks are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s scorch marks are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s scorch marks are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s scorch marks are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} burns are {progress}."
     }

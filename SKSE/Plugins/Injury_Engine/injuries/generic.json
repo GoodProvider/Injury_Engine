@@ -121,10 +121,10 @@
       "by_attacker": " by {attacker}",
       "by_none": "",
       "levels": [
-        ", a sudden stab of pain. It catches {him} by surprise and {he} flinches and grunts.",
-        " on a spot that is already sore. The pain flares, and {he} cries out.",
-        ", and it lands hard on the wound. The pain is huge and nauseating, and {he} staggers. The smell of blood rises.",
-        ", and it is too much. The pain crashes through {him}; {he} goes pale and {his} legs begin to give."
+        ", a sudden stab of pain. It catches {name} by surprise and {name} flinches and grunts.",
+        " on a spot that is already sore. The pain flares, and {name} cries out.",
+        ", and it lands hard on the wound. The pain is huge and nauseating, and {name} staggers. The smell of blood rises.",
+        ", and it is too much. The pain crashes through {name}; {name} goes pale and {name}'s legs begin to give."
       ]
     },
     "heal_events": {
@@ -152,9 +152,9 @@
         "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
       },
       "full": {
-        "none": "{name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {him} without pain or blemish.",
-        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {him} without pain or blemish."
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
       },
       "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
     }
@@ -164,25 +164,25 @@
     "lead_none": "{name} dies from {form}: ",
     "regions": {
       "head": [
-        "the blow breaks {his} skull; blood pours from {his} nose, mouth and ears and runs from the hollow where an eye was. {name} drops limp, a last gasp rattling out of {him}, and the iron smell of blood spreads over the ground.",
-        "{his} face and head are smashed open, a ruin of broken bone, torn skin and blood, with something grey showing in the wound. {name} crumples without a word, and the warm smell of blood and brains hangs in the air."
+        "the blow breaks {name}'s skull; blood pours from {name}'s nose, mouth and ears and runs from the hollow where an eye was. {name} drops limp, a last gasp rattling out of {name}, and the iron smell of blood spreads over the ground.",
+        "{name}'s face and head are smashed open, a ruin of broken bone, torn skin and blood, with something grey showing in the wound. {name} crumples without a word, and the warm smell of blood and brains hangs in the air."
       ],
       "body": [
-        "the blow tears into {his} back and chest, breaking ribs and bursting what lies beneath; blood gushes from {his} mouth and soaks {his} clothes. {name} falls choking, a last red bubble at {his} lips, in the thick smell of blood.",
-        "the wound rips {his} body open; torn flesh, broken bone and dark blood spill out together, and a sour smell of opened gut and half-eaten food mixes with the iron of blood. {name} sags to the ground with a long, final moan."
+        "the blow tears into {name}'s back and chest, breaking ribs and bursting what lies beneath; blood gushes from {name}'s mouth and soaks {name}'s clothes. {name} falls choking, a last red bubble at {name}'s lips, in the thick smell of blood.",
+        "the wound rips {name}'s body open; torn flesh, broken bone and dark blood spill out together, and a sour smell of opened gut and half-eaten food mixes with the iron of blood. {name} sags to the ground with a long, final moan."
       ],
       "arm": [
-        "{his} {part} is torn and broken past saving, bone through the skin and blood pouring from the ruin. {name} collapses, pale and shaking, and bleeds out with {his} final cries, the air thick with the smell of blood.",
-        "{his} {part} is mangled into a bloody, twisted wreck of bone and muscle hanging by strips of skin. {name} screams, then falls silent, dying in a spreading pool that smells of blood and sweat."
+        "{name}'s {part} is torn and broken past saving, bone through the skin and blood pouring from the ruin. {name} collapses, pale and shaking, and bleeds out with {name}'s final cries, the air thick with the smell of blood.",
+        "{name}'s {part} is mangled into a bloody, twisted wreck of bone and muscle hanging by strips of skin. {name} screams, then falls silent, dying in a spreading pool that smells of blood and sweat."
       ],
       "leg": [
-        "{his} {part} is broken and torn open, splintered bone jutting from the flesh and blood soaking the ground. {name} falls and does not rise; as {he} bleeds out, the smell of {his} blood fills the air along with {his} last cries.",
-        "{his} {part} is ripped and shattered, bent the wrong way beneath {him}, blood pumping from the wound. {name}'s screams fade into ragged breaths and then silence in the iron reek of blood."
+        "{name}'s {part} is broken and torn open, splintered bone jutting from the flesh and blood soaking the ground. {name} falls and does not rise; as {name} bleeds out, the smell of {name}'s blood fills the air along with {name}'s last cries.",
+        "{name}'s {part} is ripped and shattered, bent the wrong way beneath {name}, blood pumping from the wound. {name}'s screams fade into ragged breaths and then silence in the iron reek of blood."
       ]
     },
     "soil": [
-      "As {his} body goes slack, the stink of {his} shit and piss mixes with the blood.",
-      "In death {his} bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+      "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the blood.",
+      "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
     ],
     "soil_chance": 0.4
   }
