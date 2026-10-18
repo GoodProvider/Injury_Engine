@@ -198,6 +198,15 @@ schema:
       defaultValue: true
       category: "Body"
 
+    - name: "Minimum uncaused damage (%)"
+      path: "injury_engine.body.uncaused_min_percent"
+      type: "float"
+      description: "Health lost with no attacker, no hit and no real fall (other mods' scripts, bathing or animation mods, stepping down stairs) becomes a wound only if it is still missing about 1.5 seconds later and is at least this percentage of max health. Damage that comes straight back is always ignored. 0: any lasting loss counts."
+      min: 0
+      max: 100
+      defaultValue: 5.0
+      category: "Body"
+
     - name: "Show torture overlay"
       path: "injury_engine.overlay.enabled"
       type: "bool"

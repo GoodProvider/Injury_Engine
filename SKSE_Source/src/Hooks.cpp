@@ -4,6 +4,9 @@
 
 #include <chrono>
 #include <cmath>
+#include <mutex>
+#include <string>
+#include <unordered_map>
 
 // Vtable hooks on Character and PlayerCharacter:
 //   MagicTarget::AddTarget          every effect applied to an actor, with the magic item and caster
@@ -30,6 +33,8 @@ namespace
     constexpr std::size_t kActorValueOwnerVtbl = 5;
     constexpr std::size_t kAddTargetIdx = 0x1;
     constexpr std::size_t kModActorValueIdx = 0x6;
+    constexpr std::size_t kModBaseActorValueIdx = 0x5;  // drowning probe only
+    constexpr std::size_t kSetActorValueIdx = 0x7;      // drowning probe only
     constexpr std::size_t kModifyEffectActorValueIdx = 0x20;  // ValueModifierEffect::ModifyActorValue (DualValueModifierEffect overrides it)
     constexpr std::size_t kHandleHealthDamageIdx = 0x104;  // Actor::HandleHealthDamage (SE / AE); CommonLib slot comments are hex
 
@@ -67,6 +72,37 @@ namespace
         return file && file->GetFilename() == "Injury_Engine.esp";
     }
 
+    // Always-on drowning diagnosis: one info line per second per hook and actor while the actor shows any sign of
+    // water, so the hook that carries vanilla drowning damage is visible without verbose logging.
+    void UnderwaterProbe(const char* hook, RE::Actor* actor, float value, std::string_view note)
+    {
+        if (!actor) {
+            return;
+        }
+        const auto signals = Classifier::ReadDrownSignals(actor);
+        if (!signals.Wet()) {
+            return;
+        }
+        {
+            static std::mutex lock;
+            static std::unordered_map<std::string, std::chrono::steady_clock::time_point> last;
+            const auto now = std::chrono::steady_clock::now();
+            std::lock_guard guard(lock);
+            if (last.size() > 256) {
+                last.clear();
+            }
+            auto& when = last[std::format("{}|{:08X}", hook, actor->GetFormID())];
+            if (when != std::chrono::steady_clock::time_point{} && now - when < std::chrono::seconds(1)) {
+                return;
+            }
+            when = now;
+        }
+        auto* av = actor->AsActorValueOwner();
+        SKSE::log::info("[probe] {} {:08X} value:{:.2f} health:{:.1f}/{:.1f} inHandle:{} internal:{} {} | {}", hook, actor->GetFormID(), value,
+            av->GetActorValue(RE::ActorValue::kHealth), av->GetPermanentActorValue(RE::ActorValue::kHealth), g_inHandle,
+            InjuryEngine::IsInternalDamage(), note, signals.Text());
+    }
+
     struct HandleScope
     {
         HandleScope() { ++g_inHandle; }
@@ -89,7 +125,7 @@ namespace
             if (added) {
                 auto* actor = skyrim_cast<RE::Actor*>(a_this);
                 InjuryEngine::NoteHealingSource(actor, a_data.caster, a_data.magicItem, a_data.effect);
-                Classifier::NoteEffect(actor, a_data.effect);
+                Classifier::NoteEffect(actor, a_data.effect, a_data.caster);
             }
             return added;
         }
@@ -101,6 +137,9 @@ namespace
     {
         static void thunk(RE::Actor* a_this, RE::Actor* a_attacker, float a_damage)
         {
+            if (a_damage != 0.0f && !a_attacker) {
+                UnderwaterProbe("HandleHealthDamage", a_this, a_damage, "");
+            }
             if (InjuryEngine::IsInternalDamage() || a_damage == 0.0f) {
                 if (Verbose() && a_damage != 0.0f) {
                     SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} damage:{:.2f} internal, passed", a_this->GetFormID(), a_damage);
@@ -110,9 +149,19 @@ namespace
             const float amount = std::fabs(a_damage);
             bool physicalMelee = false;
             bool unarmedForm = false;
-            const int source = Classifier::Classify(a_this, a_attacker, &physicalMelee, &unarmedForm);
+            bool uncaused = false;
+            const int source = Classifier::Classify(a_this, a_attacker, &physicalMelee, &unarmedForm, &uncaused);
             SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} source:{} physical:{} unarmed:{}",
                 a_this->GetFormID(), a_attacker ? a_attacker->GetFormID() : 0, a_damage, InjuryEngine::SourceId(source), physicalMelee, unarmedForm);
+            if (uncaused) {
+                // scripted damage: the game keeps it; it becomes a wound only if it sticks (InjuryEngine::NoteUncaused)
+                {
+                    HandleScope scope;
+                    func(a_this, a_attacker, a_damage);
+                }
+                InjuryEngine::NoteUncaused(a_this, amount, source, a_this->AsActorValueOwner()->GetActorValue(RE::ActorValue::kHealth));
+                return;
+            }
             if (source >= 0 && InjuryConfig::IsTorture(source)) {
                 Classifier::MarkQuiet(a_this);  // no vanilla hit bark over the torture narration
                 Classifier::NoteCalm(a_this, a_attacker);  // and no fight back
@@ -147,14 +196,24 @@ namespace
     {
         static void thunk(RE::ActorValueOwner* a_this, RE::ACTOR_VALUE_MODIFIER a_modifier, RE::ActorValue a_av, float a_value)
         {
+            if (a_av == RE::ActorValue::kHealth && a_value < 0.0f) {
+                UnderwaterProbe("ModActorValue", skyrim_cast<RE::Actor*>(a_this), a_value,
+                    a_modifier == RE::ACTOR_VALUE_MODIFIER::kDamage ? "damage" : a_modifier == RE::ACTOR_VALUE_MODIFIER::kTemporary ? "temporary" : "permanent");
+            }
             if (a_modifier == RE::ACTOR_VALUE_MODIFIER::kDamage && a_av == RE::ActorValue::kHealth && a_value < 0.0f &&
                 g_inHandle == 0 && !InjuryEngine::IsInternalDamage()) {
                 if (auto* actor = skyrim_cast<RE::Actor*>(a_this)) {
-                    const int source = Classifier::Classify(actor, nullptr);
+                    bool uncaused = false;
+                    const int source = Classifier::Classify(actor, nullptr, nullptr, nullptr, &uncaused);
                     SKSE::log::debug("[hook] ModActorValue victim:{:08X} damage:{:.2f} source:{}", actor->GetFormID(), a_value,
                         InjuryEngine::SourceId(source));
                     if (source >= 0 && InjuryConfig::IsTorture(source)) {
                         Classifier::MarkQuiet(actor);
+                    }
+                    if (uncaused) {
+                        func(a_this, a_modifier, a_av, a_value);
+                        InjuryEngine::NoteUncaused(actor, -a_value, source, a_this->GetActorValue(RE::ActorValue::kHealth));
+                        return;
                     }
                     if (source >= 0) {
                         const float damage = a_value;
@@ -174,6 +233,36 @@ namespace
                     actor ? actor->GetFormID() : 0, a_value, g_inHandle > 0, InjuryEngine::IsInternalDamage());
             }
             func(a_this, a_modifier, a_av, a_value);
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+    };
+
+    // Diagnosis only (pass-through): ActorValueOwner 0x05 ModBaseActorValue and 0x07 SetActorValue on Health, in
+    // case vanilla drowning lowers health through one of them instead of the damage modifier.
+    template <class T>
+    struct ModBaseActorValue
+    {
+        static void thunk(RE::ActorValueOwner* a_this, RE::ActorValue a_av, float a_value)
+        {
+            if (a_av == RE::ActorValue::kHealth && a_value < 0.0f) {
+                UnderwaterProbe("ModBaseActorValue", skyrim_cast<RE::Actor*>(a_this), a_value, "");
+            }
+            func(a_this, a_av, a_value);
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+    };
+
+    template <class T>
+    struct SetActorValue
+    {
+        static void thunk(RE::ActorValueOwner* a_this, RE::ActorValue a_av, float a_value)
+        {
+            if (a_av == RE::ActorValue::kHealth) {
+                if (auto* actor = skyrim_cast<RE::Actor*>(a_this); actor && a_value < a_this->GetActorValue(RE::ActorValue::kHealth)) {
+                    UnderwaterProbe("SetActorValue", actor, a_value, "");
+                }
+            }
+            func(a_this, a_av, a_value);
         }
         static inline REL::Relocation<decltype(thunk)> func;
     };
@@ -336,6 +425,11 @@ void Install_Hooks()
     REL::Relocation<std::uintptr_t> playerAv{ RE::VTABLE_PlayerCharacter[kActorValueOwnerVtbl] };
     ModActorValue<RE::PlayerCharacter>::func = playerAv.write_vfunc(kModActorValueIdx, ModActorValue<RE::PlayerCharacter>::thunk);
     SKSE::log::info("ActorValueOwner::ModActorValue hooks installed");
+    ModBaseActorValue<RE::Character>::func = characterAv.write_vfunc(kModBaseActorValueIdx, ModBaseActorValue<RE::Character>::thunk);
+    ModBaseActorValue<RE::PlayerCharacter>::func = playerAv.write_vfunc(kModBaseActorValueIdx, ModBaseActorValue<RE::PlayerCharacter>::thunk);
+    SetActorValue<RE::Character>::func = characterAv.write_vfunc(kSetActorValueIdx, SetActorValue<RE::Character>::thunk);
+    SetActorValue<RE::PlayerCharacter>::func = playerAv.write_vfunc(kSetActorValueIdx, SetActorValue<RE::PlayerCharacter>::thunk);
+    SKSE::log::info("ActorValueOwner::ModBaseActorValue / SetActorValue probe hooks installed (drowning diagnosis)");
 
     REL::Relocation<std::uintptr_t> valueModifier{ RE::VTABLE_ValueModifierEffect[0] };
     ModifyEffectActorValue<false>::func = valueModifier.write_vfunc(kModifyEffectActorValueIdx, ModifyEffectActorValue<false>::thunk);

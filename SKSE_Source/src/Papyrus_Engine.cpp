@@ -315,6 +315,11 @@ namespace
         InjuryEngine::SetRegenRate(percent);
     }
 
+    void SetUncausedMinPercent(RE::StaticFunctionTag*, float percent)
+    {
+        InjuryEngine::SetUncausedMinPercent(percent);
+    }
+
     void SetOverlayEnabled(RE::StaticFunctionTag*, bool enabled)
     {
         Overlay::SetEnabled(enabled);
@@ -486,6 +491,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("Number", s, Number);
     a_vm->RegisterFunction("SetHoursPerPoint", s, SetHoursPerPoint);
     a_vm->RegisterFunction("SetRegenRate", s, SetRegenRate);
+    a_vm->RegisterFunction("SetUncausedMinPercent", s, SetUncausedMinPercent);
     a_vm->RegisterFunction("SetOverlayEnabled", s, SetOverlayEnabled);
     a_vm->RegisterFunction("SetIncludeSexualParts", s, SetIncludeSexualParts);
     a_vm->RegisterFunction("SetPunchCombatHealth", s, SetPunchCombatHealth);

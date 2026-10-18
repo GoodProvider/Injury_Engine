@@ -24,12 +24,13 @@
 namespace InjuryEngine
 {
     constexpr std::uint32_t kRecord = 'DHEN';
-    // 5: torture points per type; 4: per-type deficit (healing_max + damage); 3: whipping only, 11 parts; 2: 6 parts
-    // (4, 3 and 2 still load, keeping the damage only)
-    constexpr std::uint32_t kRecordVersion = 5;
+    // 6: 12 parts (lungs); 5: torture points per type, 11 parts; 4: per-type deficit (healing_max + damage);
+    // 3: whipping only, 11 parts; 2: 6 parts (5 loads as is, 4, 3 and 2 keep the damage only)
+    constexpr std::uint32_t kRecordVersion = 6;
 
     constexpr int kCoreParts = 6;    // face, left arm, right arm, back, left leg, right leg
-    constexpr int kPartCount = 11;   // + nipples, pussy, penis, lips, ass hole (only used with "include sexual parts")
+    constexpr int kPartCount = 12;   // + nipples, pussy, penis, lips, ass hole (only used with "include sexual parts"), lungs
+    constexpr int kPartLungs = 11;   // drowning only: no cap, outside the health capacity, stage by share of max health
 
     // Hit levels (the part's state before the hit), used to pick the narration.
     enum HitLevel : int { kUndamaged = 0, kLight = 1, kMedium = 2, kSevere = 3 };
@@ -51,6 +52,11 @@ namespace InjuryEngine
     // Gives back health the game already took (HandleHealthDamage reports damage after it is applied), as internal
     // damage so the hooks ignore it. No-op on a dead actor or a non-positive amount.
     void RestoreHealth(RE::Actor* actor, float amount);
+
+    // Uncaused damage (Classify's `uncaused`: no attacker, no hit event, no real fall) the game has already applied,
+    // health now `healthAfter`. Held about 1.5 s; SyncHealth lands what did not come back when it reaches
+    // SetUncausedMinPercent of max health, else drops it.
+    void NoteUncaused(RE::Actor* victim, float amount, int source, float healthAfter);
 
     // Torture hit on a random part (source model "torture"). Takes the matching health (never below the floor).
     // Returns a hit code, or -1 for None/dead actors and unknown / non-torture sources.
@@ -170,6 +176,8 @@ namespace InjuryEngine
     void SetHoursPerPoint(float hours);
     // Percent of natural regeneration that heals torture wounds (the rest of the regen is taken back).
     void SetRegenRate(float percent);
+    // Setting injury_engine.body.uncaused_min_percent (default 5; 0 = any uncaused damage that sticks counts).
+    void SetUncausedMinPercent(float percent);
     void Forget(RE::Actor* actor);
 
     // Writes a narration line to Injury_Engine.log: "[hh:mm:ss] <category>:<narrationType> <text>"

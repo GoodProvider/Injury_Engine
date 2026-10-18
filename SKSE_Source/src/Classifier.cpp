@@ -20,6 +20,7 @@ namespace Classifier
         constexpr std::uint32_t kQuietSpellId = 0x81A;  // SPEL Injury_Engine_QuietSpell
         constexpr double kCalmWindow = 3.0;  // real seconds a torture hit keeps its victim from fighting back
         constexpr double kCombatPending = 1.0;  // real seconds a combat start waits for the torture hit that caused it
+        constexpr float kDrownSubmerged = 0.85f;  // submerged level (0 dry .. 1 under) at which the head is under water
 
         struct Recent
         {
@@ -46,6 +47,15 @@ namespace Classifier
         // victim -> latest "(torture)" effect, from AddTarget and hit events. Damage hooks read this instead of walking
         // the active-effect list: they run inside the engine's own effect update, where a nested walk crashes.
         std::unordered_map<RE::FormID, TortureSeen> g_torture;
+        struct MagicSeen
+        {
+            int source = -2;  // health source index (burning, freezing, shocking, ...)
+            RE::FormID caster = 0;
+            double when = 0.0;
+        };
+        // victim -> latest real health-damage spell effect, from AddTarget: a spell's damage that comes without a
+        // usable hit event while the caster's hands are empty must not read as an unarmed hit (a punch).
+        std::unordered_map<RE::FormID, MagicSeen> g_realMagic;
         std::unordered_map<RE::FormID, double> g_quiet;  // victim -> last QuietMarker cast
 
         struct Pair
@@ -372,6 +382,17 @@ namespace Classifier
             return it->second.index;
         }
 
+        // Health source of a real spell effect `attacker` put on `victim` within kHitWindow, else -2.
+        int RecentRealMagic(RE::Actor* victim, RE::Actor* attacker)
+        {
+            std::lock_guard lock(g_lock);
+            const auto it = g_realMagic.find(victim->GetFormID());
+            if (it == g_realMagic.end() || NowSeconds() - it->second.when > kHitWindow) {
+                return -2;
+            }
+            return it->second.caster == attacker->GetFormID() ? it->second.source : -2;
+        }
+
         Match ClassifyForm(RE::TESForm* form, RE::Actor* attacker)
         {
             if (!form) {
@@ -386,26 +407,68 @@ namespace Classifier
             return {};
         }
 
-        int FallingSource()
+        const InjuryConfig::ClassifyRule* FallingRule()
         {
             for (const auto& rule : InjuryConfig::ClassifyRules()) {
                 if (rule.falling) {
-                    return rule.source;
+                    return &rule;
                 }
             }
-            return -2;
+            return nullptr;
         }
 
+        // The rule's min_drop, else half of fJumpFallHeightMin (the height where vanilla fall damage starts).
+        float MinDrop(const InjuryConfig::ClassifyRule& rule)
+        {
+            if (rule.minDrop >= 0.0f) {
+                return rule.minDrop;
+            }
+            float height = 600.0f;
+            if (auto* settings = RE::GameSettingCollection::GetSingleton()) {
+                if (auto* setting = settings->GetSetting("fJumpFallHeightMin"); setting && setting->GetFloat() > 0.0f) {
+                    height = setting->GetFloat();
+                }
+            }
+            return height * 0.5f;
+        }
+
+        // A real fall only: walking down steps gives a brief fallTime with almost no drop.
         int ClassifyFall(RE::Actor* victim)
         {
-            const int falling = FallingSource();
-            auto* controller = falling >= 0 ? victim->GetCharController() : nullptr;
+            const auto* rule = FallingRule();
+            auto* controller = rule ? victim->GetCharController() : nullptr;
             if (!controller) {
                 return -2;
             }
             const float drop = controller->fallStartHeight - victim->GetPositionZ();
-            SKSE::log::debug("classify {:08X}: fallTime:{:.2f} drop:{:.0f}", victim->GetFormID(), controller->fallTime, drop);
-            return controller->fallTime > 0.0f ? falling : -2;
+            const float minDrop = MinDrop(*rule);
+            SKSE::log::debug("classify {:08X}: fallTime:{:.2f} drop:{:.0f} min_drop:{:.0f}", victim->GetFormID(), controller->fallTime, drop, minDrop);
+            return controller->fallTime > 0.0f && drop >= minDrop ? rule->source : -2;
+        }
+
+        const InjuryConfig::ClassifyRule* DrowningRule()
+        {
+            for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (rule.drowning) {
+                    return &rule;
+                }
+            }
+            return nullptr;
+        }
+
+        // Under water without water breathing: the head is under (kUnderwater) or the body is deep enough.
+        int ClassifyDrown(RE::Actor* victim)
+        {
+            const auto* rule = DrowningRule();
+            if (!rule) {
+                return -2;
+            }
+            const DrownSignals s = ReadDrownSignals(victim);
+            SKSE::log::debug("classify {:08X}: {}", victim->GetFormID(), s.Text());
+            if (s.waterBreathing > 0.0f) {
+                return -2;
+            }
+            return s.underwater || s.submerged >= kDrownSubmerged ? rule->source : -2;
         }
 
         // The padded whip (a classify rule's ignore weapon).
@@ -776,10 +839,17 @@ namespace Classifier
         StopFighting(actor);
     }
 
-    void NoteEffect(RE::Actor* victim, RE::Effect* effect)
+    void NoteEffect(RE::Actor* victim, RE::Effect* effect, RE::TESObjectREFR* caster)
     {
         if (!victim || !effect) {
             return;
+        }
+        if (const int health = ResistHealthSourceOf(effect->baseEffect); health >= 0 && caster) {
+            std::lock_guard lock(g_lock);
+            if (g_realMagic.size() > 512) {
+                g_realMagic.clear();
+            }
+            g_realMagic[victim->GetFormID()] = { health, caster->GetFormID(), NowSeconds() };
         }
         if (const int index = TortureIndexOf(effect->baseEffect); index >= 0) {
             std::lock_guard lock(g_lock);
@@ -812,8 +882,11 @@ namespace Classifier
         return -1;
     }
 
-    int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee, bool* unarmedForm)
+    int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee, bool* unarmedForm, bool* uncaused)
     {
+        if (uncaused) {
+            *uncaused = false;
+        }
         if (!victim) {
             return -1;
         }
@@ -895,6 +968,11 @@ namespace Classifier
                         IdOf(active));
                     return take({ active, false }, false);
                 }
+                if (const int spell = RecentRealMagic(victim, attacker); spell >= 0) {
+                    SKSE::log::debug("classify {:08X}: attacker {:08X} unarmed but spell effect -> {}", victimId, attacker->GetFormID(),
+                        IdOf(spell));
+                    return take({ spell, false }, false);
+                }
                 const Match hit = MatchUnarmed(attacker);
                 SKSE::log::debug("classify {:08X}: attacker {:08X} unarmed {} -> {}", victimId, attacker->GetFormID(),
                     Npc(attacker) ? "npc" : "creature", IdOf(hit.source >= 0 ? hit.source : InjuryConfig::GenericIndex()));
@@ -909,13 +987,45 @@ namespace Classifier
             return take({ active, false }, false);
         }
         if (!sourceId && !attacker) {
+            // drowning first: a drowning actor may also be falling through the water
+            if (const int drown = ClassifyDrown(victim); drown != -2) {
+                SKSE::log::debug("classify {:08X}: drowning -> {}", victimId, IdOf(drown));
+                return take({ drown, false }, false);
+            }
             if (const int fall = ClassifyFall(victim); fall != -2) {
                 SKSE::log::debug("classify {:08X}: landing -> {}", victimId, IdOf(fall));
                 return take({ fall, false }, false);
             }
         }
         SKSE::log::debug("classify {:08X}: no hit event or attacker weapon (hit form {:08X}) -> generic", victimId, sourceId);
+        if (uncaused && !sourceId && !attacker) {
+            *uncaused = true;  // scripted damage (another mod), held until it sticks
+        }
         return take({ InjuryConfig::GenericIndex(), false }, false);
+    }
+
+    std::string DrownSignals::Text() const
+    {
+        return std::format("underwater:{} inWater:{} swimming:{} underWaterTimer:{:.1f} submerged:{:.2f} waterBreathing:{:.0f}", underwater,
+            inWater, swimming, timer, submerged, waterBreathing);
+    }
+
+    DrownSignals ReadDrownSignals(RE::Actor* actor)
+    {
+        DrownSignals s;
+        if (!actor) {
+            return s;
+        }
+        const auto& data = actor->GetActorRuntimeData();
+        s.underwater = data.boolFlags.all(RE::Actor::BOOL_FLAGS::kUnderwater);
+        s.inWater = data.boolBits.all(RE::Actor::BOOL_BITS::kInWater);
+        s.swimming = data.boolBits.all(RE::Actor::BOOL_BITS::kSwimming);
+        s.timer = data.underWaterTimer;
+        if (auto* cell = actor->GetParentCell()) {
+            s.submerged = actor->GetSubmergedLevel(actor->GetPositionZ(), cell);
+        }
+        s.waterBreathing = actor->AsActorValueOwner()->GetActorValue(RE::ActorValue::kWaterBreathing);
+        return s;
     }
 
     void MarkQuiet(RE::Actor* victim)

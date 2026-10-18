@@ -27,7 +27,7 @@ release:
 	$(MAKE) dll
 	$(MAKE) esp
 	if not exist versions mkdir versions
-	if exist "${RELEASE_FILE}" del /q "${RELEASE_FILE}"
+	if exist "$(subst /,\,${RELEASE_FILE})" del /q "$(subst /,\,${RELEASE_FILE})"
 	if exist "$(subst /,\,core)" rmdir /s /q "$(subst /,\,core)"
 	if exist "$(subst /,\,fight_actions)" rmdir /s /q "$(subst /,\,fight_actions)"
 	if exist "$(subst /,\,overlay)" rmdir /s /q "$(subst /,\,overlay)"

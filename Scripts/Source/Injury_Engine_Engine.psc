@@ -152,6 +152,10 @@ Function SetHoursPerPoint(Float hours) global native
 ; Percent of natural regeneration that heals whip wounds; the rest of that regen is taken back.
 Function SetRegenRate(Float percent) global native
 
+; Health damage with no attacker, hit event or real fall (other mods' scripts) becomes a wound only when the part that
+; did not come back within about 1.5 s reaches this percent of max health. 0: any that sticks counts.
+Function SetUncausedMinPercent(Float percent) global native
+
 ; "Show whipping overlay": PrismaUI bars for whipped actors.
 Function SetOverlayEnabled(Bool enabled) global native
 

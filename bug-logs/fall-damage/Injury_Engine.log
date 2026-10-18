@@ -1,0 +1,58 @@
+[03:51:09] Injury_Engine loading
+[03:51:09] MagicTarget::AddTarget hooks installed
+[03:51:09] ActorValueOwner::ModActorValue hooks installed
+[03:51:09] ValueModifierEffect::ModifyActorValue hooks installed (plain and dual)
+[03:51:09] GetFactionFightReaction hook installed
+[03:51:09] ProcessHitData hook installed
+[03:51:09] Actor::HandleHealthDamage hooks installed
+[03:51:09] Papyrus functions registered
+[03:53:11] injuries: loading from G:\Modlists\JoJ v8.1.0\Stock Game\data\SKSE\Plugins\Injury_Engine\injuries
+[03:53:11] injuries: loaded whipping.json (whipping, model torture)
+[03:53:11] injuries: loaded bludgeoning.json (bludgeoning, model health)
+[03:53:11] injuries: loaded burning.json (burning, model health)
+[03:53:11] injuries: loaded falling.json (falling, model torture)
+[03:53:11] injuries: loaded falling.json (falling_real, model health)
+[03:53:11] injuries: loaded fire.json (fire, model torture)
+[03:53:11] injuries: loaded freezing.json (freezing, model health)
+[03:53:11] injuries: loaded frost.json (frost, model torture)
+[03:53:11] injuries: loaded generic.json (generic, model health)
+[03:53:11] injuries: loaded leash_dragging.json (leash_dragging, model torture)
+[03:53:11] injuries: loaded mauling.json (mauling, model health)
+[03:53:11] injuries: loaded piercing.json (piercing, model health)
+[03:53:11] injuries: loaded pinching.json (pinching, model torture)
+[03:53:11] injuries: loaded pulling.json (pulling, model torture)
+[03:53:11] injuries: loaded punching.json (punching, model torture)
+[03:53:11] injuries: loaded shock.json (shock, model torture)
+[03:53:11] injuries: loaded shocking.json (shocking, model health)
+[03:53:11] injuries: loaded slapping.json (slapping, model torture)
+[03:53:11] injuries: loaded slashing.json (slashing, model health)
+[03:53:11] injuries: 17 classify rules
+[03:53:11] Classifier: torture MGEF Injury_Engine.esp 0x813 -> FEDA4813 (fire)
+[03:53:11] Classifier: torture MGEF Injury_Engine.esp 0x814 -> FEDA4814 (frost)
+[03:53:11] Classifier: torture MGEF Injury_Engine.esp 0x815 -> FEDA4815 (shock)
+[03:53:11] Classifier: hit and combat event sinks registered
+[03:53:11] InjuryEngine: death event sink registered
+[03:53:11] truce: SkyrimNet API found (version 12), decisions available
+[03:53:11] Overlay: view created
+[03:54:03] Overlay: DomReady
+[03:54:20] health: Someone (00000000) ➤ College Guardian (FEA5E841) | generic left leg point:0+1 level:undamaged amount:4.4 health:99.2% actual:525.0/525.0 skipped:0
+[03:54:22] co-save loaded 1 actors (record version 5)
+[03:54:28] Overlay: enabled
+[03:59:13] health: Someone (00000000) ➤ Maxxor (00000014) | generic right arm point:0+1 level:undamaged amount:0.8 health:99.2% actual:100.0/100.0 skipped:0
+[03:59:13] Health:direct:Start Maxxor's right arm is hurt, and it is too much. The pain crashes through him; he goes pale and his legs begin to give.
+[03:59:13] pain gone 00000014
+[03:59:13] forget 00000014 (healed)
+[03:59:13] heal:short:Start The pain from Maxxor's injuries is gone, but the healing continues.
+[03:59:13] heal:short:Start Maxxor's injuries are now fully healed, leaving him without pain or blemish.
+[04:02:14] health: Someone (00000000) ➤ Ithrini Oreyn (6F0FC2EE) | generic left leg point:0+1 level:undamaged amount:1.6 health:99.2% actual:192.0/192.0 skipped:0
+[04:02:14] pain gone 6F0FC2EE
+[04:02:14] forget 6F0FC2EE (healed)
+[04:02:14] heal:short:Start The pain from Ithrini Oreyn's injuries is gone, but the healing continues.
+[04:02:15] heal:short:Start Ithrini Oreyn's injuries are now fully healed, leaving her without pain or blemish.
+[04:02:15] Health:direct:Start Ithrini Oreyn's left leg is hurt, and it lands hard on the wound. The pain is huge and nauseating, and she staggers. The smell of blood rises.
+[04:02:22] health: Someone (00000000) ➤ Ithrini Oreyn (6F0FC2EE) | falling_real face point:0+1 level:undamaged amount:1.6 health:99.2% actual:192.0/192.0 skipped:0
+[04:02:22] Health:short:Start Ithrini Oreyn's face takes the impact of a hard fall, and something gives with a sickening crack as she lands on already battered limbs. The pain is huge and she curls up, gasping.
+[04:02:22] pain gone 6F0FC2EE
+[04:02:22] forget 6F0FC2EE (healed)
+[04:02:22] heal:short:Start The pain from Ithrini Oreyn's injuries is gone, but the healing continues.
+[04:02:22] heal:short:Start Ithrini Oreyn's injuries are now fully healed, leaving her without pain or blemish.

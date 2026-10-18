@@ -1,0 +1,169 @@
+{
+  "id": "drowning",
+  "title": "Drowning",
+  "model": "health",
+  "requires": "",
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "_note": "Drowning lands on the lungs alone (part_weights). The lungs have no cap and are outside the health capacity; their stage is the lung damage as a share of max health (lungs.medium / lungs.severe). See guide.md.",
+  "classify": [
+    {
+      "priority": 40,
+      "drowning": true
+    }
+  ],
+  "part_weights": {
+    "face": 0,
+    "left arm": 0,
+    "right arm": 0,
+    "back": 0,
+    "left leg": 0,
+    "right leg": 0,
+    "nipples": 0,
+    "pussy": 0,
+    "penis": 0,
+    "lips": 0,
+    "ass hole": 0,
+    "lungs": 1
+  },
+  "lungs": {
+    "medium": 0.25,
+    "severe": 0.5
+  },
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Near Drowning",
+    "feels_intro": "How {name}'s lungs feel after nearly drowning; let this shape {his} tone, breathing and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "lungs": [
+        "{name}'s breathing: a little ragged, with a wet cough now and then; water drips from {his} hair and nose.",
+        "{name}'s breathing: labored and rattling, broken by fits of coughing that bring up water; {his} lips are pale and tinged blue and {his} eyes are red and streaming.",
+        "{name}'s breathing: shallow, wet and gurgling, each breath a struggle; {his} lips and fingertips are blue, {his} skin is grey and clammy, and pink froth flecks {his} mouth."
+      ]
+    },
+    "feels": {
+      "lungs": [
+        "{name}'s chest feels tight and {his} throat stings from the water. {name} is shaken, coughing and catching {his} breath.",
+        "{name}'s lungs burn with every breath and a deep, wet ache sits under {his} ribs. {name} is frightened and exhausted, gasping between coughing fits and unable to speak more than a few words.",
+        "{name}'s lungs are on fire and every breath drags like wet sand; the world swims at the edges. {name} is terrified and barely conscious, clawing for air and unable to stand or speak."
+      ]
+    }
+  },
+  "narration": {
+    "form": "the water",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "lungs"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " fill with water",
+      "verb_many": " fill with water",
+      "times": {
+        "two": " again",
+        "several": " again and again",
+        "many": " again and again"
+      },
+      "by_attacker": " as {attacker} holds {name} under",
+      "by_none": " under the surface",
+      "levels": [
+        ", {name}'s breath finally running out. {name} chokes and swallows water, chest heaving as the urge to breathe takes over.",
+        ", while {name}'s chest is already burning. {name} chokes on more water, thrashing toward the surface.",
+        ", and {name}'s struggles grow weak. Water floods in with every helpless gasp and the light above fades.",
+        ", and it is too much. {name} stops struggling, limbs drifting, the last bubbles slipping from {name}'s lips."
+      ]
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to ease {own} burning lungs.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to ease {own} burning lungs."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The burning in {name}'s lungs is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the burning from {own} lungs, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s lungs are clear again, and {name} breathes deep and easy.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s lungs are clear again, and {name} breathes deep and easy.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s lungs are clear again, and {name} breathes deep and easy."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} lungs are {progress}."
+    }
+  },
+  "death": {
+    "lead": "{name} drowns: ",
+    "lead_none": "{name} drowns: ",
+    "regions": {
+      "lungs": [
+        "{name}'s last breath leaves in a stream of silver bubbles and water rushes in to take its place. {name}'s body convulses, fingers clawing at nothing, then goes slack, drifting with open, unseeing eyes and hair floating around a blue-lipped face.",
+        "{name} thrashes toward the light, mouth opening on water instead of air; the chest heaves against the flood until the struggling slows, then stops. {name}'s body hangs limp in the water, pale and bloated-lipped, a thin pink froth at the mouth."
+      ]
+    },
+    "soil": [
+      "As {name}'s body goes slack, a cloud of shit and piss spreads into the water around {name}.",
+      "In death {name}'s bowels and bladder let go, clouding the water around {name}'s body."
+    ],
+    "soil_chance": 0.4
+  }
+}

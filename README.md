@@ -8,7 +8,7 @@ Torture is built in: whipping (with a padded whip), pinching, slapping, pulling,
 
 ## Features
 
-- **Injuries from all damage**: each hit is classified by what caused it: slashing, piercing, bludgeoning, burning, freezing, shocking, mauling, falling, generic, or one of the torture types. The wound lands on a body part: face, back, left or right arm, left or right leg, plus optional sexual parts. Each part moves through light, medium and severe.
+- **Injuries from all damage**: each hit is classified by what caused it: slashing, piercing, bludgeoning, burning, freezing, shocking, mauling, falling, drowning, generic, or one of the torture types. The wound lands on a body part: face, back, left or right arm, left or right leg, plus optional sexual parts; drowning hurts the lungs alone. Each part moves through light, medium and severe.
 - **Healing**: wounds heal over game time, with healing spells, staffs and potions, and slowly with natural regeneration. When a healing source starts working on someone, a heal session begins: it is narrated, and the wounds are described by how far they have healed.
 - **Narration**: real-damage hits, torture, healing and killing blows are narrated to the LLM, or recorded as short-lived events when narration isn't allowed. A narration isn't allowed when it is turned off, when the victim is out of sight, or when someone is already speaking. Continuous torture is combined into one narration every few seconds, covering everyone torturing at the same time. A change of method is narrated at once.
 - **Wound prompts**: a character-bio section says what each wounded part looks like. A final-instructions section tells the speaker how their wounds feel, or how the healing feels while a spell, staff or potion is working.
@@ -82,6 +82,7 @@ Ordinary damage is classified by what hit the actor:
 | burning, freezing, shocking | fire, frost and shock spells |
 | mauling | creatures |
 | falling | landing from a height |
+| drowning | running out of air under water (lungs only; the stage follows how much of the actor's health the water took) |
 | generic | anything else |
 
 Each health point lost becomes damage on a body part, so all parts at maximum means no health left. Damage goes through the same light, medium and severe stages as torture. Health regained heals random injuries one point at a time, and a type, a body part and the whole body are each reported as they finish healing. A killing blow is narrated with the wound that caused it.

@@ -9,9 +9,10 @@ namespace Classifier
     // Registers the TESHitEvent and TESCombatEvent sinks (kDataLoaded).
     void Init();
 
-    // Records a "(torture)" effect landing on `victim` (MagicTarget::AddTarget hook). Damage hooks must not walk
-    // the active-effect list; Classify reads what this recorded.
-    void NoteEffect(RE::Actor* victim, RE::Effect* effect);
+    // Records a "(torture)" effect, or a real health-damage spell effect and its caster, landing on `victim`
+    // (MagicTarget::AddTarget hook). Damage hooks must not walk the active-effect list; Classify reads what this
+    // recorded.
+    void NoteEffect(RE::Actor* victim, RE::Effect* effect, RE::TESObjectREFR* caster);
 
     // Torture source of a "(torture)" MGEF, or of the first such MGEF on a spell (so the spell's other effects,
     // e.g. the perk copies 0x822–0x825, count as torture too); -1 = not torture.
@@ -22,7 +23,26 @@ namespace Classifier
     // or nothing to classify into). When `physicalMelee` is non-null, set true for weapon / fist / unarmed-body
     // hits (one torture wound per HandleHealthDamage call); false for spell ticks and active torture effects.
     // When `unarmedForm` is non-null, set true when the matching rule is an unarmed rule (fists, not a mace).
-    int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee = nullptr, bool* unarmedForm = nullptr);
+    // When `uncaused` is non-null, set true for generic damage with no hit event, no attacker and no real fall
+    // (scripted damage from other mods): the hooks hold it with InjuryEngine::NoteUncaused.
+    int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee = nullptr, bool* unarmedForm = nullptr,
+        bool* uncaused = nullptr);
+
+    // Under-water state of an actor (drowning classification and the always-on drowning probe in Hooks.cpp).
+    struct DrownSignals
+    {
+        bool underwater = false;  // Actor::BOOL_FLAGS::kUnderwater
+        bool inWater = false;     // BOOL_BITS::kInWater
+        bool swimming = false;    // BOOL_BITS::kSwimming
+        float timer = 0.0f;       // underWaterTimer
+        float submerged = 0.0f;   // GetSubmergedLevel: 0 dry .. 1 under
+        float waterBreathing = 0.0f;
+
+        // Any sign of water at all (the probe logs only then).
+        bool Wet() const { return underwater || inWater || swimming || timer > 0.0f || submerged >= 0.5f; }
+        std::string Text() const;
+    };
+    DrownSignals ReadDrownSignals(RE::Actor* actor);
 
     // Puts the short-lived QuietMarker effect (SPEL 0x81A) on a torture victim so the QuietDialogue quest's silent
     // Hit / Assault / AssaultNC lines win over vanilla barks. Throttled per victim; the cast runs as an SKSE task

@@ -80,6 +80,8 @@ namespace InjuryConfig
                 r.npc = TriBool(rule, "npc");
                 r.combat = TriBool(rule, "combat");
                 r.falling = rule.value("falling", false);
+                r.minDrop = rule.value("min_drop", -1.0f);
+                r.drowning = rule.value("drowning", false);
                 r.fallback = rule.value("fallback", false);
                 g_rules.push_back(std::move(r));
             }
@@ -177,8 +179,29 @@ namespace InjuryConfig
                     }
                 }
             }
+            // lungs: always a part of their own (whipping.json's "regions" lists the outer regions only)
+            auto lungs = std::ranges::find(b.regionName, std::string("lungs"));
+            if (lungs == b.regionName.end()) {
+                b.regionName.push_back("lungs");
+                lungs = b.regionName.end() - 1;
+            }
+            b.partRegion[kPartLungs] = static_cast<int>(lungs - b.regionName.begin());
             b.partMax.fill(b.damageMax);
             g_body = b;
+        }
+
+        // Lungs stage thresholds (shares of max health): the first source with a top-level "lungs" block.
+        void ReadLungs()
+        {
+            for (const auto& s : g_sources) {
+                const auto l = s.json.find("lungs");
+                if (l == s.json.end() || !l->is_object()) {
+                    continue;
+                }
+                g_body.lungMedium = std::clamp(l->value("medium", g_body.lungMedium), 0.01f, 1.0f);
+                g_body.lungSevere = std::clamp(l->value("severe", g_body.lungSevere), g_body.lungMedium, 1.0f);
+                return;
+            }
         }
 
         // injuries/sexual_parts.json: the optional parts 6..10 (name, region, max, weight) and their text per source id
@@ -195,8 +218,8 @@ namespace InjuryConfig
             const auto j = nlohmann::json::parse(in, nullptr, true, true);
             Body& b = g_body;
             const auto p = j.find("parts");
-            if (p != j.end() && p->is_array() && p->size() == kPartCount - kCoreParts) {
-                for (int i = kCoreParts; i < kPartCount; ++i) {
+            if (p != j.end() && p->is_array() && p->size() == kSexualEnd - kCoreParts) {
+                for (int i = kCoreParts; i < kSexualEnd; ++i) {
                     const auto& e = (*p)[i - kCoreParts];
                     b.partName[i] = e.value("name", b.partName[i]);
                     b.partMax[i] = std::max(3, e.value("max", b.partMax[i]));
@@ -393,6 +416,7 @@ namespace InjuryConfig
                 SKSE::log::error("injuries: sexual_parts.json skipped: {}", e.what());
             }
             FinishBody();
+            ReadLungs();
             FinishSources();
         }
         for (int i = 0; i < static_cast<int>(g_sources.size()); ++i) {

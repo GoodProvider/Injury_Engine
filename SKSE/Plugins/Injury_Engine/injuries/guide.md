@@ -23,6 +23,7 @@ a file that fails to parse is skipped and named there.
 | `mauling` | model `health` | unarmed attacks by creatures (non-NPC attackers) |
 | `falling` | model `both`: torture "Falls and Scrapes" + health "Fall Injuries" (source `falling_real`) | torture: `External_Injure(..., "falling", ..., torture = True)` (SkyrimNet_Leashed ragdoll pulls); health: landing damage (no hit, no attacker, still falling) |
 | `leash_dragging` | model `torture`; **shipped by SkyrimNet_Leashed**, not this mod (see "Injury types from other mods") | SkyrimNet_Leashed, each second a knocked-down actor is dragged |
+| `drowning` | model `health`: lands on the **lungs** only | drowning damage (no hit, no attacker, under water without Water Breathing) |
 | `generic` | model `health` | anything that cannot be classified; also the fallback for a class with no file; also supplies the common heal wording |
 | `sexual_parts.json` | **not a source** | optional parts (setting "Include sexual body parts"): part names, size and hit chance, plus their `looks` / `feels` text per source id (see below) |
 | `sexual` | (not written yet) | will require the victim to be in SexLab; do not create it unless asked |
@@ -53,6 +54,10 @@ and the mod manager merges that folder with this one at runtime (nothing to regi
   only), penis (men only), lips, ass hole, regions `nipple`, `vulva`, `penis`, `lips`, `anus`. They are small: each has
   its own `max` (fewer damage points) and `weight` (chance of being picked; the six main parts weigh one each). Their
   medium / severe thresholds scale down with `max`, so they still go light, medium, severe.
+- **Lungs** (part `lungs`, region `lungs`): an internal part only sources whose `part_weights` name it land on
+  (drowning). It has no cap (it takes as much damage as the source deals), is not part of the 100% health scale
+  below, and its stage is the lung damage as a share of max health: the `lungs` block (`medium`, `severe`, shares
+  0..1; drowning.json ships 0.25 / 0.5). It never takes torture and never shows on the overlay.
 - **Stages** (damage per part, 20 max): light 1-3, medium 4-10, severe 11-20. All health sources use the same scale;
   100% of max health lost = every part an actor has at its max.
 - **torture** sources: each hit adds a point of that type to one part (picked by the type's `part_weights`); a healing
@@ -91,8 +96,11 @@ damage_max, thresholds, health_link, regions, parts
                    is above it again; setting injury_engine.body.torture_bleedout). session.json "collapse" is added
                    once to the next scene line after a victim goes down.
 stages             damage stage names: light, medium, severe.
-part_weights       (torture, optional) {"part name": weight}: chance of the type landing there; 0 = never; missing parts keep
-                   the body's weight (main parts one, sexual parts their sexual_parts.json weight)
+part_weights       (optional) {"part name": weight}: chance of the type landing there; 0 = never; missing parts keep
+                   the body's weight (main parts one, sexual parts their sexual_parts.json weight, lungs 0). Torture
+                   types and health sources alike (a health file puts it at the top: drowning.json, lungs only)
+lungs              (optional, read from the first file that has it) {"medium": 0.25, "severe": 0.5}: lung damage as a
+                   share of max health at which the lungs are medium / severe
 classify           (optional) how incoming damage picks this source. Highest `priority` wins. The C++ classifier
                    has no source names of its own; it only reads these rules. A "both" file puts the rule in the
                    half it belongs to (falling's landing rule is in `health`).
@@ -105,6 +113,8 @@ classify           (optional) how incoming damage picks this source. Highest `pr
                    ignore_weapon_file / ignore_weapon_id   this weapon is not injury damage (the padded whip)
                    unarmed          true: no weapon, or the fist weapon. npc / combat are true, false, or omitted (either)
                    falling          true: landing damage (no hit, no attacker, still falling)
+                   drowning         true: damage with no hit and no attacker while under water (engine underwater
+                                    flag or head submerged) without Water Breathing; tried before falling
                    fallback         true: anything that matched nothing else (generic.json)
 hook.points_per_second  (torture, optional, default 2) points per real second hooked spell damage (fire / frost /
                    shock) adds, whatever the spell's own damage. fire / frost / shock ship 8: the 6-part body (120 points) is full in about 15 s
@@ -199,6 +209,7 @@ Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{b
 3. After editing, validate: `python -c "import json,sys;[json.load(open(f,encoding='utf-8')) for f in sys.argv[1:]]" injuries/*.json`
    and check every `looks` / `feels` region array has exactly one entry per stage (6 for whipping, 3 for others),
    including the per-source blocks in `sexual_parts.json`. Every health file's `death.regions` needs head, body, arm
-   and leg, each with at least one line (two or more so deaths do not repeat).
+   and leg, each with at least one line (two or more so deaths do not repeat); drowning.json lands only on the
+   lungs, so it needs `death.regions.lungs` (and `looks` / `feels` `lungs`) instead.
 4. Report what changed per file and anything that needs a code change (new class, new placeholder, body numbers).
 5. Do not touch the body block, `id`, `model`, or `requires` unless the user explicitly asks.

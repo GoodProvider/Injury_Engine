@@ -14,7 +14,9 @@
 namespace InjuryConfig
 {
     constexpr int kCoreParts = 6;   // face, left arm, right arm, back, left leg, right leg
-    constexpr int kPartCount = 11;  // + nipples, pussy, penis, lips, ass hole (setting "include sexual parts")
+    constexpr int kPartCount = 12;  // + nipples, pussy, penis, lips, ass hole (setting "include sexual parts"), lungs
+    constexpr int kSexualEnd = 11;  // sexual parts are 6..10
+    constexpr int kPartLungs = 11;  // only sources whose part_weights name it (drowning) land here
     constexpr int kMaxSources = 32;
 
     // Body model shared by every source (read from the first loaded file, whipping first).
@@ -27,16 +29,20 @@ namespace InjuryConfig
         float floor = 0.1f;      // torture wounds never take health below this share of max
         float bleedoutBelow = 0.15f;  // torture at or below this share of max health holds the actor in bleedout
         std::array<std::string, kPartCount> partName{ "face", "left arm", "right arm", "back", "left leg", "right leg",
-            "nipples", "pussy", "penis", "lips", "ass hole" };
-        std::array<int, kPartCount> partRegion{ 0, 2, 2, 1, 3, 3, 4, 5, 6, 7, 8 };
-        std::vector<std::string> regionName{ "head", "body", "arm", "leg", "nipple", "vulva", "penis", "lips", "anus" };
-        std::array<int, kPartCount> overlayOrder{ 0, 3, 2, 1, 5, 4, 6, 7, 8, 9, 10 };
+            "nipples", "pussy", "penis", "lips", "ass hole", "lungs" };
+        std::array<int, kPartCount> partRegion{ 0, 2, 2, 1, 3, 3, 4, 5, 6, 7, 8, 9 };
+        std::vector<std::string> regionName{ "head", "body", "arm", "leg", "nipple", "vulva", "penis", "lips", "anus", "lungs" };
+        std::array<int, kPartCount> overlayOrder{ 0, 3, 2, 1, 5, 4, 6, 7, 8, 9, 10, 11 };
         // Damage points a part holds at 100% (sexual parts are small), the chance weight of being picked,
         // and the damage at which it is "medium" / "severe" (scaled from the common thresholds by partMax).
-        std::array<int, kPartCount> partMax{ 20, 20, 20, 20, 20, 20, 8, 8, 8, 6, 6 };
-        std::array<float, kPartCount> partWeight{ 1, 1, 1, 1, 1, 1, 0.2f, 0.2f, 0.2f, 0.25f, 0.15f };
+        // Lungs: weight 0 (only a source's part_weights reach them), no cap (partMax unused).
+        std::array<int, kPartCount> partMax{ 20, 20, 20, 20, 20, 20, 8, 8, 8, 6, 6, 20 };
+        std::array<float, kPartCount> partWeight{ 1, 1, 1, 1, 1, 1, 0.2f, 0.2f, 0.2f, 0.25f, 0.15f, 0 };
         std::array<int, kPartCount> partMedium{};
         std::array<int, kPartCount> partSevere{};
+        // Lungs stage: lung damage as a share of max health ("lungs": {"medium", "severe"} in any source file).
+        float lungMedium = 0.25f;
+        float lungSevere = 0.5f;
     };
 
     struct Source
@@ -77,6 +83,8 @@ namespace InjuryConfig
         int npc = -1;
         int combat = -1;
         bool falling = false;
+        float minDrop = -1.0f;  // falling: minimum drop in units (-1: half of fJumpFallHeightMin)
+        bool drowning = false;
         bool fallback = false;
     };
 

@@ -1,0 +1,53 @@
+[04:58:00] Injury_Engine loading
+[04:58:00] MagicTarget::AddTarget hooks installed
+[04:58:00] ActorValueOwner::ModActorValue hooks installed
+[04:58:00] ValueModifierEffect::ModifyActorValue hooks installed (plain and dual)
+[04:58:00] GetFactionFightReaction hook installed
+[04:58:00] ProcessHitData hook installed
+[04:58:00] Actor::HandleHealthDamage hooks installed
+[04:58:00] Papyrus functions registered
+[04:59:34] injuries: loading from G:\Modlists\JoJ v8.1.0\Stock Game\data\SKSE\Plugins\Injury_Engine\injuries
+[04:59:34] injuries: loaded whipping.json (whipping, model torture)
+[04:59:34] injuries: loaded bludgeoning.json (bludgeoning, model health)
+[04:59:34] injuries: loaded burning.json (burning, model health)
+[04:59:34] injuries: loaded falling.json (falling, model torture)
+[04:59:34] injuries: loaded falling.json (falling_real, model health)
+[04:59:34] injuries: loaded fire.json (fire, model torture)
+[04:59:34] injuries: loaded freezing.json (freezing, model health)
+[04:59:34] injuries: loaded frost.json (frost, model torture)
+[04:59:34] injuries: loaded generic.json (generic, model health)
+[04:59:34] injuries: loaded leash_dragging.json (leash_dragging, model torture)
+[04:59:34] injuries: loaded mauling.json (mauling, model health)
+[04:59:34] injuries: loaded piercing.json (piercing, model health)
+[04:59:34] injuries: loaded pinching.json (pinching, model torture)
+[04:59:34] injuries: loaded pulling.json (pulling, model torture)
+[04:59:34] injuries: loaded punching.json (punching, model torture)
+[04:59:34] injuries: loaded shock.json (shock, model torture)
+[04:59:34] injuries: loaded shocking.json (shocking, model health)
+[04:59:34] injuries: loaded slapping.json (slapping, model torture)
+[04:59:34] injuries: loaded slashing.json (slashing, model health)
+[04:59:34] injuries: 17 classify rules
+[04:59:34] Classifier: torture MGEF Injury_Engine.esp 0x813 -> FEDA4813 (fire)
+[04:59:34] Classifier: torture MGEF Injury_Engine.esp 0x814 -> FEDA4814 (frost)
+[04:59:34] Classifier: torture MGEF Injury_Engine.esp 0x815 -> FEDA4815 (shock)
+[04:59:34] Classifier: hit and combat event sinks registered
+[04:59:34] InjuryEngine: death event sink registered
+[04:59:34] truce: SkyrimNet API found (version 12), decisions available
+[04:59:34] Overlay: view created
+[04:59:55] Overlay: DomReady
+[05:00:11] health: Someone (00000000) ➤ College Guardian (FEA5E841) | generic right leg point:0+1 level:undamaged amount:4.4 health:99.2% actual:525.0/525.0 skipped:0
+[05:00:13] co-save loaded 1 actors (record version 5)
+[05:00:17] Overlay: enabled
+[05:06:03] health: Wolf (000841D5) ➤ Horker (6430B28D) | mauling face point:0+1 level:undamaged amount:1.5 health:94.9% actual:167.5/175.0 skipped:0
+[05:06:03] health: Horker (6430B28D) ➤ Wolf (000841D5) | mauling face point:0+1 level:undamaged amount:0.2 health:31% actual:7.0/22.0 skipped:0
+[05:06:03] Health:direct:Start Wolf hits Horker with teeth and claws hitting Horker's face, and the jaws clamp down on the raw wound. The pain is huge and nauseating and he cries out as he is shaken. The stench of blood and animal musk is overwhelming.
+[05:06:04] Health:short:Start Horker hits Wolf with teeth and claws hitting Wolf's face, left arm, right arm, back and left leg, and it is too much. The savaging tears him open; he goes limp and ashen, his cries thinning to a gasp.
+[05:06:04] health: Wolf (000841D5) ➤ Horker (6430B28D) | mauling back point:0+1 level:undamaged amount:1.5 health:92% actual:162.5/175.0 skipped:4
+[05:06:05] Health:short:Start Wolf hits Horker with teeth and claws hitting Horker's back into flesh that is already torn. The teeth find the open wound again and he shrieks as the pain flares. The air smells of blood and beast.
+[05:06:05] health: Horker (6430B28D) ➤ Wolf (000841D5) | mauling right leg point:0+1 level:undamaged amount:0.2 health:-37.2% actual:-8.0/22.0 skipped:80
+[05:06:05] death Wolf (000841D5) by Horker (6430B28D): mauling part:left leg text:yes
+[05:06:06] Health:short:Death Horker kills Wolf with teeth and claws: claws and teeth strip his left leg to a chewed stump of bone and muscle; the foot is gone and the blood pours out in a dark pool. Wolf's screams fade to whimpers and then to nothing, the air heavy with the smell of blood and torn flesh.
+[05:06:06] Health:short:Start Wolf hits Horker with teeth and claws hitting Horker's back, and the jaws clamp down on the raw wound. The pain is huge and nauseating and he cries out as he is shaken. The stench of blood and animal musk is overwhelming.
+[05:06:06] forget 000841D5 (dead)
+[05:06:19] health: Maxxor (00000014) ➤ Horker (6430B28D) | burning back point:0+1 level:medium amount:1.5 health:41% actual:73.3/175.0 skipped:0
+[05:06:19] torture: Maxxor (00000014) ➤ Horker (6430B28D) | punching face point:0+1 level:undamaged amount:0.4 health:40.5% actual:70.8/175.0 skipped:0

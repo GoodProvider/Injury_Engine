@@ -355,6 +355,7 @@ Function ApplyPluginConfig()
     Injury_Engine_Engine.SetIncludeSexualParts(include_sexual_parts)
     Injury_Engine_Engine.SetPunchCombatHealth(SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "injury_engine.body.punch_combat_health", false))
     Injury_Engine_Engine.SetTortureBleedout(SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "injury_engine.body.torture_bleedout", true))
+    Injury_Engine_Engine.SetUncausedMinPercent(SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.body.uncaused_min_percent", 5.0))
     Injury_Engine_Engine.SetOverlayEnabled(show_overlay)
     Injury_Engine_Engine.SetVerboseLogging(verbose_logging)
     RegisterForSingleUpdateGameTime(hours_per_point) ; healing poll follows the heal rate
@@ -964,7 +965,7 @@ EndFunction
 String Function PartsText(int mask) global
     String text = ""
     int i = 0
-    while i < 11
+    while i < 12
         if Math.LogicalAnd(mask, Math.LeftShift(1, i)) != 0
             if text != ""
                 text += ","
