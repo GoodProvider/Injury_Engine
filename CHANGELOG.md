@@ -2,6 +2,15 @@
 
 ## [0.1.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1) — since [0.1.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.0)
 
+### Wounds / healing
+- Drowning: `injuries/drowning.json` wounds the internal part `lungs` (index 11, body weight 0, no cap, stage by the share of max health the water took; `lungs` block `medium` / `severe`). Detected by `Classifier::ClassifyDrown` (no hit form or attacker, `kUnderwater` or submerged level, no WaterBreathing). Co-save version 6; version 5 saves load with empty lungs.
+- `injury_engine.body.uncaused_min_percent` (default 5): health lost with no attacker, hit event or real fall (other mods' scripts) becomes a wound only if it is still missing about 1.5 s later and is at least this share of max health.
+- Real damage no longer lands on switched-off body parts (`PickPart` takes only active parts).
+
+### SKSE / overlay
+- Fixed a game freeze (no crash log): `InjuryEngine::OnDamage` could loop forever on an actor-update worker while holding the plugin lock when every tortured part was full and the rest of a hit was less than one torture point. `PickPart(..., canReplace)` now skips those parts, and the loop stops after 1000 rounds with an error line in `Injury_Engine.log`.
+- A real health spell effect on the victim (`Classifier::NoteEffect`, `g_realMagic`) now wins over the unarmed rule, so a Fireball tick from an empty-handed caster is burning, not `punching`.
+
 ### Install / settings
 - The FOMOD has two optional, pre-checked (Recommended) options:
   - "Add fight/stop/yield actions" installs `Start_Fighting`, `Stop_Fighting` and `Stop_Fighting_by_Yielding` with the `accept_truce` / `accept_surrender` decision prompts (folder `fight_actions`). `Torture_Target` is always installed.

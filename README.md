@@ -51,6 +51,7 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 | `injury_engine.narration.event_ttl` | Lash event lifetime | 30 s | How long a short-lived hit event stays in the scene context |
 | `injury_engine.body.include_sexual_parts` | Include sexual body parts | off | Also wound the nipples, pussy (women), penis (men), lips and ass hole. These parts are hit less often and hold less damage, but still go through light, medium and severe. |
 | `injury_engine.body.torture_bleedout` | Tortured victims collapse into bleedout until healed | on | When torture brings someone down to 15% health they collapse into the bleedout pose and stay down until their health is above 15% again. The next torture narration says that they collapse. |
+| `injury_engine.body.uncaused_min_percent` | Minimum uncaused damage (%) | 5 | Health lost with no attacker, hit or real fall (other mods' scripts, bathing or animation mods, stairs) becomes a wound only if it is still missing about 1.5 seconds later and is at least this percentage of max health. 0: any lasting loss counts. |
 | `injury_engine.body.punch_combat_health` | Punching during combat is health not torture | off | Off: bare-fist punches by people are torture in and out of combat and cannot kill. On: punches during combat are real bludgeoning damage. |
 | `injury_engine.overlay.enabled` | Show torture overlay | on | Show the torture overlay |
 | `injury_engine.debug.verbose_logging` | Verbose logging | off | Extra debug lines in `Injury_Engine.log` and `Papyrus.0.log` (for troubleshooting) |

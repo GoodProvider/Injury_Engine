@@ -1,7 +1,16 @@
 ## 0.1.1
 
+### Fixes
+- Fixed a game freeze when spells hit a badly tortured actor.
+- Fire spells cast with empty hands no longer count as punches.
+- Body parts that are switched off no longer get real wounds.
+
+### Wounds
+- Drowning now wounds the lungs.
+- New setting: minimum health loss from other mods' scripts that counts as a wound.
+
 ### Narration
-- Hit, death and healing narration names the attacker and victim in every sentence (no "he" / "she"), so followers no longer think the player was hurt in someone else's fight.
+- Narration names attacker and victim instead of "he" / "she", so followers don't think you were hurt.
 - Real hits in fights out of sight are no longer narrated (they stay short events).
 
 ### Installer

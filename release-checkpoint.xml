@@ -8,7 +8,7 @@
     <updated>2026-10-17</updated>
     <base_tag>0.1.0 (packaged 2026-10-16, not yet tagged)</base_tag>
     <next_version>0.1.1</next_version>
-    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.1 (check-version.py); changelogs cover 0.1.1 (FOMOD options for fight actions and overlay, installer image); test package only, no git tag; origin still SkyrimNet_Whipped</version_status>
+    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.1 (check-version.py); changelogs cover 0.1.1 (FOMOD options for fight actions and overlay, installer image, OnDamage freeze fix, drowning / lungs, uncaused_min_percent); test package only, no git tag; origin still SkyrimNet_Whipped</version_status>
     <related_artifacts>
       <artifact role="release rules">release-guide.md</artifact>
       <artifact role="release skill">.claude/skills/release/SKILL.md</artifact>

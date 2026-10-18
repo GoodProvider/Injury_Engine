@@ -1,7 +1,12 @@
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1
 
-Installer update. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
+Freeze fix, drowning and installer update. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
 
+- **Game freeze fixed.** `InjuryEngine::OnDamage` could spin forever (game hang, no crash log) when every tortured part was full and what was left of a hit was less than one torture point; `PickPart` now skips those parts and the loop is capped at 1000 rounds with an error log line.
+- **Fireball is not punching.** A real health spell effect on the victim (`g_realMagic`) wins over the unarmed rule.
+- **Drowning.** `injuries/drowning.json` wounds the internal `lungs` part; co-save version 6 (version 5 loads with empty lungs).
+- **Uncaused damage threshold.** `injury_engine.body.uncaused_min_percent`: scripted health loss with no cause must stick for about 1.5 s and reach this share of max health to become a wound.
+- **Switched-off parts.** Real damage no longer lands on body parts that are turned off.
 - **Optional fight actions.** The FOMOD option "Add fight/stop/yield actions" (on by default) installs `Start_Fighting`, `Stop_Fighting` and `Stop_Fighting_by_Yielding`; `Torture_Target` is always installed.
 - **Optional overlay default.** The FOMOD option "Show torture overlay" (on by default); unchecked, the dashboard setting defaults to off. A saved dashboard value is kept.
 - **Narration names, not pronouns.** Injury JSON `narration.*` / `death.*` strings use `{name}` in place of `{he}` / `{him}` / `{his}` / `{reflexive}`; `InjuryEngine.cpp` `NarrationVars` renders any pronoun placeholder as the name on every narration / event path (looks / feels keep `ActorVars`); `SourceHealText` drops the self-heal pronoun branch; `NameOf` falls back to base name, then race, never "Someone". Followers had read pronouns in narrations of other people's fights as the player.
