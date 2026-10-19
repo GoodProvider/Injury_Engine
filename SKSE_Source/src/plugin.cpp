@@ -65,10 +65,11 @@ namespace
             Overlay::Init();
             break;
         case SKSE::MessagingInterface::kPreLoadGame:
-            Classifier::ResetTruces();  // a later truce must not outlive loading an earlier save
+            // a later truce, a calm window or a friend-hit flag must not outlive loading an earlier save
+            Classifier::ResetSession();
             break;
         case SKSE::MessagingInterface::kNewGame:
-            Classifier::ResetTruces();
+            Classifier::ResetSession();
             [[fallthrough]];
         case SKSE::MessagingInterface::kPostLoadGame:
             Overlay::Reset();

@@ -19,6 +19,13 @@ namespace Overlay
 
         std::mutex g_lock;
         std::string g_lastPush;  // last OverlayJson sent to the page
+        // One pending push and at most one queued task: the task sends whatever is newest when it runs. Each push
+        // carries a growing sequence number and the page ignores an older one, since separate PrismaUI invokes may be
+        // applied out of order. A reset rides on the same call, so it can't overtake (or be overtaken by) an update.
+        std::string g_pendingJson;
+        bool g_pendingReset = false;
+        bool g_taskQueued = false;
+        std::uint64_t g_seq = 0;
 
         bool Ready()
         {
@@ -54,15 +61,36 @@ namespace Overlay
             }
         }
 
-        void Invoke(std::string script)
+        // `json` is an OverlayJson state, or "null" (reset only: the panel stays empty).
+        void Push(std::string json, bool reset)
         {
-            if (auto* tasks = SKSE::GetTaskInterface()) {
-                tasks->AddTask([script = std::move(script)]() {
-                    if (Ready()) {
-                        g_prisma->Invoke(g_view, script.c_str());
-                    }
-                });
+            auto* tasks = SKSE::GetTaskInterface();
+            if (!tasks) {
+                return;
             }
+            {
+                std::lock_guard lock(g_lock);
+                g_pendingJson = std::move(json);
+                g_pendingReset = g_pendingReset || reset;
+                if (g_taskQueued) {
+                    return;
+                }
+                g_taskQueued = true;
+            }
+            tasks->AddTask([]() {
+                std::string script;
+                {
+                    std::lock_guard lock(g_lock);
+                    g_taskQueued = false;
+                    script = "injuryEngineUpdate(" + g_pendingJson + "," + std::to_string(++g_seq) + "," +
+                             (g_pendingReset ? "true" : "false") + ");";
+                    g_pendingJson.clear();
+                    g_pendingReset = false;
+                }
+                if (Ready()) {
+                    g_prisma->Invoke(g_view, script.c_str());
+                }
+            });
         }
 
         class MenuSink : public RE::BSTEventSink<RE::MenuOpenCloseEvent>
@@ -146,17 +174,22 @@ namespace Overlay
             g_lastPush = json;
         }
         SKSE::log::debug("Overlay: push {} bytes", json.size());
-        Invoke("injuryEngineUpdate(" + json + ");");
+        Push(std::move(json), false);
     }
 
     void Reset()
     {
-        {
+        if (!Ready()) {
             std::lock_guard lock(g_lock);
             g_lastPush.clear();
+            return;
         }
-        if (Ready()) {
-            Invoke("whipReset();");
+        // Enabled: drop the old bars and show the current state in the same call; disabled: leave the panel empty.
+        std::string json = g_enabled.load() ? InjuryEngine::OverlayJson() : std::string("null");
+        {
+            std::lock_guard lock(g_lock);
+            g_lastPush = json == "null" ? std::string{} : json;
         }
+        Push(std::move(json), true);
     }
 }

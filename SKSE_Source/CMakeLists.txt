@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 # Project name = SKSE .dll name.
-project(Injury_Engine VERSION 0.1.1 LANGUAGES CXX)
+project(Injury_Engine VERSION 0.1.2 LANGUAGES CXX)
 
 # This repo is the MO2 mod folder, so the .dll is copied straight into ../SKSE/Plugins.
 set(OUTPUT_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/..")

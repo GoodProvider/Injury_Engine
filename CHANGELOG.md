@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.1.2](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2) — since [0.1.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1)
+
+Code-review fix pass ([checkpoints/reviews/checkpoint-v03.md](checkpoints/reviews/checkpoint-v03.md)).
+
+### Torture / action
+- Truce partners: per-NPC StorageUtil lists `injury_engine.truce_partners` / `injury_engine.truce_partner_until`, each partner with its own end; `RestoreExpiredTruces` prunes and re-notes each on load; `Start_Fighting` removes both fighters from every list. A pre-0.1.2 `injury_engine.truce_with` is migrated.
+- Truce requests carry a ticket (`TruceDecision.cpp`): a late LLM or message-box answer for a timed-out, replaced or earlier-load request is ignored. The decision timeline reads `data` (falling back to `text`), every field `is_string()`-safe.
+- Queued combat stops re-check the calm / truce on the game thread, so `Start_Fighting` (`ForgetCalm` / `ForgetTruces`) in between wins.
+- `injury_engine.in_action_time` is refreshed on each strike; `Injury_Engine_LashEffect` clears an `in_action` flag older than 3 s or stamped in the future, so a load mid-`Torture_Target` no longer swallows real lashes.
+
+### Papyrus
+- `sync_draining` / `deaths_draining` drain flags (as `hits_draining`); `OnUpdate` skips its `SyncHealth` while another thread drains.
+- Scene / heal indices are found again by their actors (`SceneIndexOf`, `HealFind`) after yielding calls.
+- `Setup` drops every torture pair and heal session (`ClearSessions`) and clears `heal_tick_active`; a future stamp counts as expired.
+- New scene state `SC_WAITING_HIDDEN`: a pending torture start out of sight waits instead of being cancelled.
+- A heal session with a held start line (`KEY_HS_PEND`) lives `torture_maximum_break + reply_timeout`.
+- `Strike` (External API) routes landed hits through the scene and reply gate.
+
+### SKSE / overlay
+- `ProcessHitData` classifies the swing (`HitData.weapon`) with `Classifier::ClassifyMelee`, not the equipped gear or a live spell effect; its "already handled" mark is per victim (`MarkHandled` / `TakeHandled`).
+- A stored Padded Whip hit event no longer answers every damage call in its window; `Classify` falls through to the hands, the live torture effect and drowning.
+- `Classifier::ResetSession` on kPreLoadGame / kNewGame clears truces, hit / effect / calm caches and releases `kIgnoreFriendlyHits`; a background timer releases friend-hit flags when the sync loop is not running.
+- Classify effect and ignore-weapon forms are resolved to FormIDs once in `Classifier::Init` (no per-tick `LookupForm`).
+- Hit, sync and death result buffers hold FormIDs, resolved in the read native; an empty take no longer clears them.
+- A hit that clears the last torture point now stands the actor up (`Erase`); RNG draws are locked; `Revert` clears `g_hitUnarmed` / `g_hitCounts`.
+- With sexual parts on, the lungs are no longer a torture part or in the health capacity.
+- Overlay: `injuryEngineUpdate(state, seq, reset)`; the page drops older pushes, one pending payload and one queued task (`Overlay.cpp`, `overlay.html`).
+- One `AllocTrampoline(28)`; `UnderwaterProbe` exits early on cheap flags.
+
+### Install / settings
+- Injury JSON hardening (`InjuryConfig.cpp`): a wrong field type skips that classify rule or that source's hook block, not the whole load; non-bool `npc` / `combat` skips the rule; `overlay.order` is range-checked; bad region indices (missing `sexual_parts.json`) are remapped to `body` with a warning.
+
 ## [0.1.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1) — since [0.1.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.0)
 
 ### Wounds / healing

@@ -67,6 +67,7 @@ Natives behind them: `Engine.RealHit(actor, attacker, source, points)` / `Engine
 | Key | Role |
 |-----|------|
 | `injury_engine.in_action` | Set during `Torture_Target` so the enchantment hit is not counted twice |
+| `injury_engine.in_action_time` | Real time `in_action` was last refreshed (each strike); `LashEffect` treats an older (3 s) or future stamp as left over from a load and clears the flag |
 | `injury_engine.pending_parts` / `_level` / `_count` | Hits since the last narration (part bitmask, worst level, count) |
 | `injury_engine.hs_*` (lists on the Main quest) | Heal session per healed actor: target, caster, last time `IsHealing`, last narration time, last line sent |
 | Session exclusivity | One activity per victim: opening a heal session (`HealOpen`) or a real (non-torture) hit (`NarrateRealHits`) calls `ClearTortureScene` (drops the victim's `sc_*` pairs, no line or memory); a torture or real hit calls `ClearHealBatch`. |
@@ -76,7 +77,8 @@ Natives behind them: `Engine.RealHit(actor, attacker, source, points)` / `Engine
 | `injury_engine.last_torture` | Real time of the last torture hit (torture narration window / interval) |
 | `injury_engine.truce_aggression` | Float: the actor's base Aggression before an accepted `Stop_Fighting` set it to 0 (only the first value is kept) |
 | `injury_engine.truce_until` | Float: game time (days) when that truce ends and Aggression is restored |
-| `injury_engine.truce_with` | Form: the truce partner, set with `truce_until` on acceptance (`Actions.GuardTruce`); `RestoreExpiredTruces` notes the DLL truce guard again from it on load (`Engine.NoteTruce`) |
+| `injury_engine.truce_partners` / `injury_engine.truce_partner_until` | Form list / float list on a calmed NPC: every truce partner (the player too) and that truce's end, set on acceptance (`Actions.GuardTruce`); `RestoreExpiredTruces` prunes expired ones and notes the DLL truce guard again for each on load (`Engine.NoteTruce`); `Start_Fighting` removes both fighters from every list |
+| `injury_engine.truce_with` | Form, before 0.1.2: the single saved partner; migrated into the lists above on the next load |
 | `injury_engine.truce_actors` (form list on the Main quest) | Actors under a truce; `RestoreExpiredTruces` walks it on load and every `Main.OnUpdateGameTime` |
 
 ## ESP / Spriggit

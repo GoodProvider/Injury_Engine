@@ -1,3 +1,21 @@
+## 0.1.2
+
+### Fixes
+- Loading a save no longer leaves old torture scenes, heal sessions or truces running.
+- Loading a save during an NPC's torture action no longer stops later lashes from counting.
+- Punches and weapon hits are judged by the actual swing, not by what is equipped.
+- A recent whip lash no longer hides other damage that follows it.
+- Torture narration no longer gets cancelled when you look away for a moment.
+- Heal start narration is no longer lost while SkyrimNet is still replying.
+- The overlay no longer shows an older state after quick updates.
+
+### Fighting
+- An NPC can keep several truces at once, each with its own end time.
+- A late answer to an expired truce request is ignored.
+
+### Wounds
+- A mistake in an injury file now skips only that entry instead of the whole file.
+
 ## 0.1.1
 
 ### Fixes
@@ -13,9 +31,9 @@
 - Narration names attacker and victim instead of "he" / "she", so followers don't think you were hurt.
 - Real hits in fights out of sight are no longer narrated (they stay short events).
 
-### Installer
-- Installer option: fight / stop / yield actions (on by default; Torture_Target always installs).
-- Installer option: torture overlay (on by default; off sets its dashboard default to off).
+### FOMOD
+- FOMOD option: fight / stop / yield actions (on by default; Torture_Target always installs).
+- FOMOD option: torture overlay (on by default; off sets its dashboard default to off).
 
 ## 0.1.0
 

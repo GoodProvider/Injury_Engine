@@ -40,14 +40,34 @@ namespace
 
     thread_local int g_inHandle = 0;
 
-    // The last torture melee hit ProcessHitData turned into points (victim, when): a HandleHealthDamage call for the
-    // same hit that still carries damage only gives the health back.
-    thread_local RE::FormID g_handledVictim = 0;
-    thread_local std::chrono::steady_clock::time_point g_handledWhen{};
+    // Melee hits ProcessHitData zeroed (torture points taken, or the Padded Whip), per victim: the next
+    // HandleHealthDamage call for that victim within 100 ms, on any thread, only gives back what still landed. Each mark
+    // is used once, so a second hit right after is counted normally.
+    std::mutex g_handledLock;
+    std::unordered_map<RE::FormID, std::chrono::steady_clock::time_point> g_handled;
 
-    bool HandledByProcessHit(RE::Actor* victim)
+    void MarkHandled(RE::Actor* victim)
     {
-        return victim && g_handledVictim == victim->GetFormID() && std::chrono::steady_clock::now() - g_handledWhen < std::chrono::milliseconds(100);
+        std::lock_guard lock(g_handledLock);
+        if (g_handled.size() > 256) {
+            g_handled.clear();
+        }
+        g_handled[victim->GetFormID()] = std::chrono::steady_clock::now();
+    }
+
+    bool TakeHandled(RE::Actor* victim)
+    {
+        if (!victim) {
+            return false;
+        }
+        std::lock_guard lock(g_handledLock);
+        const auto it = g_handled.find(victim->GetFormID());
+        if (it == g_handled.end()) {
+            return false;
+        }
+        const bool fresh = std::chrono::steady_clock::now() - it->second < std::chrono::milliseconds(100);
+        g_handled.erase(it);
+        return fresh;
     }
 
     bool Verbose()
@@ -77,6 +97,12 @@ namespace
     void UnderwaterProbe(const char* hook, RE::Actor* actor, float value, std::string_view note)
     {
         if (!actor) {
+            return;
+        }
+        // cheap flags first: GetSubmergedLevel and the throttle key are only paid for an actor that is in water
+        const auto& data = actor->GetActorRuntimeData();
+        if (!data.boolFlags.all(RE::Actor::BOOL_FLAGS::kUnderwater) && !data.boolBits.all(RE::Actor::BOOL_BITS::kInWater) &&
+            !data.boolBits.all(RE::Actor::BOOL_BITS::kSwimming) && data.underWaterTimer <= 0.0f) {
             return;
         }
         const auto signals = Classifier::ReadDrownSignals(actor);
@@ -140,6 +166,9 @@ namespace
             if (a_damage != 0.0f && !a_attacker) {
                 UnderwaterProbe("HandleHealthDamage", a_this, a_damage, "");
             }
+            if (a_damage == 0.0f) {
+                TakeHandled(a_this);  // the zeroed hit itself: its mark must not swallow the next damage
+            }
             if (InjuryEngine::IsInternalDamage() || a_damage == 0.0f) {
                 if (Verbose() && a_damage != 0.0f) {
                     SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} damage:{:.2f} internal, passed", a_this->GetFormID(), a_damage);
@@ -167,7 +196,9 @@ namespace
                 Classifier::NoteCalm(a_this, a_attacker);  // and no fight back
             }
             // torture melee hits and Padded Whip hits zeroed by ProcessHitData: only give back what still landed
-            const bool handled = ((source >= 0 && InjuryConfig::IsTorture(source)) || (source == -1 && physicalMelee)) && HandledByProcessHit(a_this);
+            // (ProcessHitData classified the swing itself, so Classify here may name another source for it: a melee
+            // result, a torture result or the whip all take the mark)
+            const bool handled = (physicalMelee || source == -1 || (source >= 0 && InjuryConfig::IsTorture(source))) && TakeHandled(a_this);
             const float kept = handled ? 0.0f : source >= 0 ? InjuryEngine::OnDamage(a_this, a_attacker, amount, source, physicalMelee, unarmedForm) : amount;
             auto* av = a_this->AsActorValueOwner();
             const float before = av->GetActorValue(RE::ActorValue::kHealth);
@@ -345,10 +376,11 @@ namespace
             if (a_victim && !a_victim->IsDead() && a_hit.totalDamage > 0.0f && !InjuryEngine::IsInternalDamage()) {
                 auto attackerPtr = a_hit.aggressor.get();
                 auto* attacker = attackerPtr.get();
-                bool physicalMelee = false;
                 bool unarmedForm = false;
-                const int source = Classifier::Classify(a_victim, attacker, &physicalMelee, &unarmedForm);
-                if (source >= 0 && physicalMelee && InjuryConfig::IsTorture(source)) {
+                // the swing that connected (a_hit.weapon, null = fists), not what Classify guesses from equipped gear
+                // and recent events: a live torture spell effect must not turn a punch into a spell tick
+                const int source = Classifier::ClassifyMelee(a_victim, attacker, a_hit.weapon, &unarmedForm);
+                if (source >= 0 && InjuryConfig::IsTorture(source)) {
                     const float damage = a_hit.totalDamage;
                     Classifier::MarkQuiet(a_victim);
                     Classifier::NoteCalm(a_victim, attacker);
@@ -356,18 +388,16 @@ namespace
                     a_hit.totalDamage = 0.0f;
                     a_hit.physicalDamage = 0.0f;
                     a_hit.bonusHealthDamageMult = 0.0f;
-                    g_handledVictim = a_victim->GetFormID();
-                    g_handledWhen = std::chrono::steady_clock::now();
+                    MarkHandled(a_victim);
                     SKSE::log::debug("[hook] ProcessHitData torture victim:{:08X} attacker:{:08X} source:{} damage:{:.2f} -> 0",
                         a_victim->GetFormID(), attacker ? attacker->GetFormID() : 0, InjuryEngine::SourceId(source), damage);
-                } else if (source == -1 && physicalMelee) {
+                } else if (source == -1) {
                     // The Padded Whip: its lash ENCH brings the torture (OnLash), the weapon hit itself must not take health.
                     const float damage = a_hit.totalDamage;
                     a_hit.totalDamage = 0.0f;
                     a_hit.physicalDamage = 0.0f;
                     a_hit.bonusHealthDamageMult = 0.0f;
-                    g_handledVictim = a_victim->GetFormID();
-                    g_handledWhen = std::chrono::steady_clock::now();
+                    MarkHandled(a_victim);
                     SKSE::log::debug("[hook] ProcessHitData padded whip victim:{:08X} attacker:{:08X} damage:{:.2f} -> 0", a_victim->GetFormID(),
                         attacker ? attacker->GetFormID() : 0, damage);
                 }
@@ -388,7 +418,6 @@ namespace
             SKSE::log::warn("ProcessHitData hook skipped: no call at {:X}; punches are restored after the hit", target.offset());
             return;
         }
-        SKSE::AllocTrampoline(14);
         ProcessHitData::func = SKSE::GetTrampoline().write_call<5>(target.address(), ProcessHitData::thunk);
         SKSE::log::info("ProcessHitData hook installed");
     }
@@ -405,7 +434,6 @@ namespace
                 target.offset());
             return;
         }
-        SKSE::AllocTrampoline(14);
         FightReaction::func = SKSE::GetTrampoline().write_call<5>(target.address(), FightReaction::thunk);
         SKSE::log::info("GetFactionFightReaction hook installed");
     }
@@ -437,6 +465,11 @@ void Install_Hooks()
     ModifyEffectActorValue<true>::func = dualValueModifier.write_vfunc(kModifyEffectActorValueIdx, ModifyEffectActorValue<true>::thunk);
     SKSE::log::info("ValueModifierEffect::ModifyActorValue hooks installed (plain and dual{})", REL::Module::IsVR() ? ", VR: unverified" : "");
 
+    // One allocation for both call hooks: a second AllocTrampoline that SKSE's pool can't serve makes CommonLib create
+    // a new trampoline and free the first one, under a write_call already made.
+    if (!REL::Module::IsVR()) {
+        SKSE::AllocTrampoline(28);
+    }
     InstallFightReaction();
     InstallProcessHitData();
 

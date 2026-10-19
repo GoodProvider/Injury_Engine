@@ -8,7 +8,9 @@
 #include <optional>
 #include <string_view>
 #include <string>
+#include <thread>
 #include <unordered_map>
+#include <vector>
 
 namespace Classifier
 {
@@ -72,8 +74,12 @@ namespace Classifier
         std::mutex g_friendLock;
         std::atomic<bool> g_punchCombatHealth{ false };
         std::unordered_map<RE::FormID, double> g_friendFlag;
-        // classify effect_file / effect_id -> runtime MGEF form id (ESL light masters need explicit resolution)
-        std::unordered_map<std::string, RE::FormID> g_classifyEffectForms;
+        // Resolved once in Init (the rules do not change after kDataLoaded and their vector is not touched again):
+        // classify rule -> runtime MGEF form id (ESL light masters need explicit resolution), and the ignore weapons.
+        // The damage hooks compare ids; a by-name LookupForm walks the whole file list.
+        std::unordered_map<const InjuryConfig::ClassifyRule*, RE::FormID> g_ruleEffect;
+        std::vector<RE::FormID> g_ignoreWeapons;
+        std::atomic<bool> g_releaseTimer{ false };  // the friend-hit release thread is running
 
         double NowSeconds()
         {
@@ -133,11 +139,6 @@ namespace Classifier
             return data ? data->LookupForm(id, file) : nullptr;
         }
 
-        std::string EffectRuleKey(const InjuryConfig::ClassifyRule& rule)
-        {
-            return rule.effectFile + ":" + std::to_string(rule.effectId & 0x00FFFFFFu);
-        }
-
         RE::FormID ResolveClassifyEffectForm(std::string_view file, std::uint32_t localId)
         {
             if (file.empty() || localId == 0) {
@@ -166,13 +167,19 @@ namespace Classifier
 
         void CacheClassifyEffectForms()
         {
-            g_classifyEffectForms.clear();
+            g_ruleEffect.clear();
+            g_ignoreWeapons.clear();
             for (const auto& rule : InjuryConfig::ClassifyRules()) {
-                if (!rule.hasEffect) {
-                    continue;
+                if (rule.hasIgnore) {
+                    if (const RE::FormID id = ResolveClassifyEffectForm(rule.ignoreFile, rule.ignoreId); id) {
+                        if (std::ranges::find(g_ignoreWeapons, id) == g_ignoreWeapons.end()) {
+                            g_ignoreWeapons.push_back(id);
+                        }
+                    } else {
+                        SKSE::log::warn("injuries: classify ignore weapon {} 0x{:X} not resolved", rule.ignoreFile, rule.ignoreId);
+                    }
                 }
-                const auto key = EffectRuleKey(rule);
-                if (g_classifyEffectForms.contains(key)) {
+                if (!rule.hasEffect) {
                     continue;
                 }
                 const RE::FormID id = ResolveClassifyEffectForm(rule.effectFile, rule.effectId);
@@ -180,7 +187,7 @@ namespace Classifier
                     SKSE::log::warn("injuries: classify effect {} 0x{:X} not resolved", rule.effectFile, rule.effectId);
                     continue;
                 }
-                g_classifyEffectForms.emplace(key, id);
+                g_ruleEffect.emplace(&rule, id);
                 if (const auto* conf = InjuryConfig::Find(rule.source); conf && conf->IsTorture()) {
                     SKSE::log::info("Classifier: torture MGEF {} 0x{:X} -> {:08X} ({})", rule.effectFile, rule.effectId, id,
                         conf->id);
@@ -193,13 +200,8 @@ namespace Classifier
             if (!rule.hasEffect || !mgef) {
                 return false;
             }
-            if (LookupForm(rule.effectFile, rule.effectId) == mgef) {
-                return true;
-            }
-            if (const auto it = g_classifyEffectForms.find(EffectRuleKey(rule)); it != g_classifyEffectForms.end()) {
-                return mgef->GetFormID() == it->second;
-            }
-            return false;
+            const auto it = g_ruleEffect.find(&rule);
+            return it != g_ruleEffect.end() && mgef->GetFormID() == it->second;
         }
 
         int TortureSourceOf(const RE::EffectSetting* mgef)
@@ -293,15 +295,15 @@ namespace Classifier
             return false;
         }
 
+        bool IsIgnoredId(RE::FormID id)
+        {
+            return id && std::ranges::find(g_ignoreWeapons, id) != g_ignoreWeapons.end();
+        }
+
         Match MatchWeapon(const RE::TESObjectWEAP* weapon, RE::Actor* attacker)
         {
-            for (const auto& rule : InjuryConfig::ClassifyRules()) {
-                if (!rule.hasIgnore) {
-                    continue;
-                }
-                if (auto* form = LookupForm(rule.ignoreFile, rule.ignoreId); form && form == weapon) {
-                    return { -1, false };
-                }
+            if (IsIgnoredId(weapon->GetFormID())) {
+                return { -1, false };
             }
             // A fist weapon is an unarmed hit when an unarmed rule claims this attacker. A mace stays a weapon rule.
             if (weapon->GetWeaponType() == RE::WEAPON_TYPE::kHandToHandMelee) {
@@ -474,16 +476,7 @@ namespace Classifier
         // The padded whip (a classify rule's ignore weapon).
         bool IsIgnoredWeapon(RE::FormID source)
         {
-            const auto* weapon = source ? RE::TESForm::LookupByID<RE::TESObjectWEAP>(source) : nullptr;
-            if (!weapon) {
-                return false;
-            }
-            for (const auto& rule : InjuryConfig::ClassifyRules()) {
-                if (rule.hasIgnore && LookupForm(rule.ignoreFile, rule.ignoreId) == weapon) {
-                    return true;
-                }
-            }
-            return false;
+            return IsIgnoredId(source);
         }
 
         // Ends the combat a torture hit started: the victim (and its alarm on the player) stands down. SKSE task,
@@ -514,6 +507,15 @@ namespace Classifier
                 return;
             }
             tasks->AddTask([victimId, attackerId]() {
+                // ForgetCalm (Start_Fighting) may have run since this was queued: then the new fight stays.
+                {
+                    std::lock_guard lock(g_lock);
+                    const auto it = g_calm.find(victimId);
+                    if (it == g_calm.end() || it->second.other != attackerId) {
+                        SKSE::log::debug("calm: stop of {:08X} against {:08X} dropped (calm forgotten)", victimId, attackerId);
+                        return;
+                    }
+                }
                 if (StopCombatNow(victimId)) {
                     SKSE::log::debug("calm: victim {:08X} stops fighting torture attacker {:08X}", victimId, attackerId);
                 }
@@ -574,7 +576,17 @@ namespace Classifier
                 if (InTruceLocked(actorId, targetId)) {
                     SKSE::log::info("truce: {:08X} kept from fighting {:08X}", actorId, targetId);
                     if (auto* tasks = SKSE::GetTaskInterface()) {
-                        tasks->AddTask([actorId]() { StopCombatNow(actorId, true); });
+                        tasks->AddTask([actorId, targetId]() {
+                            {
+                                // ForgetTruces / ForgetCalm (Start_Fighting) may have run since this was queued
+                                std::lock_guard lock(g_lock);
+                                if (!InTruceLocked(actorId, targetId)) {
+                                    SKSE::log::info("truce: stop of {:08X} against {:08X} dropped (truce forgotten)", actorId, targetId);
+                                    return;
+                                }
+                            }
+                            StopCombatNow(actorId, true);
+                        });
                     }
                     return RE::BSEventNotifyControl::kContinue;
                 }
@@ -686,6 +698,28 @@ namespace Classifier
         return conf && conf->IsTorture();
     }
 
+    // The timed release normally comes from TakeHits (the Papyrus sync loop). A reaction that never made a wound (the
+    // lash did not apply, the hit was blocked) may never start that loop, so a background timer releases as well.
+    void ScheduleFriendRelease()
+    {
+        if (g_releaseTimer.exchange(true)) {
+            return;
+        }
+        std::thread([]() {
+            for (;;) {
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                {
+                    std::lock_guard lock(g_friendLock);
+                    if (g_friendFlag.empty()) {
+                        g_releaseTimer.store(false);  // under the lock: a flag set after this starts a new timer
+                        return;
+                    }
+                }
+                ReleaseFriendHits(false);
+            }
+        }).detach();
+    }
+
     void SuppressFriendHits(RE::Actor* victim)
     {
         if (!victim) {
@@ -705,6 +739,7 @@ namespace Classifier
         victim->formFlags |= kFlag;
         g_friendFlag[victimId] = NowSeconds();
         SKSE::log::debug("calm: victim {:08X} ignores friendly hits while whipped", victimId);
+        ScheduleFriendRelease();  // only starts a thread; it takes g_friendLock itself after a second
     }
 
     void ReleaseFriendHits(bool all)
@@ -804,6 +839,21 @@ namespace Classifier
     {
         std::lock_guard lock(g_lock);
         g_truce.clear();
+    }
+
+    void ResetSession()
+    {
+        {
+            std::lock_guard lock(g_lock);
+            g_truce.clear();
+            g_recent.clear();
+            g_torture.clear();
+            g_realMagic.clear();
+            g_quiet.clear();
+            g_calm.clear();
+            g_combatStart.clear();
+        }
+        ReleaseFriendHits(true);
     }
 
     void ForgetTruces(RE::Actor* actor)
@@ -915,12 +965,19 @@ namespace Classifier
             }
         }
         const RE::FormID victimId = victim->GetFormID();
+        // A recent Padded Whip hit event is not the answer for every damage call in its window: a spell from the other
+        // hand or a drowning tick right after must still be classified. Only the hands loop below (this call's own
+        // attacker holds the whip) or the last fallback returns ignore for it.
+        bool whipEvent = false;
         if (sourceId) {
             auto causeRef = cause.get();
             auto* hitter = attacker ? attacker : causeRef ? causeRef->As<RE::Actor>() : nullptr;
             auto* form = RE::TESForm::LookupByID(sourceId);
             const Match hit = ClassifyForm(form, hitter);
-            if (hit.source != -2) {
+            if (hit.source == -1) {
+                whipEvent = true;
+                sourceId = 0;
+            } else if (hit.source != -2) {
                 SKSE::log::debug("classify {:08X}: hit event form {:08X} -> {}", victimId, sourceId, IdOf(hit.source));
                 return take(hit, form && form->IsWeapon());
             }
@@ -997,11 +1054,34 @@ namespace Classifier
                 return take({ fall, false }, false);
             }
         }
+        if (whipEvent) {
+            SKSE::log::debug("classify {:08X}: padded whip hit event, nothing else -> ignore", victimId);
+            return take({ -1, false }, true);
+        }
         SKSE::log::debug("classify {:08X}: no hit event or attacker weapon (hit form {:08X}) -> generic", victimId, sourceId);
         if (uncaused && !sourceId && !attacker) {
             *uncaused = true;  // scripted damage (another mod), held until it sticks
         }
         return take({ InjuryConfig::GenericIndex(), false }, false);
+    }
+
+    int ClassifyMelee(RE::Actor* victim, RE::Actor* attacker, const RE::TESObjectWEAP* weapon, bool* unarmedForm)
+    {
+        if (unarmedForm) {
+            *unarmedForm = false;
+        }
+        if (!victim) {
+            return -2;
+        }
+        // The hit's own weapon: the whip -> -1, fists -> the unarmed rule, any other weapon -> its weapon rule. A live
+        // spell effect or an older hit event never replaces it.
+        const Match hit = weapon ? MatchWeapon(weapon, attacker) : MatchUnarmed(attacker);
+        if (unarmedForm) {
+            *unarmedForm = hit.unarmed;
+        }
+        SKSE::log::debug("classify {:08X}: melee hit weapon {:08X} attacker {:08X} -> {}", victim->GetFormID(), weapon ? weapon->GetFormID() : 0,
+            attacker ? attacker->GetFormID() : 0, IdOf(hit.source));
+        return hit.source;
     }
 
     std::string DrownSignals::Text() const

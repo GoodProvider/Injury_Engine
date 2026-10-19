@@ -22,6 +22,10 @@ String Property KEY_LAST_NARRATION = "injury_engine.last_narration" AutoReadOnly
 ; Real time of the victim's last torture hit (any torture type), for the torture narration window / interval
 String Property KEY_LAST_TORTURE = "injury_engine.last_torture" AutoReadOnly
 String Property KEY_IN_ACTION = "injury_engine.in_action" AutoReadOnly
+; Real time the in-action flag was last refreshed (each Torture_Target strike). Older than IN_ACTION_STALE, or in the
+; future (a new game process), the flag is left over from an action a load cut short.
+String Property KEY_IN_ACTION_TIME = "injury_engine.in_action_time" AutoReadOnly
+Float Property IN_ACTION_STALE = 3.0 AutoReadOnly
 ; Torture scene: parallel lists on this quest, one entry per (attacker, victim) pair (no attacker: this quest itself)
 String Property KEY_SC_ATT = "injury_engine.sc_att" AutoReadOnly
 String Property KEY_SC_VIC = "injury_engine.sc_vic" AutoReadOnly
@@ -34,10 +38,12 @@ String Property KEY_SC_NARR = "injury_engine.sc_narr" AutoReadOnly
 String Property KEY_SC_STATE = "injury_engine.sc_state" AutoReadOnly
 String Property KEY_SC_SWITCH = "injury_engine.sc_switch" AutoReadOnly
 String Property KEY_SC_CAUSE = "injury_engine.sc_cause" AutoReadOnly
-; KEY_SC_STATE values: not narrated yet / narrated and in sight / out of sight (never narrated)
+; KEY_SC_STATE values: not narrated yet / narrated and in sight / out of sight (never narrated) / a start still owed
+; but out of sight right now (back in sight: pending again, so a look-away pauses the start instead of cancelling it)
 Int Property SC_PENDING = 0 AutoReadOnly
 Int Property SC_RUNNING = 1 AutoReadOnly
 Int Property SC_HIDDEN = 2 AutoReadOnly
+Int Property SC_WAITING_HIDDEN = 3 AutoReadOnly
 Int Property SC_SEL_START = 0 AutoReadOnly
 Int Property SC_SEL_SWITCH = 1 AutoReadOnly
 Int Property SC_SEL_AGAIN = 2 AutoReadOnly
@@ -94,6 +100,10 @@ Bool Property scene_tick_active = False Auto Hidden
 Bool Property heal_tick_active = False Auto Hidden
 ; TakeHits / HitVictims / HitAttackers share one C++ buffer: only one NarrateRealHits drains it at a time.
 Bool Property hits_draining = False Auto Hidden
+; Same for SyncHealth / TakeSyncEvents -> SyncActors / SyncCasters, and TakeDeaths -> DeathVictims / ... : every
+; native call yields, so a second drain between the take and the reads would hand this one another batch's actors.
+Bool Property sync_draining = False Auto Hidden
+Bool Property deaths_draining = False Auto Hidden
 ; True while a 0.2 s sync update is already scheduled (RegisterForSingleUpdate replaces a pending one).
 Bool Property sync_pending = False Auto Hidden
 ; Method leg of the last healing short-lived event id (wound source or heal-sync source).
@@ -192,8 +202,12 @@ EndFunction
 Function Setup()
     Trace("Setup", "")
     scene_tick_active = False
+    heal_tick_active = False
     hits_draining = False
+    sync_draining = False
+    deaths_draining = False
     sync_pending = False
+    ClearSessions()
     if !Setup_CheckLinks()
         return
     endif
@@ -225,6 +239,29 @@ Function Setup()
     else
         Trace("Setup", "ERROR: Failed to get Injury_Engine_Actions.", true)
     endif
+EndFunction
+
+; Torture pairs and heal sessions are stamped with real time, which starts over with the game process: a session
+; saved in an earlier process could never expire. A load starts with no open session (the injuries themselves are
+; in the co-save; the next hit or heal opens a new one).
+Function ClearSessions()
+    StorageUtil.FormListClear(self, KEY_SC_ATT)
+    StorageUtil.FormListClear(self, KEY_SC_VIC)
+    StorageUtil.StringListClear(self, KEY_SC_SRC)
+    StorageUtil.IntListClear(self, KEY_SC_MASK)
+    StorageUtil.IntListClear(self, KEY_SC_LEVEL)
+    StorageUtil.IntListClear(self, KEY_SC_COUNT)
+    StorageUtil.FloatListClear(self, KEY_SC_LAST)
+    StorageUtil.FloatListClear(self, KEY_SC_NARR)
+    StorageUtil.IntListClear(self, KEY_SC_STATE)
+    StorageUtil.IntListClear(self, KEY_SC_SWITCH)
+    StorageUtil.StringListClear(self, KEY_SC_CAUSE)
+    StorageUtil.FormListClear(self, KEY_HS_TGT)
+    StorageUtil.FormListClear(self, KEY_HS_CASTER)
+    StorageUtil.FloatListClear(self, KEY_HS_LAST)
+    StorageUtil.FloatListClear(self, KEY_HS_NARR)
+    StorageUtil.StringListClear(self, KEY_HS_TEXT)
+    StorageUtil.StringListClear(self, KEY_HS_PEND)
 EndFunction
 
 Bool Function Setup_CheckLinks()
@@ -621,11 +658,39 @@ Function SceneUpdate(int i, String source, int mask, int level, int hits, String
     if cause != ""
         StorageUtil.StringListSet(self, KEY_SC_CAUSE, i, cause)
     endif
-    if visible && st == SC_HIDDEN
-        StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_RUNNING) ; back in sight: joins the next combined line, no start line
-    elseif !visible && st != SC_HIDDEN
+    SceneSetVisible(i, st, visible)
+EndFunction
+
+; Visibility change of pair i (state st): a hidden pair back in sight joins the next combined line with no start line;
+; a pending start out of sight waits (SC_WAITING_HIDDEN) and is pending again once back in sight.
+Function SceneSetVisible(int i, int st, Bool visible)
+    if visible
+        if st == SC_HIDDEN
+            StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_RUNNING)
+        elseif st == SC_WAITING_HIDDEN
+            StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_PENDING)
+        endif
+    elseif st == SC_PENDING
+        StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_WAITING_HIDDEN)
+    elseif st == SC_RUNNING
         StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_HIDDEN)
     endif
+EndFunction
+
+; Index of the pair (att: the attacker form, this quest when none) at hint, or wherever it moved; -1 when gone.
+; Lists shift when another thread removes a pair while this one waits in a native call.
+Int Function SceneIndexOf(Form att, Form vic, int hint)
+    if hint >= 0 && hint < StorageUtil.FormListCount(self, KEY_SC_VIC) && StorageUtil.FormListGet(self, KEY_SC_VIC, hint) == vic && StorageUtil.FormListGet(self, KEY_SC_ATT, hint) == att
+        return hint
+    endif
+    int i = StorageUtil.FormListCount(self, KEY_SC_VIC) - 1
+    while i >= 0
+        if StorageUtil.FormListGet(self, KEY_SC_VIC, i) == vic && StorageUtil.FormListGet(self, KEY_SC_ATT, i) == att
+            return i
+        endif
+        i -= 1
+    endwhile
+    return -1
 EndFunction
 
 Function SceneRemove(int i)
@@ -679,7 +744,7 @@ EndFunction
 ; Pair i still has an unsent start or switch line (hidden pairs have none: they are not narrated).
 Bool Function SceneWaiting(int i)
     int st = StorageUtil.IntListGet(self, KEY_SC_STATE, i)
-    return st == SC_PENDING || (st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 1)
+    return st == SC_PENDING || st == SC_WAITING_HIDDEN || (st == SC_RUNNING && StorageUtil.IntListGet(self, KEY_SC_SWITCH, i) == 1)
 EndFunction
 
 ; Indices of the pairs of a selection (empty array when none).
@@ -746,23 +811,36 @@ Function SceneSend(String phase, int[] picked, Bool purge)
         ReleaseNarration()
         return
     endif
+    ; The pairs as forms first: SceneText (and every other native) yields, and another thread may remove a pair and
+    ; shift the indices meanwhile. After the line is built, each pair is found again by its actors.
+    Form[] atts = Utility.CreateFormArray(picked.Length)
+    Form[] vics = Utility.CreateFormArray(picked.Length)
+    int k = 0
+    while k < picked.Length
+        atts[k] = StorageUtil.FormListGet(self, KEY_SC_ATT, picked[k])
+        vics[k] = StorageUtil.FormListGet(self, KEY_SC_VIC, picked[k])
+        k += 1
+    endwhile
+    String method = StorageUtil.StringListGet(self, KEY_SC_SRC, picked[0])
     String msg = SceneLine(phase, picked)
     Actor player = Game.GetPlayer()
     Bool involved = false
     String cause = ""
-    int k = 0
+    float stamp = Utility.GetCurrentRealTime()
+    k = 0
     while k < picked.Length
-        Actor att = SceneAttacker(picked[k])
-        Actor vic = SceneVictim(picked[k])
-        involved = involved || att == player || vic == player
-        String own = StorageUtil.StringListGet(self, KEY_SC_CAUSE, picked[k])
-        if own != ""
-            if cause == ""
-                cause = own
+        involved = involved || atts[k] == player || vics[k] == player
+        int j = SceneIndexOf(atts[k], vics[k], picked[k])
+        if j >= 0
+            String own = StorageUtil.StringListGet(self, KEY_SC_CAUSE, j)
+            if own != ""
+                if cause == ""
+                    cause = own
+                endif
+                StorageUtil.StringListSet(self, KEY_SC_CAUSE, j, "")
             endif
-            StorageUtil.StringListSet(self, KEY_SC_CAUSE, picked[k], "")
+            StorageUtil.FloatListSet(self, KEY_SC_NARR, j, stamp)
         endif
-        StorageUtil.FloatListSet(self, KEY_SC_NARR, picked[k], Utility.GetCurrentRealTime())
         k += 1
     endwhile
     msg = CauseText(cause) + msg
@@ -770,14 +848,13 @@ Function SceneSend(String phase, int[] picked, Bool purge)
         ReleaseNarration()
         return
     endif
-    Actor speaker = SceneAttacker(picked[0])
-    Actor target = SceneVictim(picked[0])
+    Actor speaker = atts[0] as Actor ; None when the pair has no attacker (stored as this quest)
+    Actor target = vics[0] as Actor
     Trace("SceneSend", phase + " pairs:" + picked.Length + " player:" + involved + ": " + msg)
     if torture_mode == 2
         ReleaseNarration()
     elseif !DirectAllowed("torturing")
         ReleaseNarration()
-        String method = StorageUtil.StringListGet(self, KEY_SC_SRC, picked[0])
         if method == ""
             method = SOURCE_WHIP
         endif
@@ -817,13 +894,13 @@ Function SceneTick()
     float now = Utility.GetCurrentRealTime()
     int i = 0
     while i < total
-        int st = StorageUtil.IntListGet(self, KEY_SC_STATE, i)
+        Form attForm = StorageUtil.FormListGet(self, KEY_SC_ATT, i)
         Actor vic = SceneVictim(i)
-        Bool visible = vic != None && !vic.IsDead() && PairVisible(SceneAttacker(i), vic) ; a dead victim gets no torture line
-        if visible && st == SC_HIDDEN
-            StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_RUNNING)
-        elseif !visible && st != SC_HIDDEN
-            StorageUtil.IntListSet(self, KEY_SC_STATE, i, SC_HIDDEN)
+        Bool visible = vic != None && !vic.IsDead() && PairVisible(attForm as Actor, vic) ; a dead victim gets no torture line
+        ; IsDead / PairVisible yield: another thread may have removed a pair, so write to wherever this one is now
+        int j = SceneIndexOf(attForm, vic, i)
+        if j >= 0 && vic != None
+            SceneSetVisible(j, StorageUtil.IntListGet(self, KEY_SC_STATE, j), visible)
         endif
         i += 1
     endwhile
@@ -859,7 +936,8 @@ Function SceneTick()
         if SceneWaiting(i)
             limit += reply_timeout ; a held start / switch line gets one reply timeout more, then it is stale
         endif
-        if now - StorageUtil.FloatListGet(self, KEY_SC_LAST, i) >= limit
+        float last = StorageUtil.FloatListGet(self, KEY_SC_LAST, i)
+        if now - last >= limit || now < last ; a stamp in the future is from an earlier game process
             SceneRemove(i)
         endif
         i -= 1
@@ -1171,16 +1249,30 @@ Function HealTick()
     float now = Utility.GetCurrentRealTime()
     while i >= 0
         Actor target = HealTarget(i)
-        if target != None && Injury_Engine_Engine.IsHealing(target)
-            StorageUtil.FloatListSet(self, KEY_HS_LAST, i, now)
+        Bool healing = target != None && Injury_Engine_Engine.IsHealing(target)
+        Bool dead = target == None || target.IsDead()
+        ; IsHealing / IsDead yield: another thread may have removed a session, so use wherever this one is now
+        int j = i
+        if target != None
+            j = HealFind(target)
         endif
-        String pend = StorageUtil.StringListGet(self, KEY_HS_PEND, i)
-        if target == None || target.IsDead() || now - StorageUtil.FloatListGet(self, KEY_HS_LAST, i) >= torture_maximum_break
-            HealRemove(i)
-        elseif pend != ""
-            HealSend("start", i, pend) ; the start line held back until SkyrimNet answered
-        elseif now - StorageUtil.FloatListGet(self, KEY_HS_LAST, i) <= torture_again_recent && now - StorageUtil.FloatListGet(self, KEY_HS_NARR, i) >= torture_direct_narration_gap
-            HealSend("again", i, "")
+        if j >= 0
+            if healing
+                StorageUtil.FloatListSet(self, KEY_HS_LAST, j, now)
+            endif
+            String pend = StorageUtil.StringListGet(self, KEY_HS_PEND, j)
+            float last = StorageUtil.FloatListGet(self, KEY_HS_LAST, j)
+            float limit = torture_maximum_break
+            if pend != ""
+                limit += reply_timeout ; a held start line gets one reply timeout more, as in SceneTick
+            endif
+            if dead || now - last >= limit || now < last ; a stamp in the future is from an earlier game process
+                HealRemove(j)
+            elseif pend != ""
+                HealSend("start", j, pend) ; the start line held back until SkyrimNet answered
+            elseif now - last <= torture_again_recent && now - StorageUtil.FloatListGet(self, KEY_HS_NARR, j) >= torture_direct_narration_gap
+                HealSend("again", j, "")
+            endif
         endif
         i -= 1
     endwhile
@@ -1210,18 +1302,33 @@ Function StartSync()
     RegisterForSingleUpdate(SYNC_INTERVAL)
 EndFunction
 
-Function ProcessSyncEventBatch()
-    int[] codes = Injury_Engine_Engine.TakeSyncEvents()
+; Narrates one SyncHealth / TakeSyncEvents batch. The caller holds sync_draining.
+Function NarrateSyncCodes(int[] codes)
     if codes.Length == 0
         return
     endif
     Actor[] targets = Injury_Engine_Engine.SyncActors()
     Actor[] casters = Injury_Engine_Engine.SyncCasters()
     int i = 0
-    while i < codes.Length
+    while i < codes.Length && i < targets.Length && i < casters.Length
         NarrateSourceHeal(codes[i] / 10000, (codes[i] / 1000) % 10, codes[i] % 1000, casters[i], targets[i])
         i += 1
     endwhile
+EndFunction
+
+; One drain at a time (sync_draining, like hits_draining): a call while one runs returns, the running drain takes
+; the events.
+Function ProcessSyncEventBatch()
+    if sync_draining
+        return
+    endif
+    sync_draining = True
+    int[] codes = Injury_Engine_Engine.TakeSyncEvents()
+    while codes.Length > 0
+        NarrateSyncCodes(codes)
+        codes = Injury_Engine_Engine.TakeSyncEvents()
+    endwhile
+    sync_draining = False
 EndFunction
 
 Function DrainInjuryQueues()
@@ -1241,16 +1348,16 @@ Event OnUpdate()
     NarrateDeaths()
     NarrateRealHits()
     SceneTick()
-    int[] codes = Injury_Engine_Engine.SyncHealth()
-    if codes.Length > 0
-        Actor[] targets = Injury_Engine_Engine.SyncActors()
-        Actor[] casters = Injury_Engine_Engine.SyncCasters()
-        int i = 0
-        while i < codes.Length
-            int code = codes[i]
-            NarrateSourceHeal(code / 10000, (code / 1000) % 10, code % 1000, casters[i], targets[i])
-            i += 1
+    ; SyncHealth also takes the queued sync events: skip this tick's sync while another thread drains them (the
+    ; next tick is 0.2 s away)
+    if !sync_draining
+        sync_draining = True
+        int[] codes = Injury_Engine_Engine.SyncHealth()
+        while codes.Length > 0
+            NarrateSyncCodes(codes)
+            codes = Injury_Engine_Engine.TakeSyncEvents()
         endwhile
+        sync_draining = False
     endif
     HealTick()
     if Injury_Engine_Engine.TrackedCount() > 0 || StorageUtil.FormListCount(self, KEY_SC_VIC) > 0 || StorageUtil.FormListCount(self, KEY_HS_TGT) > 0
@@ -1264,11 +1371,22 @@ EndEvent
 ; Killing blows queued by the DLL (a death soon after a real hit): one death line each. In sight with narration on:
 ; DirectNarration (once per death, no cooloff) when SkyrimNet has answered the last narration (ClaimNarration);
 ; otherwise a short-lived injury_death event. Mode Event: always the event; Silent: nothing.
+; One drain at a time (deaths_draining): a call while one runs returns, the running drain takes the deaths.
 Function NarrateDeaths()
-    String[] texts = Injury_Engine_Engine.TakeDeaths()
-    if texts.Length == 0
+    if deaths_draining
         return
     endif
+    deaths_draining = True
+    String[] texts = Injury_Engine_Engine.TakeDeaths()
+    while texts.Length > 0
+        NarrateDeathBatch(texts)
+        texts = Injury_Engine_Engine.TakeDeaths()
+    endwhile
+    deaths_draining = False
+EndFunction
+
+; One TakeDeaths batch. The caller holds deaths_draining.
+Function NarrateDeathBatch(String[] texts)
     Actor[] victims = Injury_Engine_Engine.DeathVictims()
     Actor[] attackers = Injury_Engine_Engine.DeathAttackers()
     String[] sources = Injury_Engine_Engine.DeathSources()
@@ -1596,11 +1714,13 @@ Int Function Strike(Actor attacker, Actor victim, String text, Int count, String
     endif
     int mask = 0
     int worst = 0
+    int hits = 0
     int code = -1
     int i = 0
     while i < count
         code = Injury_Engine_Engine.HitPart(victim, attacker, source, index)
         if code >= 0
+            hits += 1
             mask = Math.LogicalOr(mask, MaskOf(code))
             if LevelOf(code) > worst
                 worst = LevelOf(code)
@@ -1609,27 +1729,16 @@ Int Function Strike(Actor attacker, Actor victim, String text, Int count, String
         i += 1
     endwhile
     Trace("Strike", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " parts:" + PartsText(mask) + " level:" + worst)
-    if code < 0
+    if hits == 0
         if narrate && text != ""
-            DirectNarrate(text, attacker, victim, "torture")
+            DirectNarrate(text, attacker, victim, "torture") ; nothing landed: the caller's own line only
         endif
         return code
     endif
     if narrate
-        String msg = text
-        if narration_enabled
-            String injury = Injury_Engine_Engine.HitText(source, attacker, victim, mask, worst, count)
-            if injury != ""
-                if msg != ""
-                    msg += " "
-                endif
-                msg += injury
-            endif
-        endif
-        if msg != ""
-            DirectNarrate(msg, attacker, victim, "torture")
-        endif
-        StorageUtil.SetFloatValue(victim, KEY_LAST_NARRATION, Utility.GetCurrentRealTime())
+        ; the same path as External_Damage: the scene and the reply gate, the caller's text leading the line, so an
+        ; open scene for this pair does not speak beside it
+        NarrateHits(attacker, victim, source, mask, worst, hits, text)
     endif
     ClearHealBatch(victim)
     StartSync()

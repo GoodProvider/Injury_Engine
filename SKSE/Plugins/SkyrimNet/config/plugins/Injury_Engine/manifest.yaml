@@ -1,6 +1,6 @@
 plugin:
   name: "Injury_Engine"
-  version: "0.1.1"
+  version: "0.1.2"
   description: "Torture damage for SkyrimNet: whipping, pinching, slapping, pulling, punching and companion fire / frost / shock, with wound narration and a Torture_Target action"
   icon: "🪢"
 

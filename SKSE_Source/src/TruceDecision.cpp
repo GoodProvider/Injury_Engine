@@ -41,7 +41,9 @@ namespace TruceDecision
         {
             RE::FormID target = 0;
             double since = 0.0;  // real seconds
+            std::uint64_t ticket = 0;  // this request; an answer carrying another ticket is stale
         };
+        std::uint64_t g_nextTicket = 0;
         std::unordered_map<RE::FormID, Waiting> g_inFlight;  // speakers waiting for an answer
         // A request older than this no longer blocks its speaker (a player box closed without a callback, a lost
         // decision reply).
@@ -165,13 +167,37 @@ namespace TruceDecision
                 };
                 return time(a) < time(b);
             });
+            // A string field or "" (a present field of another type must not throw out of Ask).
+            const auto str = [](const nlohmann::json& obj, const char* key) {
+                const auto it = obj.find(key);
+                return it != obj.end() && it->is_string() ? it->get<std::string>() : std::string{};
+            };
+            // The line sits in "data": a dialogue object ({"dialogue": ...}), or a string that may itself be JSON.
+            const auto lineOf = [&str](const nlohmann::json& e) {
+                const auto data = e.find("data");
+                nlohmann::json obj;
+                if (data != e.end() && data->is_object()) {
+                    obj = *data;
+                } else if (data != e.end() && data->is_string()) {
+                    obj = nlohmann::json::parse(data->get<std::string>(), nullptr, false);
+                    if (!obj.is_object()) {
+                        return data->get<std::string>();
+                    }
+                }
+                for (const char* key : { "dialogue", "line", "text", "narration" }) {
+                    if (std::string line = obj.is_object() ? str(obj, key) : std::string{}; !line.empty()) {
+                        return line;
+                    }
+                }
+                return str(e, "text");
+            };
             for (const auto& e : list) {
                 if (!e.is_object()) {
                     continue;
                 }
-                const std::string type = e.value("type", std::string{});
-                const std::string text = Trim(e.value("text", std::string{}));
-                const std::string who = e.value("originatingActorName", std::string{});
+                const std::string type = str(e, "type");
+                const std::string text = Trim(lineOf(e));
+                const std::string who = str(e, "originatingActorName");
                 if (text.empty() || type == "spell" || type == "hit" || type == "combat" || type == "npc_thoughts" ||
                     type == "gamemaster_dialogue") {
                     continue;
@@ -224,7 +250,7 @@ namespace TruceDecision
         // Game thread. False when the request can go out (and marks `speaker` as waiting). A speaker still waiting on
         // another target gets an immediate refusal for this one, since Papyrus has already acted on it; a repeat for
         // the same target is ignored (its answer is coming).
-        bool Busy(RE::FormID speaker, RE::FormID target, bool yield)
+        bool Busy(RE::FormID speaker, RE::FormID target, bool yield, std::uint64_t& ticket)
         {
             const double now = NowSeconds();
             if (const auto it = g_inFlight.find(speaker); it != g_inFlight.end()) {
@@ -240,7 +266,8 @@ namespace TruceDecision
                 }
                 SKSE::log::warn("truce: {:08X} request to {:08X} never answered; dropped", speaker, it->second.target);
             }
-            g_inFlight[speaker] = { target, now };
+            ticket = ++g_nextTicket;
+            g_inFlight[speaker] = { target, now, ticket };
             return false;
         }
 
@@ -250,6 +277,14 @@ namespace TruceDecision
             if (const auto it = g_inFlight.find(speaker); it != g_inFlight.end() && it->second.target == target) {
                 g_inFlight.erase(it);
             }
+        }
+
+        // Game thread. True while `ticket` is still the live request of `speaker`: not timed out and replaced by Busy,
+        // not cleared by Reset (a load or new game).
+        bool Current(RE::FormID speaker, std::uint64_t ticket)
+        {
+            const auto it = g_inFlight.find(speaker);
+            return it != g_inFlight.end() && it->second.ticket == ticket;
         }
 
         // Game thread.
@@ -282,9 +317,14 @@ namespace TruceDecision
         }
 
         // Game thread. The answer for `speaker` arrived (or failed).
-        void OnAnswer(RE::FormID speaker, RE::FormID target, bool yield, int success, const std::string& answer,
+        void OnAnswer(RE::FormID speaker, RE::FormID target, std::uint64_t ticket, bool yield, int success, const std::string& answer,
             const std::string& json)
         {
+            if (!Current(speaker, ticket)) {
+                SKSE::log::info("{}: {:08X} -> {:08X} answer arrived after the request was dropped; ignored", yield ? "surrender" : "truce",
+                    speaker, target);
+                return;
+            }
             Done(speaker, target);
             if (!success) {
                 NoteFailure(speaker, json);
@@ -301,16 +341,22 @@ namespace TruceDecision
         class PlayerChoice : public RE::IMessageBoxCallback
         {
         public:
-            PlayerChoice(RE::FormID speaker, RE::FormID target, bool yield) :
-                _speaker(speaker), _target(target), _yield(yield) {}
+            PlayerChoice(RE::FormID speaker, RE::FormID target, std::uint64_t ticket, bool yield) :
+                _speaker(speaker), _target(target), _ticket(ticket), _yield(yield) {}
 
             void Run(std::uint8_t a_button) override
             {
                 const RE::FormID speaker = _speaker;
                 const RE::FormID target = _target;
+                const std::uint64_t ticket = _ticket;
                 const bool yield = _yield;
                 const bool accepted = a_button == 0;
-                SKSE::GetTaskInterface()->AddTask([speaker, target, yield, accepted]() {
+                SKSE::GetTaskInterface()->AddTask([speaker, target, ticket, yield, accepted]() {
+                    if (!Current(speaker, ticket)) {
+                        SKSE::log::info("{}: player answer for {:08X} came after the request was dropped; ignored", yield ? "surrender" : "truce",
+                            speaker);
+                        return;
+                    }
                     Done(speaker, target);
                     SKSE::log::info("{}: player {} {:08X}", yield ? "surrender" : "truce", accepted ? "accepted" : "refused", speaker);
                     Push(speaker, target, accepted, yield);
@@ -320,12 +366,13 @@ namespace TruceDecision
         private:
             RE::FormID _speaker;
             RE::FormID _target;
+            std::uint64_t _ticket;
             bool _yield;
         };
 
         // Vanilla message box "<speaker> wishes to ... Do you accept?" with Yes / No (Esc = No). Queued with
         // MessageBoxData::QueueMessage (SE 51422 / AE 52271, as the SkyMessage plugin does); not on VR.
-        bool ShowPlayerBox(RE::Actor* speaker, RE::FormID target, bool yield)
+        bool ShowPlayerBox(RE::Actor* speaker, RE::FormID target, std::uint64_t ticket, bool yield)
         {
             if (REL::Module::IsVR()) {
                 SKSE::log::warn("truce: player message box not supported on VR");
@@ -343,7 +390,7 @@ namespace TruceDecision
             box->bodyText = text.c_str();
             box->buttonText.push_back("Yes");
             box->buttonText.push_back("No");
-            box->callback = RE::make_smart<PlayerChoice>(speaker->GetFormID(), target, yield);
+            box->callback = RE::make_smart<PlayerChoice>(speaker->GetFormID(), target, ticket, yield);
             box->cancelButtonIndex = 1;
             box->isCancellable = true;
             box->warningType = 25;
@@ -377,12 +424,13 @@ namespace TruceDecision
         }
         const RE::FormID speakerId = speaker->GetFormID();
         const RE::FormID targetId = target->GetFormID();
+        std::uint64_t ticket = 0;
         if (target->IsPlayerRef()) {
             // The player answers with a Yes / No box; no decision model involved.
-            if (Busy(speakerId, targetId, yield)) {
+            if (Busy(speakerId, targetId, yield, ticket)) {
                 return;
             }
-            if (!ShowPlayerBox(speaker, targetId, yield)) {
+            if (!ShowPlayerBox(speaker, targetId, ticket, yield)) {
                 Done(speakerId, targetId);
                 Push(speakerId, targetId, false, yield);
                 return;
@@ -402,17 +450,17 @@ namespace TruceDecision
             Push(speakerId, targetId, false, yield);
             return;
         }
-        if (Busy(speakerId, targetId, yield)) {
+        if (Busy(speakerId, targetId, yield, ticket)) {
             return;
         }
         const std::string ctx = BuildContext(speaker, target);
         const bool queued = PublicSendCustomDecisionToLLM(yield ? kSurrenderTemplate : kTruceTemplate, ctx.c_str(),
-            kMaxProbabilities, [speakerId, targetId, yield](const char* answer, const char* resultJson, int success) {
+            kMaxProbabilities, [speakerId, targetId, ticket, yield](const char* answer, const char* resultJson, int success) {
                 // SkyrimNet ThreadPool: copy, then do the work on the game thread.
                 std::string a = answer ? answer : "";
                 std::string j = resultJson ? resultJson : "";
-                SKSE::GetTaskInterface()->AddTask([speakerId, targetId, yield, success, a = std::move(a), j = std::move(j)]() {
-                    OnAnswer(speakerId, targetId, yield, success, a, j);
+                SKSE::GetTaskInterface()->AddTask([speakerId, targetId, ticket, yield, success, a = std::move(a), j = std::move(j)]() {
+                    OnAnswer(speakerId, targetId, ticket, yield, success, a, j);
                 });
             });
         if (!queued) {

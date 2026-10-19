@@ -1,3 +1,17 @@
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2
+
+Stability fix pass. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
+
+- **Papyrus threads.** Sync and death drains have their own drain flags, and scene / heal entries are found again by their actors after any yielding call.
+- **Clean loads.** Torture scenes, heal sessions and the DLL's classify / calm / truce caches are reset on load; a stale `in_action` flag no longer swallows real lashes.
+- **Swing-based melee.** `ProcessHitData` classifies the actual swing (`HitData.weapon`), and a recent whip hit no longer hides later damage.
+- **Several truces per NPC.** Each truce partner is saved with its own end time; old single-partner saves are migrated.
+- **Late truce answers ignored.** Each request has a ticket; answers for timed-out or replaced requests are dropped.
+- **Torture start waits out of sight** instead of being cancelled, and held heal start lines are no longer dropped.
+- **Overlay ordering.** Pushes carry a sequence number so the page never shows an older state.
+- **Config hardening.** A bad field in an injury JSON skips that rule only; bad region indices fall back to `body`.
+- **Performance.** Classify forms are resolved to FormIDs once instead of looked up by name per tick.
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1
 
 Freeze fix, drowning and installer update. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.

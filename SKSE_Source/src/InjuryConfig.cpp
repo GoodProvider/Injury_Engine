@@ -36,12 +36,16 @@ namespace InjuryConfig
             return 0;
         }
 
-        // -1 when the key is absent: the rule does not care. 0 / 1 when it is a bool.
+        // -1 when the key is absent ("don't care"). A present value that is not a bool (`"npc": 1`) is an error: the
+        // rule is skipped rather than silently matching everyone.
         int TriBool(const nlohmann::json& rule, const char* key)
         {
             const auto it = rule.find(key);
-            if (it == rule.end() || !it->is_boolean()) {
+            if (it == rule.end()) {
                 return -1;
+            }
+            if (!it->is_boolean()) {
+                throw std::runtime_error(std::string("\"") + key + "\" must be true or false");
             }
             return it->get<bool>() ? 1 : 0;
         }
@@ -57,33 +61,38 @@ namespace InjuryConfig
                     SKSE::log::warn("injuries: {} classify: an entry is not an object, ignored", g_sources[sourceIndex].id);
                     continue;
                 }
-                ClassifyRule r;
-                r.source = sourceIndex;
-                r.priority = rule.value("priority", 0);
-                if (const auto types = rule.find("weapon_types"); types != rule.end() && types->is_array()) {
-                    for (const auto& name : *types) {
-                        if (name.is_string()) {
-                            r.weaponTypes.push_back(name.get<std::string>());
+                // A field of the wrong type (nlohmann throws type_error) skips this rule, not the whole load.
+                try {
+                    ClassifyRule r;
+                    r.source = sourceIndex;
+                    r.priority = rule.value("priority", 0);
+                    if (const auto types = rule.find("weapon_types"); types != rule.end() && types->is_array()) {
+                        for (const auto& name : *types) {
+                            if (name.is_string()) {
+                                r.weaponTypes.push_back(name.get<std::string>());
+                            }
                         }
                     }
+                    r.keyword = rule.value("keyword", "");
+                    r.withoutKeyword = rule.value("without_keyword", "");
+                    r.resist = rule.value("resist", "");
+                    r.effectFile = rule.value("effect_file", "");
+                    r.effectId = FormIdOf(rule, "effect_id");
+                    r.hasEffect = r.effectId != 0 && !r.effectFile.empty();
+                    r.ignoreFile = rule.value("ignore_weapon_file", "");
+                    r.ignoreId = FormIdOf(rule, "ignore_weapon_id");
+                    r.hasIgnore = r.ignoreId != 0 && !r.ignoreFile.empty();
+                    r.unarmed = rule.value("unarmed", false);
+                    r.npc = TriBool(rule, "npc");
+                    r.combat = TriBool(rule, "combat");
+                    r.falling = rule.value("falling", false);
+                    r.minDrop = rule.value("min_drop", -1.0f);
+                    r.drowning = rule.value("drowning", false);
+                    r.fallback = rule.value("fallback", false);
+                    g_rules.push_back(std::move(r));
+                } catch (const std::exception& e) {
+                    SKSE::log::error("injuries: {} classify rule skipped: {}", g_sources[sourceIndex].id, e.what());
                 }
-                r.keyword = rule.value("keyword", "");
-                r.withoutKeyword = rule.value("without_keyword", "");
-                r.resist = rule.value("resist", "");
-                r.effectFile = rule.value("effect_file", "");
-                r.effectId = FormIdOf(rule, "effect_id");
-                r.hasEffect = r.effectId != 0 && !r.effectFile.empty();
-                r.ignoreFile = rule.value("ignore_weapon_file", "");
-                r.ignoreId = FormIdOf(rule, "ignore_weapon_id");
-                r.hasIgnore = r.ignoreId != 0 && !r.ignoreFile.empty();
-                r.unarmed = rule.value("unarmed", false);
-                r.npc = TriBool(rule, "npc");
-                r.combat = TriBool(rule, "combat");
-                r.falling = rule.value("falling", false);
-                r.minDrop = rule.value("min_drop", -1.0f);
-                r.drowning = rule.value("drowning", false);
-                r.fallback = rule.value("fallback", false);
-                g_rules.push_back(std::move(r));
             }
         }
 
@@ -175,7 +184,12 @@ namespace InjuryConfig
             if (const auto o = j.find("overlay"); o != j.end() && o->is_object()) {
                 if (const auto order = o->find("order"); order != o->end() && order->is_array() && order->size() == kCoreParts) {
                     for (int i = 0; i < kCoreParts; ++i) {
-                        b.overlayOrder[i] = (*order)[i].get<int>();
+                        const int part = (*order)[i].is_number_integer() ? (*order)[i].get<int>() : -1;
+                        if (part < 0 || part >= kCoreParts) {
+                            SKSE::log::warn("injuries: overlay.order[{}] is not a part index 0..{}; default kept", i, kCoreParts - 1);
+                            continue;
+                        }
+                        b.overlayOrder[i] = part;
                     }
                 }
             }
@@ -224,7 +238,10 @@ namespace InjuryConfig
                     b.partName[i] = e.value("name", b.partName[i]);
                     b.partMax[i] = std::max(3, e.value("max", b.partMax[i]));
                     b.partWeight[i] = std::max(0.01f, e.value("weight", b.partWeight[i]));
-                    const std::string region = e.value("region", b.regionName[b.partRegion[i]]);
+                    // the default is read only when "region" is absent: partRegion may not point into regionName yet
+                    const std::string region = e.contains("region") ? e.value("region", std::string{})
+                                               : b.partRegion[i] < static_cast<int>(b.regionName.size()) ? b.regionName[b.partRegion[i]]
+                                                                                                         : std::string("body");
                     auto it = std::ranges::find(b.regionName, region);
                     if (it == b.regionName.end()) {
                         b.regionName.push_back(region);
@@ -281,19 +298,42 @@ namespace InjuryConfig
             const Body& b = g_body;
             for (auto& s : g_sources) {
                 s.partWeight = b.partWeight;
-                s.pointsPerSecond = std::max(0.1f, s.json.value("/hook/points_per_second"_json_pointer, 2.0f));
-                s.pointsPerHit = std::clamp(s.json.value("/hook/points_per_hit"_json_pointer, 1), 1, 10);
-                const auto w = s.json.find("part_weights");
-                if (w == s.json.end() || !w->is_object()) {
-                    continue;
-                }
-                for (const auto& [name, value] : w->items()) {
-                    const auto it = std::ranges::find(b.partName, name);
-                    if (it == b.partName.end() || !value.is_number()) {
-                        SKSE::log::warn("injuries: {} part_weights: unknown part \"{}\" ignored", s.id, name);
+                try {
+                    s.pointsPerSecond = std::max(0.1f, s.json.value("/hook/points_per_second"_json_pointer, 2.0f));
+                    s.pointsPerHit = std::clamp(s.json.value("/hook/points_per_hit"_json_pointer, 1), 1, 10);
+                    const auto w = s.json.find("part_weights");
+                    if (w == s.json.end() || !w->is_object()) {
                         continue;
                     }
-                    s.partWeight[it - b.partName.begin()] = std::max(0.0f, value.get<float>());
+                    for (const auto& [name, value] : w->items()) {
+                        const auto it = std::ranges::find(b.partName, name);
+                        if (it == b.partName.end() || !value.is_number()) {
+                            SKSE::log::warn("injuries: {} part_weights: unknown part \"{}\" ignored", s.id, name);
+                            continue;
+                        }
+                        s.partWeight[it - b.partName.begin()] = std::max(0.0f, value.get<float>());
+                    }
+                } catch (const std::exception& e) {
+                    SKSE::log::error("injuries: {} hook / part_weights skipped: {}", s.id, e.what());
+                }
+            }
+        }
+
+        // Every part must name a region that exists: a missing or short sexual_parts.json leaves parts 6..10 on their
+        // default indices, past the end of regionName (the decorator and the death text index it).
+        void CheckRegions()
+        {
+            Body& b = g_body;
+            if (b.regionName.empty()) {
+                b.regionName.push_back("body");
+            }
+            const auto body = std::ranges::find(b.regionName, std::string("body"));
+            const int fallback = body != b.regionName.end() ? static_cast<int>(body - b.regionName.begin()) : 0;
+            for (int i = 0; i < kPartCount; ++i) {
+                if (b.partRegion[i] < 0 || b.partRegion[i] >= static_cast<int>(b.regionName.size())) {
+                    SKSE::log::warn("injuries: part {} has no region (index {}); using \"{}\"", b.partName[i], b.partRegion[i],
+                        b.regionName[fallback]);
+                    b.partRegion[i] = fallback;
                 }
             }
         }
@@ -419,6 +459,7 @@ namespace InjuryConfig
             ReadLungs();
             FinishSources();
         }
+        CheckRegions();
         for (int i = 0; i < static_cast<int>(g_sources.size()); ++i) {
             ReadClassify(i);
         }

@@ -144,16 +144,18 @@ namespace InjuryEngine
         std::unordered_map<RE::FormID, std::array<double, kMaxSources>> g_lastTorture;
         std::vector<Event> g_events;                        // not yet taken by SyncHealth
         std::vector<HitEntry> g_hits;                       // real hits not yet taken by Papyrus
-        std::vector<RE::Actor*> g_syncActors;
-        std::vector<RE::Actor*> g_syncCasters;
-        std::vector<RE::Actor*> g_hitVictims;
-        std::vector<RE::Actor*> g_hitAttackers;
+        // Result buffers hold FormIDs, resolved when Papyrus reads them: an actor deleted in between (a summon) must
+        // not reach the VM as a dangling pointer.
+        std::vector<RE::FormID> g_syncActors;
+        std::vector<RE::FormID> g_syncCasters;
+        std::vector<RE::FormID> g_hitVictims;
+        std::vector<RE::FormID> g_hitAttackers;
         std::vector<bool> g_hitUnarmed;
         std::vector<int> g_hitCounts;
         std::unordered_map<RE::FormID, LastReal> g_lastReal;  // per victim, see LastReal
         std::vector<DeathEntry> g_deaths;                     // killing blows not yet taken by Papyrus
-        std::vector<RE::Actor*> g_deathVictims;
-        std::vector<RE::Actor*> g_deathAttackers;
+        std::vector<RE::FormID> g_deathVictims;
+        std::vector<RE::FormID> g_deathAttackers;
         std::vector<std::string> g_deathSources;
         // Last release time per victim|attacker|source: TakeHits lets one hit per key through per kHitGap.
         std::unordered_map<std::string, std::chrono::steady_clock::time_point> g_hitReleased;
@@ -221,6 +223,10 @@ namespace InjuryEngine
             return duration<double>(steady_clock::now().time_since_epoch()).count();
         }
 
+        // Shared by the damage threads (under g_lock) and the death sink (outside it): std::mt19937 is not thread-safe,
+        // so every draw takes its own lock.
+        std::mutex g_rngLock;
+
         std::mt19937& Rng()
         {
             static std::mt19937 rng{ std::random_device{}() };
@@ -229,7 +235,31 @@ namespace InjuryEngine
 
         int RandomIndex(int count)
         {
+            std::lock_guard lock(g_rngLock);
             return std::uniform_int_distribution<int>(0, count - 1)(Rng());
+        }
+
+        float RandomFloat(float low, float high)
+        {
+            std::lock_guard lock(g_rngLock);
+            return std::uniform_real_distribution<float>(low, high)(Rng());
+        }
+
+        // Papyrus reads of the FormID result buffers above.
+        std::vector<RE::Actor*> ResolveActors(const std::vector<RE::FormID>& ids)
+        {
+            std::vector<RE::Actor*> out;
+            out.reserve(ids.size());
+            for (const RE::FormID id : ids) {
+                out.push_back(id ? RE::TESForm::LookupByID<RE::Actor>(id) : nullptr);
+            }
+            return out;
+        }
+
+        RE::FormID IdOf(const RE::ActorHandle& handle)
+        {
+            const auto actor = handle.get();
+            return actor ? actor->GetFormID() : 0;
         }
 
         int WhipIndex()
@@ -242,7 +272,8 @@ namespace InjuryEngine
         // Parts that new hits, prompts and the overlay use.
         int ActiveParts()
         {
-            return g_sexualParts ? kPartCount : kCoreParts;
+            // lungs (the last index) are never an active part: only drowning reaches them, through PartActive
+            return g_sexualParts ? kPartLungs : kCoreParts;
         }
 
         constexpr int kPartPussy = 7;
@@ -271,7 +302,7 @@ namespace InjuryEngine
             if (total <= 0.0f) {
                 return candidates[RandomIndex(count)];
             }
-            float roll = std::uniform_real_distribution<float>(0.0f, total)(Rng());
+            float roll = RandomFloat(0.0f, total);
             for (int i = 0; i < count; ++i) {
                 roll -= weight[candidates[i]];
                 if (roll < 0.0f && weight[candidates[i]] > 0.0f) {
@@ -936,18 +967,20 @@ namespace InjuryEngine
         std::vector<std::int32_t> DrainPendingEvents()
         {
             std::vector<std::int32_t> codes;
+            // an empty take must not wipe the arrays another Papyrus thread is still reading
+            if (g_events.empty()) {
+                return codes;
+            }
             g_syncActors.clear();
             g_syncCasters.clear();
             for (const auto& e : g_events) {
-                auto* actor = RE::TESForm::LookupByID<RE::Actor>(e.actor);
-                if (!actor) {
+                if (!RE::TESForm::LookupByID<RE::Actor>(e.actor)) {
                     continue;
                 }
-                auto* caster = e.caster.get().get();
-                SKSE::log::debug("sync event {:08X} kind:{} source:{} percent:{} caster:{:08X}", e.actor, e.kind, e.source, e.percent,
-                    caster ? caster->GetFormID() : 0);
+                const RE::FormID caster = IdOf(e.caster);
+                SKSE::log::debug("sync event {:08X} kind:{} source:{} percent:{} caster:{:08X}", e.actor, e.kind, e.source, e.percent, caster);
                 codes.push_back(e.kind * 10000 + e.source * 1000 + e.percent);
-                g_syncActors.push_back(actor);
+                g_syncActors.push_back(e.actor);
                 g_syncCasters.push_back(caster);
             }
             g_events.clear();
@@ -1626,7 +1659,7 @@ namespace InjuryEngine
                 }
             }
             if (!AnyInjury(st)) {
-                g_actors.erase(id);
+                Erase(id);  // also lets a torture-downed actor stand up (ReleaseDowned)
             }
         }
         NotifyPapyrus();
@@ -1769,8 +1802,8 @@ namespace InjuryEngine
             SKSE::log::debug("take hits: {:08X} {} mask:{} level:{} fresh:{} count:{}", e.victim, SourceId(e.source), e.mask, e.level,
                 e.fresh, e.count);
             codes.push_back(EncodeHit(e.fresh, e.source, e.mask, e.level));
-            g_hitVictims.push_back(victim);
-            g_hitAttackers.push_back(e.attacker.get().get());
+            g_hitVictims.push_back(e.victim);
+            g_hitAttackers.push_back(IdOf(e.attacker));
             g_hitUnarmed.push_back(e.unarmed);
             g_hitCounts.push_back(e.count);
         }
@@ -1814,13 +1847,13 @@ namespace InjuryEngine
     std::vector<RE::Actor*> HitVictims()
     {
         std::lock_guard lock(g_lock);
-        return g_hitVictims;
+        return ResolveActors(g_hitVictims);
     }
 
     std::vector<RE::Actor*> HitAttackers()
     {
         std::lock_guard lock(g_lock);
-        return g_hitAttackers;
+        return ResolveActors(g_hitAttackers);
     }
 
     void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect)
@@ -1994,13 +2027,13 @@ namespace InjuryEngine
     std::vector<RE::Actor*> SyncActors()
     {
         std::lock_guard lock(g_lock);
-        return g_syncActors;
+        return ResolveActors(g_syncActors);
     }
 
     std::vector<RE::Actor*> SyncCasters()
     {
         std::lock_guard lock(g_lock);
-        return g_syncCasters;
+        return ResolveActors(g_syncCasters);
     }
 
     int TrackedCount()
@@ -2234,7 +2267,7 @@ namespace InjuryEngine
         text += InjuryConfig::Render(pick.is_string() ? pick.get<std::string>() : std::string(), vars);
         const nlohmann::json soil = InjuryConfig::Json(source, "death.soil");
         const float chance = InjuryConfig::Number(source, "death.soil_chance", 0.0f);
-        if (soil.is_array() && !soil.empty() && std::uniform_real_distribution<float>(0.0f, 1.0f)(Rng()) < chance) {
+        if (soil.is_array() && !soil.empty() && RandomFloat(0.0f, 1.0f) < chance) {
             const auto& extra = soil[RandomIndex(static_cast<int>(soil.size()))];
             if (extra.is_string()) {
                 text += " " + InjuryConfig::Render(extra.get<std::string>(), vars);
@@ -2329,13 +2362,13 @@ namespace InjuryEngine
         g_deathAttackers.clear();
         g_deathSources.clear();
         for (auto& d : g_deaths) {
-            auto* victim = d.victim.get().get();
+            const RE::FormID victim = IdOf(d.victim);
             if (!victim) {
                 continue;
             }
             texts.push_back(d.text);
             g_deathVictims.push_back(victim);
-            g_deathAttackers.push_back(d.attacker.get().get());
+            g_deathAttackers.push_back(IdOf(d.attacker));
             g_deathSources.push_back(SourceId(d.source));
         }
         g_deaths.clear();
@@ -2345,13 +2378,13 @@ namespace InjuryEngine
     std::vector<RE::Actor*> DeathVictims()
     {
         std::lock_guard lock(g_lock);
-        return g_deathVictims;
+        return ResolveActors(g_deathVictims);
     }
 
     std::vector<RE::Actor*> DeathAttackers()
     {
         std::lock_guard lock(g_lock);
-        return g_deathAttackers;
+        return ResolveActors(g_deathAttackers);
     }
 
     std::vector<std::string> DeathSources()
@@ -2918,6 +2951,8 @@ namespace InjuryEngine
         g_syncCasters.clear();
         g_hitVictims.clear();
         g_hitAttackers.clear();
+        g_hitUnarmed.clear();
+        g_hitCounts.clear();
         g_lastReal.clear();
         g_deaths.clear();
         g_deathVictims.clear();

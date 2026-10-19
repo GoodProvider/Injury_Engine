@@ -13,8 +13,12 @@ Float Property TRUCE_HOURS = 24.0 AutoReadOnly
 String Property KEY_TRUCE_AGGRESSION = "injury_engine.truce_aggression" AutoReadOnly
 String Property KEY_TRUCE_UNTIL = "injury_engine.truce_until" AutoReadOnly
 String Property KEY_TRUCE_LIST = "injury_engine.truce_actors" AutoReadOnly
-; StorageUtil: the truce partner per calmed actor (the DLL's truce guard is noted again from it on load)
+; StorageUtil: the truce partner per calmed actor, as saved before 0.1.2 (one partner); migrated to the lists below
 String Property KEY_TRUCE_WITH = "injury_engine.truce_with" AutoReadOnly
+; StorageUtil: every truce partner of a calmed actor and that truce's end (game days), parallel lists on the actor.
+; The DLL's pair-keyed truce guard is noted again from them on load.
+String Property KEY_TRUCE_PARTNERS = "injury_engine.truce_partners" AutoReadOnly
+String Property KEY_TRUCE_PARTNER_UNTIL = "injury_engine.truce_partner_until" AutoReadOnly
 ; TakeTruces / TruceSpeakers / ... share one C++ buffer: only one drain at a time.
 Bool Property truces_draining = False Auto Hidden
 
@@ -84,6 +88,7 @@ Function TortureTarget(Actor speaker, Actor target, String type, String strikeCo
 
     Trace("TortureTarget", speaker.GetDisplayName() + " -> " + target.GetDisplayName() + " " + source + " strikes:" + strikes + " given:" + given)
     StorageUtil.SetIntValue(speaker, whip_main.KEY_IN_ACTION, 1)
+    StorageUtil.SetFloatValue(speaker, whip_main.KEY_IN_ACTION_TIME, Utility.GetCurrentRealTime())
 
     if whipping
         speaker.EquipItem(whip, false, true)
@@ -99,6 +104,8 @@ Function TortureTarget(Actor speaker, Actor target, String type, String strikeCo
 
     int done = 0
     while done < strikes && !target.IsDead() && !speaker.IsDead()
+        ; the flag stays fresh while strikes come (LashEffect ignores a stale one: a load drops this stack mid-wait)
+        StorageUtil.SetFloatValue(speaker, whip_main.KEY_IN_ACTION_TIME, Utility.GetCurrentRealTime())
         int code
         if whipping
             Debug.SendAnimationEvent(speaker, "attackStart")
@@ -118,6 +125,7 @@ Function TortureTarget(Actor speaker, Actor target, String type, String strikeCo
 
     Utility.Wait(0.5) ; let a late enchantment hit from the last swing see the in-action flag
     StorageUtil.UnsetIntValue(speaker, whip_main.KEY_IN_ACTION)
+    StorageUtil.UnsetFloatValue(speaker, whip_main.KEY_IN_ACTION_TIME)
     if whipping
         speaker.SheatheWeapon()
         if previous != None && previous != whip
@@ -251,12 +259,61 @@ Function GuardTruce(Actor speaker, Actor target)
     while i < 2
         Actor a = pair[i]
         if a != Game.GetPlayer() && StorageUtil.HasFloatValue(a, KEY_TRUCE_AGGRESSION)
-            StorageUtil.SetFormValue(a, KEY_TRUCE_WITH, pair[1 - i])
+            SetPartner(a, pair[1 - i], untilTime)
             StorageUtil.SetFloatValue(a, KEY_TRUCE_UNTIL, untilTime)
         endif
         i += 1
     endwhile
     Injury_Engine_Engine.NoteTruce(speaker, target, untilTime)
+EndFunction
+
+; One saved truce of `a` with `other` (an actor may hold several, the player among them), ending at untilTime.
+Function SetPartner(Actor a, Actor other, Float untilTime)
+    int i = StorageUtil.FormListFind(a, KEY_TRUCE_PARTNERS, other)
+    if i < 0
+        StorageUtil.FormListAdd(a, KEY_TRUCE_PARTNERS, other, true)
+        StorageUtil.FloatListAdd(a, KEY_TRUCE_PARTNER_UNTIL, untilTime, true)
+    else
+        StorageUtil.FloatListSet(a, KEY_TRUCE_PARTNER_UNTIL, i, untilTime)
+    endif
+EndFunction
+
+Function RemovePartner(Actor a, Form other)
+    int i = StorageUtil.FormListFind(a, KEY_TRUCE_PARTNERS, other)
+    if i >= 0
+        StorageUtil.FormListRemoveAt(a, KEY_TRUCE_PARTNERS, i)
+        StorageUtil.FloatListRemoveAt(a, KEY_TRUCE_PARTNER_UNTIL, i)
+    endif
+EndFunction
+
+Function ClearPartners(Actor a)
+    StorageUtil.FormListClear(a, KEY_TRUCE_PARTNERS)
+    StorageUtil.FloatListClear(a, KEY_TRUCE_PARTNER_UNTIL)
+    StorageUtil.UnsetFormValue(a, KEY_TRUCE_WITH)
+EndFunction
+
+; Drops a's expired truces (and moves a pre-0.1.2 single partner into the lists); noteGuard: notes the DLL guard of
+; every one left.
+Function RefreshPartners(Actor a, Float now, Bool noteGuard)
+    Form legacy = StorageUtil.GetFormValue(a, KEY_TRUCE_WITH)
+    if legacy != None
+        StorageUtil.UnsetFormValue(a, KEY_TRUCE_WITH)
+        if legacy as Actor != None
+            SetPartner(a, legacy as Actor, StorageUtil.GetFloatValue(a, KEY_TRUCE_UNTIL))
+        endif
+    endif
+    int i = StorageUtil.FormListCount(a, KEY_TRUCE_PARTNERS) - 1
+    while i >= 0
+        Actor other = StorageUtil.FormListGet(a, KEY_TRUCE_PARTNERS, i) as Actor
+        Float untilTime = StorageUtil.FloatListGet(a, KEY_TRUCE_PARTNER_UNTIL, i)
+        if other == None || untilTime <= now
+            StorageUtil.FormListRemoveAt(a, KEY_TRUCE_PARTNERS, i)
+            StorageUtil.FloatListRemoveAt(a, KEY_TRUCE_PARTNER_UNTIL, i)
+        elseif noteGuard
+            Injury_Engine_Engine.NoteTruce(a, other, untilTime)
+        endif
+        i -= 1
+    endwhile
 EndFunction
 
 ; Aggression 0 until TRUCE_HOURS pass (or Start_Fighting involves the actor). The first saved value is kept. `other`
@@ -284,7 +341,7 @@ Function RestoreAggression(Actor a)
     a.SetActorValue("Aggression", value)
     StorageUtil.UnsetFloatValue(a, KEY_TRUCE_AGGRESSION)
     StorageUtil.UnsetFloatValue(a, KEY_TRUCE_UNTIL)
-    StorageUtil.UnsetFormValue(a, KEY_TRUCE_WITH)
+    ClearPartners(a)
     StorageUtil.FormListRemove(self, KEY_TRUCE_LIST, a, true)
     Trace("RestoreAggression", a.GetDisplayName() + " aggression back to " + value)
 EndFunction
@@ -300,11 +357,8 @@ Function RestoreExpiredTruces(Bool noteGuard = False)
             StorageUtil.FormListRemoveAt(self, KEY_TRUCE_LIST, i)
         elseif StorageUtil.GetFloatValue(a, KEY_TRUCE_UNTIL, 0.0) <= now
             RestoreAggression(a)
-        elseif noteGuard
-            Actor other = StorageUtil.GetFormValue(a, KEY_TRUCE_WITH) as Actor
-            if other != None
-                Injury_Engine_Engine.NoteTruce(a, other, StorageUtil.GetFloatValue(a, KEY_TRUCE_UNTIL))
-            endif
+        else
+            RefreshPartners(a, now, noteGuard)
         endif
         i -= 1
     endwhile
@@ -324,9 +378,19 @@ Function StartFighting(Actor speaker, Actor target)
     endif
     RestoreAggression(speaker)
     RestoreAggression(target)
-    ; RestoreAggression drops both actors' saved truces with anyone: drop the DLL guards to match
+    ; RestoreAggression drops both actors' saved truces with anyone: drop the DLL guards to match, and the two from
+    ; every other calmed actor's saved partners, or those truces would be noted again on the next load
     Injury_Engine_Engine.ForgetTruces(speaker)
     Injury_Engine_Engine.ForgetTruces(target)
+    int i = StorageUtil.FormListCount(self, KEY_TRUCE_LIST) - 1
+    while i >= 0
+        Actor other = StorageUtil.FormListGet(self, KEY_TRUCE_LIST, i) as Actor
+        if other != None
+            RemovePartner(other, speaker)
+            RemovePartner(other, target)
+        endif
+        i -= 1
+    endwhile
     Injury_Engine_Engine.ForgetCalm(speaker, target)
     speaker.StartCombat(target)
     String text = speaker.GetDisplayName() + " attacks " + target.GetDisplayName() + "."

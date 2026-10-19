@@ -28,6 +28,11 @@ namespace Classifier
     int Classify(RE::Actor* victim, RE::Actor* attacker, bool* physicalMelee = nullptr, bool* unarmedForm = nullptr,
         bool* uncaused = nullptr);
 
+    // The melee hit that connected (ProcessHitData): classified from the hit's own weapon (null = fists) only, so a
+    // live "(torture)" spell effect or a sword in the other hand can't replace a punch or a whip swing. -1 = the
+    // Padded Whip, -2 = no rule.
+    int ClassifyMelee(RE::Actor* victim, RE::Actor* attacker, const RE::TESObjectWEAP* weapon, bool* unarmedForm = nullptr);
+
     // Under-water state of an actor (drowning classification and the always-on drowning probe in Hooks.cpp).
     struct DrownSignals
     {
@@ -68,6 +73,10 @@ namespace Classifier
 
     // Load / new game: drops every truce guard (Papyrus notes the save's active truces again).
     void ResetTruces();
+
+    // Load / new game: drops the truce guards and every session cache (hit events, torture and spell effects, calm
+    // windows, quiet casts) and releases every kIgnoreFriendlyHits flag this set. Main thread.
+    void ResetSession();
 
     // Start_Fighting: drops every truce guard `actor` holds (with anyone), matching the Papyrus truce keys it clears.
     void ForgetTruces(RE::Actor* actor);
