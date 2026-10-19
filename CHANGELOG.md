@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Prompts
+- `InjuryEngine::StateJson` adds `healed` (`session.json` `healed`, default "{name} is completely healed.", rendered with `NarrationVars`) when `sources` is empty and the actor is alive; `character_bio/0420_injury_looks.prompt` prints it, so followers drop wounds that are only left in the dialogue history.
+
+### Fixes
+- Buff endings that skip the 0x20 / `kTemporary` marks (a mod Courage re-applied by Ocato's Recital: only an attacker-less `HandleHealthDamage(-30)`) no longer land as generic wounds: `Hooks.cpp` `HandleHealthDamage` passes an attacker-less loss larger than the Health `kDamage` modifier through as a buff change (`[buff] ... shrink:true`, `HealthDamaged`), and `InjuryEngine::ResolveUncaused` caps `top` at the current max health. `[hook] HandleHealthDamage` debug line adds `damageMod`.
+- Real hits smaller than one point on an unwounded actor now add up: `InjuryEngine::OnDamage` keeps the carry of the erased State in `g_realCarry` (not saved) and seeds the next hit with it, clamped to the health the Health damage modifier still holds (not max minus current health, which a temporary Health buff can push below zero). Before, every such hit started from zero, so small weapons and damage over time never wounded a healthy actor.
+
 ## [0.1.2](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2) — since [0.1.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1)
 
 Code-review fix pass ([checkpoints/reviews/checkpoint-v03.md](checkpoints/reviews/checkpoint-v03.md)).

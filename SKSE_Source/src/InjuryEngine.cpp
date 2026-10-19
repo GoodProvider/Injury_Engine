@@ -139,6 +139,9 @@ namespace InjuryEngine
         // Hooked torture damage (spell ticks) not yet a hit, per actor and source. Kept when the actor is
         // forgotten, so small ticks on an unwounded actor still add up.
         std::unordered_map<RE::FormID, std::array<float, kMaxSources>> g_tortureCarry;
+        // Real damage (health) not yet a point on an unwounded actor, whose State is erased after the hit. Used by its
+        // next hit, clamped to the health still missing, so regen and healing drain it. Not saved.
+        std::unordered_map<RE::FormID, float> g_realCarry;
         std::unordered_map<TortureBatchKey, double, TortureBatchKeyHash> g_tortureBatchLast;  // last tick real time per batch
         // Real seconds of each torture type's last hit per victim (overlay: the bar shows the latest type). Not saved.
         std::unordered_map<RE::FormID, std::array<double, kMaxSources>> g_lastTorture;
@@ -759,6 +762,7 @@ namespace InjuryEngine
             g_regenBank.erase(id);
             g_lastScan.erase(id);
             g_lastTorture.erase(id);
+            g_realCarry.erase(id);
         }
 
         // Applies time to the actor's entry; drops it when every injury is healed (queuing kFullyHealed) or
@@ -1364,7 +1368,8 @@ namespace InjuryEngine
                 auto* av = actor->AsActorValueOwner();
                 const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
                 const float health = av->GetActorValue(RE::ActorValue::kHealth);
-                const float stuck = std::clamp(u.top - health, 0.0f, u.sum);
+                // health missing above the current max is no wound (a max-health shrink after the hold started)
+                const float stuck = std::clamp(std::min(u.top, maxHealth) - health, 0.0f, u.sum);
                 const float threshold = maxHealth * minPercent / 100.0f;
                 // a buff ending around the held damage (its mark may come just after the damage call) took that health
                 const bool buff = Classifier::RecentBuffChange(actor, kUncausedHold + 1.0);
@@ -1551,6 +1556,19 @@ namespace InjuryEngine
             const bool female = IsFemale(victim);
             const float ratioT = RatioTorture(maxHealth);
             const float ratioR = RatioReal(maxHealth);
+            if (!existing) {
+                // an unwounded actor: earlier small hits still count while their health is missing. Missing health is
+                // what the Health damage modifier holds (regen and healing lower it), not max - current: a temporary
+                // Health buff can put health above the permanent max. HandleHealthDamage runs after the damage, so this
+                // hit is in the modifier already; on a path that runs before it this only undercounts.
+                if (const auto it = g_realCarry.find(id); it != g_realCarry.end()) {
+                    const float missing = -victim->GetActorValueModifier(RE::ACTOR_VALUE_MODIFIER::kDamage, RE::ActorValue::kHealth) - amount;
+                    st.carry = std::clamp(missing, 0.0f, it->second);
+                    SKSE::log::debug("damage {:08X} {}: carry {:.2f} from the last hit, {:.2f} still missing -> {:.2f}", id, conf->id, it->second,
+                        missing, st.carry);
+                    g_realCarry.erase(it);
+                }
+            }
 
             // One attack lands on one part (tortured parts first). Torture points there hold health down: the
             // attack replaces them first (health is not lowered by that part; the part's maximum drops and the
@@ -1661,7 +1679,15 @@ namespace InjuryEngine
                 }
             }
             if (!AnyInjury(st)) {
+                const float carry = st.carry;
                 Erase(id);  // also lets a torture-downed actor stand up (ReleaseDowned)
+                if (carry > 0.0f) {
+                    if (g_realCarry.size() > 512) {
+                        g_realCarry.clear();
+                    }
+                    g_realCarry[id] = carry;
+                    SKSE::log::debug("damage {:08X} {}: carry {:.2f} kept for the next hit", id, conf->id, carry);
+                }
             }
         }
         NotifyPapyrus();
@@ -2071,42 +2097,45 @@ namespace InjuryEngine
         }
         std::lock_guard lock(g_lock);
         const State* st = Current(actor, NowHours());
-        if (!st) {
-            return out.dump();
+        if (st) {
+            const auto& body = GetBody();
+            auto vars = ActorVars(actor);
+            // Torture feelings: text.feels.torture.<region>.<stage>, or during a heal session text.feels.heal.<region>.<level>.
+            const bool healing = ActiveHealer(actor->GetFormID(), NowSeconds()) != nullptr;
+            for (int s = 0; s < InjuryConfig::SourceCount(); ++s) {
+                const auto* conf = InjuryConfig::Find(s);
+                const bool torture = conf->IsTorture();
+                nlohmann::json parts = nlohmann::json::array();
+                for (int i = 0; i < kPartCount; ++i) {
+                    if (i >= ActiveParts() && i != kPartLungs) {
+                        continue;
+                    }
+                    const int stage = DamageStage(torture ? st->torture[s][i].deficit : st->real[s][i], i);
+                    if (stage < 0) {
+                        continue;
+                    }
+                    const std::string& region = body.regionName[body.partRegion[i]];
+                    vars["part"] = body.partName[i];
+                    const std::string key = region + "." + std::to_string(stage);
+                    const std::string feels = !torture ? "text.feels." : healing ? "text.feels.heal." : "text.feels.torture.";
+                    parts.push_back({ { "part", body.partName[i] }, { "region", region },
+                        { "stage", torture && healing ? kHealLevels[stage] : StageName(s, stage) },
+                        { "look", InjuryConfig::Render(InjuryConfig::Str(s, "text.looks." + key), vars) },
+                        { "feel", InjuryConfig::Render(InjuryConfig::Str(s, feels + key), vars) } });
+                }
+                if (parts.empty()) {
+                    continue;
+                }
+                out["sources"].push_back({ { "id", conf->id },
+                    { "looks_heading", InjuryConfig::Str(s, "text.looks_heading") },
+                    { "feels_intro", InjuryConfig::Render(InjuryConfig::Str(s, "text.feels_intro"), vars) },
+                    { "feels_outro", InjuryConfig::Str(s, "text.feels_outro") },
+                    { "parts", parts } });
+            }
         }
-        const auto& body = GetBody();
-        auto vars = ActorVars(actor);
-        // Torture feelings: text.feels.torture.<region>.<stage>, or during a heal session text.feels.heal.<region>.<level>.
-        const bool healing = ActiveHealer(actor->GetFormID(), NowSeconds()) != nullptr;
-        for (int s = 0; s < InjuryConfig::SourceCount(); ++s) {
-            const auto* conf = InjuryConfig::Find(s);
-            const bool torture = conf->IsTorture();
-            nlohmann::json parts = nlohmann::json::array();
-            for (int i = 0; i < kPartCount; ++i) {
-                if (i >= ActiveParts() && i != kPartLungs) {
-                    continue;
-                }
-                const int stage = DamageStage(torture ? st->torture[s][i].deficit : st->real[s][i], i);
-                if (stage < 0) {
-                    continue;
-                }
-                const std::string& region = body.regionName[body.partRegion[i]];
-                vars["part"] = body.partName[i];
-                const std::string key = region + "." + std::to_string(stage);
-                const std::string feels = !torture ? "text.feels." : healing ? "text.feels.heal." : "text.feels.torture.";
-                parts.push_back({ { "part", body.partName[i] }, { "region", region },
-                    { "stage", torture && healing ? kHealLevels[stage] : StageName(s, stage) },
-                    { "look", InjuryConfig::Render(InjuryConfig::Str(s, "text.looks." + key), vars) },
-                    { "feel", InjuryConfig::Render(InjuryConfig::Str(s, feels + key), vars) } });
-            }
-            if (parts.empty()) {
-                continue;
-            }
-            out["sources"].push_back({ { "id", conf->id },
-                { "looks_heading", InjuryConfig::Str(s, "text.looks_heading") },
-                { "feels_intro", InjuryConfig::Render(InjuryConfig::Str(s, "text.feels_intro"), vars) },
-                { "feels_outro", InjuryConfig::Str(s, "text.feels_outro") },
-                { "parts", parts } });
+        // Nothing shown: say so outright, so the LLM drops wounds still in the dialogue history (session.json "healed").
+        if (out["sources"].empty() && !actor->IsDead()) {
+            out["healed"] = InjuryConfig::Render(InjuryConfig::SessionStr("healed", "{name} is completely healed."), NarrationVars(actor));
         }
         return out.dump();
     }
@@ -2900,6 +2929,7 @@ namespace InjuryEngine
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();
+        g_realCarry.clear();
         g_tortureBatchLast.clear();
         g_lastTorture.clear();
         g_events.clear();
@@ -2941,6 +2971,7 @@ namespace InjuryEngine
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();
+        g_realCarry.clear();
         g_tortureBatchLast.clear();
         g_lastTorture.clear();
         g_events.clear();

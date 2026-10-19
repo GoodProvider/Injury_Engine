@@ -120,17 +120,29 @@ namespace
         ~BuffScope() { --g_inBuff; }
     };
 
-    // Uncaused health loss from a buff change: passed through untouched, logged (always on, throttled).
-    bool BuffChange(const char* hook, RE::Actor* actor, float value)
+    // Health the Health damage modifier holds (what damage took and nothing restored yet). A max-health shrink (a
+    // Fortify Health ending, whatever its archetype) lowers health without touching it.
+    float HealthDamaged(RE::Actor* actor)
     {
-        if (!actor || (g_inBuff == 0 && !Classifier::RecentBuffChange(actor, kBuffWindow))) {
+        return -actor->GetActorValueModifier(RE::ACTOR_VALUE_MODIFIER::kDamage, RE::ActorValue::kHealth);
+    }
+
+    // Uncaused health loss from a buff change: passed through untouched, logged (always on, throttled).
+    // `shrink`: HandleHealthDamage reported more loss than the damage modifier holds (it runs after the damage), so
+    // the loss is max health shrinking, not damage.
+    bool BuffChange(const char* hook, RE::Actor* actor, float value, bool shrink = false)
+    {
+        if (!actor || (!shrink && g_inBuff == 0 && !Classifier::RecentBuffChange(actor, kBuffWindow))) {
             return false;
+        }
+        if (shrink) {
+            Classifier::NoteBuffChange(actor);  // a held uncaused loss around it is the buff's doing too
         }
         if (Throttle(std::format("buff {}", hook), actor)) {
             auto* av = actor->AsActorValueOwner();
-            SKSE::log::info("[buff] {} {:08X} value:{:.2f} health:{:.1f}/{:.1f} nested:{}: health change from a buff ending, not a wound", hook,
-                actor->GetFormID(), value, av->GetActorValue(RE::ActorValue::kHealth), av->GetPermanentActorValue(RE::ActorValue::kHealth),
-                g_inBuff > 0);
+            SKSE::log::info("[buff] {} {:08X} value:{:.2f} health:{:.1f}/{:.1f} damageMod:{:.1f} nested:{} shrink:{}: health change from a buff ending, not a wound",
+                hook, actor->GetFormID(), value, av->GetActorValue(RE::ActorValue::kHealth), av->GetPermanentActorValue(RE::ActorValue::kHealth),
+                -HealthDamaged(actor), g_inBuff > 0, shrink);
         }
         return true;
     }
@@ -204,7 +216,7 @@ namespace
                 }
                 return func(a_this, a_attacker, a_damage);
             }
-            if (!a_attacker && BuffChange("HandleHealthDamage", a_this, a_damage)) {
+            if (!a_attacker && BuffChange("HandleHealthDamage", a_this, a_damage, a_damage < 0.0f && HealthDamaged(a_this) + 0.5f < -a_damage)) {
                 HandleScope scope;
                 return func(a_this, a_attacker, a_damage);
             }
@@ -213,8 +225,9 @@ namespace
             bool unarmedForm = false;
             bool uncaused = false;
             const int source = Classifier::Classify(a_this, a_attacker, &physicalMelee, &unarmedForm, &uncaused);
-            SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} source:{} physical:{} unarmed:{}",
-                a_this->GetFormID(), a_attacker ? a_attacker->GetFormID() : 0, a_damage, InjuryEngine::SourceId(source), physicalMelee, unarmedForm);
+            SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} attacker:{:08X} damage:{:.2f} damageMod:{:.1f} source:{} physical:{} unarmed:{}",
+                a_this->GetFormID(), a_attacker ? a_attacker->GetFormID() : 0, a_damage, -HealthDamaged(a_this), InjuryEngine::SourceId(source),
+                physicalMelee, unarmedForm);
             if (uncaused) {
                 // scripted damage: the game keeps it; it becomes a wound only if it sticks (InjuryEngine::NoteUncaused)
                 {

@@ -1,0 +1,1226 @@
+[10/18/2026 - 10:01:49PM] Papyrus log opened (PC)
+[10/18/2026 - 10:01:49PM] Update budget: 1.200000ms (Extra tasklet budget: 1.200000ms, Load screen budget: 2000.000000ms)
+[10/18/2026 - 10:01:49PM] Memory page: 128 (min) 512 (max) 153600 (max total)
+[10/18/2026 - 10:01:49PM] Cannot open store for class "sethirelingrehire3dnpc", missing file?
+[10/18/2026 - 10:01:51PM] Cannot open store for class "DLCDwarvenPuzzleWinterFreezing", missing file?
+[10/18/2026 - 10:01:51PM] Cannot open store for class "dlcdwarvenpuzzlecoolantreleaselever", missing file?
+[10/18/2026 - 10:01:51PM] Cannot open store for class "SSE_SF_ccFFBSSE001_QuestScene_02005EB3", missing file?
+[10/18/2026 - 10:01:51PM] Error: Script SSE_SF_ccFFBSSE001_QuestScene_02005EB3 cannot be bound to  (FE01B934) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:01:51PM] Cannot open store for class "SSE_SF_ccFFBSSE001_QuestScene_02000932", missing file?
+[10/18/2026 - 10:01:51PM] Error: Script SSE_SF_ccFFBSSE001_QuestScene_02000932 cannot be bound to  (FE01B932) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:01:51PM] Cannot open store for class "ccBGSSSE038_AssassinEnableScript", missing file?
+[10/18/2026 - 10:01:52PM] Cannot open store for class "SSE_QF_ccBGSSSE051_MiscQuestA_0500083F", missing file?
+[10/18/2026 - 10:01:52PM] Error: Script SSE_QF_ccBGSSSE051_MiscQuestA_0500083F cannot be bound to ccBGSSSE051_MiscQuestAliasFillers (FE03283F) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:01:52PM] Cannot open store for class "DefaultDebugMagicEffect", missing file?
+[10/18/2026 - 10:01:52PM] Cannot open store for class "ccBGSSSE067_ScourgeDremoraScript", missing file?
+[10/18/2026 - 10:01:52PM] Cannot open store for class "KRT_PF_ccKRTSSE001_WhiterunTe_0500081C", missing file?
+[10/18/2026 - 10:01:52PM] Error: Script KRT_PF_ccKRTSSE001_WhiterunTe_0500081C cannot be bound to  (FE03E81C) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:01:52PM] Cannot open store for class "ccKRTSSE001_zQuestScen_05000F40", missing file?
+[10/18/2026 - 10:01:52PM] Error: Script ccKRTSSE001_zQuestScen_05000F40 cannot be bound to  (FE03EF40) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:01:52PM] Cannot open store for class "arth_sf_storefrontquestscript", missing file?
+[10/18/2026 - 10:01:52PM] Error: Unknown property type 97 loaded from disk for property  on script SkyrimNet_SexLab_Handler_UDNG_PR
+[10/18/2026 - 10:01:52PM] Error: Unknown property type 101 loaded from disk for property  on script SkyrimNet_SexLab_Handler_UDNG_PR
+[10/18/2026 - 10:01:52PM] Cannot open store for class "dom_diary", missing file?
+[10/18/2026 - 10:01:52PM] Cannot open store for class "dom_actor", missing file?
+[10/18/2026 - 10:01:52PM] Cannot open store for class "dom_sexlab", missing file?
+[10/18/2026 - 10:01:52PM] Cannot open store for class "dom_core", missing file?
+[10/18/2026 - 10:01:52PM] Cannot open store for class "dom_mind", missing file?
+[10/18/2026 - 10:02:05PM] Error: Unable to bind script defaultIgnoreFriendlyHits (defaultIgnoreFriendlyHits->ObjectReference->Form) to alias HostlerRef on quest ccBGSSSE034_WildHorsesQuest (FE017D65) because their base types do not match
+[10/18/2026 - 10:02:05PM] warning: Property nwsInterpolate on script nwsfollowercontrollerscript attached to nwsFollowerController (2100434F) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D86E) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D86E) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccBGSSSE019_SheogorathNote01 on script QF_ccBGSSSE019_StaffOfSheogo_03000822 attached to ccBGSSSE019_StaffOfSheogorathQuest (FE00A822) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property  on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property  on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ÀBÜ9ž on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property  Breast on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property €ÐÈ9ž on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE002_VE_Message01 on script SSE_PF_ccMTYSSE002_WindpeakIn_050009A0 attached to  (FE01C9A0) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE002_VE_Message04 on script SSE_PF_ccMTYSSE002_WindpeakIn_050009A0 attached to  (FE01C9A0) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myCell on script ccASVSSE001_DoorUnlockScript attached to  (05000F2B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE002_VE_Message06 on script SSE_PF_ccMTYSSE002_Dawnstarto_050009A5 attached to  (FE01C9A5) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE002_VE_Message03 on script SSE_PF_ccMTYSSE002_Dawnstarto_050009A5 attached to  (FE01C9A5) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property wraithguard on script ccBGSSE008_WraithguardScript attached to alias ccBGSSSE008_Player on quest ccBGSSSE008_PlayerTrackingQuest (FE019B60) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] Error: Property myQuest on script defaultcounter attached to  (0E000835) cannot be bound because <nullptr form> (0E001185) is not the right type
+[10/18/2026 - 10:02:05PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0392E2) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0392E2) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0392E2) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property boss3 on script ccBGSSE008_MessengerScript attached to  (FE01983C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Boss1 on script ccBGSSE008_MessengerScript attached to  (FE01983C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property boss2 on script ccBGSSE008_MessengerScript attached to  (FE01983C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property SummonFX on script QF_ccBGSSSE016_UmbraMainQues_020021B6 attached to ccBGSSSE016_UmbraMainQuest (090021B6) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Jarl on script SSE_QF_ccBGSSSE064_MiscQuest_0200081A attached to ccBGSSSE064_MiscQuest (FE02B81A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Steward on script SSE_QF_ccBGSSSE064_MiscQuest_0200081A attached to ccBGSSSE064_MiscQuest (FE02B81A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3EE) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3EE) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3EE) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3ED) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3ED) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3ED) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0341D7) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0341D7) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0341D7) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TimeToPass on script ccKRTSSE001_FerryScript attached to ccKRTSSE001_FerrySystem (FE03EA7B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property GameHour on script ccKRTSSE001_FerryScript attached to ccKRTSSE001_FerrySystem (FE03EA7B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] Error: Property SolitudeOrigin on script nwsfollowersandboxscript attached to nwsFollowerSandbox (21179283) cannot be bound because <nullptr form> (00037EE9) is not the right type
+[10/18/2026 - 10:02:05PM] warning: Property crystalEnableRef on script ccBGSSSE008_VaultOpenScript attached to  (FE019A68) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Stages on script SkyrimNet_SexLab_Scene_Manager attached to SkyrimNet_SexLab (FE04F800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Stages on script SkyrimNet_SexLab_MCM attached to SkyrimNet_SexLab (FE04F800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Stages on script skyrimnet_sexlab_menu attached to SkyrimNet_SexLab (FE04F800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D856) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D856) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D857) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D857) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D855) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D855) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property skeeverQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property rabbitQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property foxQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property spiderQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_BountyHunterNote on script SSE_QF_ccBGSSSE050_Quest_02000822 attached to ccBGSSSE050_Quest (FE022822) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Champion04 on script SSE_QF_ccFFBSSE001_CorpseChec_0200086B attached to ccFFBSSE001_CorpseCheck (FE01B86B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Champion05 on script SSE_QF_ccFFBSSE001_CorpseChec_0200086B attached to ccFFBSSE001_CorpseCheck (FE01B86B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D85C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D85C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D858) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D858) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property stageToCheck on script ccKRTSSE001_CourierEquipScript attached to  (FE03EFFC) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property myQuest on script ccKRTSSE001_CourierEquipScript attached to  (FE03EFFC) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D859) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D859) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Merchant_Chest_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Circlet_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Amulet_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property Alias_Ring_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D85B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D85B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property DLCDwarvenpuzzleDungeonHorseMessage on script dlcdwarvenpuzzle_rebuildhorsescript attached to  (070038D4) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property DLCDwarvenpuzzleDungeonHorseCompleteMessage on script dlcdwarvenpuzzle_rebuildhorsescript attached to  (070038D4) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D85A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D85A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:05PM] VM is freezing...
+[10/18/2026 - 10:02:05PM] VM is frozen
+[10/18/2026 - 10:02:05PM] Reverting game...
+[10/18/2026 - 10:02:05PM] Error: Script SSE_QF_ccBGSSSE051_MiscQuestA_0500083F cannot be bound to ccBGSSSE051_MiscQuestAliasFillers (FE03283F) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:02:05PM] Error: Script ccKRTSSE001_zQuestScen_05000F40 cannot be bound to  (FE03EF40) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:02:05PM] Error: Script SSE_SF_ccFFBSSE001_QuestScene_02000932 cannot be bound to  (FE01B932) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:02:05PM] Error: Script SSE_SF_ccFFBSSE001_QuestScene_02005EB3 cannot be bound to  (FE01B934) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:02:05PM] Error: Script KRT_PF_ccKRTSSE001_WhiterunTe_0500081C cannot be bound to  (FE03E81C) because the script does not exist or is not currently loaded
+[10/18/2026 - 10:02:07PM] Loading game...
+[10/18/2026 - 10:02:07PM] Error: Unable to bind script defaultIgnoreFriendlyHits (defaultIgnoreFriendlyHits->ObjectReference->Form) to alias HostlerRef on quest ccBGSSSE034_WildHorsesQuest (FE017D65) because their base types do not match
+[10/18/2026 - 10:02:08PM] Error: Property myQuest on script defaultcounter attached to  (0E000835) cannot be bound because <nullptr form> (0E001185) is not the right type
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D86E) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D86E) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccBGSSSE019_SheogorathNote01 on script QF_ccBGSSSE019_StaffOfSheogo_03000822 attached to ccBGSSSE019_StaffOfSheogorathQuest (FE00A822) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property  on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property  on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ÀBÜ9ž on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property  Breast on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property €ÐÈ9ž on script SkyrimNet_SexLab_Handler_UDNG_PR attached to alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE002_VE_Message01 on script SSE_PF_ccMTYSSE002_WindpeakIn_050009A0 attached to  (FE01C9A0) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE002_VE_Message04 on script SSE_PF_ccMTYSSE002_WindpeakIn_050009A0 attached to  (FE01C9A0) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myCell on script ccASVSSE001_DoorUnlockScript attached to  (05000F2B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property wraithguard on script ccBGSSE008_WraithguardScript attached to alias ccBGSSSE008_Player on quest ccBGSSSE008_PlayerTrackingQuest (FE019B60) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D85B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D85B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Jarl on script SSE_QF_ccBGSSSE064_MiscQuest_0200081A attached to ccBGSSSE064_MiscQuest (FE02B81A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Steward on script SSE_QF_ccBGSSSE064_MiscQuest_0200081A attached to ccBGSSSE064_MiscQuest (FE02B81A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3EE) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3EE) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3EE) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3ED) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3ED) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A03E3ED) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0341D7) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0341D7) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0341D7) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE002_VE_Message06 on script SSE_PF_ccMTYSSE002_Dawnstarto_050009A5 attached to  (FE01C9A5) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE002_VE_Message03 on script SSE_PF_ccMTYSSE002_Dawnstarto_050009A5 attached to  (FE01C9A5) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property boss3 on script ccBGSSE008_MessengerScript attached to  (FE01983C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Boss1 on script ccBGSSE008_MessengerScript attached to  (FE01983C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property boss2 on script ccBGSSE008_MessengerScript attached to  (FE01983C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property SummonFX on script QF_ccBGSSSE016_UmbraMainQues_020021B6 attached to ccBGSSSE016_UmbraMainQuest (090021B6) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property crystalEnableRef on script ccBGSSSE008_VaultOpenScript attached to  (FE019A68) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TimeToPass on script ccKRTSSE001_FerryScript attached to ccKRTSSE001_FerrySystem (FE03EA7B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property GameHour on script ccKRTSSE001_FerryScript attached to ccKRTSSE001_FerrySystem (FE03EA7B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D855) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D855) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Merchant_Chest_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Circlet_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Amulet_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Ring_Madesi on script QF_ccEDHSSE001_UtilityQuest_03000830 attached to ccEDHSSE001_UtilityQuest (FE014830) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Stages on script SkyrimNet_SexLab_Scene_Manager attached to SkyrimNet_SexLab (FE04F800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Stages on script SkyrimNet_SexLab_MCM attached to SkyrimNet_SexLab (FE04F800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Stages on script skyrimnet_sexlab_menu attached to SkyrimNet_SexLab (FE04F800) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D856) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D856) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] Error: Property SolitudeOrigin on script nwsfollowersandboxscript attached to nwsFollowerSandbox (21179283) cannot be bound because <nullptr form> (00037EE9) is not the right type
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D857) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D857) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property nwsInterpolate on script nwsfollowercontrollerscript attached to nwsFollowerController (2100434F) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_BountyHunterNote on script SSE_QF_ccBGSSSE050_Quest_02000822 attached to ccBGSSSE050_Quest (FE022822) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property skeeverQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property rabbitQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property foxQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property spiderQuest on script ccVSVSSE002_MainQuestScript attached to ccVSVSSE002_MainQuest (FE0158C8) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D85C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D85C) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Champion04 on script SSE_QF_ccFFBSSE001_CorpseChec_0200086B attached to ccFFBSSE001_CorpseCheck (FE01B86B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property Alias_Champion05 on script SSE_QF_ccFFBSSE001_CorpseChec_0200086B attached to ccFFBSSE001_CorpseCheck (FE01B86B) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D858) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D858) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property stageToCheck on script ccKRTSSE001_CourierEquipScript attached to  (FE03EFFC) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myQuest on script ccKRTSSE001_CourierEquipScript attached to  (FE03EFFC) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D859) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D859) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property noCheckNeeded on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0392E2) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myQuest on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0392E2) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property myLocationDiscovered on script ccBGSSSE031_FastTravelFlagScript attached to  (0A0392E2) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property DLCDwarvenpuzzleDungeonHorseMessage on script dlcdwarvenpuzzle_rebuildhorsescript attached to  (070038D4) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property DLCDwarvenpuzzleDungeonHorseCompleteMessage on script dlcdwarvenpuzzle_rebuildhorsescript attached to  (070038D4) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property ccMTYSSE001_CrusaderGlobalShrines on script ccMTYSSE001_ShrineCounter attached to  (FE00D85A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Property TargetValue on script ccMTYSSE001_ShrineCounter attached to  (FE00D85A) cannot be initialized because the script no longer contains that property
+[10/18/2026 - 10:02:08PM] warning: Variable ending_end_after on script skyrimnet_sexlab_scene loaded from save not found within the actual object. This variable will be skipped.
+[10/18/2026 - 10:02:08PM] VM is thawing...
+[10/18/2026 - 10:02:08PM] [Zad-NG]: Devious Devices Contraptions is now creating sex animations.
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_CPill_Behind1): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_CPill_BehindA): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_Billyy_PilloryFuck1): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_Babo_ZazPillory01): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_NibblesPillory): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_Leito_Pillory_Doggy): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_PsychePillory): get
+[10/18/2026 - 10:02:08PM] Error: Cannot call OnGameReload() on a None object, aborting function call
+stack:
+	[alias playerAlias on quest OSexIntegrationMainQuest (FE056801)].SKI_PlayerLoadGameAlias.OnPlayerLoadGame() - "SKI_PlayerLoadGameAlias.psc" Line 6
+[10/18/2026 - 10:02:08PM] [Injury_Engine_Main] Setup: 
+[10/18/2026 - 10:02:08PM] SLAL: SLAL: OnLoad
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Horny] Registered. Event #11
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Horny] Loaded: 5%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Plug Moan] Registered. Event #4
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Plug Moan] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Catsuit Wearing] Registered. Event #8
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Catsuit Wearing] Loaded: 15%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Wet Padding] Registered. Event #12
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Wet Padding] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Harness] Registered. Event #26
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Harness] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Bump Pumps] Registered. Event #9
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Bump Pumps] Loaded: 17%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Tight Gloves] Registered. Event #2
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Tight Gloves] Loaded: 15%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Tight Corset] Registered. Event #0
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Tight Corset] Loaded: 15%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Belted Empty] Registered. Event #21
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Belted Empty] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Health Drain] Registered. Event #16
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Health Drain] Loaded: 50%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Bra Chafing] Registered. Event #23
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Bra Chafing] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Struggle] Registered. Event #18
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Struggle] Loaded: 25%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Stamina Drain] Registered. Event #15
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Stamina Drain] Loaded: 50%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Restrictive Collar] Registered. Event #17
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Restrictive Collar] Loaded: 15%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Blindfold Trip] Registered. Event #6
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Blindfold Trip] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Nipple Piercings] Registered. Event #19
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Nipple Piercings] Loaded: 55%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Belt Chafing] Registered. Event #1
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Belt Chafing] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Restraints Under Outfit] Registered. Event #20
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Restraints Under Outfit] Loaded: 7%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Vibration] Registered. Event #13
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Vibration] Loaded: 25%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Posture Collar] Registered. Event #5
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Posture Collar] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Mana Drain] Registered. Event #7
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Mana Drain] Loaded: 50%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Mounted] Registered. Event #3
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Mounted] Loaded: 100%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Periodic Shocks] Registered. Event #25
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Periodic Shocks] Loaded: 25%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Drip] Registered. Event #10
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Drip] Loaded: 10%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Chaos Plugs] Registered. Event #24
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Chaos Plugs] Loaded: 25%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Blindfold Mystery] Registered. Event #22
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Blindfold Mystery] Loaded: 1%
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Trip and Fall] Registered. Event #14
+[10/18/2026 - 10:02:08PM] [Zad-NG]: [Trip and Fall] Loaded: 20%
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_CXCross_Face): get
+[10/18/2026 - 10:02:08PM] SEXLAB - loaded: Version 16601 / 16601
+[10/18/2026 - 10:02:08PM] [Zad-NG]: DDX Events registered
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_Billyy_XCrossFuck): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_Billyy_XCrossFuck2): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_Billyy_XCrossReverseAnal): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_PsycheRestrictRape3): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPDown_HangBJ): get
+[10/18/2026 - 10:02:08PM] Error: Cannot call Setup() on a None object, aborting function call
+stack:
+	[alias PlayerRef on quest skyrimnet_sexlab_udng_handler (FE050800)].SkyrimNet_SexLab_Handler_UDNG_PR.OnPlayerLoadGame() - "SkyrimNet_SexLab_Handler_UDNG_PR.psc" Line 20
+[10/18/2026 - 10:02:08PM] SexLab MCM Loaded CurrentVerison: 16601 / 16601
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPDown_HangFF): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPDown_HangFacial): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPHorse_ForGrind): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPOH_Behind): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPOH_Holding): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPStrap_BentOver): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_GallPStrap_Standing): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_TiltWMiss): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_TiltWSide): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_TiltWFist): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_TiltWFF): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_B_TiltWFF2): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_Billyy_StockadeFuckMachine): get
+[10/18/2026 - 10:02:08PM] SEXLAB - GetSetAnimation(DDC_PsycheWoodenHorse): get
+[10/18/2026 - 10:02:12PM] SEXLAB - GetSetAnimation(DDC_NibblesBondagePost): get
+[10/18/2026 - 10:02:12PM] SEXLAB - GetSetAnimation(DDC_NibblesBondagePostTOY): get
+[10/18/2026 - 10:02:12PM] SEXLAB - GetSetAnimation(DDC_PsycheRestrictRape8): get
+[10/18/2026 - 10:02:12PM] SEXLAB - GetSetAnimation(DDC_PsycheFingerFucking): get
+[10/18/2026 - 10:02:12PM] SEXLAB - GetSetAnimation(DDC_PsycheRestrictRape): get
+[10/18/2026 - 10:02:13PM] Error: File "BBLS_SKSE64_Patch.esp" does not exist or is not currently loaded.
+stack:
+	<unknown self>.Game.GetFormFromFile() - "<native>" Line ?
+	[OSexIntegrationMainQuest (FE056801)].OSexIntegrationMain.OnLoadGame() - "OSexIntegrationMain.psc" Line 2130
+	[alias playerAlias on quest OSexIntegrationMainQuest (FE056801)].OStimPlayerAliasScript.OnPlayerLoadGame() - "qnmwfjdrjtehptpnntmmpbrogs" Line 10
+[10/18/2026 - 10:02:13PM] Error: File "CS_Vayne.esp" does not exist or is not currently loaded.
+stack:
+	<unknown self>.Game.GetFormFromFile() - "<native>" Line ?
+	[OSexIntegrationMainQuest (FE056801)].OSexIntegrationMain.OnLoadGame() - "OSexIntegrationMain.psc" Line 2131
+	[alias playerAlias on quest OSexIntegrationMainQuest (FE056801)].OStimPlayerAliasScript.OnPlayerLoadGame() - "qnmwfjdrjtehptpnntmmpbrogs" Line 10
+[10/18/2026 - 10:02:13PM] Error: File "CS_Coralyn.esp" does not exist or is not currently loaded.
+stack:
+	<unknown self>.Game.GetFormFromFile() - "<native>" Line ?
+	[OSexIntegrationMainQuest (FE056801)].OSexIntegrationMain.OnLoadGame() - "OSexIntegrationMain.psc" Line 2132
+	[alias playerAlias on quest OSexIntegrationMainQuest (FE056801)].OStimPlayerAliasScript.OnPlayerLoadGame() - "qnmwfjdrjtehptpnntmmpbrogs" Line 10
+[10/18/2026 - 10:02:13PM] RealNamesExtended: Loading .json files in ../RealNamesExtended/Nord
+[10/18/2026 - 10:02:13PM] error: Native static function GetInventoryObjectPropertyType could find no matching static function on linked type zadNativeFunctions. Function will not be bound.
+[10/18/2026 - 10:02:13PM] error: Native static function GetNodeTransformScaleMode does not match existing signature on linked type NiOverride. Function will not be bound.
+[10/18/2026 - 10:02:13PM] RealNamesExtended: Loading file ../RealNamesExtended/Nord/uesp-nord-names.json...
+[10/18/2026 - 10:02:13PM] RealNamesExtended: Loaded 1052 first names and 260 last names in total.
+[10/18/2026 - 10:02:13PM] RealNamesExtended: Loading lastnameChance at path: .Nord.lastnameChance
+[10/18/2026 - 10:02:13PM] RealNamesExtended: Rolled 74 for last name against a chance of 20
+[10/18/2026 - 10:02:13PM] RealNamesExtended: Picked name: Eriann .
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Maintenance routine called
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): Not running VR, disabling VR Integrations
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): Using DBVO integration
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): MinAI Bridge: MinAI.esp not detected - SkyrimNet will handle MinAI-style events exclusively
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): MinAI Bridge: Registered for MinAI-style mod events
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): MinAI Bridge initialized
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): Native hotkeys enabled on load
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): Library initialized
+[10/18/2026 - 10:02:13PM] [SkyrimNet] (Info): SkyrimNet version 1 ready.
+[10/18/2026 - 10:02:13PM] InitWidgetLoader()
+[10/18/2026 - 10:02:13PM] Error: Cannot cast from None to String[]
+stack:
+	[sla_Main (11042D62)].slamainscr.OnPlayerLoadGame() - "slaMainScr.psc" Line 509
+	[alias PlayerRef on quest sla_Internal (11083137)].slaPlayerAliasScr.OnPlayerLoadGame() - "slaPlayerAliasScr.psc" Line 8
+[10/18/2026 - 10:02:13PM] RealNamesExtended: ForceRename = False
+[10/18/2026 - 10:02:13PM] RealNamesExtended: BlockRename = False
+[10/18/2026 - 10:02:13PM] RealNamesExtended: TargetIsUnique = TRUE
+[10/18/2026 - 10:02:13PM] FISHING: Checking for updates.
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Starting update chain.
+[10/18/2026 - 10:02:13PM] Cannot open store for class "fnis", missing file?
+[10/18/2026 - 10:02:13PM] Error: Static function VersionCompare not found on object fnis. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.CheckRequirements() - "XPMSEWeaponQuest.psc" Line 276
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 54
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp51"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.CheckRequirements() - "XPMSEWeaponQuest.psc" Line 276
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 54
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Devious Devices is now creating animations.
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DDBeltedSolo): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DDArmbinderSolo): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DDYokeSolo): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DDElbowbinderSolo): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DDBBYokeSolo): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DDFrontCuffsSolo): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DDElbowTieSolo): get
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Devious Devices is now creating bound animations.
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DD_B_PS_DT): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DD_BPPetSuitBJ): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DD_B_PS_Doggy): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DD_B_PS_Miss): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DD_BPPetSuit): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DD_BPPetSuitRCG): get
+[10/18/2026 - 10:02:13PM] SEXLAB - GetSetAnimation(DD_B_PS_DoggyA): get
+[10/18/2026 - 10:02:13PM] [Zad-NG]: EnableEventProcessing()
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Rehooking Mod Events
+[10/18/2026 - 10:02:13PM] Cannot open store for class "fnis_aa", missing file?
+[10/18/2026 - 10:02:13PM] Error: Static function GetAAmodID not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 187
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 187
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _1hmeqp not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 190
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 190
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 190
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 190
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _2hmeqp not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 192
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 192
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 192
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 192
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _2hweqp not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 194
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 194
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 194
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 194
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _axeeqp not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 196
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 196
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 196
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 196
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _bowatk not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 198
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 198
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 198
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 198
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _boweqp not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 200
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 200
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 200
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 200
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _bowidle not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 202
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 202
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 202
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 202
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _maceqp not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 204
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 204
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 204
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 204
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _dageqp not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 206
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 206
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 206
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 206
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _magatk not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 208
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 208
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 208
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 208
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _magcastmt not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 210
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 210
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 210
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 210
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _magcon not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 212
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 212
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 212
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 212
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _magidle not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 214
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 214
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 214
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 214
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _magmt not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 216
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 216
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 216
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 216
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _sprint not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 218
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 218
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 218
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 218
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function _shout not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 220
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp35"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 220
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] Error: Static function GetGroupBaseValue not found on object fnis_aa. Aborting call and returning None
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 220
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] warning: Assigning None to a non-object variable named "::temp37"
+stack:
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.InitializeData() - "XPMSEWeaponQuest.psc" Line 220
+	[XPMSEWeaponQuest (1A000D62)].XPMSEWeaponQuest.Initialize() - "XPMSEWeaponQuest.psc" Line 56
+	[alias XPMSEWeaponPlayer on quest XPMSEWeaponQuest (1A000D62)].XPMSEWeaponPlayerScript.OnPlayerLoadGame() - "XPMSEWeaponPlayerScript.psc" Line 6
+[10/18/2026 - 10:02:13PM] [Zad-NG]: ZadNpc::DoRegister(1.078948)
+[10/18/2026 - 10:02:13PM] [Zad-NG]: RepopulateNpcs(): In menu mode, aborting.
+[10/18/2026 - 10:02:13PM] [Zad-NG]: ==========Begin Compatibility Checks==========
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Please note that Errors related to missing files should be ignored.
+[10/18/2026 - 10:02:13PM] [Zad-NG]: [ Dependency Checks ]
+[10/18/2026 - 10:02:13PM] [Zad-NG]: DDi version [14.000000]: Ok
+[10/18/2026 - 10:02:13PM] [Zad-NG]: assets version [3.000000]: Ok
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Aroused version [30100004.000000]: Ok
+[10/18/2026 - 10:02:13PM] [Zad-NG]: SexLab version [16601.000000]: Ok
+[10/18/2026 - 10:02:13PM] [Zad-NG]: [ Third Party Mod Compatibility Checks ]
+[10/18/2026 - 10:02:13PM] [Zad-NG]: [ Sanity Checks ]
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Verifying that installation is untainted by an unsupported upgrade: Ok
+[10/18/2026 - 10:02:13PM] [Zad-NG]: ==========End Compatibility Checks==========
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Events arrays already initialized - skipping.
+[10/18/2026 - 10:02:13PM] [Zad-NG]: zadEventSlots::Maintenance()
+[10/18/2026 - 10:02:13PM] [Zad-NG]: Config Interval:1.500000. Total number of events: 0. Next staggered update in 1.500000
+[10/18/2026 - 10:02:14PM] [Zad-NG]: Monitoring Camera state.
+[10/18/2026 - 10:02:14PM] [Injury_Engine_Main] ApplyPluginConfig: require_whip:TRUE give_gear:TRUE max_strikes:10 hours_per_point:1.000000 give_healing_hands:TRUE regen_rate:10.000000 narration:TRUE modes injury/heal/death/torture:0/0/0/0 cooldown:8.000000 torture_window:30.000000 break:3.000000 gap:6.000000 reply_timeout:15.000000 max_distance:15.000000 event_ttl:30.000000 sexual_parts:TRUE overlay:TRUE verbose:TRUE
+[10/18/2026 - 10:02:14PM] [Injury_Engine_Main] GiveGear: player already has 1 whip(s); not giving another
+[10/18/2026 - 10:02:15PM] XPMSE MainQuest Initialization successful.
+[10/18/2026 - 10:02:15PM] [Zad-NG]: iWantDD Widgets: ***LIBRARY RESET***
+[10/18/2026 - 10:02:15PM] [Zad-NG]: iWantDD Widgets: iWant Widgets Reset Event Fired
+[10/18/2026 - 10:02:16PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.onBeginState() - "XPMSEWeaponStyleScaleEffect.psc" Line 255
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.GotoState() - "ActiveMagicEffect.psc" Line ?
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.OnEffectStart() - "XPMSEWeaponStyleScaleEffect.psc" Line 222
+[10/18/2026 - 10:02:16PM] warning: Assigning None to a non-object variable named "::temp70"
+stack:
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.onBeginState() - "XPMSEWeaponStyleScaleEffect.psc" Line 255
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.GotoState() - "ActiveMagicEffect.psc" Line ?
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.OnEffectStart() - "XPMSEWeaponStyleScaleEffect.psc" Line 222
+[10/18/2026 - 10:02:19PM] [Zad-NG]: UpdateControls()
+[10/18/2026 - 10:02:20PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:20PM] warning: Assigning None to a non-object variable named "::temp70"
+stack:
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:22PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:23PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:24PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:25PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] warning: Assigning None to a non-object variable named "::temp70"
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:25PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] warning: Assigning None to a non-object variable named "::temp150"
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] Error: Static function SetAnimGroupEX not found on object fnis_aa. Aborting call and returning None
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] warning: Assigning None to a non-object variable named "::temp50"
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] warning: Assigning None to a non-object variable named "::temp150"
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] Error: Static function SetAnimGroupEX not found on object fnis_aa. Aborting call and returning None
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:25PM] warning: Assigning None to a non-object variable named "::temp50"
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:26PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:28PM] [Zad-NG]: UpdateControls()
+[10/18/2026 - 10:02:34PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:34PM] [Injury_Engine_Main] NarrateRealHits: Bob -> Angi slashing part:left arm level:2 fresh:TRUE hits:1
+[10/18/2026 - 10:02:34PM] [Injury_Engine_Main] DirectNarration: Bob -> Angi: Bob hits Angi with a keen cutting blade hitting Angi's left arm, and the blade bites deep into the wound. The pain is huge and nauseating, and Angi's composure breaks as the blood pours. The coppery smell of blood is everywhere.
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] Follower_IsEligible called for Skadi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] PauseFollow_IsEligible called for Skadi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] StopFollow_IsEligible called for Skadi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] StartFollow_IsEligible called for Angi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] StartFollow_IsEligible called for Skadi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] StopFollow_IsEligible called for Angi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] PauseFollow_IsEligible called for Angi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] Follower_IsEligible called for Angi
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] Follower_IsEligible: Angi is not in the companion faction.
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] Follower_IsEligible: Skadi is eligible as active companion.
+[10/18/2026 - 10:02:34PM] [SkyrimNetInternal] StartFollow_IsEligible: Skadi is in the companion faction.
+[10/18/2026 - 10:02:34PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:35PM] [Injury_Engine_Main] NarrateRealHits: Bob -> Angi slashing part:right leg level:2 fresh:False hits:1
+[10/18/2026 - 10:02:35PM] [Injury_Engine_Main] NarrateInjury: slashing short-lived event: Bob hits Angi with a keen cutting blade hitting Angi's right leg, and the blade bites deep into the wound. The pain is huge and nauseating, and Angi's composure breaks as the blood pours. The coppery smell of blood is everywhere.
+[10/18/2026 - 10:02:35PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:36PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:36PM] warning: Assigning None to a non-object variable named "::temp70"
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:36PM] [Injury_Engine_Main] NarrateRealHits: Bob -> Angi slashing part:face level:2 fresh:False hits:1
+[10/18/2026 - 10:02:36PM] [Injury_Engine_Main] NarrateInjury: slashing short-lived event: Bob hits Angi with a keen cutting blade hitting Angi's face, and the blade bites deep into the wound. The pain is huge and nauseating, and Angi's composure breaks as the blood pours. The coppery smell of blood is everywhere.
+[10/18/2026 - 10:02:36PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:36PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:36PM] warning: Assigning None to a non-object variable named "::temp150"
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:36PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:36PM] Error: Static function SetAnimGroupEX not found on object fnis_aa. Aborting call and returning None
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 241
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:36PM] warning: Assigning None to a non-object variable named "::temp50"
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 241
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 722
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] warning: Assigning None to a non-object variable named "::temp150"
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] Error: Static function SetAnimGroupEX not found on object fnis_aa. Aborting call and returning None
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] warning: Assigning None to a non-object variable named "::temp50"
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1261
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Zad-NG]: UpdateControls()
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1310
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] warning: Assigning None to a non-object variable named "::temp150"
+stack:
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.GetFNISSaveData() - "XPMSEWeaponStyleScaleEffect.psc" Line 1652
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1310
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] Error: Static function SetAnimGroupEX not found on object fnis_aa. Aborting call and returning None
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1310
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] warning: Assigning None to a non-object variable named "::temp50"
+stack:
+	<unknown self>.xpmselib.SetAA() - "XPMSELib.psc" Line 238
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.SetAA() - "XPMSEWeaponStyleScaleEffect.psc" Line 1553
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 1310
+	[Active effect 1 on  (FE04B83C)].XPMSEWeaponStyleScaleEffect.OnObjectEquipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:37PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] NarrateDeaths: slashing short-lived event: Skadi kills Angi with a keen cutting blade: the blade opens Angi's belly from side to side; Angi's bowels slide out in grey, glistening loops and spill over Angi's hands as Angi tries to hold them in. The air fills with the stench of blood, torn gut and half-digested food, and Angi sinks to Angi's knees with a last, broken scream.
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] NarrateRealHits: Bob -> Angi slashing part:lips,ass hole level:3 fresh:False hits:1
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] NarrateInjury: slashing short-lived event: Bob hits Angi with a keen cutting blade hitting Angi's lips and ass hole, and it is too much. The blow cuts through muscle and tendon; Angi goes pale, Angi's vision tunnels and Angi's legs begin to give.
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] NarrateRealHits: Angi is dead, hit not narrated (the death line covers it)
+[10/18/2026 - 10:02:38PM] [Injury_Engine_Main] NarrateRealHits: Angi is dead, hit not narrated (the death line covers it)
+[10/18/2026 - 10:02:43PM] [SkyrimNetInternal] StartFollow_IsEligible called for Skadi
+[10/18/2026 - 10:02:43PM] [SkyrimNetInternal] PauseFollow_IsEligible called for Skadi
+[10/18/2026 - 10:02:43PM] [SkyrimNetInternal] StopFollow_IsEligible called for Skadi
+[10/18/2026 - 10:02:43PM] [SkyrimNetInternal] Follower_IsEligible called for Skadi
+[10/18/2026 - 10:02:43PM] [SkyrimNetInternal] Follower_IsEligible: Skadi is eligible as active companion.
+[10/18/2026 - 10:02:44PM] [SkyrimNetInternal] StartFollow_IsEligible: Skadi is in the companion faction.
+[10/18/2026 - 10:02:44PM] Error: Cannot call GetDisplayName() on a None object, aborting function call
+stack:
+	[SkyrimNet_SexLab (FE04F800)].skyrimnet_sexlab_actions.StartScene_Consensual_Two() - "SkyrimNet_SexLab_Actions.psc" Line 80
+[10/18/2026 - 10:02:44PM] warning: Assigning None to a non-object variable named "::temp18"
+stack:
+	[SkyrimNet_SexLab (FE04F800)].skyrimnet_sexlab_actions.StartScene_Consensual_Two() - "SkyrimNet_SexLab_Actions.psc" Line 80
+[10/18/2026 - 10:02:56PM] [Zad-NG]: UpdateControls()
+[10/18/2026 - 10:03:00PM] Error: Static function GetInstallationCRC not found on object fnis_aa. Aborting call and returning None
+stack:
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.OnObjectUnequipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:03:00PM] warning: Assigning None to a non-object variable named "::temp70"
+stack:
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.Restyle() - "XPMSEWeaponStyleScaleEffect.psc" Line 564
+	[Active effect 1 on  (00000014)].XPMSEWeaponStyleScaleEffect.OnObjectUnequipped() - "XPMSEWeaponStyleScaleEffect.psc" Line ?
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:01PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:02PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:03PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:04PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:07PM] [Zad-NG]: UpdateControls()
+[10/18/2026 - 10:03:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [SkyrimNetInternal] StartFollow_IsEligible called for Skadi
+[10/18/2026 - 10:03:09PM] [SkyrimNetInternal] StopFollow_IsEligible called for Skadi
+[10/18/2026 - 10:03:09PM] [SkyrimNetInternal] PauseFollow_IsEligible called for Skadi
+[10/18/2026 - 10:03:09PM] [SkyrimNetInternal] Follower_IsEligible called for Skadi
+[10/18/2026 - 10:03:09PM] [SkyrimNetInternal] Follower_IsEligible: Skadi is eligible as active companion.
+[10/18/2026 - 10:03:09PM] [SkyrimNetInternal] StartFollow_IsEligible: Skadi is in the companion faction.
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:03:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:05PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:06PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:07PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:08PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:09PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Zad-NG]: UpdateControls()
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:10PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:11PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:12PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining
+[10/18/2026 - 10:04:13PM] [Injury_Engine_Main] OnInjury: [v] injury/heal queued, draining

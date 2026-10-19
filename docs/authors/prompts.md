@@ -19,7 +19,7 @@ SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine/
 
 | File | Role |
 |------|------|
-| `character_bio/0420_injury_looks.prompt` | What each wounded part looks like to an observer, for every injury source |
+| `character_bio/0420_injury_looks.prompt` | What each wounded part looks like to an observer, for every injury source; an unhurt actor gets the decorator's `healed` line ("{name} is completely healed.") |
 | `user_final_instructions/0420_injury_feels.prompt` | How the speaker's own wounds feel, for every injury source |
 
 ## Injury text lives in JSON, not in prompts

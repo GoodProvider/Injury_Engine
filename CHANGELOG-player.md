@@ -1,3 +1,12 @@
+## Unreleased
+
+### Wounds
+- A character with no wounds left is now described as completely healed, so followers stop talking about wounds that are gone.
+
+### Fixes
+- A Courage or Fortify Health buff refreshing or wearing off no longer gives a follower a sudden severe wound (0.1.2 still caught some of these).
+- Light hits now add up to a wound. Before, a healthy character (especially one with lots of health) hit by a weak weapon or a burning spell never got wounded, however often they were hit. This also works while a health buff is active.
+
 ## 0.1.2
 
 ### Fixes

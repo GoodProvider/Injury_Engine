@@ -1,3 +1,9 @@
+Unreleased
+
+- **Healed line in the bio.** The `injury_engine_injuries` decorator carries `healed` ("{name} is completely healed.", `session.json` `healed`) when a living actor has no wound to show, and `character_bio/0420_injury_looks.prompt` prints it.
+- **Buff endings, any archetype.** An attacker-less `HandleHealthDamage` that reports more loss than the Health `kDamage` modifier holds is max health shrinking, not damage, and passes through as a buff change; held uncaused damage counts only health missing below the current max.
+- **Small real hits add up.** The carry of an unwounded actor's erased State is kept in `g_realCarry` (not saved) and seeds its next hit, clamped to the health the Health `kDamage` modifier still holds (not `max - current`: a temporary Health buff puts health above the permanent max), so hits below one point and damage over time can start a wound.
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2
 
 Stability fix pass. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.

@@ -1,6 +1,6 @@
 {# Injuries: what each wounded body part looks like, for every injury source (whipping, slashing, ...). Data:            #}
 {# injury_engine_injuries(uuid) from Injury_Engine.dll (InjuryEngine); the text is already resolved for this     #}
-{# actor from SKSE/Plugins/Injury_Engine/injuries/<source>.json (see injuries/guide.md). Empty when nothing is hurt. #}
+{# actor from SKSE/Plugins/Injury_Engine/injuries/<source>.json (see injuries/guide.md). Unhurt: "healed" line.    #}
 {% if render_mode == "full" or render_mode == "thoughts" or render_mode == "thought" or render_mode == "transform" or render_mode == "dialogue_target" %}
 {% set injuries = injury_engine_injuries(actorUUID) %}
 {% if existsIn(injuries, "sources") and length(injuries.sources) > 0 %}
@@ -13,5 +13,8 @@
 {% endif %}
 {% endfor %}
 {% endfor %}
+{% else if existsIn(injuries, "healed") and injuries.healed != "" %}
+
+{{ injuries.healed }}
 {% endif %}
 {% endif %}

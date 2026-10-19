@@ -22,6 +22,7 @@ Use **bare lowercase** keys only (`parts`, `stage`, `caster_is_target`). Do not 
 | `parts[].part` / `region` | body part name / region (head, body, arm, leg; with "include sexual parts" also nipple, vulva, penis, lips, anus) |
 | `parts[].stage` | stage word of that source (`light`, `medium`, `severe`); torture parts during a heal session: `high`, `mid`, `low` |
 | `parts[].look` / `feel` | the finished sentences for the character bio / final instructions (torture `feel` from `text.feels.torture`, or `text.feels.heal` during a heal session) |
+| `healed` | only when `sources` is empty and the actor is alive: `session.json` `healed` ("{name} is completely healed."), printed by the character bio so the LLM drops wounds left in the dialogue history |
 
 ## Injury files `injuries/<source>.json`
 
