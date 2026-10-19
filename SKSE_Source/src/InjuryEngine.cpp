@@ -1366,9 +1366,11 @@ namespace InjuryEngine
                 const float health = av->GetActorValue(RE::ActorValue::kHealth);
                 const float stuck = std::clamp(u.top - health, 0.0f, u.sum);
                 const float threshold = maxHealth * minPercent / 100.0f;
-                const bool land = maxHealth > 0.0f && stuck > 0.0f && stuck >= threshold;
+                // a buff ending around the held damage (its mark may come just after the damage call) took that health
+                const bool buff = Classifier::RecentBuffChange(actor, kUncausedHold + 1.0);
+                const bool land = !buff && maxHealth > 0.0f && stuck > 0.0f && stuck >= threshold;
                 SKSE::log::info("uncaused {} {} sum:{:.1f} stuck:{:.1f} threshold:{:.1f} -> {}", LogActor(actor), SourceId(u.source), u.sum, stuck,
-                    threshold, land ? "landed" : "dropped");
+                    threshold, land ? "landed" : buff ? "dropped (buff change)" : "dropped");
                 if (land) {
                     const float pass = OnDamage(actor, nullptr, stuck, u.source, false);
                     RestoreHealth(actor, stuck - pass);

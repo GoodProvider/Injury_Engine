@@ -92,6 +92,49 @@ namespace
         return file && file->GetFilename() == "Injury_Engine.esp";
     }
 
+    // At most one always-on line per second per (hook, actor).
+    bool Throttle(std::string_view hook, RE::Actor* actor)
+    {
+        static std::mutex lock;
+        static std::unordered_map<std::string, std::chrono::steady_clock::time_point> last;
+        const auto now = std::chrono::steady_clock::now();
+        std::lock_guard guard(lock);
+        if (last.size() > 256) {
+            last.clear();
+        }
+        auto& when = last[std::format("{}|{:08X}", hook, actor->GetFormID())];
+        if (when != std::chrono::steady_clock::time_point{} && now - when < std::chrono::seconds(1)) {
+            return false;
+        }
+        when = now;
+        return true;
+    }
+
+    // Inside a Recover-flagged Health effect's change (a Fortify Health ending): what it takes is no wound.
+    thread_local int g_inBuff = 0;
+    constexpr double kBuffWindow = 1.0;  // real seconds after a buff change in which uncaused health loss is its doing
+
+    struct BuffScope
+    {
+        BuffScope() { ++g_inBuff; }
+        ~BuffScope() { --g_inBuff; }
+    };
+
+    // Uncaused health loss from a buff change: passed through untouched, logged (always on, throttled).
+    bool BuffChange(const char* hook, RE::Actor* actor, float value)
+    {
+        if (!actor || (g_inBuff == 0 && !Classifier::RecentBuffChange(actor, kBuffWindow))) {
+            return false;
+        }
+        if (Throttle(std::format("buff {}", hook), actor)) {
+            auto* av = actor->AsActorValueOwner();
+            SKSE::log::info("[buff] {} {:08X} value:{:.2f} health:{:.1f}/{:.1f} nested:{}: health change from a buff ending, not a wound", hook,
+                actor->GetFormID(), value, av->GetActorValue(RE::ActorValue::kHealth), av->GetPermanentActorValue(RE::ActorValue::kHealth),
+                g_inBuff > 0);
+        }
+        return true;
+    }
+
     // Always-on drowning diagnosis: one info line per second per hook and actor while the actor shows any sign of
     // water, so the hook that carries vanilla drowning damage is visible without verbose logging.
     void UnderwaterProbe(const char* hook, RE::Actor* actor, float value, std::string_view note)
@@ -106,22 +149,8 @@ namespace
             return;
         }
         const auto signals = Classifier::ReadDrownSignals(actor);
-        if (!signals.Wet()) {
+        if (!signals.Wet() || !Throttle(hook, actor)) {
             return;
-        }
-        {
-            static std::mutex lock;
-            static std::unordered_map<std::string, std::chrono::steady_clock::time_point> last;
-            const auto now = std::chrono::steady_clock::now();
-            std::lock_guard guard(lock);
-            if (last.size() > 256) {
-                last.clear();
-            }
-            auto& when = last[std::format("{}|{:08X}", hook, actor->GetFormID())];
-            if (when != std::chrono::steady_clock::time_point{} && now - when < std::chrono::seconds(1)) {
-                return;
-            }
-            when = now;
         }
         auto* av = actor->AsActorValueOwner();
         SKSE::log::info("[probe] {} {:08X} value:{:.2f} health:{:.1f}/{:.1f} inHandle:{} internal:{} {} | {}", hook, actor->GetFormID(), value,
@@ -173,6 +202,10 @@ namespace
                 if (Verbose() && a_damage != 0.0f) {
                     SKSE::log::debug("[hook] HandleHealthDamage victim:{:08X} damage:{:.2f} internal, passed", a_this->GetFormID(), a_damage);
                 }
+                return func(a_this, a_attacker, a_damage);
+            }
+            if (!a_attacker && BuffChange("HandleHealthDamage", a_this, a_damage)) {
+                HandleScope scope;
                 return func(a_this, a_attacker, a_damage);
             }
             const float amount = std::fabs(a_damage);
@@ -231,9 +264,13 @@ namespace
                 UnderwaterProbe("ModActorValue", skyrim_cast<RE::Actor*>(a_this), a_value,
                     a_modifier == RE::ACTOR_VALUE_MODIFIER::kDamage ? "damage" : a_modifier == RE::ACTOR_VALUE_MODIFIER::kTemporary ? "temporary" : "permanent");
             }
+            if (a_modifier == RE::ACTOR_VALUE_MODIFIER::kTemporary && a_av == RE::ActorValue::kHealth && a_value < 0.0f) {
+                // max health shrinks (a fortify ending): the health it takes in the same moment is no wound
+                Classifier::NoteBuffChange(skyrim_cast<RE::Actor*>(a_this));
+            }
             if (a_modifier == RE::ACTOR_VALUE_MODIFIER::kDamage && a_av == RE::ActorValue::kHealth && a_value < 0.0f &&
                 g_inHandle == 0 && !InjuryEngine::IsInternalDamage()) {
-                if (auto* actor = skyrim_cast<RE::Actor*>(a_this)) {
+                if (auto* actor = skyrim_cast<RE::Actor*>(a_this); actor && !BuffChange("ModActorValue", actor, a_value)) {
                     bool uncaused = false;
                     const int source = Classifier::Classify(actor, nullptr, nullptr, nullptr, &uncaused);
                     SKSE::log::debug("[hook] ModActorValue victim:{:08X} damage:{:.2f} source:{}", actor->GetFormID(), a_value,
@@ -324,6 +361,15 @@ namespace
                 source = Classifier::TortureSourceOfSpell(a_this->spell);
             }
             if (source < 0) {
+                if (mgef->data.flags.all(RE::EffectSetting::EffectSettingData::Flag::kRecover)) {
+                    // a Recover Health effect only moves max health (Fortify Health ending, a max-health drain):
+                    // whatever health it takes now, nested or a moment later, is not a wound
+                    Classifier::NoteBuffChange(a_actor);
+                    SKSE::log::debug("[hook] effect{} victim:{:08X} effect:{:08X} value:{:.3f} recover: buff change", Dual ? " (dual)" : "",
+                        a_actor->GetFormID(), mgef->GetFormID(), a_value);
+                    BuffScope scope;
+                    return func(a_this, a_actor, a_value, a_av);
+                }
                 return func(a_this, a_actor, a_value, a_av);
             }
             const auto caster = a_this->GetCasterActor();

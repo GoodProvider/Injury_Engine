@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — since [0.1.2](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2)
+
+### Real damage
+- Falls must be physically plausible: `Classifier::ClassifyFall` also needs `fallTime >= 0.3 s` and a drop no larger than `686 × max(gravity, 1) × t² + 100` units. `fallStartHeight` is stale between falls, so a brief `fallTime` on a step read a buff ending as a fall ("Camilla Valerius stumbles"). An accepted landing logs an info `landing` line.
+- Buff changes are not wounds: a Recover-flagged Health effect going negative (`ValueModifierEffect::ModifyActorValue`, e.g. Fortify Health from Courage ending) or a negative `kTemporary` Health `ModActorValue` marks the actor (`Classifier::NoteBuffChange`). For 1 s after the mark, and inside that effect's call, attacker-less Health damage passes through unclassified (always-on, throttled `[buff]` info line), and held uncaused damage near a mark is dropped (`dropped (buff change)`).
+
 ## [0.1.2](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2) — since [0.1.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1)
 
 Code-review fix pass ([checkpoints/reviews/checkpoint-v03.md](checkpoints/reviews/checkpoint-v03.md)).

@@ -54,6 +54,12 @@ namespace Classifier
     // because damage hooks sit inside the engine's effect update. Padded Whip hits get the marker from their ENCH.
     void MarkQuiet(RE::Actor* victim);
 
+    // A max-health buff changed on `actor` (a Recover-flagged Health effect such as Fortify Health ending, or the
+    // temporary Health modifier dropping). The health it takes is not a wound: the hooks pass uncaused damage
+    // within `seconds` of such a change through untouched, and held uncaused damage is dropped.
+    void NoteBuffChange(RE::Actor* actor);
+    bool RecentBuffChange(RE::Actor* actor, double seconds);
+
     // Torture is not aggression: when `victim` enters combat against `attacker` within a few seconds of a torture
     // hit by them (either order), its combat is stopped. The hit event sink covers Padded Whip lashes and
     // "(torture)" spells; the damage hook calls this for every torture-classified hit (punches).

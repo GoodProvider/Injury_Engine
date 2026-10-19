@@ -23,6 +23,8 @@ namespace Classifier
         constexpr double kCalmWindow = 3.0;  // real seconds a torture hit keeps its victim from fighting back
         constexpr double kCombatPending = 1.0;  // real seconds a combat start waits for the torture hit that caused it
         constexpr float kDrownSubmerged = 0.85f;  // submerged level (0 dry .. 1 under) at which the head is under water
+        constexpr float kMinFallTime = 0.3f;  // real seconds in the air before a landing can hurt (a 300-unit drop takes ~0.9 s)
+        constexpr float kGravity = 686.0f;  // Havok gravity in game units / s² (9.8 m/s² × 70 units / m)
 
         struct Recent
         {
@@ -59,6 +61,7 @@ namespace Classifier
         // usable hit event while the caster's hands are empty must not read as an unarmed hit (a punch).
         std::unordered_map<RE::FormID, MagicSeen> g_realMagic;
         std::unordered_map<RE::FormID, double> g_quiet;  // victim -> last QuietMarker cast
+        std::unordered_map<RE::FormID, double> g_buff;  // actor -> last max-health buff change (a fortify ending)
 
         struct Pair
         {
@@ -434,7 +437,9 @@ namespace Classifier
             return height * 0.5f;
         }
 
-        // A real fall only: walking down steps gives a brief fallTime with almost no drop.
+        // A real fall only: walking down steps gives a brief fallTime with almost no drop, and fallStartHeight is
+        // left over from an older fall (seen: drop -12613 while standing), so the drop must also fit the time in the
+        // air (twice free fall plus 100 units of slack for jumps and gravity mods).
         int ClassifyFall(RE::Actor* victim)
         {
             const auto* rule = FallingRule();
@@ -442,10 +447,23 @@ namespace Classifier
             if (!controller) {
                 return -2;
             }
+            const float time = controller->fallTime;
             const float drop = controller->fallStartHeight - victim->GetPositionZ();
             const float minDrop = MinDrop(*rule);
-            SKSE::log::debug("classify {:08X}: fallTime:{:.2f} drop:{:.0f} min_drop:{:.0f}", victim->GetFormID(), controller->fallTime, drop, minDrop);
-            return controller->fallTime > 0.0f && drop >= minDrop ? rule->source : -2;
+            const float maxDrop = kGravity * std::max(controller->gravity, 1.0f) * time * time + 100.0f;
+            const char* reject = time <= 0.0f ? "not falling" :
+                                 drop < minDrop ? "short drop" :
+                                 time < kMinFallTime ? "brief fall" :
+                                 drop > maxDrop ? "stale start height" :
+                                                  nullptr;
+            if (reject) {
+                SKSE::log::debug("classify {:08X}: fallTime:{:.2f} drop:{:.0f} min_drop:{:.0f} max_drop:{:.0f} -> {}", victim->GetFormID(), time, drop,
+                    minDrop, maxDrop, reject);
+                return -2;
+            }
+            SKSE::log::info("landing {:08X}: fallTime:{:.2f} drop:{:.0f} min_drop:{:.0f} max_drop:{:.0f}", victim->GetFormID(), time, drop, minDrop,
+                maxDrop);
+            return rule->source;
         }
 
         const InjuryConfig::ClassifyRule* DrowningRule()
@@ -850,6 +868,7 @@ namespace Classifier
             g_torture.clear();
             g_realMagic.clear();
             g_quiet.clear();
+            g_buff.clear();
             g_calm.clear();
             g_combatStart.clear();
         }
@@ -1137,5 +1156,27 @@ namespace Classifier
             caster->CastSpellImmediate(spell, true, actor, 1.0f, false, 0.0f, nullptr);
             SKSE::log::debug("quiet marker: victim {:08X}", actor->GetFormID());
         });
+    }
+
+    void NoteBuffChange(RE::Actor* actor)
+    {
+        if (!actor) {
+            return;
+        }
+        std::lock_guard lock(g_lock);
+        if (g_buff.size() > 512) {
+            g_buff.clear();
+        }
+        g_buff[actor->GetFormID()] = NowSeconds();
+    }
+
+    bool RecentBuffChange(RE::Actor* actor, double seconds)
+    {
+        if (!actor) {
+            return false;
+        }
+        std::lock_guard lock(g_lock);
+        const auto it = g_buff.find(actor->GetFormID());
+        return it != g_buff.end() && NowSeconds() - it->second <= seconds;
     }
 }

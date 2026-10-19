@@ -2,6 +2,13 @@
 
 Quirks and lessons for Injury_Engine. Read before changes; append a dated entry (newest first) after a session that found something non-obvious. Entries marked *(from SkyrimNet_SexLab)* were learned there and apply here too.
 
+## A buff wearing off read as a fall (2026-10-18, needs in-game verification)
+
+Player report: a follower sneaking along got "Camilla Valerius stumbles." every time the player's Ocato's Recital buffs (Courage, Nightfall) wore off. The supplied logs had no Injury_Engine lines; the diagnosis comes from the code and a local log.
+- **`bhkCharacterController::fallStartHeight` is stale between falls.** A standing actor logged `fallTime:0.00 drop:-12613`. The old test (`fallTime > 0` and `drop >= min_drop`) accepted any no-cause Health loss during a brief `fallTime` (a step, a slope) whenever the old start height sat 300+ units above the actor. `ClassifyFall` now also needs `fallTime >= 0.3 s` and `drop <= 686 × max(gravity, 1) × t² + 100` (twice free fall plus slack; `gravity` is the controller member at 0x248, a multiplier). Rejections log the reason at debug; accepted landings log `landing ...` at info.
+- **A buff ending is not a wound.** A Recover-flagged Health effect with a negative change (`ValueModifierEffect::ModifyActorValue` 0x20, non-torture only) or a negative `kTemporary` Health `ModActorValue` marks the actor (`Classifier::NoteBuffChange`). Attacker-less Health damage inside that effect call (`BuffScope`) or within 1 s of the mark passes through with no classification, and `ResolveUncaused` drops a held chunk with a mark within 2.5 s. Always-on line: `[buff] <hook> <id> ... not a wound` (throttled).
+- **Unverified:** which engine path a Fortify Health ending takes (whether it reaches 0x20 with a negative value, a `kTemporary` change, a `kDamage` change or `HandleHealthDamage` at all). The `[buff]`, `landing` and `uncaused` lines in a repro log answer it. A real no-cause loss in the same second as a buff ending is skipped (accepted).
+
 ## Review v02 fixes: Papyrus threads, stale sessions, swing-based melee (2026-10-18, needs in-game verification)
 
 Every native this DLL registers runs on the game thread, so the calling Papyrus thread yields, and so does any call on an actor (`IsDead`, `GetDistance`). Another `OnInjury` / `OnUpdate` thread on the Main quest can run at each of those points. Rules that came out of the review:

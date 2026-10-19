@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixes
+- A buff wearing off (Courage, Fortify Health and the like) no longer counts as a fall or a wound.
+- Walking down steps or slopes can no longer be taken for a hard landing.
+
 ## 0.1.2
 
 ### Fixes
