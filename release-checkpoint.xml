@@ -6,9 +6,9 @@
     <summary>Per-body-part injury tracking for SkyrimNet: real damage by type, torture damage and a padded whip, with healing, narration, prompts and an overlay.</summary>
     <repository_root>c:\Skyrim\dev\mods\Injury_Engine</repository_root>
     <updated>2026-10-18</updated>
-    <base_tag>0.1.1 (packaged 2026-10-17, not yet tagged; only 0.1.0 is tagged)</base_tag>
-    <next_version>0.1.2</next_version>
-    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.2 (check-version.py); changelogs cover 0.1.2 (code-review v02 fix pass, checkpoints/reviews/checkpoint-v03.md, plus the fall / buff-change fix 07ad3b3 folded in); 7z rebuilt; fall / stairs fix tested in game, buff-ending path and the review fixes not yet verified; no git tag; origin still SkyrimNet_Whipped</version_status>
+    <base_tag>0.1.2</base_tag>
+    <next_version>0.1.3</next_version>
+    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.3 (check-version.py); changelogs cover 0.1.3 (d430eef: buff endings via the HandleHealthDamage shrink check, small real hits carry in g_realCarry, healed bio line); Courage / buff-ending path tested in game (no wound, no damage); small-hit carry and healed bio line not yet verified in game; no 0.1.3 tag; origin still SkyrimNet_Whipped</version_status>
     <related_artifacts>
       <artifact role="release rules">release-guide.md</artifact>
       <artifact role="release skill">.claude/skills/release/SKILL.md</artifact>

@@ -1,4 +1,6 @@
-Unreleased
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.3
+
+Buff-ending and small-hit fix release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
 
 - **Healed line in the bio.** The `injury_engine_injuries` decorator carries `healed` ("{name} is completely healed.", `session.json` `healed`) when a living actor has no wound to show, and `character_bio/0420_injury_looks.prompt` prints it.
 - **Buff endings, any archetype.** An attacker-less `HandleHealthDamage` that reports more loss than the Health `kDamage` modifier holds is max health shrinking, not damage, and passes through as a buff change; held uncaused damage counts only health missing below the current max.
