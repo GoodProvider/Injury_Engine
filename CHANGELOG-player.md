@@ -1,12 +1,8 @@
-## Unreleased
+## 0.1.2
 
 ### Fixes
 - A buff wearing off (Courage, Fortify Health and the like) no longer counts as a fall or a wound.
 - Walking down steps or slopes can no longer be taken for a hard landing.
-
-## 0.1.2
-
-### Fixes
 - Loading a save no longer leaves old torture scenes, heal sessions or truces running.
 - Loading a save during an NPC's torture action no longer stops later lashes from counting.
 - Punches and weapon hits are judged by the actual swing, not by what is equipped.

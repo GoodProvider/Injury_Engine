@@ -11,6 +11,7 @@ Stability fix pass. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address 
 - **Overlay ordering.** Pushes carry a sequence number so the page never shows an older state.
 - **Config hardening.** A bad field in an injury JSON skips that rule only; bad region indices fall back to `body`.
 - **Performance.** Classify forms are resolved to FormIDs once instead of looked up by name per tick.
+- **Buffs and steps are not falls.** A fall needs a real fall time and a drop that fits it; a Health buff ending (Courage, Fortify Health) marks the actor, and the attacker-less loss right after is not a wound.
 
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.1
 
