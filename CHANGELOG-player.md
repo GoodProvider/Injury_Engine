@@ -1,3 +1,16 @@
+## 0.1.4
+
+### Wounds
+- Real wounds are measured against max health and staged minor / major / severe.
+- New Injury Ranges settings set where real wounds become minor, major and severe.
+- Light hits below minor still count but are not narrated.
+- A body part can't be hurt worse than the body has lost health.
+- Death narration names the hit that actually killed.
+
+### Gear and settings
+- Torture gear is renamed "Torture Padded Whip", "Torture Flames" and so on, so it sorts together.
+- Narration settings are split into "Narration" (modes) and "Narration Options".
+
 ## 0.1.3
 
 ### Wounds

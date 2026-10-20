@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.4](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.4) — since [0.1.3](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.3)
+
+### Wounds / healing
+- Real points use their own scale: 1 point = 1% of max health (`Body::realMax` core 100; sexual parts 10 / 5 via `sexual_parts.json` `real_max`). Co-save version 7; version 6 and older real points are converted on load. Torture points are unchanged.
+- Real stages come from the new Injury Ranges settings `injury_engine.ranges.minor_min` / `major_min` / `severe_min` (25 / 75 / 90, `SetInjuryRanges`, `RealStage`). A hit whose parts all stay below minor pushes no `HitEntry`, so it is not narrated.
+- Missing-health caps: `RealCaps` / `FitRealToHealth` cap each part at the body's missing health share of its real max and clamp the real total to the missing health beyond the torture hold.
+- `OnDamage` ignores health-model hits that land at or below 0 health (before `IsDead`), so the death record names the real killing blow.
+
+### Install / settings
+- Torture gear renamed to "Torture <name>" so it sorts together: WEAP 0x803 Torture Padded Whip, SPEL 0x816–0x818 and MGEF 0x813–0x815 Torture Flames / Frostbite / Sparks (FULL names only; FormIDs and EditorIDs unchanged).
+- Dashboard: the four narration mode selects stay in "Narration", Injury Ranges follows, and the other `injury_engine.narration.*` fields move to a new "Narration Options" section (keys and defaults unchanged). README settings table reordered to match.
+
+### Docs
+- `CLAUDE.md`, `README.md`, `injuries/guide.md`, `docs/developers/papyrus.md` and `docs/authors/actions.md` describe the real scale, Injury Ranges and the renamed gear; KNOWLEDGEBASE adds the 0-health killing-blow hit and the SkyrimNet prompt editor override that shadows plugin prompts.
+
 ## [0.1.3](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.3) — since [0.1.2](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2)
 
 ### Narration / prompts

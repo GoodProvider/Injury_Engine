@@ -1,3 +1,14 @@
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.4
+
+Injury bands release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
+
+- **Real damage on a 1% scale.** One real point is 1% of max health (core parts 100, sexual parts 10 / 5); co-save version 7 converts older saves on load.
+- **Injury Ranges sliders.** `injury_engine.ranges.minor_min` / `major_min` / `severe_min` (25 / 75 / 90) set where a real wound becomes minor, major or severe; hits below minor are tracked but not narrated.
+- **Wounds fit missing health.** No part can be hurt worse than the body has lost health (`RealCaps` / `FitRealToHealth`).
+- **Killing blow named correctly.** Hits that land at or below 0 health are ignored, so the death narration names the hit that killed.
+- **Torture gear sorts together.** Torture Padded Whip and Torture Flames / Frostbite / Sparks (names only; FormIDs unchanged).
+- **Dashboard tidy.** The narration modes stay in "Narration"; the remaining narration settings move to "Narration Options".
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.3
 
 Buff-ending and small-hit fix release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
