@@ -59,7 +59,7 @@ Vanilla Flames. Two attacks.
 
 **Bob → Nina.** Cast `08:25:57.302` (4.034 s after Nia's last hit). One hit, `08:25:57.335`. The Flames `spell_cast` id was overwritten. The `hit` id was new because the target changed. No further Flames hit after that.
 
-## Sparks (torture), 07:53
+## Torture Sparks, 07:53
 
 `Injury_Engine_SparksTorture`, weapon `0xFE050818`, projectile `0x00034190`. Cast `07:53:44.235`. Short-lived `spell_cast` at `07:53:44.261` (`spell_id` `4261742616`).
 

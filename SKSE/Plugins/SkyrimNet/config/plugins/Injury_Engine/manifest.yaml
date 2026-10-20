@@ -87,7 +87,7 @@ schema:
     - name: "Add gear to player"
       path: "injury_engine.action.give_to_player"
       type: "bool"
-      description: "On: on load (and when settings are saved) give the player the padded whip and the spells Flames (torture), Frostbite (torture) and Sparks (torture), each only if they don't have it yet. The torture spells cause fire / frost / shock torture wounds (in or out of combat) instead of real damage; the normal Flames, Frostbite and Sparks are unchanged and always do real damage. Turning it off takes nothing away."
+      description: "On: on load (and when settings are saved) give the player the padded whip and the spells Torture Flames, Torture Frostbite and Torture Sparks, each only if they don't have it yet. The torture spells cause fire / frost / shock torture wounds (in or out of combat) instead of real damage; the normal Flames, Frostbite and Sparks are unchanged and always do real damage. Turning it off takes nothing away."
       defaultValue: true
       category: "Action"
 

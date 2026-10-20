@@ -11,7 +11,7 @@ Weapon Property PaddedWhip Auto
 ImpactDataSet Property ImpactSet Auto
 GlobalVariable Property require_whip_global Auto
 Spell Property HealingHands Auto
-; Flames / Frostbite / Sparks (torture): fire / frost / shock torture wounds instead of real damage
+; Torture Flames / Frostbite / Sparks: fire / frost / shock torture wounds instead of real damage
 Spell Property TortureFlames Auto
 Spell Property TortureFrostbite Auto
 Spell Property TortureSparks Auto

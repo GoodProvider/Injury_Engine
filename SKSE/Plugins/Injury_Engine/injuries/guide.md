@@ -14,10 +14,10 @@ a file that fails to parse is skipped and named there.
 
 | File | Source | Fed by |
 |------|--------|--------|
-| `whipping.json` | model `torture`: damage then healing over game time, requires a Injury_Engine whip; also holds the body block, setting defaults and overlay | Torture_Target `whip`, real Padded Whip hits |
+| `whipping.json` | model `torture`: damage then healing over game time, requires a Injury_Engine whip; also holds the body block, setting defaults and overlay | Torture_Target `whip`, real Torture Padded Whip hits |
 | `pinching`, `slapping`, `pulling` | model `torture` | Torture_Target `pinch` / `slap` / `pull`, `External_Torture` |
 | `punching` | model `torture` | Torture_Target `punch`, unarmed NPC / player hits while the attacker is out of combat |
-| `fire`, `frost`, `shock` | model `torture` | the spells Flames / Frostbite / Sparks (torture) (Injury_Engine.esp; vanilla spells are real damage) |
+| `fire`, `frost`, `shock` | model `torture` | the spells Torture Flames / Frostbite / Sparks (Injury_Engine.esp; vanilla spells are real damage) |
 | `slashing`, `piercing`, `bludgeoning` | model `health`: physical weapon hits | blades / daggers, arrows / bolts, maces / hammers / staves / fists |
 | `burning`, `freezing`, `shocking` | model `health`: spell and enchantment damage | magic effects by resist type (fire, frost, shock) |
 | `mauling` | model `health` | unarmed attacks by creatures (non-NPC attackers) |

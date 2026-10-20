@@ -15,7 +15,7 @@ All four are SkyrimNet YAML actions in `SKSE/Plugins/SkyrimNet/external/goodprov
 | `Stop_Fighting_by_Yielding.yaml` | `StopFightingByYielding(speaker, target)` | `target` | in combat |
 | `Start_Fighting.yaml` | `StartFighting(speaker, target)` | `target` | none |
 
-The descriptions live in the YAML (`[speaker]`, `[target]`, `[type]`, `[strikes]` placeholders). The type list and strike range are fixed in `Torture_Target.yaml`: torture types added by other mods' injury JSON are not offered, an unknown type falls back to whip, and `injury_engine.action.max_strikes` only caps the chosen count. The "has no whip" event is `whipping.json` `action.no_whip`; the summary narration is `narration.summary` of the chosen type's file. Fire / frost / shock torture is not an action type: it comes from the Flames / Frostbite / Sparks (torture) spells and from `External_Torture`.
+The descriptions live in the YAML (`[speaker]`, `[target]`, `[type]`, `[strikes]` placeholders). The type list and strike range are fixed in `Torture_Target.yaml`: torture types added by other mods' injury JSON are not offered, an unknown type falls back to whip, and `injury_engine.action.max_strikes` only caps the chosen count. The "has no whip" event is `whipping.json` `action.no_whip`; the summary narration is `narration.summary` of the chosen type's file. Fire / frost / shock torture is not an action type: it comes from the Torture Flames / Frostbite / Sparks spells and from `External_Torture`.
 
 ## Execution
 

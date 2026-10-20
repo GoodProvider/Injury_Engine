@@ -17,7 +17,7 @@ namespace Classifier
     namespace
     {
         constexpr double kHitWindow = 0.6;  // real seconds a hit event stays usable for the damage that follows it
-        constexpr double kTortureWindow = 2.0;  // real seconds a "(torture)" effect stays current after it was last seen
+        constexpr double kTortureWindow = 2.0;  // real seconds a "Torture" effect stays current after it was last seen
         constexpr double kQuietRecast = 1.0;  // real seconds between QuietMarker casts on one victim (the marker lasts 3 s)
         constexpr std::uint32_t kQuietSpellId = 0x81A;  // SPEL Injury_Engine_QuietSpell
         constexpr double kCalmWindow = 3.0;  // real seconds a torture hit keeps its victim from fighting back
@@ -48,7 +48,7 @@ namespace Classifier
 
         std::mutex g_lock;
         std::unordered_map<RE::FormID, Recent> g_recent;  // victim -> latest hit event
-        // victim -> latest "(torture)" effect, from AddTarget and hit events. Damage hooks read this instead of walking
+        // victim -> latest "Torture" effect, from AddTarget and hit events. Damage hooks read this instead of walking
         // the active-effect list: they run inside the engine's own effect update, where a nested walk crashes.
         std::unordered_map<RE::FormID, TortureSeen> g_torture;
         struct MagicSeen
@@ -330,7 +330,7 @@ namespace Classifier
             return {};
         }
 
-        // Torture "(torture)" MGEF first, else health resist match, else -2.
+        // Torture "Torture" MGEF first, else health resist match, else -2.
         int EffectSource(const RE::EffectSetting* mgef)
         {
             if (const int torture = TortureSourceOf(mgef); torture >= 0) {
@@ -984,7 +984,7 @@ namespace Classifier
             }
         }
         const RE::FormID victimId = victim->GetFormID();
-        // A recent Padded Whip hit event is not the answer for every damage call in its window: a spell from the other
+        // A recent Torture Padded Whip hit event is not the answer for every damage call in its window: a spell from the other
         // hand or a drowning tick right after must still be classified. Only the hands loop below (this call's own
         // attacker holds the whip) or the last fallback returns ignore for it.
         bool whipEvent = false;
@@ -1006,7 +1006,7 @@ namespace Classifier
             }
         }
         if (attacker) {
-            // Both hands first: a Padded Whip in one hand must not swallow the beam of a "(torture)" spell in the
+            // Both hands first: a Torture Padded Whip in one hand must not swallow the beam of a "Torture" spell in the
             // other (the whip's ignore result lets the game apply the spell damage untouched, so torture could kill).
             RE::TESForm* hands[2] = { attacker->GetEquippedObject(false), attacker->GetEquippedObject(true) };
             Match matches[2] = { ClassifyForm(hands[0], attacker), ClassifyForm(hands[1], attacker) };
@@ -1026,7 +1026,7 @@ namespace Classifier
             if (pick >= 0) {
                 SKSE::log::debug("classify {:08X}: attacker {:08X} equipped {:08X} -> {}", victimId, attacker->GetFormID(),
                     hands[pick]->GetFormID(), IdOf(matches[pick].source));
-                // an equipped spell (Sparks (torture), ...) ticks every frame: only a weapon is a melee hit
+                // an equipped spell (Torture Sparks, ...) ticks every frame: only a weapon is a melee hit
                 return take(matches[pick], hands[pick]->IsWeapon());
             }
             if (matches[0].source == -1 || matches[1].source == -1) {

@@ -1530,7 +1530,7 @@ namespace InjuryEngine
 
     namespace
     {
-        // Hooked torture damage (out-of-combat punches, "(torture)" spells): the game applies none
+        // Hooked torture damage (out-of-combat punches, "Torture" spells): the game applies none
         // of it. A melee hit is hook.points_per_hit points on one part; spell damage lands hook.points_per_second
         // points per real second whatever the spell's own damage.
         float OnTortureDamage(RE::Actor* victim, RE::Actor* attacker, float amount, const InjuryConfig::Source& conf, int source,

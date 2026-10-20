@@ -16,14 +16,14 @@
 //                                   what the engine did not keep (punches, real hits replacing torture, missed ticks)
 //   ActorValueOwner::ModActorValue  other health damage when not nested inside HandleHealthDamage
 // Vtable hooks on ValueModifierEffect and DualValueModifierEffect:
-//   ModifyActorValue (0x20)         the per-tick change of a value-modifier effect; "(torture)" Health ticks are
+//   ModifyActorValue (0x20)         the per-tick change of a value-modifier effect; "Torture" Health ticks are
 //                                   blocked here before they land (the AV argument is kNone, the effect's own AV is
 //                                   the member `actorValue`), and the dual Stamina / Magicka drain is applied by us
 // Call hooks (SE / AE):
 //   GetFactionFightReaction         in the victim's hit handling (the Simple Offence Suppression site): a Padded
 //                                   Whip lash on a neutral victim reads as an ally hit, so it starts no combat
 //   ProcessHitData                  in the melee hit handler, before health is taken: a torture melee hit (a punch)
-//                                   becomes torture points and its damage is zeroed, so it can't kill; a Padded Whip
+//                                   becomes torture points and its damage is zeroed, so it can't kill; a Torture Padded Whip
 //                                   hit is zeroed too (its lash ENCH brings the torture)
 // Damage is classified (Classifier) and handed to InjuryEngine::OnDamage, which may reduce it (torture wounds
 // absorb their share; torture damage itself is taken whole). HandleHealthDamage's own nested ModActorValue calls are not counted twice.
@@ -40,7 +40,7 @@ namespace
 
     thread_local int g_inHandle = 0;
 
-    // Melee hits ProcessHitData zeroed (torture points taken, or the Padded Whip), per victim: the next
+    // Melee hits ProcessHitData zeroed (torture points taken, or the Torture Padded Whip), per victim: the next
     // HandleHealthDamage call for that victim within 100 ms, on any thread, only gives back what still landed. Each mark
     // is used once, so a second hit right after is counted normally.
     std::mutex g_handledLock;
@@ -241,7 +241,7 @@ namespace
                 Classifier::MarkQuiet(a_this);  // no vanilla hit bark over the torture narration
                 Classifier::NoteCalm(a_this, a_attacker);  // and no fight back
             }
-            // torture melee hits and Padded Whip hits zeroed by ProcessHitData: only give back what still landed
+            // torture melee hits and Torture Padded Whip hits zeroed by ProcessHitData: only give back what still landed
             // (ProcessHitData classified the swing itself, so Classify here may name another source for it: a melee
             // result, a torture result or the whip all take the mark)
             const bool handled = (physicalMelee || source == -1 || (source >= 0 && InjuryConfig::IsTorture(source))) && TakeHandled(a_this);
@@ -349,7 +349,7 @@ namespace
     };
 
     // The per-tick call that actually changes the actor value of a value-modifier effect (HandleHealthDamage only
-    // reports a change already made). A "(torture)" effect, or any Health effect on a "(torture)" spell, never
+    // reports a change already made). A "Torture" effect, or any Health effect on a "Torture" spell, never
     // touches Health: the tick becomes torture points (OnDamage, whose TakeHealth keeps the floor). The dual
     // variant (frost / shock) still drains its second value (Stamina / Magicka) here.
     template <bool Dual>
@@ -451,7 +451,7 @@ namespace
                     SKSE::log::debug("[hook] ProcessHitData torture victim:{:08X} attacker:{:08X} source:{} damage:{:.2f} -> 0",
                         a_victim->GetFormID(), attacker ? attacker->GetFormID() : 0, InjuryEngine::SourceId(source), damage);
                 } else if (source == -1) {
-                    // The Padded Whip: its lash ENCH brings the torture (OnLash), the weapon hit itself must not take health.
+                    // The Torture Padded Whip: its lash ENCH brings the torture (OnLash), the weapon hit itself must not take health.
                     const float damage = a_hit.totalDamage;
                     a_hit.totalDamage = 0.0f;
                     a_hit.physicalDamage = 0.0f;
