@@ -156,6 +156,10 @@ Function SetRegenRate(Float percent) global native
 ; did not come back within about 1.5 s reaches this percent of max health. 0: any that sticks counts.
 Function SetUncausedMinPercent(Float percent) global native
 
+; Injury Ranges settings: the percent of a body part's real maximum where a real wound becomes minor / major / severe.
+; Below minor a wound has no stage and is not narrated. The DLL clamps to 1..100 and keeps minor < major < severe.
+Function SetInjuryRanges(Int minor, Int major, Int severe) global native
+
 ; "Show whipping overlay": PrismaUI bars for whipped actors.
 Function SetOverlayEnabled(Bool enabled) global native
 

@@ -298,7 +298,7 @@ namespace
                     }
                     if (source >= 0) {
                         const float damage = a_value;
-                        a_value = -InjuryEngine::OnDamage(actor, nullptr, -a_value, source, false);
+                        a_value = -InjuryEngine::OnDamage(actor, nullptr, -a_value, source, false, false, false);  // taken after this call
                         if (InjuryConfig::IsTorture(source)) {
                             auto* av = actor->AsActorValueOwner();
                             const float before = av->GetActorValue(RE::ActorValue::kHealth);

@@ -201,6 +201,10 @@ namespace InjuryConfig
             }
             b.partRegion[kPartLungs] = static_cast<int>(lungs - b.regionName.begin());
             b.partMax.fill(b.damageMax);
+            const int realMax = std::max(1, j.value("real_max", 100));
+            for (int i = 0; i < kCoreParts; ++i) {
+                b.realMax[i] = realMax;
+            }
             g_body = b;
         }
 
@@ -220,7 +224,7 @@ namespace InjuryConfig
 
         // injuries/sexual_parts.json: the optional parts 6..10 (name, region, max, weight) and their text per source id
         // (a "both" file's health half falls back to the file id):
-        // {"parts":[{name,region,max,weight} x5], "text":{"<source id>":{"looks":{region:[..]},"feels":{...}}}}
+        // {"parts":[{name,region,max,real_max,weight} x5], "text":{"<source id>":{"looks":{region:[..]},"feels":{...}}}}
         // (torture feels: {"torture":{region:[..]},"heal":{region:[..]}}; health feels: {region:[..]})
         void ReadSexualParts(const std::filesystem::path& file)
         {
@@ -237,6 +241,7 @@ namespace InjuryConfig
                     const auto& e = (*p)[i - kCoreParts];
                     b.partName[i] = e.value("name", b.partName[i]);
                     b.partMax[i] = std::max(3, e.value("max", b.partMax[i]));
+                    b.realMax[i] = std::max(1, e.value("real_max", b.realMax[i]));
                     b.partWeight[i] = std::max(0.01f, e.value("weight", b.partWeight[i]));
                     // the default is read only when "region" is absent: partRegion may not point into regionName yet
                     const std::string region = e.contains("region") ? e.value("region", std::string{})

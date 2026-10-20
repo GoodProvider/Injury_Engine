@@ -40,6 +40,10 @@ namespace InjuryConfig
         std::array<float, kPartCount> partWeight{ 1, 1, 1, 1, 1, 1, 0.2f, 0.2f, 0.2f, 0.25f, 0.15f, 0 };
         std::array<int, kPartCount> partMedium{};
         std::array<int, kPartCount> partSevere{};
+        // Real (health model) points a part holds at 100%: one real point is 1% of max health on any part; the
+        // stage is points / realMax against the Injury Ranges settings. Torture keeps partMax.
+        // Core parts: body key "real_max"; sexual parts: sexual_parts.json "real_max"; lungs: no cap (unused).
+        std::array<int, kPartCount> realMax{ 100, 100, 100, 100, 100, 100, 10, 10, 10, 5, 5, 100 };
         // Lungs stage: lung damage as a share of max health ("lungs": {"medium", "severe"} in any source file).
         float lungMedium = 0.25f;
         float lungSevere = 0.5f;

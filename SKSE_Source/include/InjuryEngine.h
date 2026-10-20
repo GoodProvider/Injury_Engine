@@ -24,9 +24,10 @@
 namespace InjuryEngine
 {
     constexpr std::uint32_t kRecord = 'DHEN';
-    // 6: 12 parts (lungs); 5: torture points per type, 11 parts; 4: per-type deficit (healing_max + damage);
+    // 7: real points on their own scale (1 point = 1% of max health; 6 and older are rescaled from the old
+    // 1 / capacity points); 6: 12 parts (lungs); 5: torture points per type, 11 parts; 4: per-type deficit (healing_max + damage);
     // 3: whipping only, 11 parts; 2: 6 parts (5 loads as is, 4, 3 and 2 keep the damage only)
-    constexpr std::uint32_t kRecordVersion = 6;
+    constexpr std::uint32_t kRecordVersion = 7;
 
     constexpr int kCoreParts = 6;    // face, left arm, right arm, back, left leg, right leg
     constexpr int kPartCount = 12;   // + nipples, pussy, penis, lips, ass hole (only used with "include sexual parts"), lungs
@@ -63,7 +64,7 @@ namespace InjuryEngine
     std::int32_t Hit(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId);
     // Hit on one part (PartIndex); -1, a part outside the active set, or one the actor's sex lacks: random.
     std::int32_t HitPart(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId, int part);
-    // Scripted real damage: `points` damage points of the health source with file id `base` (a "health" file, or the
+    // Scripted real damage: `points` real points (1% of max health each) of the health source with file id `base` (a "health" file, or the
     // health half of a "both" file), applied like a hooked hit (the part is picked as for an attack; the hit is
     // queued for narration). Returns the source index, -1 for None/dead actors or no such health source.
     std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points);
@@ -82,7 +83,10 @@ namespace InjuryEngine
     // should still apply: torture sources none (they become torture hits), health sources what torture wounds
     // do not absorb.
     // unarmedForm: the hit matched an "unarmed" classify rule, so narration uses narration.form_unarmed when that key exists.
-    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm = false);
+    // applied: the game has already taken `amount` (HandleHealthDamage, held uncaused damage); false when it is taken
+    // after this call (ModActorValue, RealHit). Real points are capped by the health missing after the hit.
+    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm = false,
+        bool applied = true);
 
     // True if the actor has any damage left (any source).
     bool HasOpenWounds(RE::Actor* actor);
@@ -178,6 +182,9 @@ namespace InjuryEngine
     void SetRegenRate(float percent);
     // Setting injury_engine.body.uncaused_min_percent (default 5; 0 = any uncaused damage that sticks counts).
     void SetUncausedMinPercent(float percent);
+    // Settings injury_engine.ranges.*: the percent of a part's real max where a real wound becomes minor / major /
+    // severe (below minor: no stage, no narration). Clamped to 1..100 and minor < major < severe.
+    void SetInjuryRanges(int minor, int major, int severe);
     void Forget(RE::Actor* actor);
 
     // Writes a narration line to Injury_Engine.log: "[hh:mm:ss] <category>:<narrationType> <text>"

@@ -30,6 +30,7 @@ Schema: `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml`. `Ma
 |-----|---------|
 | `injury_engine.action.require_whip`, `injury_engine.action.give_to_player`, `injury_engine.action.max_strikes` | Action eligibility, setup (`give_to_player` = "Add gear to player": `GiveGear` adds the whip and the Flames / Frostbite / Sparks (torture) spells); `max_strikes` needs a reload (re-registers the action) |
 | `injury_engine.healing.hours_per_point`, `injury_engine.healing.regen_rate` | Passed to the DLL (`SetHoursPerPoint`, `SetRegenRate`) |
+| `injury_engine.ranges.minor_min`, `major_min`, `severe_min` | Passed to the DLL (`SetInjuryRanges`; defaults `whipping.json` `defaults.range_minor / range_major / range_severe`): real-wound stage starts in percent of a part's real max |
 | `injury_engine.healing.give_healing_hands` | Adds Healing Hands (Skyrim.esm 0x4D3F2) to the player |
 | `injury_engine.narration.enabled`, `.cooldown`, `.max_distance`, `.event_ttl` | Narration gate (`cooldown`: healing only) |
 | `injury_engine.narration.torture_narration_window_size` | Unused since passive heals are no longer narrated (was `InTortureSession`); torture narration itself is a session (`NarrateHits`: start narration, summary 2 s after the last hit) |

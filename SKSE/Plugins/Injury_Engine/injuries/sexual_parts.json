@@ -1,36 +1,41 @@
 {
   "id": "sexual_parts",
   "title": "Sexual Body Parts",
-  "_note": "Not an injury source. Optional parts 6..10, used only with the setting 'Include sexual body parts'. max = damage points the part holds (the others hold damage_max); weight = chance of being picked next to the others' weight of one; pussy is only wounded on women, penis only on men. text.<source id>.looks / feels are merged into that source's text by region, one entry per stage (torture types 6, others 3). See guide.md.",
+  "_note": "Not an injury source. Optional parts 6..10, used only with the setting 'Include sexual body parts'. max = torture points the part holds (the others hold damage_max); real_max = real (health) points it holds at 100% (the others hold real_max, 100; one real point is 1% of max health); weight = chance of being picked next to the others' weight of one; pussy is only wounded on women, penis only on men. text.<source id>.looks / feels are merged into that source's text by region, one entry per stage (torture types 6, others 3). See guide.md.",
   "parts": [
     {
       "name": "nipples",
       "region": "nipple",
       "max": 8,
+      "real_max": 10,
       "weight": 0.2
     },
     {
       "name": "pussy",
       "region": "vulva",
       "max": 8,
+      "real_max": 10,
       "weight": 0.2
     },
     {
       "name": "penis",
       "region": "penis",
       "max": 8,
+      "real_max": 10,
       "weight": 0.2
     },
     {
       "name": "lips",
       "region": "lips",
       "max": 6,
+      "real_max": 5,
       "weight": 0.25
     },
     {
       "name": "ass hole",
       "region": "anus",
       "max": 6,
+      "real_max": 5,
       "weight": 0.15
     }
   ],

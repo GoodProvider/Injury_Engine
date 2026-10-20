@@ -58,8 +58,14 @@ and the mod manager merges that folder with this one at runtime (nothing to regi
   (drowning). It has no cap (it takes as much damage as the source deals), is not part of the 100% health scale
   below, and its stage is the lung damage as a share of max health: the `lungs` block (`medium`, `severe`, shares
   0..1; drowning.json ships 0.25 / 0.5). It never takes torture and never shows on the overlay.
-- **Stages** (damage per part, 20 max): light 1-3, medium 4-10, severe 11-20. All health sources use the same scale;
-  100% of max health lost = every part an actor has at its max.
+- **Torture stages** (torture points per part, 20 max, `damage_max` / `thresholds`): light 1-3, medium 4-10, severe 11-20.
+- **Real (health) stages**: real points have their own scale: one point is 1% of max health on any part, a main part
+  holds `real_max` (100), sexual parts their `real_max` in sexual_parts.json (10 / 5). The stage is the points as a
+  percent of the part's real max against the dashboard **Injury Ranges** (`defaults.range_minor / range_major /
+  range_severe`, 25 / 75 / 90): below minor the wound counts (it holds health) but has no stage, no narration and no
+  looks / feels text; then the source's three stages (minor, major, severe) in order. No part can hold a larger share
+  of its real max than the body has lost health (while health is between 75% and 26% no part passes minor), and parts
+  are trimmed back when health comes back. The `thresholds` blocks in health files are not read.
 - **torture** sources: each hit adds a point of that type to one part (picked by the type's `part_weights`); a healing
   wound of that type that is hit again just gains one point on top of where it had healed down to (one value per part and type:
   hits raise it, healing lowers it). Each type is tracked separately per part, but a part counts
@@ -67,8 +73,8 @@ and the mod manager merges that folder with this one at runtime (nothing to regi
   time, and every point of healing lowers **every** type on the part by one (slap light, pinch severe, fire light: all
   heal together). The points give the torture stage light / medium / severe and, while a healing source works on the
   actor (heal session), the heal level high / mid / low (severe = low, medium = mid, light = high).
-- **health** sources: the health an attack takes becomes damage points, tagged with the classified source, all on one random part
-  (whipped parts first) until that part is full, then on another. Healing (potions, spells, rest) removes points at random across all sources; each source
+- **health** sources: the health an attack takes becomes real points, tagged with the classified source, all on one random part
+  (whipped parts first) until that part reaches its cap (the body's missing health), then on another. Healing (potions, spells, rest) removes points at random across all sources; each source
   and nothing is narrated per stage.
 - **Real damage replaces torture damage** first, on the same part the attack lands on (health is not lowered by that part): the
   part's worst type drops by one per point and every other type above it is clamped down to it, so a tortured actor only dies

@@ -1,0 +1,2 @@
+Injury_Engine.log 735350 10/20/2026 09:47:37 C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\Injury_Engine.log
+Papyrus.0.log 1285626 10/20/2026 09:47:37 C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\Logs\Script\Papyrus.0.log

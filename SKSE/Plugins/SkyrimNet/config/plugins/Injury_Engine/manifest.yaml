@@ -50,6 +50,33 @@ schema:
         - "Silent"
       category: "Narration"
 
+    - name: "Minimum damage for minor"
+      path: "injury_engine.ranges.minor_min"
+      type: "int"
+      description: "Percent of a body part's maximum where a real wound becomes minor. Below it the wound counts (it holds health) but is not narrated and not described. Real damage only (slashing, piercing, burning, ...); torture keeps its own stages. One real point is 1% of max health; a core body part holds 100, small parts 10 or 5. No body part can hold a larger share of its maximum than the body has lost health, so while health is between 75% and 26% no part gets past minor."
+      min: 0
+      max: 100
+      defaultValue: 25
+      category: "Injury Ranges"
+
+    - name: "Minimum damage for major"
+      path: "injury_engine.ranges.major_min"
+      type: "int"
+      description: "Percent of a body part's maximum where a real wound becomes major (from minor's minimum up to this: minor narration). Real damage only (slashing, piercing, burning, ...); torture keeps its own stages. One real point is 1% of max health; a core body part holds 100, small parts 10 or 5. No body part can hold a larger share of its maximum than the body has lost health, so while health is between 75% and 26% no part gets past minor."
+      min: 0
+      max: 100
+      defaultValue: 75
+      category: "Injury Ranges"
+
+    - name: "Minimum damage for severe"
+      path: "injury_engine.ranges.severe_min"
+      type: "int"
+      description: "Percent of a body part's maximum where a real wound becomes severe (from major's minimum up to this: major narration; this and above: severe narration). Real damage only (slashing, piercing, burning, ...); torture keeps its own stages. One real point is 1% of max health; a core body part holds 100, small parts 10 or 5. No body part can hold a larger share of its maximum than the body has lost health, so while health is between 75% and 26% no part gets past minor."
+      min: 0
+      max: 100
+      defaultValue: 90
+      category: "Injury Ranges"
+
     - name: "NPC must already carry a whip"
       path: "injury_engine.action.require_whip"
       type: "bool"

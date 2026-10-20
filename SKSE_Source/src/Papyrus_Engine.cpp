@@ -320,6 +320,11 @@ namespace
         InjuryEngine::SetUncausedMinPercent(percent);
     }
 
+    void SetInjuryRanges(RE::StaticFunctionTag*, std::int32_t minor, std::int32_t major, std::int32_t severe)
+    {
+        InjuryEngine::SetInjuryRanges(minor, major, severe);
+    }
+
     void SetOverlayEnabled(RE::StaticFunctionTag*, bool enabled)
     {
         Overlay::SetEnabled(enabled);
@@ -492,6 +497,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("SetHoursPerPoint", s, SetHoursPerPoint);
     a_vm->RegisterFunction("SetRegenRate", s, SetRegenRate);
     a_vm->RegisterFunction("SetUncausedMinPercent", s, SetUncausedMinPercent);
+    a_vm->RegisterFunction("SetInjuryRanges", s, SetInjuryRanges);
     a_vm->RegisterFunction("SetOverlayEnabled", s, SetOverlayEnabled);
     a_vm->RegisterFunction("SetIncludeSexualParts", s, SetIncludeSexualParts);
     a_vm->RegisterFunction("SetPunchCombatHealth", s, SetPunchCombatHealth);

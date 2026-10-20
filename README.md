@@ -34,6 +34,9 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 | `injury_engine.narration.healing_mode` | Healing Narration | Direct Narration | Healing by spells, staffs and potions, same choices |
 | `injury_engine.narration.death_mode` | Death Narration | Direct Narration | Killing blows from real damage, same choices |
 | `injury_engine.narration.torture_mode` | Torture Narration | Direct Narration | Torture, same choices |
+| `injury_engine.ranges.minor_min` | Minimum damage for minor | 25 | Percent of a body part's maximum where a real wound (not torture) becomes minor. Below it the wound counts but is not narrated or described. |
+| `injury_engine.ranges.major_min` | Minimum damage for major | 75 | ... becomes major |
+| `injury_engine.ranges.severe_min` | Minimum damage for severe | 90 | ... becomes severe. No body part can be hurt worse than the body has lost health: while health is between 75% and 26% no part gets past minor. |
 | `injury_engine.action.require_whip` | NPC must already carry a whip | on | Only NPCs carrying the padded whip can whip with Torture_Target. Off: one is handed over for the lashing. |
 | `injury_engine.action.give_to_player` | Add gear to player | on | Give the player the padded whip and the three torture spells |
 | `injury_engine.action.max_strikes` | Maximum lashes per action | 10 | Most strikes per Torture_Target action (the action offers up to ten) |

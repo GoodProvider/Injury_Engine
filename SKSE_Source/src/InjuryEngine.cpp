@@ -193,6 +193,10 @@ namespace InjuryEngine
 
         float g_hoursPerPoint = 1.0f;
         float g_regenRate = 10.0f;
+        // Injury Ranges (percent of a part's real max): minor / major / severe start here; below minor no stage.
+        int g_rangeMinor = 25;
+        int g_rangeMajor = 75;
+        int g_rangeSevere = 90;
 
         // Uncaused damage (no attacker, no hit event, no real fall: another mod's script) waits here until it sticks.
         // Not saved. `top`: health before the first chunk; `sum`: damage reported since.
@@ -322,21 +326,37 @@ namespace InjuryEngine
 
         // ---- stages and totals -------------------------------------------------------------------------
 
-        int CapacityDamage();
+        int CapacityTorture();
 
-        int DamageStage(int damage, int part)
+        // Torture stage of a part's torture points: -1 none, 0 light, 1 medium, 2 severe (thresholds scaled by partMax).
+        int TortureStage(int damage, int part)
         {
             const auto& b = GetBody();
-            if (part == kPartLungs) {
-                // no cap: the stage is the lung damage as a share of max health (one point = 1 / capacity)
-                const float share = static_cast<float>(damage) / static_cast<float>(std::max(1, CapacityDamage()));
-                if (share >= b.lungSevere) return 2;
-                if (share >= b.lungMedium) return 1;
-                return damage >= 1 ? 0 : -1;
-            }
             if (damage >= b.partSevere[part]) return 2;
             if (damage >= b.partMedium[part]) return 1;
             if (damage >= 1) return 0;
+            return -1;
+        }
+
+        // Real stage of a part's real points: -1 none (below minor: no narration, not in looks / feels), 0 minor,
+        // 1 major, 2 severe, by points / realMax against the Injury Ranges. Lungs: the lung damage as a share of max
+        // health (one real point = 1%), any point counts.
+        int RealStage(int damage, int part)
+        {
+            const auto& b = GetBody();
+            if (damage <= 0) {
+                return -1;
+            }
+            if (part == kPartLungs) {
+                const float share = static_cast<float>(damage) / 100.0f;
+                if (share >= b.lungSevere) return 2;
+                if (share >= b.lungMedium) return 1;
+                return 0;
+            }
+            const int percent = damage * 100 / std::max(1, b.realMax[part]);
+            if (percent >= g_rangeSevere) return 2;
+            if (percent >= g_rangeMajor) return 1;
+            if (percent >= g_rangeMinor) return 0;
             return -1;
         }
 
@@ -429,11 +449,6 @@ namespace InjuryEngine
             return total;
         }
 
-        int PartDamage(const State& st, int part)
-        {
-            return PartTorture(st, part) + RealOnPart(st, part);
-        }
-
         bool HasTorture(const State& st)
         {
             return Deficit(st) > 0;
@@ -454,8 +469,8 @@ namespace InjuryEngine
             return AnyTortureHit(st) || RealTotal(st) > 0;
         }
 
-        // Damage points of every part an actor has (100% of max health); one genital part counted.
-        int CapacityDamage()
+        // Torture points of every part an actor has (woundShare of max health); one genital part counted.
+        int CapacityTorture()
         {
             const auto& b = GetBody();
             int total = 0;
@@ -471,12 +486,33 @@ namespace InjuryEngine
         float RatioTorture(float maxHealth)
         {
             const auto& b = GetBody();
-            return b.woundShare * maxHealth / static_cast<float>(CapacityDamage());
+            return b.woundShare * maxHealth / static_cast<float>(CapacityTorture());
         }
 
+        // One real point: 1% of max health on any part.
         float RatioReal(float maxHealth)
         {
-            return maxHealth / static_cast<float>(CapacityDamage());
+            return maxHealth / 100.0f;
+        }
+
+        // Health missing in percent of max health (what the Health damage modifier holds; torture holds count too).
+        float MissingPercent(RE::Actor* actor, float maxHealth, float extra)
+        {
+            const float missing = -actor->GetActorValueModifier(RE::ACTOR_VALUE_MODIFIER::kDamage, RE::ActorValue::kHealth) + extra;
+            return maxHealth > 0.0f ? std::clamp(missing / maxHealth * 100.0f, 0.0f, 100.0f) : 0.0f;
+        }
+
+        // Real points each part may hold while `missing` percent of max health is gone: no part holds a larger share
+        // of its real max than the body has lost (lungs: no cap).
+        std::array<int, kPartCount> RealCaps(float missing)
+        {
+            const auto& b = GetBody();
+            std::array<int, kPartCount> caps{};
+            for (int i = 0; i < kPartCount; ++i) {
+                caps[i] = i == kPartLungs ? std::numeric_limits<int>::max()
+                                          : std::clamp(static_cast<int>(std::floor(missing * b.realMax[i] / 100.0f + 1e-3f)), 0, b.realMax[i]);
+            }
+            return caps;
         }
 
         // Health the wounds hold health down to (torture never takes more than the floor allows).
@@ -634,9 +670,21 @@ namespace InjuryEngine
 
         // ---- real (health model) -----------------------------------------------------------------------
 
-        bool PartFull(const State& st, int part)
+        // Torture fullness: the part's torture points plus its real points in torture units (by health worth)
+        // reach the part's torture max.
+        bool PartFullTorture(const State& st, int part)
         {
-            return part != kPartLungs && PartDamage(st, part) >= GetBody().partMax[part];  // lungs have no cap
+            const auto& b = GetBody();
+            const int real = RealOnPart(st, part);
+            const int realAsTorture =
+                real > 0 ? static_cast<int>(std::ceil(real * CapacityTorture() / (100.0f * std::max(0.01f, b.woundShare)) - 1e-3f)) : 0;
+            return PartTorture(st, part) + realAsTorture >= b.partMax[part];
+        }
+
+        // Real fullness: the part holds its cap (RealCaps) in real points.
+        bool PartFullReal(const State& st, int part, const std::array<int, kPartCount>& caps)
+        {
+            return part != kPartLungs && RealOnPart(st, part) >= caps[part];  // lungs have no cap
         }
 
         // Real damage may land here: an active part (or the lungs) that fits the actor's sex.
@@ -648,21 +696,22 @@ namespace InjuryEngine
         // The part a real attack of a source with these part weights lands on (only active parts weighted above 0:
         // the body's weights for most sources, the lungs alone for drowning): a weighted random tortured part that
         // can still take a point (converting torture damage frees room), else a weighted random part not at max
-        // damage; -1 when every part is full. canReplace: what is left of the attack can still replace a torture
+        // damage (caps: RealCaps); -1 when every part is full. canReplace: what is left of the attack can still replace a torture
         // point. Without it a tortured part at max damage can take nothing, and picking it again would never end
         // the OnDamage loop (a frozen game: it runs on the actor-update threads with g_lock held).
-        int PickPart(const State& st, bool female, const std::array<float, kPartCount>& weight, bool canReplace)
+        int PickPart(const State& st, bool female, const std::array<float, kPartCount>& weight, bool canReplace,
+            const std::array<int, kPartCount>& caps)
         {
             std::array<int, kPartCount> open{};
             int count = 0;
             for (int i = 0; i < kPartCount; ++i) {
-                if (weight[i] > 0.0f && PartActive(i, female) && TortureOpen(st, i) && (canReplace || !PartFull(st, i))) {
+                if (weight[i] > 0.0f && PartActive(i, female) && TortureOpen(st, i) && (canReplace || !PartFullReal(st, i, caps))) {
                     open[count++] = i;
                 }
             }
             if (count == 0) {
                 for (int i = 0; i < kPartCount; ++i) {
-                    if (weight[i] > 0.0f && PartActive(i, female) && !PartFull(st, i)) {
+                    if (weight[i] > 0.0f && PartActive(i, female) && !PartFullReal(st, i, caps)) {
                         open[count++] = i;
                     }
                 }
@@ -688,6 +737,45 @@ namespace InjuryEngine
             const auto [source, part] = open[RandomIndex(count)];
             --st.real[source][part];
             return true;
+        }
+
+        // Real points must fit the health actually missing: each part is clamped to its cap (RealCaps), and the real
+        // points together never hold more health than is missing beyond the torture hold. Runs after ConvertHealth
+        // (which heals by excess health), so it mostly clamps parts once regen or healing lowered the missing health,
+        // and fixes old saves on the first SyncHealth after a load.
+        void FitRealToHealth(RE::Actor* actor, State& st)
+        {
+            if (RealTotal(st) <= 0) {
+                return;
+            }
+            const float maxHealth = actor->AsActorValueOwner()->GetPermanentActorValue(RE::ActorValue::kHealth);
+            if (maxHealth <= 0.0f) {
+                return;
+            }
+            const float missing = MissingPercent(actor, maxHealth, 0.0f);
+            const auto caps = RealCaps(missing);
+            int trimmed = 0;
+            for (int part = 0; part < kPartCount; ++part) {
+                while (RealOnPart(st, part) > caps[part]) {
+                    int top = 0;
+                    for (int s = 1; s < kMaxSources; ++s) {
+                        if (st.real[s][part] > st.real[top][part]) {
+                            top = s;
+                        }
+                    }
+                    --st.real[top][part];
+                    ++trimmed;
+                }
+            }
+            const float held = std::max(0.0f, missing - Deficit(st) * RatioTorture(maxHealth) * 100.0f / maxHealth);
+            const int limit = static_cast<int>(std::floor(held + 1e-3f));
+            while (RealTotal(st) > limit && HealRealPoint(st)) {
+                ++trimmed;
+            }
+            if (trimmed > 0) {
+                SKSE::log::debug("fit {:08X}: {} real points trimmed (missing {:.1f}%, real points left {})", actor->GetFormID(), trimmed,
+                    missing, RealTotal(st));
+            }
         }
 
         // ---- healing sources, events -------------------------------------------------------------------
@@ -1249,7 +1337,7 @@ namespace InjuryEngine
             const std::array<float, kPartCount>* weight = nullptr;
             const auto reach = SourceReach(source, female, weight);
             for (int i = 0; i < ActiveParts(); ++i) {
-                if (reach[i] && !PartFull(st, i)) {
+                if (reach[i] && !PartFullTorture(st, i)) {
                     candidates[count++] = i;
                 }
             }
@@ -1266,7 +1354,7 @@ namespace InjuryEngine
 
             const int top = PartTorture(st, index);
             // The part's state before the hit (any torture type): 0 undamaged .. 3 severe.
-            const int level = DamageStage(top, index) + 1;
+            const int level = TortureStage(top, index) + 1;
             Cell& c = st.torture[source][index];
             const int pointBefore = c.hit ? c.deficit : 0;
             if (top <= 0) {
@@ -1430,7 +1518,7 @@ namespace InjuryEngine
         }
         // the same path as hooked damage: points worth of health, torture wounds absorb their share first
         const float amount = points * RatioReal(maxHealth);
-        const float pass = OnDamage(actor, attacker, amount, source, false);
+        const float pass = OnDamage(actor, attacker, amount, source, false, false, false);
         SKSE::log::debug("real hit {:08X} {} points:{} amount:{:.1f} pass:{:.1f}", actor->GetFormID(), InjuryConfig::Find(source)->id, points,
             amount, pass);
         if (pass > 0.0f) {
@@ -1528,7 +1616,7 @@ namespace InjuryEngine
         }
     }
 
-    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm)
+    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm, bool applied)
     {
         const auto* conf = InjuryConfig::Find(source);
         if (!victim || amount <= 0.0f || !conf || victim->IsDead()) {
@@ -1543,6 +1631,12 @@ namespace InjuryEngine
         auto* av = victim->AsActorValueOwner();
         const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
         if (maxHealth <= 0.0f) {
+            return amount;
+        }
+        // Already at or below zero before this hit (dying, IsDead not set yet): hits keep landing for a moment. Not a
+        // wound, and it must not take the killing blow (g_lastReal) from the hit that brought health below zero.
+        if (const float before = av->GetActorValue(RE::ActorValue::kHealth) + (applied ? amount : 0.0f); before <= 0.0f) {
+            SKSE::log::debug("damage {:08X} {}: victim already at {:.1f} health, ignored", victim->GetFormID(), conf->id, before);
             return amount;
         }
         float pass = amount;
@@ -1573,11 +1667,14 @@ namespace InjuryEngine
             // One attack lands on one part (tortured parts first). Torture points there hold health down: the
             // attack replaces them first (health is not lowered by that part; the part's maximum drops and the
             // other types are clamped to it) and their health becomes real points on the same part. The attack
-            // stays on that part until it is full, then moves to another one.
-            int part = PickPart(st, female, conf->partWeight, amount >= ratioT - 1e-3f);
+            // stays on that part until it is full, then moves to another one. Full: the part holds as large a share
+            // of its real max as the body has lost health after this hit (RealCaps).
+            const float missing = MissingPercent(victim, maxHealth, applied ? 0.0f : amount);
+            const auto caps = RealCaps(missing);
+            int part = PickPart(st, female, conf->partWeight, amount >= ratioT - 1e-3f, caps);
             const int firstPart = part;
             if (firstPart < 0) {
-                SKSE::log::info("health {:08X} {}: no part can take a point (amount:{:.1f})", id, conf->id, amount);
+                SKSE::log::debug("health {:08X} {}: no part can take a point (amount:{:.1f} missing:{:.1f}%)", id, conf->id, amount, missing);
             }
             int lastPart = firstPart;
             float left = amount;
@@ -1586,6 +1683,7 @@ namespace InjuryEngine
             int points = 0;
             int mask = 0;
             int level = 0;
+            int narrateMask = 0;  // parts at minor or worse after their point: only those are narrated
             std::vector<HealthLogEntry> healthLogs;
             // Each round replaces a torture point or fills carry, so a real hit ends within ~2 rounds per point the
             // body holds. If a round ever stops making progress the game freezes (no crash log): stop and log instead.
@@ -1603,27 +1701,30 @@ namespace InjuryEngine
                     absorbed += ratioT;
                     st.carry += ratioT;
                     ++replacedNow;
-                } else if (!PartFull(st, part)) {
+                } else if (!PartFullReal(st, part, caps)) {
                     const float take = std::min(left, std::max(0.0f, ratioR - st.carry));
                     left -= take;
                     st.carry += take;
                 } else {
-                    part = PickPart(st, female, conf->partWeight, left >= ratioT - 1e-3f);
+                    part = PickPart(st, female, conf->partWeight, left >= ratioT - 1e-3f, caps);
                     continue;
                 }
                 while (st.carry >= ratioR - 1e-4f) {
-                    if (PartFull(st, part)) {
-                        part = PickPart(st, female, conf->partWeight, false);  // a real point needs room below the maximum
+                    if (PartFullReal(st, part, caps)) {
+                        part = PickPart(st, female, conf->partWeight, false, caps);  // a real point needs room below the cap
                         if (part < 0) {
                             break;
                         }
                     }
                     st.carry -= ratioR;
-                    // the part's stage before the point lands: 0 undamaged .. 3 severe
-                    const int pointLevel = DamageStage(PartDamage(st, part), part) + 1;
-                    level = std::max(level, pointLevel);
+                    // the part's real stage before the point lands: 0 none / below minor .. 3 severe
+                    const int pointLevel = RealStage(RealOnPart(st, part), part) + 1;
                     const int countBefore = st.real[source][part];
                     ++st.real[source][part];
+                    if (RealStage(RealOnPart(st, part), part) >= 0) {
+                        narrateMask |= 1 << part;
+                        level = std::max(level, pointLevel);
+                    }
                     healthLogs.push_back({ part, countBefore, pointLevel });
                     lastPart = part;
                     mask |= 1 << part;
@@ -1650,15 +1751,18 @@ namespace InjuryEngine
                 SKSE::log::debug("damage {:08X} {} part:{} amount:{:.1f} absorbed:{:.1f} torture_replaced:{}: no new point (carry {:.2f})", id,
                     conf->id, firstName, amount, absorbed, replacedNow, st.carry);
             }
+            if (mask != 0 && narrateMask == 0) {
+                SKSE::log::debug("damage {:08X} {}: parts {} below minor, not narrated", id, conf->id, PartsText(source, mask));
+            }
             if (mask != 0) {
-                {
+                if (narrateMask != 0) {
                     HitEntry e;
                     e.victim = id;
                     if (attacker) {
                         e.attacker = attacker->GetHandle();
                     }
                     e.source = source;
-                    e.mask = mask;
+                    e.mask = narrateMask;
                     e.level = level;
                     e.fresh = fresh;
                     e.unarmed = unarmedForm;
@@ -2019,6 +2123,9 @@ namespace InjuryEngine
             }
             const Healer* healer = ActiveHealer(id, now);
             ConvertHealth(actor, id, *st, nowHours, healer != nullptr);
+            if (!actor->IsDead()) {
+                FitRealToHealth(actor, *st);
+            }
             ClearTortureIfDone(*st);
             UpdateBleedout(actor, id, *st, scanQueued);
 
@@ -2110,7 +2217,7 @@ namespace InjuryEngine
                     if (i >= ActiveParts() && i != kPartLungs) {
                         continue;
                     }
-                    const int stage = DamageStage(torture ? st->torture[s][i].deficit : st->real[s][i], i);
+                    const int stage = torture ? TortureStage(st->torture[s][i].deficit, i) : RealStage(st->real[s][i], i);
                     if (stage < 0) {
                         continue;
                     }
@@ -2164,7 +2271,7 @@ namespace InjuryEngine
             }
         }
         nlohmann::json out = { { "title", InjuryConfig::Str(whip, "overlay.title", "Torture Damage") },
-            { "max", CapacityDamage() }, { "part_max", partMax }, { "medium", body.medium }, { "severe", body.severe },
+            { "max", CapacityTorture() }, { "part_max", partMax }, { "medium", body.medium }, { "severe", body.severe },
             { "colors", whip >= 0 ? InjuryConfig::Json(whip, "overlay.colors") : nlohmann::json::object() },
             { "source_colors", sourceColors }, { "actors", nlohmann::json::array() } };
         std::lock_guard lock(g_lock);
@@ -2196,7 +2303,7 @@ namespace InjuryEngine
             }
             const bool healing = ActiveHealer(id, NowSeconds()) != nullptr;
             out["actors"].push_back({ { "id", id }, { "name", NameOf(actor) },
-                { "source", source >= 0 ? InjuryConfig::Find(source)->id : std::string() }, { "max", max > 0 ? max : CapacityDamage() },
+                { "source", source >= 0 ? InjuryConfig::Find(source)->id : std::string() }, { "max", max > 0 ? max : CapacityTorture() },
                 { "replaced", st.replaced }, { "healing", healing }, { "parts", parts } });
         }
         return out.dump();
@@ -2219,7 +2326,7 @@ namespace InjuryEngine
             parts.push_back({ { "name", body.partName[i] }, { "points", st ? PartTorture(*st, i) : 0 },
                 { "max", body.partMax[i] } });
         }
-        const nlohmann::json out = { { "total", st ? Deficit(*st) : 0 }, { "max", CapacityDamage() }, { "parts", parts } };
+        const nlohmann::json out = { { "total", st ? Deficit(*st) : 0 }, { "max", CapacityTorture() }, { "parts", parts } };
         return out.dump();
     }
 
@@ -2454,7 +2561,7 @@ namespace InjuryEngine
                 if (top < 0) {
                     continue;
                 }
-                const int level = DamageStage(points, i);
+                const int level = TortureStage(points, i);
                 auto g = std::ranges::find_if(groups, [&](const Group& x) { return x.source == top && x.level == level; });
                 if (g == groups.end()) {
                     groups.push_back({ top, level, 1 << i });
@@ -2740,6 +2847,21 @@ namespace InjuryEngine
         SKSE::log::debug("regen rate {:.1f}%", g_regenRate);
     }
 
+    void SetInjuryRanges(int minor, int major, int severe)
+    {
+        std::lock_guard lock(g_lock);
+        const int a = std::clamp(minor, 1, 98);
+        const int b = std::clamp(major, a + 1, 99);
+        const int c = std::clamp(severe, b + 1, 100);
+        if (a != minor || b != major || c != severe) {
+            SKSE::log::warn("injury ranges {} / {} / {} fixed to {} / {} / {} (1..100, minor < major < severe)", minor, major, severe, a, b, c);
+        }
+        g_rangeMinor = a;
+        g_rangeMajor = b;
+        g_rangeSevere = c;
+        SKSE::log::debug("injury ranges minor {}% major {}% severe {}%", a, b, c);
+    }
+
     void SetUncausedMinPercent(float percent)
     {
         std::lock_guard lock(g_lock);
@@ -2821,6 +2943,22 @@ namespace InjuryEngine
                 }
             }
             return intfc->ReadRecordData(st.replaced);
+        }
+
+        // v2 .. v6 real points were 1 / capacity of max health (capacity: the torture capacity, 120 for the core
+        // parts); v7 real points are 1% of max health. FitRealToHealth trims them to the missing health later.
+        void RescaleOldReal(State& st)
+        {
+            const float factor = 100.0f / static_cast<float>(std::max(1, CapacityTorture()));
+            for (auto& source : st.real) {
+                for (int i = 0; i < kPartCount; ++i) {
+                    if (source[i] <= 0) {
+                        continue;
+                    }
+                    const int scaled = std::max(1, static_cast<int>(std::lround(source[i] * factor)));
+                    source[i] = i == kPartLungs ? scaled : std::min(scaled, GetBody().realMax[i]);
+                }
+            }
         }
 
         // v4 .. v6: lastHours per part (v6: 12, else 11), replaced, then torture per source id: count, {id, {hit, deficit} x parts}.
@@ -2917,7 +3055,7 @@ namespace InjuryEngine
 
     void Load(SKSE::SerializationInterface* intfc, std::uint32_t version, std::uint32_t)
     {
-        if (version != kRecordVersion && version != 5 && version != 4 && version != 3 && version != 2) {
+        if (version != kRecordVersion && version != 6 && version != 5 && version != 4 && version != 3 && version != 2) {
             SKSE::log::warn("co-save version {} unsupported, skipped (old wounds are dropped)", version);
             return;
         }
@@ -2952,6 +3090,9 @@ namespace InjuryEngine
             if (!ok) {
                 SKSE::log::error("co-save truncated");
                 return;
+            }
+            if (version < 7) {
+                RescaleOldReal(st);
             }
             ClearTortureIfDone(st);
             RE::FormID id = 0;

@@ -11,6 +11,7 @@
     }
   ],
   "damage_max": 20,
+  "real_max": 100,
   "thresholds": {
     "medium": 4,
     "severe": 11
@@ -61,6 +62,9 @@
     "severe"
   ],
   "defaults": {
+    "range_minor": 25,
+    "range_major": 75,
+    "range_severe": 90,
     "require_whip": true,
     "give_to_player": true,
     "max_strikes": 10,
