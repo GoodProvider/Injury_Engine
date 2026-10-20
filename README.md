@@ -37,12 +37,6 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 | `injury_engine.ranges.minor_min` | Minimum damage for minor | 25 | Percent of a body part's maximum where a real wound (not torture) becomes minor. Below it the wound counts but is not narrated or described. |
 | `injury_engine.ranges.major_min` | Minimum damage for major | 75 | ... becomes major |
 | `injury_engine.ranges.severe_min` | Minimum damage for severe | 90 | ... becomes severe. No body part can be hurt worse than the body has lost health: while health is between 75% and 26% no part gets past minor. |
-| `injury_engine.action.require_whip` | NPC must already carry a whip | on | Only NPCs carrying the padded whip can whip with Torture_Target. Off: one is handed over for the lashing. |
-| `injury_engine.action.give_to_player` | Add gear to player | on | Give the player the padded whip and the three torture spells |
-| `injury_engine.action.max_strikes` | Maximum lashes per action | 10 | Most strikes per Torture_Target action (the action offers up to ten) |
-| `injury_engine.healing.hours_per_point` | Game hours per heal point | 1 | Game hours per torture point healed |
-| `injury_engine.healing.regen_rate` | Natural regen vs. torture wounds (%) | 10 | How fast natural regeneration heals torture wounds |
-| `injury_engine.healing.give_healing_hands` | Add Healing Hands to player | on | Teach the player Healing Hands |
 | `injury_engine.narration.enabled` | Narrate lashes | on | Direct Narrations for torture and healing (off = events only) |
 | `injury_engine.narration.torture_narration_window_size` | Torture narration window | 30 s | Passive healing is not reported for this long after a torture hit |
 | `injury_engine.narration.torture_maximum_break` | Torture maximum break | 3 s | A pause this long ends a torture session |
@@ -52,6 +46,12 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 | `injury_engine.narration.cooldown` | Narration cooldown | 8 s | Per-actor healing narration cooldown |
 | `injury_engine.narration.max_distance` | Narration max distance | 15 m | Farther hits and healing become events |
 | `injury_engine.narration.event_ttl` | Lash event lifetime | 30 s | How long a short-lived hit event stays in the scene context |
+| `injury_engine.action.require_whip` | NPC must already carry a whip | on | Only NPCs carrying the padded whip can whip with Torture_Target. Off: one is handed over for the lashing. |
+| `injury_engine.action.give_to_player` | Add gear to player | on | Give the player the padded whip and the three torture spells |
+| `injury_engine.action.max_strikes` | Maximum lashes per action | 10 | Most strikes per Torture_Target action (the action offers up to ten) |
+| `injury_engine.healing.hours_per_point` | Game hours per heal point | 1 | Game hours per torture point healed |
+| `injury_engine.healing.regen_rate` | Natural regen vs. torture wounds (%) | 10 | How fast natural regeneration heals torture wounds |
+| `injury_engine.healing.give_healing_hands` | Add Healing Hands to player | on | Teach the player Healing Hands |
 | `injury_engine.body.include_sexual_parts` | Include sexual body parts | off | Also wound the nipples, pussy (women), penis (men), lips and ass hole. These parts are hit less often and hold less damage, but still go through light, medium and severe. |
 | `injury_engine.body.torture_bleedout` | Tortured victims collapse into bleedout until healed | on | When torture brings someone down to 15% health they collapse into the bleedout pose and stay down until their health is above 15% again. The next torture narration says that they collapse. |
 | `injury_engine.body.uncaused_min_percent` | Minimum uncaused damage (%) | 5 | Health lost with no attacker, hit or real fall (other mods' scripts, bathing or animation mods, stairs) becomes a wound only if it is still missing about 1.5 seconds later and is at least this percentage of max health. 0: any lasting loss counts. |

@@ -77,6 +77,85 @@ schema:
       defaultValue: 90
       category: "Injury Ranges"
 
+    - name: "Narrate lashes"
+      path: "injury_engine.narration.enabled"
+      type: "bool"
+      description: "Send Direct Narrations for torture and healing. Torture is narrated when it starts, every few seconds while it continues, and when the method changes (the speech queue is cleared first when the player is involved); hits in between are short-lived events. Off: everything is recorded as short-lived events."
+      defaultValue: true
+      category: "Narration Options"
+
+    - name: "Torture narration window (sec)"
+      path: "injury_engine.narration.torture_narration_window_size"
+      type: "float"
+      description: "After a torture hit, ordinary passive healing is not reported for this long, so it does not undo the punishment just narrated."
+      min: 0
+      max: 300
+      defaultValue: 30.0
+      category: "Narration Options"
+
+    - name: "Torture maximum break (sec)"
+      path: "injury_engine.narration.torture_maximum_break"
+      type: "float"
+      description: "Torture counts as continuous while the pause between hits stays below this. A break this long ends the session with no narration; combined \"again\" lines stop for that pair."
+      min: 0.5
+      max: 30
+      defaultValue: 3.0
+      category: "Narration Options"
+
+    - name: "Torture direct narration gap (sec)"
+      path: "injury_engine.narration.torture_direct_narration_gap"
+      type: "float"
+      description: "During continuous torture, one combined narration (everyone torturing at the same time) is sent this often; hits in between are short-lived events. A change of method is narrated at once."
+      min: 1
+      max: 60
+      defaultValue: 6.0
+      category: "Narration Options"
+
+    - name: "Wait for reply (sec)"
+      path: "injury_engine.narration.reply_timeout"
+      type: "float"
+      description: "After a narration, the next one waits until SkyrimNet has spoken a reply, or until there has been no dialogue for this long. Hits in between are short-lived events."
+      min: 3
+      max: 120
+      defaultValue: 15.0
+      category: "Narration Options"
+
+    - name: "Health narration cooloff (sec)"
+      path: "injury_engine.narration.health_narration_cooloff"
+      type: "float"
+      description: "Real damage: at most one spoken narration this often (when the speech queue is empty); hits in between are short-lived events."
+      min: 0
+      max: 120
+      defaultValue: 6.0
+      category: "Narration Options"
+
+    - name: "Narration cooldown (sec)"
+      path: "injury_engine.narration.cooldown"
+      type: "float"
+      description: "Healing: minimum seconds between narrations for the same actor; the speech queue must also be empty. Healing in between becomes short-lived events and is combined into the next narration. Torture uses the torture break and gap settings instead."
+      min: 0
+      max: 120
+      defaultValue: 8.0
+      category: "Narration Options"
+
+    - name: "Narration max distance (m)"
+      path: "injury_engine.narration.max_distance"
+      type: "float"
+      description: "Hits and healing farther than this from the player are not narrated: the first hit and healing are recorded as events, other hits as short-lived events."
+      min: 5
+      max: 100
+      defaultValue: 15.0
+      category: "Narration Options"
+
+    - name: "Lash event lifetime (sec)"
+      path: "injury_engine.narration.event_ttl"
+      type: "float"
+      description: "How long the short-lived event for a hit that was not narrated stays in the scene context."
+      min: 5
+      max: 300
+      defaultValue: 30.0
+      category: "Narration Options"
+
     - name: "NPC must already carry a whip"
       path: "injury_engine.action.require_whip"
       type: "bool"
@@ -124,85 +203,6 @@ schema:
       description: "On: teach the player Healing Hands on load. Any healing source (spell, staff, scroll, potion) on a tortured actor is narrated as it starts, when the pain is gone, and when the wounds are fully healed or the healing stops. Healing by the player is always narrated; other healing follows the narration settings."
       defaultValue: true
       category: "Healing"
-
-    - name: "Narrate lashes"
-      path: "injury_engine.narration.enabled"
-      type: "bool"
-      description: "Send Direct Narrations for torture and healing. Torture is narrated when it starts, every few seconds while it continues, and when the method changes (the speech queue is cleared first when the player is involved); hits in between are short-lived events. Off: everything is recorded as short-lived events."
-      defaultValue: true
-      category: "Narration"
-
-    - name: "Torture narration window (sec)"
-      path: "injury_engine.narration.torture_narration_window_size"
-      type: "float"
-      description: "After a torture hit, ordinary passive healing is not reported for this long, so it does not undo the punishment just narrated."
-      min: 0
-      max: 300
-      defaultValue: 30.0
-      category: "Narration"
-
-    - name: "Torture maximum break (sec)"
-      path: "injury_engine.narration.torture_maximum_break"
-      type: "float"
-      description: "Torture counts as continuous while the pause between hits stays below this. A break this long ends the session with no narration; combined \"again\" lines stop for that pair."
-      min: 0.5
-      max: 30
-      defaultValue: 3.0
-      category: "Narration"
-
-    - name: "Torture direct narration gap (sec)"
-      path: "injury_engine.narration.torture_direct_narration_gap"
-      type: "float"
-      description: "During continuous torture, one combined narration (everyone torturing at the same time) is sent this often; hits in between are short-lived events. A change of method is narrated at once."
-      min: 1
-      max: 60
-      defaultValue: 6.0
-      category: "Narration"
-
-    - name: "Wait for reply (sec)"
-      path: "injury_engine.narration.reply_timeout"
-      type: "float"
-      description: "After a narration, the next one waits until SkyrimNet has spoken a reply, or until there has been no dialogue for this long. Hits in between are short-lived events."
-      min: 3
-      max: 120
-      defaultValue: 15.0
-      category: "Narration"
-
-    - name: "Health narration cooloff (sec)"
-      path: "injury_engine.narration.health_narration_cooloff"
-      type: "float"
-      description: "Real damage: at most one spoken narration this often (when the speech queue is empty); hits in between are short-lived events."
-      min: 0
-      max: 120
-      defaultValue: 6.0
-      category: "Narration"
-
-    - name: "Narration cooldown (sec)"
-      path: "injury_engine.narration.cooldown"
-      type: "float"
-      description: "Healing: minimum seconds between narrations for the same actor; the speech queue must also be empty. Healing in between becomes short-lived events and is combined into the next narration. Torture uses the torture break and gap settings instead."
-      min: 0
-      max: 120
-      defaultValue: 8.0
-      category: "Narration"
-
-    - name: "Narration max distance (m)"
-      path: "injury_engine.narration.max_distance"
-      type: "float"
-      description: "Hits and healing farther than this from the player are not narrated: the first hit and healing are recorded as events, other hits as short-lived events."
-      min: 5
-      max: 100
-      defaultValue: 15.0
-      category: "Narration"
-
-    - name: "Lash event lifetime (sec)"
-      path: "injury_engine.narration.event_ttl"
-      type: "float"
-      description: "How long the short-lived event for a hit that was not narrated stays in the scene context."
-      min: 5
-      max: 300
-      defaultValue: 30.0
-      category: "Narration"
 
     - name: "Include sexual body parts (nipples, pussy, penis, lips, and ass hole)"
       path: "injury_engine.body.include_sexual_parts"
