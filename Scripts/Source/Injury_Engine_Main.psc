@@ -55,6 +55,14 @@ String Property KEY_HS_LAST = "injury_engine.hs_last" AutoReadOnly
 String Property KEY_HS_NARR = "injury_engine.hs_narr" AutoReadOnly
 String Property KEY_HS_TEXT = "injury_engine.hs_text" AutoReadOnly
 String Property KEY_HS_PEND = "injury_engine.hs_pend" AutoReadOnly
+; Death lines held by a closed reply gate: parallel lists on this quest (no attacker: this quest itself), sent by
+; DeathTick once the gate opens, or as the short-lived event after DEATH_WAIT
+String Property KEY_DP_VIC = "injury_engine.dp_vic" AutoReadOnly
+String Property KEY_DP_ATT = "injury_engine.dp_att" AutoReadOnly
+String Property KEY_DP_TXT = "injury_engine.dp_txt" AutoReadOnly
+String Property KEY_DP_SRC = "injury_engine.dp_src" AutoReadOnly
+String Property KEY_DP_TIME = "injury_engine.dp_time" AutoReadOnly
+Float Property DEATH_WAIT = 1.0 AutoReadOnly
 
 Float Property UNITS_PER_METER = 70.0 AutoReadOnly
 
@@ -87,6 +95,8 @@ Float Property torture_again_recent = 1.0 AutoReadOnly
 Float Property reply_timeout = 15.0 Auto Hidden
 Float Property REPLY_MIN_DELAY = 1.5 AutoReadOnly
 Float Property last_direct_time = -1000.0 Auto Hidden
+; Target of the last DirectNarration: once it is dead its reply never comes, so the gate opens (ClaimNarration)
+Actor Property last_direct_target = None Auto Hidden
 ; Set by ClaimNarration while a caller holds the gate; DirectNarrate releases it. Stops two threads sending at once.
 Bool narration_claim = False
 Float Property narration_max_distance = 15.0 Auto Hidden
@@ -130,16 +140,18 @@ Function DirectNarrate(String msg, Actor speaker, Actor target, String category 
     Trace("DirectNarration", NameOf(speaker) + " -> " + NameOf(target) + ": " + msg)
     Injury_Engine_Main main = Get()
     if main
-        main.NoteDirect()
+        main.NoteDirect(target)
     endif
     Injury_Engine_Engine.LogLine(category, "direct", session, msg)
     SkyrimNetApi.DirectNarration(msg, speaker, target)
 EndFunction
 
 Float claim_time = -1000.0
+Float closed_log_time = -1000.0
 
-Function NoteDirect()
+Function NoteDirect(Actor target)
     last_direct_time = Utility.GetCurrentRealTime()
+    last_direct_target = target
     narration_claim = False
 EndFunction
 
@@ -174,9 +186,17 @@ Bool Function ClaimNarration()
         why = "replied"
     elseif since >= reply_timeout && (audio <= 0.0 || audio >= reply_timeout)
         why = "silence"
+    elseif last_direct_target != None && last_direct_target.IsDead()
+        why = "target dead" ; the narration asked a now dead actor to reply: no reply comes
     endif
-    if verbose_logging && why != ""
-        Verbose("ClaimNarration", "since:" + since + " audio_ended:" + audio + " queue:" + queue + " -> " + why)
+    ; a closed gate is logged at most once a second (SceneTick / DeathTick retry it every 0.2 s)
+    if verbose_logging && (why != "" || now - closed_log_time >= 1.0 || now < closed_log_time)
+        String result = why
+        if why == ""
+            result = "closed"
+            closed_log_time = now
+        endif
+        Verbose("ClaimNarration", "since:" + since + " audio_ended:" + audio + " queue:" + queue + " target:" + NameOf(last_direct_target) + " -> " + result)
     endif
     if why == ""
         narration_claim = False
@@ -262,6 +282,11 @@ Function ClearSessions()
     StorageUtil.FloatListClear(self, KEY_HS_NARR)
     StorageUtil.StringListClear(self, KEY_HS_TEXT)
     StorageUtil.StringListClear(self, KEY_HS_PEND)
+    StorageUtil.FormListClear(self, KEY_DP_VIC)
+    StorageUtil.FormListClear(self, KEY_DP_ATT)
+    StorageUtil.StringListClear(self, KEY_DP_TXT)
+    StorageUtil.StringListClear(self, KEY_DP_SRC)
+    StorageUtil.FloatListClear(self, KEY_DP_TIME)
 EndFunction
 
 Bool Function Setup_CheckLinks()
@@ -526,10 +551,21 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
             Float now = Utility.GetCurrentRealTime()
             Bool cooled = now < last_health_narration || now - last_health_narration >= health_narration_cooloff
             ; only fights in sight are narrated (like torture pairs and deaths); out of sight: the short-lived event
-            if DirectAllowed(kind) && cooled && PairVisible(attacker, victim) && ClaimNarration()
+            String failed = ""
+            if !DirectAllowed(kind)
+                failed = "mode"
+            elseif !cooled
+                failed = "cooloff"
+            elseif !PairVisible(attacker, victim)
+                failed = "not visible"
+            elseif !ClaimNarration()
+                failed = "gate"
+            endif
+            if failed == ""
                 last_health_narration = now
                 DirectNarrate(msg, attacker, victim, "health", "start")
             else
+                Verbose("NarrateInjury", source + " no DirectNarration: " + failed)
                 Trace("NarrateInjury", source + " short-lived event: " + msg)
                 RegisterInjuryShortEvent(msg, attacker, victim, kind, source, attacker, victim)
             endif
@@ -1351,6 +1387,7 @@ EndEvent
 Event OnUpdate()
     sync_pending = False
     NarrateDeaths()
+    DeathTick()
     NarrateRealHits()
     SceneTick()
     ; SyncHealth also takes the queued sync events: skip this tick's sync while another thread drains them (the
@@ -1365,7 +1402,8 @@ Event OnUpdate()
         sync_draining = False
     endif
     HealTick()
-    if Injury_Engine_Engine.TrackedCount() > 0 || StorageUtil.FormListCount(self, KEY_SC_VIC) > 0 || StorageUtil.FormListCount(self, KEY_HS_TGT) > 0
+    if Injury_Engine_Engine.TrackedCount() > 0 || StorageUtil.FormListCount(self, KEY_SC_VIC) > 0 || StorageUtil.FormListCount(self, KEY_HS_TGT) > 0 \
+        || StorageUtil.FormListCount(self, KEY_DP_VIC) > 0
         sync_pending = True
         RegisterForSingleUpdate(SYNC_INTERVAL)
     else
@@ -1375,7 +1413,8 @@ EndEvent
 
 ; Killing blows queued by the DLL (a death soon after a real hit): one death line each. In sight with narration on:
 ; DirectNarration (once per death, no cooloff) when SkyrimNet has answered the last narration (ClaimNarration);
-; otherwise a short-lived injury_death event. Mode Event: always the event; Silent: nothing.
+; a closed gate holds the line up to DEATH_WAIT (DeathTick retries it), then it becomes the short-lived event.
+; Out of sight or mode Event: the short-lived injury_death event; Silent: nothing.
 ; One drain at a time (deaths_draining): a call while one runs returns, the running drain takes the deaths.
 Function NarrateDeaths()
     if deaths_draining
@@ -1401,15 +1440,80 @@ Function NarrateDeathBatch(String[] texts)
         if victim != None && death_mode != 2 && texts[i] != ""
             ClearTortureScene(victim)
             ClearHealBatch(victim)
-            if DirectAllowed("death") && PairVisible(attackers[i], victim) && ClaimNarration()
+            if !DirectAllowed("death")
+                Verbose("NarrateDeaths", NameOf(victim) + " no DirectNarration: mode")
+                DeathEvent(texts[i], attackers[i], victim, sources[i])
+            elseif !PairVisible(attackers[i], victim)
+                Verbose("NarrateDeaths", NameOf(victim) + " no DirectNarration: not visible")
+                DeathEvent(texts[i], attackers[i], victim, sources[i])
+            elseif ClaimNarration()
                 DirectNarrate(texts[i], attackers[i], victim, "health", "death")
             else
-                Trace("NarrateDeaths", sources[i] + " short-lived event: " + texts[i])
-                ShortEvent(texts[i], attackers[i], victim, "health", InjuryShortEventId("death", sources[i], attackers[i], victim),                     "injury_death", (event_ttl * 1000.0) as int, "death")
+                DeathHold(texts[i], attackers[i], victim, sources[i])
             endif
         endif
         i += 1
     endwhile
+EndFunction
+
+Function DeathEvent(String text, Actor attacker, Actor victim, String source)
+    Trace("NarrateDeaths", source + " short-lived event: " + text)
+    ShortEvent(text, attacker, victim, "health", InjuryShortEventId("death", source, attacker, victim), "injury_death", (event_ttl * 1000.0) as int, "death")
+EndFunction
+
+; The reply gate is closed: hold the death line for DeathTick.
+Function DeathHold(String text, Actor attacker, Actor victim, String source)
+    Form att = self
+    if attacker != None
+        att = attacker
+    endif
+    StorageUtil.FormListAdd(self, KEY_DP_VIC, victim, true)
+    StorageUtil.FormListAdd(self, KEY_DP_ATT, att, true)
+    StorageUtil.StringListAdd(self, KEY_DP_TXT, text, true)
+    StorageUtil.StringListAdd(self, KEY_DP_SRC, source, true)
+    StorageUtil.FloatListAdd(self, KEY_DP_TIME, Utility.GetCurrentRealTime(), true)
+    Verbose("NarrateDeaths", NameOf(victim) + " gate closed, death pending")
+    StartSync()
+EndFunction
+
+Function DeathRemove(int i)
+    StorageUtil.FormListRemoveAt(self, KEY_DP_VIC, i)
+    StorageUtil.FormListRemoveAt(self, KEY_DP_ATT, i)
+    StorageUtil.StringListRemoveAt(self, KEY_DP_TXT, i)
+    StorageUtil.StringListRemoveAt(self, KEY_DP_SRC, i)
+    StorageUtil.FloatListRemoveAt(self, KEY_DP_TIME, i)
+EndFunction
+
+; Held death lines (from OnUpdate): the oldest goes out as DirectNarration once the gate opens (one per tick);
+; any held longer than DEATH_WAIT becomes the short-lived event.
+Function DeathTick()
+    int n = StorageUtil.FormListCount(self, KEY_DP_VIC)
+    if n == 0
+        return
+    endif
+    float now = Utility.GetCurrentRealTime()
+    int i = n - 1
+    while i >= 0
+        float held = now - StorageUtil.FloatListGet(self, KEY_DP_TIME, i)
+        if held >= DEATH_WAIT || held < 0.0
+            Actor victim = StorageUtil.FormListGet(self, KEY_DP_VIC, i) as Actor
+            Verbose("NarrateDeaths", NameOf(victim) + " death timed out -> event")
+            DeathEvent(StorageUtil.StringListGet(self, KEY_DP_TXT, i), StorageUtil.FormListGet(self, KEY_DP_ATT, i) as Actor, victim, StorageUtil.StringListGet(self, KEY_DP_SRC, i))
+            DeathRemove(i)
+        endif
+        i -= 1
+    endwhile
+    if StorageUtil.FormListCount(self, KEY_DP_VIC) > 0 && ClaimNarration()
+        if StorageUtil.FormListCount(self, KEY_DP_VIC) == 0 ; another thread took it meanwhile
+            ReleaseNarration()
+            return
+        endif
+        String text = StorageUtil.StringListGet(self, KEY_DP_TXT, 0)
+        Actor attacker = StorageUtil.FormListGet(self, KEY_DP_ATT, 0) as Actor
+        Actor victim = StorageUtil.FormListGet(self, KEY_DP_VIC, 0) as Actor
+        DeathRemove(0)
+        DirectNarrate(text, attacker, victim, "health", "death")
+    endif
 EndFunction
 
 ; Hits queued by the damage hooks (real damage and hooked torture): narrate like lashes.

@@ -6,6 +6,7 @@
 - Light hits below minor still count but are not narrated.
 - A body part can't be hurt worse than the body has lost health.
 - Death narration names the hit that actually killed.
+- Killing blows in a fight are now narrated instead of only noted.
 
 ### Gear and settings
 - Torture gear is renamed "Torture Padded Whip", "Torture Flames" and so on, so it sorts together.

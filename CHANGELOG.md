@@ -12,8 +12,13 @@
 - Torture gear renamed to "Torture <name>" so it sorts together: WEAP 0x803 Torture Padded Whip, SPEL 0x816–0x818 and MGEF 0x813–0x815 Torture Flames / Frostbite / Sparks (FULL names only; FormIDs and EditorIDs unchanged).
 - Dashboard: the four narration mode selects stay in "Narration", Injury Ranges follows, and the other `injury_engine.narration.*` fields move to a new "Narration Options" section (keys and defaults unchanged). README settings table reordered to match.
 
+### Narration
+- Death lines wait for the reply gate: a closed gate holds the line (`Main.DeathHold`, StorageUtil lists `KEY_DP_*` on the Main quest) and `DeathTick` (from `OnUpdate`, which keeps looping while one is held) retries it for `DEATH_WAIT` (1 s), then sends the `injury_death` event. Before, a killing blow 1–2 s after a hit narration always became an event in combat.
+- `ClaimNarration` also opens when the last DirectNarration's target (`last_direct_target`, set by `NoteDirect`) is dead, since its reply never comes.
+- Verbose logging: `NarrateInjury` / `NarrateDeaths` log why a hit or death got no DirectNarration (mode / cooloff / not visible / gate); the closed-gate `ClaimNarration` line is logged at most once a second.
+
 ### Docs
-- `CLAUDE.md`, `README.md`, `injuries/guide.md`, `docs/developers/papyrus.md` and `docs/authors/actions.md` describe the real scale, Injury Ranges and the renamed gear; KNOWLEDGEBASE adds the 0-health killing-blow hit and the SkyrimNet prompt editor override that shadows plugin prompts.
+- `CLAUDE.md`, `README.md`, `injuries/guide.md`, `docs/developers/papyrus.md` and `docs/authors/actions.md` describe the real scale, Injury Ranges and the renamed gear; KNOWLEDGEBASE adds the 0-health killing-blow hit, the SkyrimNet prompt editor override that shadows plugin prompts, and the reply gate that starved death lines in combat.
 
 ## [0.1.3](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.3) — since [0.1.2](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.2)
 

@@ -2,6 +2,10 @@
 
 Quirks and lessons for Injury_Engine. Read before changes; append a dated entry (newest first) after a session that found something non-obvious. Entries marked *(from SkyrimNet_SexLab)* were learned there and apply here too.
 
+## The reply gate starved death lines in combat (2026-10-20, needs in-game verification)
+
+From `checkpoints/to-quite/logs/2026-10-20-11-36-51/`: all 4 deaths had DLL text, but every one went out as an `injury_death` event. A killing blow usually lands 1–2 s after a hit DirectNarration on the same pair. That narration asks the victim to reply, and the victim is now dead. In combat, barks keep the speech queue busy and reset the audio-ended time, so `ClaimNarration` saw neither "replied" nor 15 s of "silence", and the single try fell back to the event. Fix (Papyrus): the gate opens when `last_direct_target` is dead, and a gated death is held for 1 s (`DeathTick`, `KEY_DP_*`) before becoming the event. `ClaimNarration` now logs a closed gate (verbose, at most once a second), and hits log which check failed (`mode` / `cooloff` / `not visible` / `gate`).
+
 ## Hits keep landing for a moment at or below zero health, before IsDead (2026-10-20, needs in-game verification)
 
 From `checkpoints/2026-10-20-injury-bands/logs/2026-10-20-09-54-07/Injury_Engine.log` lines 2990–3014: on Feduzdal, a burning hit took health from 5 to -25, which was the killing blow. After it, a piercing hit (-55 → -115, 172 real points) and then a 0.1 nipple sliver still reached `OnDamage`, because `victim->IsDead()` was false. The last hit overwrote `g_lastReal`, so the death text said `piercing part:nipples`. Fix: `OnDamage` (health model) ignores a hit when health before it is at or below 0. Health before = `GetActorValue(kHealth) + amount` when `applied` (HandleHealthDamage, after the damage), else the current value. Torture is not affected.

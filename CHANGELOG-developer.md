@@ -6,6 +6,7 @@ Injury bands release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Addres
 - **Injury Ranges sliders.** `injury_engine.ranges.minor_min` / `major_min` / `severe_min` (25 / 75 / 90) set where a real wound becomes minor, major or severe; hits below minor are tracked but not narrated.
 - **Wounds fit missing health.** No part can be hurt worse than the body has lost health (`RealCaps` / `FitRealToHealth`).
 - **Killing blow named correctly.** Hits that land at or below 0 health are ignored, so the death narration names the hit that killed.
+- **Killing blows narrated in combat.** A death line held by a closed reply gate waits up to 1 s (`DeathHold` / `DeathTick`) instead of becoming an event, and the gate opens when the last narration's target is dead.
 - **Torture gear sorts together.** Torture Padded Whip and Torture Flames / Frostbite / Sparks (names only; FormIDs unchanged).
 - **Dashboard tidy.** The narration modes stay in "Narration"; the remaining narration settings move to "Narration Options".
 
