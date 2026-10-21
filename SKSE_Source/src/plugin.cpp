@@ -61,6 +61,7 @@ namespace
             InjuryConfig::Load();
             Classifier::Init();
             InjuryEngine::InitDeaths();
+            InjuryEngine::InitSceneFactions();
             TruceDecision::Init();
             Overlay::Init();
             break;

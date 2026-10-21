@@ -170,7 +170,17 @@ namespace InjuryEngine
         std::unordered_set<RE::FormID> g_downed;
         std::unordered_set<RE::FormID> g_collapsePending;
         std::atomic<bool> g_bleedoutEnabled{ true };
+        // Factions SexLab (SexLabAnimatingFaction) and OStim (OStimActorCountFaction) put scene actors in; resolved
+        // once in InitSceneFactions, null when the mod is not installed. A scene actor is never held in our bleedout.
+        RE::TESFaction* g_sexLabFaction = nullptr;
+        RE::TESFaction* g_ostimFaction = nullptr;
         constexpr std::chrono::milliseconds kHitGap{ 1000 };
+
+        bool InAnimationScene(RE::Actor* actor)
+        {
+            return actor && ((g_sexLabFaction && actor->IsInFaction(g_sexLabFaction)) ||
+                                (g_ostimFaction && actor->IsInFaction(g_ostimFaction)));
+        }
 
         // Queues a hit for narration. A queued hit of the same victim, attacker and source absorbs it (latest mask / level win).
         // Caller holds g_lock.
@@ -811,7 +821,8 @@ namespace InjuryEngine
         }
 
         // Sends BleedOutStart / BleedOutStop to a living actor's behavior graph on the game thread. `hold`: only
-        // when the graph says the actor is no longer bleeding out (the AI stood it up).
+        // when the graph agrees with the change (start: the AI stood the actor up; stop: it is still bleeding out).
+        // A start never reaches an actor a SexLab / OStim scene took in the meantime.
         void SendBleedout(RE::FormID id, bool start, bool hold = false)
         {
             if (auto* tasks = SKSE::GetTaskInterface()) {
@@ -820,12 +831,17 @@ namespace InjuryEngine
                     if (!actor || actor->IsDead() || !actor->Is3DLoaded()) {
                         return;
                     }
+                    if (start && InAnimationScene(actor)) {
+                        return;
+                    }
                     if (hold) {
                         bool down = false;
-                        if (!actor->GetGraphVariableBool("IsBleedingOut", down) || down) {
+                        if (!actor->GetGraphVariableBool("IsBleedingOut", down) || down == start) {
                             return;
                         }
-                        SKSE::log::debug("downed {:08X} stood up, back into bleedout", id);
+                        if (start) {
+                            SKSE::log::debug("downed {:08X} stood up, back into bleedout", id);
+                        }
                     }
                     actor->NotifyAnimationGraph(start ? "BleedOutStart" : "BleedOutStop");
                 });
@@ -2028,6 +2044,18 @@ namespace InjuryEngine
             const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
             const float health = av->GetActorValue(RE::ActorValue::kHealth);
             const float threshold = GetBody().bleedoutBelow * maxHealth;
+            // A SexLab / OStim scene owns the actor: let go (stand it up only if still bleeding out, so it can walk
+            // to its position; a scene animation that already replaced the bleedout idle is left alone) and do not
+            // put it down while the scene lasts. After the scene the rule below applies again.
+            if (InAnimationScene(actor)) {
+                if (downed) {
+                    g_collapsePending.erase(id);
+                    g_downed.erase(id);
+                    SendBleedout(id, false, true);
+                    SKSE::log::info("downed {} taken by an animation scene: released", LogActor(actor));
+                }
+                return;
+            }
             if (!downed) {
                 if (g_bleedoutEnabled.load() && maxHealth > 0.0f && HasTorture(st) && health <= threshold) {
                     g_downed.insert(id);
@@ -2486,6 +2514,21 @@ namespace InjuryEngine
             holder->AddEventSink<RE::TESDeathEvent>(&sink);
             SKSE::log::info("InjuryEngine: death event sink registered");
         }
+    }
+
+    void InitSceneFactions()
+    {
+        auto* data = RE::TESDataHandler::GetSingleton();
+        if (!data) {
+            return;
+        }
+        g_sexLabFaction = data->LookupForm<RE::TESFaction>(0xE50F, "SexLab.esm");
+        g_ostimFaction = data->LookupForm<RE::TESFaction>(0xECA, "OStim.esp");
+        if (!g_ostimFaction) {
+            g_ostimFaction = RE::TESForm::LookupByEditorID<RE::TESFaction>("OStimActorCountFaction");
+        }
+        SKSE::log::info("InjuryEngine: scene factions SexLab:{} OStim:{}", g_sexLabFaction ? "found" : "missing",
+            g_ostimFaction ? "found" : "missing");
     }
 
     std::vector<std::string> TakeDeaths()

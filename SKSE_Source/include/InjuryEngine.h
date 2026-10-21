@@ -110,6 +110,8 @@ namespace InjuryEngine
     // TESDeathEvent sink (kDataLoaded): a death within a few seconds of the victim's last real hit queues that
     // source's DeathText. TakeDeaths returns the texts; DeathVictims / DeathAttackers / DeathSources are parallel to it.
     void InitDeaths();
+    // kDataLoaded: resolves the SexLab / OStim scene factions; an actor in one is never held in torture bleedout.
+    void InitSceneFactions();
     std::vector<std::string> TakeDeaths();
     std::vector<RE::Actor*> DeathVictims();
     std::vector<RE::Actor*> DeathAttackers();
