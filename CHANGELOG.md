@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Integration
+- New mod event `Injury_Engine_Torture` (`Form attacker, Form victim, String source, Int hits, String cause`). It is sent for every torture batch that lands: hooked hits, lashes, `Torture_Target`, and `External_*`, narrated or silent (including `External_TortureText`). Attacker is None when there is no attacker. SkyrimNet_DOM uses it to count torture as a DOM punishment.
+- New mod event `Injury_Engine_HealStart` (`Form caster, Form target, Int source`). It is sent once when a healing source opens a heal session (`NarrateSourceHeal`, HEAL_START; source 1 spell / 2 staff / 3 potion / 4 other magic / 5 food). SkyrimNet_DOM uses it for Healing Hands comfort.
+
+### Healing
+- Food and ingredients that restore health are their own healing source (`kSourceFood` = 5): the heal start line is now `session.json` `heal_food` ("Amy eats the Apple Pie and feels better.", "drinks" for food with the potion drinking sound) instead of the magic "warm yellow light" text, and the session has no caster, so the line no longer reads as someone else (the player) healing the eater. Pain-gone / fully-healed lines use the `.none` wording; no stopped line.
+
 ## [0.1.4](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.4) — since [0.1.3](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.3)
 
 ### Wounds / healing

@@ -38,7 +38,7 @@ namespace InjuryEngine
 
     // SyncHealth events and the healing source attached to them.
     enum SyncKind : int { kHealStart = 0, kPainGone = 1, kFullyHealed = 2, kHealStopped = 3 };
-    enum SourceKind : int { kSourceNone = 0, kSourceSpell = 1, kSourceStaff = 2, kSourcePotion = 3, kSourceMagic = 4 };
+    enum SourceKind : int { kSourceNone = 0, kSourceSpell = 1, kSourceStaff = 2, kSourcePotion = 3, kSourceMagic = 4, kSourceFood = 5 };
 
     // Hit code: fresh * 100000000 + source * 1000000 + partMask * 10 + level
     //   fresh: the victim had no open wounds before; level: worst part stage before the hit (HitLevel).

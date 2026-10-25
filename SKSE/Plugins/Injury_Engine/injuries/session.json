@@ -24,5 +24,10 @@
   "feeling": "{attacker}'s last {noun} lands on {target}'s {parts}",
   "feeling_none": "The last {noun} lands on {target}'s {parts}",
   "collapse": "{target} collapses.",
-  "healed": "{name} is completely healed."
+  "healed": "{name} is completely healed.",
+  "heal_food": {
+    "eat": "{name} eats the {item} and feels better.",
+    "drink": "{name} drinks the {item} and feels better.",
+    "eat_unknown": "{name} eats something and feels better."
+  }
 }

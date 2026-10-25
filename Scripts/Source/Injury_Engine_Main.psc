@@ -216,6 +216,38 @@ Injury_Engine_Main Function Get() global
     return Game.GetFormFromFile(0x800, "Injury_Engine.esp") as Injury_Engine_Main
 EndFunction
 
+; Mod event "Injury_Engine_Torture" for other mods (e.g. SkyrimNet_DOM punishment): every torture batch that landed,
+; narrated or silent. Args: Form attacker (None when no attacker), Form victim, String source, Int hits, String cause.
+Function NotifyTorture(Actor attacker, Actor victim, String source, Int hits, String cause) global
+    if victim == None || hits < 1
+        return
+    endif
+    int handle = ModEvent.Create("Injury_Engine_Torture")
+    if handle
+        ModEvent.PushForm(handle, attacker)
+        ModEvent.PushForm(handle, victim)
+        ModEvent.PushString(handle, source)
+        ModEvent.PushInt(handle, hits)
+        ModEvent.PushString(handle, cause)
+        ModEvent.Send(handle)
+    endif
+EndFunction
+
+; Mod event "Injury_Engine_HealStart": a healing source opened a heal session on target.
+; Args: Form caster (None when unknown), Form target, Int source (1 spell, 2 staff, 3 potion, HealSyncSourceMethod).
+Function NotifyHealStart(Actor caster, Actor target, Int source) global
+    if target == None
+        return
+    endif
+    int handle = ModEvent.Create("Injury_Engine_HealStart")
+    if handle
+        ModEvent.PushForm(handle, caster)
+        ModEvent.PushForm(handle, target)
+        ModEvent.PushInt(handle, source)
+        ModEvent.Send(handle)
+    endif
+EndFunction
+
 ;----------------------------------------------------------------------------------------------------
 ; Setup
 ;----------------------------------------------------------------------------------------------------
@@ -493,6 +525,8 @@ Int Function OnLash(Actor attacker, Actor victim, Bool narrate=True)
     if narrate
         Injury_Engine_Engine.QueueHit(victim, attacker, code)
         NarrateRealHits()
+    else
+        NotifyTorture(attacker, victim, SOURCE_WHIP, 1, "")
     endif
     ClearHealBatch(victim) ; pending heals are stale; the next heal is fresh
     StartSync()
@@ -573,6 +607,7 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         return
     endif
     StorageUtil.SetFloatValue(victim, KEY_LAST_TORTURE, Utility.GetCurrentRealTime())
+    NotifyTorture(attacker, victim, source, hits, cause)
     Bool visible = PairVisible(attacker, victim)
     int i = SceneFind(attacker, victim)
     String session = "update"
@@ -1040,6 +1075,8 @@ String Function HealSyncSourceMethod(int source) global
         return "staff"
     elseif source == 3
         return "potion"
+    elseif source == 5
+        return "food"
     elseif source == 0
         return "none"
     endif
@@ -1123,6 +1160,8 @@ Int Function Torture(Actor attacker, Actor victim, String source, Bool narrate=T
     if narrate
         Injury_Engine_Engine.QueueHit(victim, attacker, code)
         NarrateRealHits()
+    else
+        NotifyTorture(attacker, victim, source, 1, "")
     endif
     ClearHealBatch(victim)
     StartSync()
@@ -1579,6 +1618,7 @@ Function NarrateSourceHeal(int kind, int source, int percent, Actor caster, Acto
     if source == HEAL_SOURCE_NONE || kind != HEAL_START
         return
     endif
+    NotifyHealStart(caster, target, source)
     int s = HealFind(target)
     if s >= 0
         StorageUtil.FloatListSet(self, KEY_HS_LAST, s, Utility.GetCurrentRealTime())
@@ -1779,6 +1819,8 @@ Int Function Damage(Actor attacker, Actor victim, String cause, String source, I
     endif
     if narrate
         NarrateHits(attacker, victim, source, mask, worst, hits, cause)
+    else
+        NotifyTorture(attacker, victim, source, hits, cause)
     endif
     ClearHealBatch(victim)
     StartSync()
@@ -1811,6 +1853,7 @@ String Function TortureText(Actor attacker, Actor victim, String source, String 
     if hits == 0
         return ""
     endif
+    NotifyTorture(attacker, victim, source, hits, "")
     ClearHealBatch(victim)
     StartSync()
     return Injury_Engine_Engine.HitText(source, attacker, victim, mask, worst, hits)
@@ -1848,6 +1891,8 @@ Int Function Strike(Actor attacker, Actor victim, String text, Int count, String
         ; the same path as External_Damage: the scene and the reply gate, the caller's text leading the line, so an
         ; open scene for this pair does not speak beside it
         NarrateHits(attacker, victim, source, mask, worst, hits, text)
+    else
+        NotifyTorture(attacker, victim, source, hits, text)
     endif
     ClearHealBatch(victim)
     StartSync()

@@ -134,6 +134,9 @@ namespace InjuryEngine
         std::mutex g_lock;
         std::unordered_map<RE::FormID, State> g_actors;
         std::unordered_map<RE::FormID, Healer> g_healers;
+        // Last food (or ingredient) that healed each actor, for the food heal line. Kept when the actor is forgotten
+        // (the fully healed line comes after). Not saved.
+        std::unordered_map<RE::FormID, RE::FormID> g_healFood;
         std::unordered_map<RE::FormID, bool> g_pained;      // had damage at the last sync
         std::unordered_map<RE::FormID, float> g_regenBank;  // regen health not yet a whole point
         // Hooked torture damage (spell ticks) not yet a hit, per actor and source. Kept when the actor is
@@ -921,32 +924,67 @@ namespace InjuryEngine
             case Type::kStaffEnchantment:
                 return kSourceStaff;
             case Type::kPotion:
-                return item->IsFood() ? kSourceMagic : kSourcePotion;
+                return item->IsFood() ? kSourceFood : kSourcePotion;
+            case Type::kIngredient:
+                return kSourceFood;
             default:
                 return kSourceMagic;
             }
         }
 
+        // The sound potions are drunk with (vanilla ITMPotionUse): the most common consumption sound of the loaded
+        // non-food potions. Food with it is a drink (mead, ale, wine, milk), any other food is eaten.
+        const RE::BGSSoundDescriptorForm* DrinkSound()
+        {
+            static const RE::BGSSoundDescriptorForm* sound = [] {
+                std::unordered_map<const RE::BGSSoundDescriptorForm*, int> counts;
+                if (auto* data = RE::TESDataHandler::GetSingleton()) {
+                    for (const auto* potion : data->GetFormArray<RE::AlchemyItem>()) {
+                        if (potion && potion->data.consumptionSound && !potion->IsFood() && !potion->IsPoison()) {
+                            ++counts[potion->data.consumptionSound];
+                        }
+                    }
+                }
+                const RE::BGSSoundDescriptorForm* best = nullptr;
+                int most = 0;
+                for (const auto& [s, n] : counts) {
+                    if (n > most) {
+                        best = s;
+                        most = n;
+                    }
+                }
+                SKSE::log::info("drink sound {:08X} ({} potions)", best ? best->GetFormID() : 0, most);
+                return best;
+            }();
+            return sound;
+        }
+
         // A healing source touched an actor: refresh its session, or start one (queuing kHealStart). An unhurt actor
         // (st null or no points) still gets the start line: healing feels nice anyway.
+        // Food and ingredients: the eater healed themself, so the session has no caster (the line must not read as
+        // someone else healing them).
         void Seen(RE::FormID id, const State* st, RE::Actor* caster, RE::MagicItem* item, double now)
         {
+            const int source = SourceOf(item);
+            if (source == kSourceFood && item) {
+                g_healFood[id] = item->GetFormID();
+            }
             if (const auto it = g_healers.find(id); it != g_healers.end()) {
                 it->second.lastSeen = now;
                 return;
             }
             const int points = st ? TotalPoints(*st) : 0;
             Healer healer;
-            if (caster) {
+            if (caster && source != kSourceFood) {
                 healer.caster = caster->GetHandle();
             }
-            healer.source = SourceOf(item);
+            healer.source = source;
             healer.startPoints = points;
             healer.lastSeen = now;
             g_healers[id] = healer;
             PushEvent(id, kHealStart, &healer, 0);
-            SKSE::log::info("heal start {:08X} source:{} caster:{:08X} points:{}", id, healer.source,
-                caster ? caster->GetFormID() : 0, points);
+            SKSE::log::info("heal start {:08X} source:{} caster:{:08X} item:{:08X} points:{}", id, healer.source,
+                caster ? caster->GetFormID() : 0, item ? item->GetFormID() : 0, points);
         }
 
         struct HealingEffect
@@ -2633,14 +2671,36 @@ namespace InjuryEngine
         }
         int conf;
         bool unhurt;
+        RE::FormID foodId = 0;
         {
             std::lock_guard lock(g_lock);
             const auto it = g_actors.find(target->GetFormID());
             conf = HealEventsSource(it != g_actors.end() ? &it->second : nullptr);
             unhurt = it == g_actors.end() || TotalPoints(it->second) <= 0;
+            if (const auto f = g_healFood.find(target->GetFormID()); f != g_healFood.end()) {
+                foodId = f->second;
+            }
         }
         auto vars = NarrationVars(target);
         const std::string name = vars["name"];
+        // Food: the eater healed themself. "Amy eats the Apple Pie and feels better."; no stopped line (no light fades).
+        const bool food = healingSource == kSourceFood;
+        if (food && kind == kHealStopped) {
+            return {};
+        }
+        if (food && kind == kHealStart) {
+            const auto* item = foodId ? RE::TESForm::LookupByID(foodId) : nullptr;
+            const char* itemName = item ? item->GetName() : nullptr;
+            if (!itemName || !*itemName) {
+                return InjuryConfig::Render(InjuryConfig::SessionStr("heal_food.eat_unknown"), vars);
+            }
+            const auto* potion = item->As<RE::AlchemyItem>();
+            const bool drink = potion && potion->data.consumptionSound && potion->data.consumptionSound == DrinkSound();
+            SKSE::log::debug("food heal {:08X} item:{:08X} sound:{:08X} drink:{}", target->GetFormID(), foodId,
+                potion && potion->data.consumptionSound ? potion->data.consumptionSound->GetFormID() : 0, drink);
+            vars["item"] = itemName;
+            return InjuryConfig::Render(InjuryConfig::SessionStr(drink ? "heal_food.drink" : "heal_food.eat"), vars);
+        }
         const std::string casterName = caster ? NameOf(caster) : std::string{};
         const bool named = !casterName.empty() && (healingSource == kSourceSpell || healingSource == kSourceStaff);
         const bool casterCasts = healingSource == kSourceSpell && !casterName.empty();
@@ -2668,10 +2728,10 @@ namespace InjuryEngine
             }
             break;
         case kPainGone:
-            key = healingSource == kSourceNone ? "pain_gone.none" : "pain_gone.source";
+            key = healingSource == kSourceNone || food ? "pain_gone.none" : "pain_gone.source";
             break;
         case kFullyHealed:
-            key = healingSource == kSourceNone ? "full.none" : casterCasts ? "full.caster_casts" : "full.other";
+            key = healingSource == kSourceNone || food ? "full.none" : casterCasts ? "full.caster_casts" : "full.other";
             break;
         default:
             break;
@@ -3107,6 +3167,7 @@ namespace InjuryEngine
         std::lock_guard lock(g_lock);
         g_actors.clear();
         g_healers.clear();
+        g_healFood.clear();
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();
@@ -3152,6 +3213,7 @@ namespace InjuryEngine
         g_actors.clear();
         g_uncaused.clear();
         g_healers.clear();
+        g_healFood.clear();
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();
