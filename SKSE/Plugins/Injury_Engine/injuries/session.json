@@ -25,6 +25,14 @@
   "feeling_none": "The last {noun} lands on {target}'s {parts}",
   "collapse": "{target} collapses.",
   "healed": "{name} is completely healed.",
+  "heal_group": {
+    "caster_casts": "{caster} casts {spell} around {names}, easing their wounds and pain with a warm yellow swirling light.",
+    "other": "{owner} {noun} surrounds {names} in a warm yellow swirling light, easing their wounds and pain.",
+    "unhurt": {
+      "caster_casts": "{caster} casts {spell} around {names}. With no wounds to mend, the warm yellow swirling light simply washes over them, warm and soothing.",
+      "other": "{owner} {noun} surrounds {names} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+    }
+  },
   "heal_food": {
     "eat": "{name} eats the {item} and feels better.",
     "drink": "{name} drinks the {item} and feels better.",

@@ -91,6 +91,7 @@ namespace InjuryEngine
             int kind = 0;
             int source = kSourceNone;
             int percent = 0;
+            double time = 0.0;  // real seconds the event was queued
         };
 
         struct HitEntry
@@ -137,6 +138,15 @@ namespace InjuryEngine
         // Last food (or ingredient) that healed each actor, for the food heal line. Kept when the actor is forgotten
         // (the fully healed line comes after). Not saved.
         std::unordered_map<RE::FormID, RE::FormID> g_healFood;
+        // Last spell / staff / potion that started a heal session on each actor, for the group heal line. Not saved.
+        std::unordered_map<RE::FormID, RE::FormID> g_healItem;
+        // Heal starts of one cast arrive within a frame or two: they are held this long (real seconds) so the drain
+        // hands them over together and Papyrus can narrate them as one line.
+        constexpr double kHealGroupWindow = 0.35;
+        // Real time of the last heal start on an unhurt actor: ambient healing (other mods' regen spells) must not
+        // open a session every few seconds. Not saved.
+        std::unordered_map<RE::FormID, double> g_unhurtHealAt;
+        constexpr double kUnhurtHealGap = 60.0;
         std::unordered_map<RE::FormID, bool> g_pained;      // had damage at the last sync
         std::unordered_map<RE::FormID, float> g_regenBank;  // regen health not yet a whole point
         // Hooked torture damage (spell ticks) not yet a hit, per actor and source. Kept when the actor is
@@ -816,6 +826,7 @@ namespace InjuryEngine
             e.actor = id;
             e.kind = kind;
             e.percent = percent;
+            e.time = NowSeconds();
             if (healer) {
                 e.caster = healer->caster;
                 e.source = healer->source;
@@ -865,6 +876,7 @@ namespace InjuryEngine
             ReleaseDowned(id);
             g_actors.erase(id);
             g_healers.erase(id);
+            g_unhurtHealAt.erase(id);
             g_pained.erase(id);
             g_regenBank.erase(id);
             g_lastScan.erase(id);
@@ -974,6 +986,20 @@ namespace InjuryEngine
                 return;
             }
             const int points = st ? TotalPoints(*st) : 0;
+            if (points <= 0) {
+                // Unhurt: only a deliberate heal gets a line. A spell an actor casts on itself (not the player) is
+                // ambient (regen abilities from other mods), and any unhurt start is limited to one per gap.
+                const bool self = !caster || caster->GetFormID() == id;
+                if (source != kSourceFood && self && id != 0x14) {
+                    SKSE::log::debug("ambient self-heal skipped {:08X} item:{:08X} {}", id, item ? item->GetFormID() : 0,
+                        item ? item->GetName() : "");
+                    return;
+                }
+                if (const auto last = g_unhurtHealAt.find(id); last != g_unhurtHealAt.end() && now - last->second < kUnhurtHealGap) {
+                    return;
+                }
+                g_unhurtHealAt[id] = now;
+            }
             Healer healer;
             if (caster && source != kSourceFood) {
                 healer.caster = caster->GetHandle();
@@ -982,9 +1008,12 @@ namespace InjuryEngine
             healer.startPoints = points;
             healer.lastSeen = now;
             g_healers[id] = healer;
+            if (item && source != kSourceFood) {
+                g_healItem[id] = item->GetFormID();
+            }
             PushEvent(id, kHealStart, &healer, 0);
-            SKSE::log::info("heal start {:08X} source:{} caster:{:08X} item:{:08X} points:{}", id, healer.source,
-                caster ? caster->GetFormID() : 0, item ? item->GetFormID() : 0, points);
+            SKSE::log::info("heal start {:08X} source:{} caster:{:08X} item:{:08X} {} points:{}", id, healer.source,
+                caster ? caster->GetFormID() : 0, item ? item->GetFormID() : 0, item ? item->GetName() : "", points);
         }
 
         struct HealingEffect
@@ -1117,19 +1146,36 @@ namespace InjuryEngine
             if (g_events.empty()) {
                 return codes;
             }
-            g_syncActors.clear();
-            g_syncCasters.clear();
+            // A heal start waits kHealGroupWindow for its siblings (one cast, several targets); later events of the
+            // same actor stay behind it.
+            const double now = NowSeconds();
+            std::vector<RE::FormID> blocked;
+            std::vector<Event> held;
+            std::vector<RE::FormID> actors;
+            std::vector<RE::FormID> casters;
             for (const auto& e : g_events) {
+                const bool wait = std::ranges::find(blocked, e.actor) != blocked.end() ||
+                                  (e.kind == kHealStart && e.source != kSourceNone && now >= e.time && now - e.time < kHealGroupWindow);
+                if (wait) {
+                    blocked.push_back(e.actor);
+                    held.push_back(e);
+                    continue;
+                }
                 if (!RE::TESForm::LookupByID<RE::Actor>(e.actor)) {
                     continue;
                 }
                 const RE::FormID caster = IdOf(e.caster);
                 SKSE::log::debug("sync event {:08X} kind:{} source:{} percent:{} caster:{:08X}", e.actor, e.kind, e.source, e.percent, caster);
                 codes.push_back(e.kind * 10000 + e.source * 1000 + e.percent);
-                g_syncActors.push_back(e.actor);
-                g_syncCasters.push_back(caster);
+                actors.push_back(e.actor);
+                casters.push_back(caster);
             }
-            g_events.clear();
+            g_events = std::move(held);
+            // an empty take must not wipe the arrays another Papyrus thread is still reading
+            if (!codes.empty()) {
+                g_syncActors = std::move(actors);
+                g_syncCasters = std::move(casters);
+            }
             return codes;
         }
 
@@ -2739,6 +2785,62 @@ namespace InjuryEngine
         return InjuryConfig::Render(InjuryConfig::Str(conf, std::string("narration.heal_events.") + key), vars);
     }
 
+    std::string SourceHealGroupText(int healingSource, RE::Actor* caster, const std::vector<RE::Actor*>& targets)
+    {
+        std::vector<RE::Actor*> list;
+        for (auto* t : targets) {
+            if (t && std::ranges::find(list, t) == list.end()) {
+                list.push_back(t);
+            }
+        }
+        if (list.empty() || healingSource == kSourceFood) {
+            return {};
+        }
+        bool unhurt = true;
+        int conf = -1;
+        RE::FormID itemId = 0;
+        {
+            std::lock_guard lock(g_lock);
+            for (auto* t : list) {
+                const auto it = g_actors.find(t->GetFormID());
+                if (it != g_actors.end() && TotalPoints(it->second) > 0) {
+                    unhurt = false;
+                    if (conf < 0) {
+                        conf = HealEventsSource(&it->second);
+                    }
+                }
+                if (!itemId) {
+                    if (const auto f = g_healItem.find(t->GetFormID()); f != g_healItem.end()) {
+                        itemId = f->second;
+                    }
+                }
+            }
+            if (conf < 0) {
+                conf = HealEventsSource(nullptr);
+            }
+        }
+        std::string names;
+        for (std::size_t i = 0; i < list.size(); ++i) {
+            names += i == 0 ? NameOf(list[i])
+                            : (i + 1 == list.size() ? InjuryConfig::SessionStr("and", " and ") : InjuryConfig::SessionStr("comma", ", ")) + NameOf(list[i]);
+        }
+        const std::string casterName = caster ? NameOf(caster) : std::string{};
+        const bool named = !casterName.empty() && (healingSource == kSourceSpell || healingSource == kSourceStaff);
+        const bool casterCasts = healingSource == kSourceSpell && !casterName.empty();
+        const char* nounKey = healingSource == kSourceSpell ? "spell" : healingSource == kSourceStaff ? "staff" : healingSource == kSourcePotion ? "potion" : "magic";
+        const auto* item = itemId ? RE::TESForm::LookupByID(itemId) : nullptr;
+        const char* itemName = item ? item->GetName() : nullptr;
+        const std::string noun = InjuryConfig::Str(conf, std::string("narration.heal_events.nouns.") + nounKey, nounKey);
+        std::map<std::string, std::string> vars;
+        vars["caster"] = casterName;
+        vars["names"] = names;
+        vars["noun"] = noun;
+        vars["spell"] = itemName && *itemName ? itemName : noun;
+        vars["owner"] = named ? casterName + "'s" : "The";
+        const std::string key = std::string("heal_group.") + (unhurt ? "unhurt." : "") + (casterCasts ? "caster_casts" : "other");
+        return InjuryConfig::Render(InjuryConfig::SessionStr(key), vars);
+    }
+
     std::string ActionText(std::string_view sourceId, std::string_view path, RE::Actor* speaker, RE::Actor* target, int count)
     {
         const int source = InjuryConfig::IndexOf(sourceId);
@@ -3168,6 +3270,8 @@ namespace InjuryEngine
         g_actors.clear();
         g_healers.clear();
         g_healFood.clear();
+        g_healItem.clear();
+        g_unhurtHealAt.clear();
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();
@@ -3214,6 +3318,8 @@ namespace InjuryEngine
         g_uncaused.clear();
         g_healers.clear();
         g_healFood.clear();
+        g_healItem.clear();
+        g_unhurtHealAt.clear();
         g_pained.clear();
         g_regenBank.clear();
         g_tortureCarry.clear();

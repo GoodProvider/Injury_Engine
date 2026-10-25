@@ -1222,7 +1222,7 @@ Actor Function HealCaster(int i)
 EndFunction
 
 ; Opens a session for target and sends the start line (lead + heal map) right away. Returns its index.
-int Function HealOpen(Actor target, Actor caster, String lead)
+int Function HealOpen(Actor target, Actor caster, String lead, Bool send = True)
     Form c = caster
     if c == None
         c = self
@@ -1236,7 +1236,12 @@ int Function HealOpen(Actor target, Actor caster, String lead)
     StorageUtil.StringListAdd(self, KEY_HS_TEXT, "", true)
     StorageUtil.StringListAdd(self, KEY_HS_PEND, "", true)
     int i = StorageUtil.FormListCount(self, KEY_HS_TGT) - 1
-    HealSend("start", i, lead)
+    if send
+        HealSend("start", i, lead)
+    else
+        ; a group line already told it: "again" lines wait for the heal map to change
+        StorageUtil.StringListSet(self, KEY_HS_TEXT, i, Injury_Engine_Engine.HealMapText(target))
+    endif
     StartSync()
     return i
 EndFunction
@@ -1369,6 +1374,7 @@ Int Property HEAL_START = 0 AutoReadOnly
 Int Property HEAL_PAIN_GONE = 1 AutoReadOnly
 Int Property HEAL_FULL = 2 AutoReadOnly
 Int Property HEAL_STOPPED = 3 AutoReadOnly
+Int Property HEAL_SOURCE_FOOD = 5 AutoReadOnly ; SyncHealth source: food or ingredient (eaten by the healed actor, no caster)
 Int Property HEAL_SOURCE_NONE = 0 AutoReadOnly ; SyncHealth source: no healing source (natural healing)
 
 Float Property SYNC_INTERVAL = 0.2 AutoReadOnly
@@ -1389,11 +1395,101 @@ Function NarrateSyncCodes(int[] codes)
     endif
     Actor[] targets = Injury_Engine_Engine.SyncActors()
     Actor[] casters = Injury_Engine_Engine.SyncCasters()
+    int count = codes.Length
+    if targets.Length < count
+        count = targets.Length
+    endif
+    if casters.Length < count
+        count = casters.Length
+    endif
+    ; Heal starts of one cast (same caster and healing source, two or more targets) are one line naming everyone.
+    Bool[] done = Utility.CreateBoolArray(count)
     int i = 0
-    while i < codes.Length && i < targets.Length && i < casters.Length
-        NarrateSourceHeal(codes[i] / 10000, (codes[i] / 1000) % 10, codes[i] % 1000, casters[i], targets[i])
+    while i < count
+        int source = (codes[i] / 1000) % 10
+        if !done[i] && codes[i] / 10000 == HEAL_START && source != HEAL_SOURCE_NONE && source != HEAL_SOURCE_FOOD
+            int n = 1
+            int j = i + 1
+            while j < count
+                if !done[j] && codes[j] / 10000 == HEAL_START && (codes[j] / 1000) % 10 == source && casters[j] == casters[i] && targets[j] != None
+                    n += 1
+                endif
+                j += 1
+            endwhile
+            if n > 1
+                Form[] group = Utility.CreateFormArray(n)
+                group[0] = targets[i]
+                done[i] = True
+                n = 1
+                j = i + 1
+                while j < count
+                    if !done[j] && codes[j] / 10000 == HEAL_START && (codes[j] / 1000) % 10 == source && casters[j] == casters[i] && targets[j] != None
+                        group[n] = targets[j]
+                        n += 1
+                        done[j] = True
+                    endif
+                    j += 1
+                endwhile
+                NarrateHealGroup(casters[i], source, group)
+            endif
+        endif
         i += 1
     endwhile
+    i = 0
+    while i < count
+        if !done[i]
+            NarrateSourceHeal(codes[i] / 10000, (codes[i] / 1000) % 10, codes[i] % 1000, casters[i], targets[i])
+        endif
+        i += 1
+    endwhile
+EndFunction
+
+; One cast healed several actors: a single short-lived event and (gate open, in sight) a single DirectNarration
+; naming all of them, instead of one line per target that the reply gate would let only the first one through.
+; Each target still gets a silent heal session (HealTick) and the external HealStart event.
+Function NarrateHealGroup(Actor caster, int source, Form[] group)
+    String msg = Injury_Engine_Engine.SourceHealGroupText(source, caster, group)
+    Actor first = group[0] as Actor
+    if msg == "" || first == None
+        return
+    endif
+    Actor toward = None
+    if caster != first
+        toward = caster
+    endif
+    Trace("NarrateHealGroup", "source:" + source + " caster:" + NameOf(caster) + " targets:" + group.Length + ": " + msg)
+    heal_short_method = HealSyncSourceMethod(source)
+    RegisterInjuryShortEvent(msg, first, toward, "healing", heal_short_method, caster, first)
+    Bool playerInvolved = caster == Game.GetPlayer()
+    int k = 0
+    while k < group.Length
+        Actor t = group[k] as Actor
+        if t == Game.GetPlayer()
+            playerInvolved = True
+        endif
+        NotifyHealStart(caster, t, source)
+        int s = HealFind(t)
+        if s >= 0
+            StorageUtil.FloatListSet(self, KEY_HS_LAST, s, Utility.GetCurrentRealTime())
+            if caster != None
+                StorageUtil.FormListSet(self, KEY_HS_CASTER, s, caster)
+            endif
+        else
+            HealOpen(t, caster, "", False)
+        endif
+        k += 1
+    endwhile
+    if healing_mode == 2 || !DirectAllowed("healing") || !PairVisible(caster, first)
+        return
+    endif
+    if !ClaimNarration()
+        Verbose("NarrateHealGroup", "gate closed, the short-lived event carries it")
+        return
+    endif
+    if playerInvolved
+        SkyrimNetApi.PurgeDialogue(true)
+    endif
+    DirectNarrate(msg, first, toward, "heal", "start")
 EndFunction
 
 ; One drain at a time (sync_draining, like hits_draining): a call while one runs returns, the running drain takes

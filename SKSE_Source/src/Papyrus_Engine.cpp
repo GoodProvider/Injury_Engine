@@ -264,6 +264,17 @@ namespace
         return InjuryEngine::SourceHealText(kind, source, percent, caster, target);
     }
 
+    RE::BSFixedString SourceHealGroupText(RE::StaticFunctionTag*, std::int32_t source, RE::Actor* caster, std::vector<RE::TESForm*> targets)
+    {
+        std::vector<RE::Actor*> actors;
+        for (auto* form : targets) {
+            if (auto* actor = form ? form->As<RE::Actor>() : nullptr) {
+                actors.push_back(actor);
+            }
+        }
+        return InjuryEngine::SourceHealGroupText(source, caster, actors);
+    }
+
     RE::BSFixedString ActionText(RE::StaticFunctionTag*, RE::BSFixedString sourceId, RE::BSFixedString path, RE::Actor* speaker,
         RE::Actor* target, std::int32_t count)
     {
@@ -489,6 +500,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("LevelText", s, LevelText);
     a_vm->RegisterFunction("HealMapText", s, HealMapText);
     a_vm->RegisterFunction("SourceHealText", s, SourceHealText);
+    a_vm->RegisterFunction("SourceHealGroupText", s, SourceHealGroupText);
     a_vm->RegisterFunction("ActionText", s, ActionText);
     a_vm->RegisterFunction("SceneText", s, SceneText);
     a_vm->RegisterFunction("Text", s, Text);

@@ -135,6 +135,8 @@ String Function HealMapText(Actor victim) global native
 ; The feeling sentence of a hit level 0-3 (narration.hit.levels), rendered for the victim.
 String Function LevelText(String sourceId, Actor victim, Int level) global native
 String Function SourceHealText(Int kind, Int source, Int percent, Actor caster, Actor target) global native
+; One line for several targets of the same cast (session.json heal_group), empty for food. Targets: Actor or Form array.
+String Function SourceHealGroupText(Int source, Actor caster, Form[] targets) global native
 ; Renders the string at a dotted path ("narration.summary.text", "action.no_whip") with {speaker}, {target} and
 ; {times} (words for count, from narration.summary.times).
 ; Combined torture narration for parallel lists of pairs (an attacker that is not an Actor means none); phase start, again, or switch.
