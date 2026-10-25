@@ -5,6 +5,8 @@ Just below the narration section at the top we will now add
 a Injury Ranges section. It will have a set of slides
 that control the maximum level of damage a body part can get.
 
+This is for injury / real only, torture works as before. 
+
 | label | default | 
 | ------|---------|
 | Minium Damage for minor| minor | 25% | 

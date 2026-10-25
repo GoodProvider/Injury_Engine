@@ -168,6 +168,8 @@ namespace InjuryEngine
     std::string SourceHealText(int kind, int healingSource, int percent, RE::Actor* caster, RE::Actor* target);
     // One line for several targets healed by the same cast (heal_group in session.json); empty for food.
     std::string SourceHealGroupText(int healingSource, RE::Actor* caster, const std::vector<RE::Actor*>& targets);
+    // Form id of the spell / staff / potion of the actor's last heal start (0 none): heal starts group only on the same item.
+    RE::FormID HealItem(RE::Actor* actor);
     // Renders the string at `path` with {speaker}, {target} and {times} (words for count).
     // Combined torture narration for the pairs (parallel lists) of one phase: start, again, or switch.
     // Pairs are grouped by victim; same method / mixed methods and one or many attackers are worded from session.json.

@@ -94,6 +94,8 @@ Float Property torture_again_recent = 1.0 AutoReadOnly
 ; a reply (an audio line ended at least REPLY_MIN_DELAY after it, speech queue empty), or reply_timeout of silence.
 Float Property reply_timeout = 15.0 Auto Hidden
 Float Property REPLY_MIN_DELAY = 1.5 AutoReadOnly
+; A dead last-narration target opens the gate only after this long (the attacker's own reply may still be coming)
+Float Property DEAD_TARGET_GRACE = 3.0 AutoReadOnly
 Float Property last_direct_time = -1000.0 Auto Hidden
 ; Target of the last DirectNarration: once it is dead its reply never comes, so the gate opens (ClaimNarration)
 Actor Property last_direct_target = None Auto Hidden
@@ -186,7 +188,7 @@ Bool Function ClaimNarration()
         why = "replied"
     elseif since >= reply_timeout && (audio <= 0.0 || audio >= reply_timeout)
         why = "silence"
-    elseif last_direct_target != None && last_direct_target.IsDead()
+    elseif last_direct_target != None && last_direct_target.IsDead() && since >= DEAD_TARGET_GRACE
         why = "target dead" ; the narration asked a now dead actor to reply: no reply comes
     endif
     ; a closed gate is logged at most once a second (SceneTick / DeathTick retry it every 0.2 s)
@@ -234,7 +236,8 @@ Function NotifyTorture(Actor attacker, Actor victim, String source, Int hits, St
 EndFunction
 
 ; Mod event "Injury_Engine_HealStart": a healing source opened a heal session on target.
-; Args: Form caster (None when unknown), Form target, Int source (1 spell, 2 staff, 3 potion, HealSyncSourceMethod).
+; Args: Form caster (None when unknown), Form target, Int source (1 spell, 2 staff, 3 potion, 5 food, HealSyncSourceMethod).
+; Sent by NarrateSourceHeal, and by NarrateHealGroup once per target of a grouped cast.
 Function NotifyHealStart(Actor caster, Actor target, Int source) global
     if target == None
         return
@@ -1402,35 +1405,48 @@ Function NarrateSyncCodes(int[] codes)
     if casters.Length < count
         count = casters.Length
     endif
-    ; Heal starts of one cast (same caster and healing source, two or more targets) are one line naming everyone.
+    if count == 0
+        return
+    endif
+    ; Heal starts of one cast (same caster, healing source and item, two or more targets) are one line naming
+    ; everyone. No caster (potions, ability effects): never grouped, the casts are unrelated.
     Bool[] done = Utility.CreateBoolArray(count)
     int i = 0
     while i < count
         int source = (codes[i] / 1000) % 10
-        if !done[i] && codes[i] / 10000 == HEAL_START && source != HEAL_SOURCE_NONE && source != HEAL_SOURCE_FOOD
+        if !done[i] && casters[i] != None && targets[i] != None && codes[i] / 10000 == HEAL_START && source != HEAL_SOURCE_NONE && source != HEAL_SOURCE_FOOD
             int n = 1
             int j = i + 1
             while j < count
-                if !done[j] && codes[j] / 10000 == HEAL_START && (codes[j] / 1000) % 10 == source && casters[j] == casters[i] && targets[j] != None
+                if !done[j] && SameHealCast(codes, casters, targets, i, j)
                     n += 1
                 endif
                 j += 1
             endwhile
             if n > 1
                 Form[] group = Utility.CreateFormArray(n)
+                Bool[] member = Utility.CreateBoolArray(count)
                 group[0] = targets[i]
-                done[i] = True
+                member[i] = True
                 n = 1
                 j = i + 1
                 while j < count
-                    if !done[j] && codes[j] / 10000 == HEAL_START && (codes[j] / 1000) % 10 == source && casters[j] == casters[i] && targets[j] != None
+                    if !done[j] && SameHealCast(codes, casters, targets, i, j)
                         group[n] = targets[j]
+                        member[j] = True
                         n += 1
-                        done[j] = True
                     endif
                     j += 1
                 endwhile
-                NarrateHealGroup(casters[i], source, group)
+                if NarrateHealGroup(casters[i], source, group)
+                    j = 0
+                    while j < count
+                        if member[j]
+                            done[j] = True
+                        endif
+                        j += 1
+                    endwhile
+                endif
             endif
         endif
         i += 1
@@ -1444,14 +1460,21 @@ Function NarrateSyncCodes(int[] codes)
     endwhile
 EndFunction
 
+; True when heal start j belongs to the same cast as heal start i (same caster, healing source and item).
+Bool Function SameHealCast(int[] codes, Actor[] casters, Actor[] targets, int i, int j)
+    return codes[j] / 10000 == HEAL_START && (codes[j] / 1000) % 10 == (codes[i] / 1000) % 10 && casters[j] == casters[i] && targets[j] != None \
+        && Injury_Engine_Engine.HealItem(targets[j]) == Injury_Engine_Engine.HealItem(targets[i])
+EndFunction
+
 ; One cast healed several actors: a single short-lived event and (gate open, in sight) a single DirectNarration
 ; naming all of them, instead of one line per target that the reply gate would let only the first one through.
 ; Each target still gets a silent heal session (HealTick) and the external HealStart event.
-Function NarrateHealGroup(Actor caster, int source, Form[] group)
+; Returns False (nothing done) when there is no group text: the caller then narrates each target on its own.
+Bool Function NarrateHealGroup(Actor caster, int source, Form[] group)
     String msg = Injury_Engine_Engine.SourceHealGroupText(source, caster, group)
     Actor first = group[0] as Actor
     if msg == "" || first == None
-        return
+        return False
     endif
     Actor toward = None
     if caster != first
@@ -1480,16 +1503,22 @@ Function NarrateHealGroup(Actor caster, int source, Form[] group)
         k += 1
     endwhile
     if healing_mode == 2 || !DirectAllowed("healing") || !PairVisible(caster, first)
-        return
+        return True
     endif
     if !ClaimNarration()
-        Verbose("NarrateHealGroup", "gate closed, the short-lived event carries it")
-        return
+        ; like HealSend: the group line waits in the first target's session for HealTick (the event is out already)
+        int s = HealFind(first)
+        if s >= 0
+            StorageUtil.StringListSet(self, KEY_HS_PEND, s, msg)
+        endif
+        Verbose("NarrateHealGroup", "gate closed, the group line waits for a reply")
+        return True
     endif
     if playerInvolved
         SkyrimNetApi.PurgeDialogue(true)
     endif
     DirectNarrate(msg, first, toward, "heal", "start")
+    return True
 EndFunction
 
 ; One drain at a time (sync_draining, like hits_draining): a call while one runs returns, the running drain takes

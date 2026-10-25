@@ -137,6 +137,8 @@ String Function LevelText(String sourceId, Actor victim, Int level) global nativ
 String Function SourceHealText(Int kind, Int source, Int percent, Actor caster, Actor target) global native
 ; One line for several targets of the same cast (session.json heal_group), empty for food. Targets: Actor or Form array.
 String Function SourceHealGroupText(Int source, Actor caster, Form[] targets) global native
+; The spell / staff / potion of the actor's last heal start (None if unknown); heal starts group only on the same item.
+Form Function HealItem(Actor akActor) global native
 ; Renders the string at a dotted path ("narration.summary.text", "action.no_whip") with {speaker}, {target} and
 ; {times} (words for count, from narration.summary.times).
 ; Combined torture narration for parallel lists of pairs (an attacker that is not an Actor means none); phase start, again, or switch.

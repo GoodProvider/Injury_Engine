@@ -8,6 +8,8 @@
 
 ### Healing
 - Food and ingredients that restore health are their own healing source (`kSourceFood` = 5): the heal start line is now `session.json` `heal_food` ("Amy eats the Apple Pie and feels better.", "drinks" for food with the potion drinking sound) instead of the magic "warm yellow light" text, and the session has no caster, so the line no longer reads as someone else (the player) healing the eater. Pain-gone / fully-healed lines use the `.none` wording; no stopped line.
+- Ambient healing no longer narrates: a spell an unhurt NPC casts on itself (regen abilities from other mods re-applied every few seconds) opens no heal session, and any unhurt actor gets at most one heal start per 60 s. Healing a wounded actor, the player's own cast and food are unchanged. The `heal start` log line now names the item.
+- Group heal lines are more careful: "no wounds to mend" is judged at heal start (an actor healed within the hold no longer reads as unhurt); only starts of the same caster and the same spell / staff / potion group (no caster: never); a closed reply gate holds the group line instead of dropping it, and a missing `heal_group` text falls back to one line per target.
 
 ## [0.1.4](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.4) — since [0.1.3](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.3)
 

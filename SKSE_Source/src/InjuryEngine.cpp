@@ -138,8 +138,17 @@ namespace InjuryEngine
         // Last food (or ingredient) that healed each actor, for the food heal line. Kept when the actor is forgotten
         // (the fully healed line comes after). Not saved.
         std::unordered_map<RE::FormID, RE::FormID> g_healFood;
-        // Last spell / staff / potion that started a heal session on each actor, for the group heal line. Not saved.
-        std::unordered_map<RE::FormID, RE::FormID> g_healItem;
+        // What the last heal start on each actor looked like (item, whether the actor was unhurt), for the group heal
+        // line: that line is worded after kHealGroupWindow, when the actor may already be healed or forgotten, so
+        // entries are not dropped with the actor but pruned by age in Seen. Not saved.
+        struct HealStart
+        {
+            RE::FormID item = 0;
+            bool unhurt = false;
+            double time = 0.0;  // real seconds
+        };
+        constexpr double kHealStartKeep = 30.0;
+        std::unordered_map<RE::FormID, HealStart> g_healStart;
         // Heal starts of one cast arrive within a frame or two: they are held this long (real seconds) so the drain
         // hands them over together and Papyrus can narrate them as one line.
         constexpr double kHealGroupWindow = 0.35;
@@ -1008,8 +1017,9 @@ namespace InjuryEngine
             healer.startPoints = points;
             healer.lastSeen = now;
             g_healers[id] = healer;
-            if (item && source != kSourceFood) {
-                g_healItem[id] = item->GetFormID();
+            if (source != kSourceFood) {
+                std::erase_if(g_healStart, [now](const auto& kv) { return now - kv.second.time > kHealStartKeep; });
+                g_healStart[id] = { item ? item->GetFormID() : 0, points <= 0, now };
             }
             PushEvent(id, kHealStart, &healer, 0);
             SKSE::log::info("heal start {:08X} source:{} caster:{:08X} item:{:08X} {} points:{}", id, healer.source,
@@ -2283,6 +2293,16 @@ namespace InjuryEngine
         return ResolveActors(g_syncCasters);
     }
 
+    RE::FormID HealItem(RE::Actor* actor)
+    {
+        if (!actor) {
+            return 0;
+        }
+        std::lock_guard lock(g_lock);
+        const auto it = g_healStart.find(actor->GetFormID());
+        return it != g_healStart.end() ? it->second.item : 0;
+    }
+
     int TrackedCount()
     {
         std::lock_guard lock(g_lock);
@@ -2608,9 +2628,6 @@ namespace InjuryEngine
         }
         g_sexLabFaction = data->LookupForm<RE::TESFaction>(0xE50F, "SexLab.esm");
         g_ostimFaction = data->LookupForm<RE::TESFaction>(0xECA, "OStim.esp");
-        if (!g_ostimFaction) {
-            g_ostimFaction = RE::TESForm::LookupByEditorID<RE::TESFaction>("OStimActorCountFaction");
-        }
         SKSE::log::info("InjuryEngine: scene factions SexLab:{} OStim:{}", g_sexLabFaction ? "found" : "missing",
             g_ostimFaction ? "found" : "missing");
     }
@@ -2796,22 +2813,27 @@ namespace InjuryEngine
         if (list.empty() || healingSource == kSourceFood) {
             return {};
         }
+        // "Unhurt" is what each target was at its heal start (g_healStart), not now: one may be healed by the time
+        // this line is worded.
         bool unhurt = true;
         int conf = -1;
         RE::FormID itemId = 0;
         {
             std::lock_guard lock(g_lock);
             for (auto* t : list) {
-                const auto it = g_actors.find(t->GetFormID());
-                if (it != g_actors.end() && TotalPoints(it->second) > 0) {
-                    unhurt = false;
-                    if (conf < 0) {
-                        conf = HealEventsSource(&it->second);
+                const auto f = g_healStart.find(t->GetFormID());
+                if (f != g_healStart.end()) {
+                    unhurt = unhurt && f->second.unhurt;
+                    if (!itemId) {
+                        itemId = f->second.item;
                     }
+                } else {
+                    const auto it = g_actors.find(t->GetFormID());
+                    unhurt = unhurt && (it == g_actors.end() || TotalPoints(it->second) <= 0);
                 }
-                if (!itemId) {
-                    if (const auto f = g_healItem.find(t->GetFormID()); f != g_healItem.end()) {
-                        itemId = f->second;
+                if (conf < 0) {
+                    if (const auto it = g_actors.find(t->GetFormID()); it != g_actors.end() && TotalPoints(it->second) > 0) {
+                        conf = HealEventsSource(&it->second);
                     }
                 }
             }
@@ -3270,7 +3292,7 @@ namespace InjuryEngine
         g_actors.clear();
         g_healers.clear();
         g_healFood.clear();
-        g_healItem.clear();
+        g_healStart.clear();
         g_unhurtHealAt.clear();
         g_pained.clear();
         g_regenBank.clear();
@@ -3318,7 +3340,7 @@ namespace InjuryEngine
         g_uncaused.clear();
         g_healers.clear();
         g_healFood.clear();
-        g_healItem.clear();
+        g_healStart.clear();
         g_unhurtHealAt.clear();
         g_pained.clear();
         g_regenBank.clear();
