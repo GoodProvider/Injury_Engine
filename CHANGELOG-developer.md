@@ -1,3 +1,13 @@
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.5
+
+Healing and integration release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
+
+- **Torture mod event.** `Injury_Engine_Torture` (`Form attacker, Form victim, String source, Int hits, String cause`) is sent for every torture batch that lands, narrated or silent; SkyrimNet_DOM counts it as a punishment.
+- **Heal start mod event.** `Injury_Engine_HealStart` (`Form caster, Form target, Int source`) is sent once when a heal session opens (source 1 spell / 2 staff / 3 potion / 4 other magic / 5 food).
+- **Food is its own healing source.** `kSourceFood` = 5: eating or drinking reads "eats the Apple Pie and feels better", with no caster.
+- **Ambient healing is quiet.** Regen abilities re-cast by unhurt NPCs open no heal session; an unhurt actor gets at most one heal start per 60 s.
+- **Group heal lines.** One cast healing several actors is narrated as one line; a closed reply gate holds it, and missing `heal_group` text falls back to one line per target.
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.4
 
 Injury bands release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.

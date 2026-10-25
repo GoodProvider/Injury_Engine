@@ -1,8 +1,8 @@
 #include <winver.h>
 
 1 VERSIONINFO
-FILEVERSION 0,1,4,0
-PRODUCTVERSION 0,1,4,0
+FILEVERSION 0,1,5,0
+PRODUCTVERSION 0,1,5,0
 FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
 	FILEFLAGS 0x1L
@@ -18,11 +18,11 @@ BEGIN
 		BLOCK "040904b0"
 		BEGIN
 			VALUE "FileDescription", "Injury_Engine"
-			VALUE "FileVersion", "0.1.4.0"
+			VALUE "FileVersion", "0.1.5.0"
 			VALUE "InternalName", "Injury_Engine"
 			VALUE "LegalCopyright", "MIT License"
 			VALUE "ProductName", "Injury_Engine"
-			VALUE "ProductVersion", "0.1.4.0"
+			VALUE "ProductVersion", "0.1.5.0"
 		END
 	END
 	BLOCK "VarFileInfo"

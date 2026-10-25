@@ -1,3 +1,13 @@
+## 0.1.5
+
+### Healing
+- Eating or drinking a healing item is narrated as eating or drinking, not as magic.
+- NPCs with self-healing abilities no longer narrate healing every few seconds.
+- One spell healing several people is narrated as a single line.
+
+### Integration
+- New mod events for torture and for the start of healing, for other mods to use.
+
 ## 0.1.4
 
 ### Wounds

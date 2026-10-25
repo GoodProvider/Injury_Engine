@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.1.5](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.5) — since [0.1.4](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.4)
 
 ### Integration
 - New mod event `Injury_Engine_Torture` (`Form attacker, Form victim, String source, Int hits, String cause`). It is sent for every torture batch that lands: hooked hits, lashes, `Torture_Target`, and `External_*`, narrated or silent (including `External_TortureText`). Attacker is None when there is no attacker. SkyrimNet_DOM uses it to count torture as a DOM punishment.
