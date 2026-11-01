@@ -83,6 +83,9 @@ namespace InjuryConfig
         std::string ignoreFile;
         std::uint32_t ignoreId = 0;
         bool hasIgnore = false;
+        std::string weaponFile;  // one weapon form (another mod's), this source in or out of combat
+        std::uint32_t weaponId = 0;
+        bool hasWeapon = false;
         bool unarmed = false;
         int npc = -1;
         int combat = -1;

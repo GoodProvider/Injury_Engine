@@ -56,8 +56,9 @@ namespace InjuryEngine
         // Torture model: torture points per (torture type, part), 0 .. part max. Damage raises them, healing
         // lowers them; the points give the stage (light / medium / severe) and, inverted, the heal level
         // (high / mid / low). A part's torture is the maximum of its types: that alone holds health down and
-        // shows on the overlay. Healing a part lowers every type on it by one; real damage replacing torture
-        // lowers the maximum by one and clamps the other types to it. A type at 0 on every part is cleared.
+        // shows on the overlay. Healing a part and real damage replacing torture both lower the maximum by one and
+        // clamp every type to it, so a heal costs the health the torture took, mixed types included. A type at 0 on
+        // every part is cleared.
         struct Cell
         {
             bool hit = false;
@@ -158,6 +159,7 @@ namespace InjuryEngine
         constexpr double kUnhurtHealGap = 60.0;
         std::unordered_map<RE::FormID, bool> g_pained;      // had damage at the last sync
         std::unordered_map<RE::FormID, float> g_regenBank;  // regen health not yet a whole point
+        std::unordered_map<RE::FormID, float> g_healCredit;  // health a healing source restored, not yet a whole point (kept after the session, never taken back as regen)
         // Hooked torture damage (spell ticks) not yet a hit, per actor and source. Kept when the actor is
         // forgotten, so small ticks on an unwounded actor still add up.
         std::unordered_map<RE::FormID, std::array<float, kMaxSources>> g_tortureCarry;
@@ -559,23 +561,27 @@ namespace InjuryEngine
 
         // ---- torture model -----------------------------------------------------------------------------
 
-        // Lowers every open type on `part` by `points` (healing: game time, a healing source).
+        // Clamps every type on `part` to `top`.
+        void ClampPartTorture(State& st, int part, int top)
+        {
+            for (auto& source : st.torture) {
+                source[part].deficit = std::min(source[part].deficit, top);
+            }
+        }
+
+        // Lowers the part's maximum by `points` and clamps every type to it (healing: game time, a healing source).
         // Returns true if anything changed.
         bool HealTortureCells(State& st, int part, int points)
         {
-            bool changed = false;
-            for (auto& source : st.torture) {
-                Cell& c = source[part];
-                if (!c.hit || c.deficit <= 0) {
-                    continue;
-                }
-                c.deficit = std::max(0, c.deficit - points);
-                changed = true;
+            const int top = PartTorture(st, part);
+            if (top <= 0) {
+                return false;
             }
-            return changed;
+            ClampPartTorture(st, part, std::max(0, top - points));
+            return true;
         }
 
-        // Spend elapsed heal points per part: every type on the part drops by the same amount.
+        // Spend elapsed heal points per part: the part's maximum drops by that amount.
         void Advance(State& st, double now)
         {
             const double step = g_hoursPerPoint;
@@ -594,7 +600,7 @@ namespace InjuryEngine
             }
         }
 
-        // One torture point healed on a random part that still needs it (every type there drops by one).
+        // One torture point healed on a random part that still needs it (its maximum drops by one).
         // False when nothing is left. only >= 0: that part alone.
         bool HealTorturePoint(State& st, double now, int only = -1)
         {
@@ -629,9 +635,7 @@ namespace InjuryEngine
                 return false;
             }
             ++st.replaced;
-            for (auto& source : st.torture) {
-                source[part].deficit = std::min(source[part].deficit, top - 1);
-            }
+            ClampPartTorture(st, part, top - 1);
             return true;
         }
 
@@ -888,6 +892,7 @@ namespace InjuryEngine
             g_unhurtHealAt.erase(id);
             g_pained.erase(id);
             g_regenBank.erase(id);
+            g_healCredit.erase(id);
             g_lastScan.erase(id);
             g_lastTorture.erase(id);
             g_realCarry.erase(id);
@@ -1072,7 +1077,9 @@ namespace InjuryEngine
 
         // Health above the wounded level is healing: turn it into points on random parts (torture and real alike).
         // A healing source, or an actor without torture wounds, converts all of it; natural regen with torture wounds
-        // only g_regenRate percent, the rest is taken back.
+        // only g_regenRate percent, the rest is taken back. Healing-source health left over (less than a point) stays
+        // as g_healCredit: it converts at full value later and is never taken back, so healing costs what it does in
+        // the base game.
         void ConvertHealth(RE::Actor* actor, RE::FormID id, State& st, double now, bool sourceActive)
         {
             auto* av = actor->AsActorValueOwner();
@@ -1084,14 +1091,21 @@ namespace InjuryEngine
             const float ratioR = RatioReal(maxHealth);
             const float excess = av->GetActorValue(RE::ActorValue::kHealth) - WoundedLevel(st, maxHealth);
             if (excess <= 0.0f) {
+                g_healCredit.erase(id);
                 return;
             }
             const bool fullSpeed = sourceActive || !HasTorture(st);
             float budget = excess;
+            float credit = 0.0f;
+            float regen = 0.0f;
             if (!fullSpeed) {
+                if (const auto it = g_healCredit.find(id); it != g_healCredit.end()) {
+                    credit = std::min(it->second, excess);
+                }
+                regen = excess - credit;
                 float& bank = g_regenBank[id];
-                bank += excess * g_regenRate / 100.0f;
-                budget = bank;
+                bank += regen * g_regenRate / 100.0f;
+                budget = credit + bank;
             }
             float spent = 0.0f;
             while (true) {
@@ -1100,7 +1114,11 @@ namespace InjuryEngine
                 if (!torture && !real) {
                     break;
                 }
-                const bool pickTorture = torture && (!real || RandomIndex(2) == 0);
+                // a coin between the open kinds; the other one when the pick costs more than what is left
+                bool pickTorture = torture && (!real || RandomIndex(2) == 0);
+                if (budget - spent < (pickTorture ? ratioT : ratioR) && (pickTorture ? real : torture)) {
+                    pickTorture = !pickTorture;
+                }
                 const float cost = pickTorture ? ratioT : ratioR;
                 if (budget - spent < cost) {
                     break;
@@ -1111,15 +1129,28 @@ namespace InjuryEngine
                 spent += cost;
             }
             if (spent > 0.0f) {
-                SKSE::log::debug("convert {:08X} excess:{:.2f} budget:{:.2f} spent:{:.2f} source:{} full_speed:{} points left:{}", id, excess,
-                    budget, spent, sourceActive, fullSpeed, TotalPoints(st));
+                SKSE::log::debug("convert {:08X} excess:{:.2f} budget:{:.2f} credit:{:.2f} spent:{:.2f} source:{} full_speed:{} points left:{}", id,
+                    excess, budget, credit, spent, sourceActive, fullSpeed, TotalPoints(st));
             }
-            if (!fullSpeed) {
-                g_regenBank[id] = std::max(0.0f, budget - spent);
-                if (const float extra = excess - spent; extra > 0.0f) {
-                    InternalScope scope;
-                    av->DamageActorValue(RE::ActorValue::kHealth, extra);
+            if (fullSpeed) {
+                if (sourceActive && budget - spent > 0.0f) {
+                    g_healCredit[id] = budget - spent;
+                } else {
+                    g_healCredit.erase(id);
                 }
+                return;
+            }
+            // credit is spent first; only regen beyond it is taken back
+            const float bankSpent = std::max(0.0f, spent - credit);
+            if (const float left = credit - spent; left > 0.0f) {
+                g_healCredit[id] = left;
+            } else {
+                g_healCredit.erase(id);
+            }
+            g_regenBank[id] = std::max(0.0f, budget - credit - bankSpent);
+            if (const float extra = regen - bankSpent; extra > 0.0f) {
+                InternalScope scope;
+                av->DamageActorValue(RE::ActorValue::kHealth, extra);
             }
         }
 
@@ -3296,6 +3327,7 @@ namespace InjuryEngine
         g_unhurtHealAt.clear();
         g_pained.clear();
         g_regenBank.clear();
+        g_healCredit.clear();
         g_tortureCarry.clear();
         g_realCarry.clear();
         g_tortureBatchLast.clear();
@@ -3344,6 +3376,7 @@ namespace InjuryEngine
         g_unhurtHealAt.clear();
         g_pained.clear();
         g_regenBank.clear();
+        g_healCredit.clear();
         g_tortureCarry.clear();
         g_realCarry.clear();
         g_tortureBatchLast.clear();

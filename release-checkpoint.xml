@@ -5,10 +5,10 @@
     <project>Injury_Engine</project>
     <summary>Per-body-part injury tracking for SkyrimNet: real damage by type, torture damage and a padded whip, with healing, narration, prompts and an overlay.</summary>
     <repository_root>c:\Skyrim\dev\mods\Injury_Engine</repository_root>
-    <updated>2026-10-24</updated>
-    <base_tag>0.1.4</base_tag>
-    <next_version>0.1.5</next_version>
-    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.5 (check-version.py); changelogs cover 0.1.5 (food healing source, ambient / group heal fixes, Injury_Engine_Torture and Injury_Engine_HealStart mod events); 0.1.4 is tagged; no 0.1.5 tag; origin still SkyrimNet_Whipped</version_status>
+    <updated>2026-10-26</updated>
+    <base_tag>0.1.5</base_tag>
+    <next_version>0.1.6</next_version>
+    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.6 (check-version.py); changelogs cover 0.1.6 (in-combat punches real bludgeoning, punch_combat_health removed, DOMSlap slapping torture via weapon_file / weapon_id, healing costs vanilla health / g_healCredit); 0.1.5 committed (c16e0e2) but not tagged; 0.1.6 built by make release, not committed or tagged; origin still SkyrimNet_Whipped</version_status>
     <related_artifacts>
       <artifact role="release rules">release-guide.md</artifact>
       <artifact role="release skill">.claude/skills/release/SKILL.md</artifact>

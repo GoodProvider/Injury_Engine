@@ -1,6 +1,6 @@
 plugin:
   name: "Injury_Engine"
-  version: "0.1.5"
+  version: "0.1.6"
   description: "Torture damage for SkyrimNet: whipping, pinching, slapping, pulling, punching and companion fire / frost / shock, with wound narration and a Torture_Target action"
   icon: "🪢"
 
@@ -208,13 +208,6 @@ schema:
       path: "injury_engine.body.include_sexual_parts"
       type: "bool"
       description: "On: lashes and real damage can also wound the nipples, the pussy (women) or penis (men), the lips and the ass hole. These parts are small: they are hit less often and hold less damage than the face, back, arms and legs, but they are sensitive, so they still go through light, medium and severe wounds. Their wounds are described to the LLM like any other part. Turning it off stops new wounds on them and hides them from the LLM and the overlay; wounds already there keep healing."
-      defaultValue: false
-      category: "Body"
-
-    - name: "Punching during combat is health not torture"
-      path: "injury_engine.body.punch_combat_health"
-      type: "bool"
-      description: "Off: bare-fist punches by people are torture in and out of combat: they hold health down but cannot kill. On: punches thrown while the attacker is in combat are real bludgeoning damage and can kill."
       defaultValue: false
       category: "Body"
 

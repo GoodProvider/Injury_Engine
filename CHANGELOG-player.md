@@ -1,3 +1,18 @@
+## 0.1.6
+
+### Combat
+- Punches in combat are always real damage: mages out of magicka no longer cause torture damage.
+- In combat, only the torture spells and the padded whip are torture.
+- Removed the setting "Punching during combat is health not torture".
+- Diary of Mine's "Slap with hand" is now slap torture in or out of combat, not a sword cut.
+
+### Healing
+- Healing costs as much as in the base game; mixed wounds on one body part heal from the worst down.
+- Leftover healing is no longer taken back after the spell ends.
+
+### SkyrimNet_DOM
+- Added support for SkyrimNet_DOM 0.2.0.
+
 ## 0.1.5
 
 ### Healing

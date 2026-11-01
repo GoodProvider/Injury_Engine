@@ -347,11 +347,6 @@ namespace
         Overlay::SetEnabled(enabled);
     }
 
-    void SetPunchCombatHealth(RE::StaticFunctionTag*, bool enabled)
-    {
-        Classifier::SetPunchCombatHealth(enabled);
-    }
-
     void SetTortureBleedout(RE::StaticFunctionTag*, bool enabled)
     {
         InjuryEngine::SetTortureBleedout(enabled);
@@ -519,7 +514,6 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("SetInjuryRanges", s, SetInjuryRanges);
     a_vm->RegisterFunction("SetOverlayEnabled", s, SetOverlayEnabled);
     a_vm->RegisterFunction("SetIncludeSexualParts", s, SetIncludeSexualParts);
-    a_vm->RegisterFunction("SetPunchCombatHealth", s, SetPunchCombatHealth);
     a_vm->RegisterFunction("SetTortureBleedout", s, SetTortureBleedout);
     a_vm->RegisterFunction("SetVerboseLogging", s, SetVerboseLogging);
     a_vm->RegisterFunction("Forget", s, Forget);

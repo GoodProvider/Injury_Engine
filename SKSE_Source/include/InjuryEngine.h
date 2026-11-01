@@ -13,7 +13,7 @@
 //           up with damage and down with healing (game time, healing sources). A part counts only its largest
 //           type: its points give the torture stage (light / medium / severe) and, inverted, the heal level
 //           (high / mid / low). Wounds hold health down by the sum of the part maxima * RatioTorture, never
-//           below the floor. Healing a part lowers every type on it by one.
+//           below the floor. Healing a part lowers its maximum by one and clamps every type to it.
 //   health  Real damage (slashing, freezing, ...): the health the attack takes becomes damage points
 //           (100% of max health = every part at damage_max), tagged with the classified source.
 // Real damage first replaces torture points (the hit does not lower health by that part; the part's maximum
@@ -70,7 +70,7 @@ namespace InjuryEngine
     std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points);
 
     // A caller's heal (spell, potion): `health` becomes torture points healed on `part` first (-1: random parts),
-    // then any part (each point lowers every type on its part); health rises by the points healed.
+    // then any part (each point lowers its part's maximum and clamps every type to it); health rises by the points healed.
     // Returns points healed, 0 when nothing was open, -1 bad args.
     std::int32_t HealPart(RE::Actor* actor, int part, float health);
 

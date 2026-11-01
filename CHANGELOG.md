@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.6](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6) — since [0.1.5](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.5)
+
+### Combat
+- Unarmed hits by an attacker in combat are always real `bludgeoning` (`Classifier::UnarmedMatches`). Before, the out-of-combat `punching` rule also matched in combat unless `injury_engine.body.punch_combat_health` was on (off by default), so vanilla mages out of magicka punching the player caused torture damage, and healing made health jump. The setting and the native `SetPunchCombatHealth` are removed. Torture spells and the padded whip stay torture in combat. A `Start_Fighting` brawl is now real damage.
+- Diary of Mine's "Slap with hand" (`DOMSlap`, DiaryOfMine.esm 0x404724) is `slapping` torture in or out of combat. It is a OneHandSword, so before it read as real `slashing`. New classify rule keys `weapon_file` / `weapon_id` name one weapon form; `MatchWeapon` checks them before the weapon type. A torture weapon also counts in `IsTortureAttacker` (no combat from the hit) and in the hit sink's calm. A plugin that is not loaded leaves the rule inactive (info line).
+
+### Healing
+- Healing costs the health the torture took, as in the base game. Healing a part lowers its torture maximum by one and clamps every type to it (the same rule as real damage replacing torture), so mixed torture types on one part heal from the worst down instead of every type dropping by one. `ConvertHealth` tries the other point kind (torture / real) before giving up on a budget. Healing-source health left over below a whole point is kept per actor in `g_healCredit` (converted at full value later, cleared on load / new game) instead of being taken back as regen after the session ends.
+
 ## [0.1.5](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.5) — since [0.1.4](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.4)
 
 ### Integration

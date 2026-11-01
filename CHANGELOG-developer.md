@@ -1,3 +1,11 @@
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6
+
+Combat and healing fix release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.
+
+- **No torture punches in combat.** `UnarmedMatches` no longer lets the out-of-combat `punching` rule match in combat, so in-combat fists (mages out of magicka) fall to `bludgeoning`. Setting `injury_engine.body.punch_combat_health` and native `SetPunchCombatHealth` removed. Torture spells and the padded whip are unchanged.
+- **DOM slap is slap torture.** New classify rule keys `weapon_file` / `weapon_id` (one weapon form, in or out of combat, before its weapon type). `slapping.json` names DiaryOfMine.esm `DOMSlap` 0x404724, which was a OneHandSword and read as `slashing`. Its hits become torture points (`ProcessHitData`), start no combat (`IsTortureAttacker`) and are calmed (hit sink).
+- **Healing costs vanilla health.** Healing lowers a part's torture maximum and clamps every type to it (like real damage replacing torture); `ConvertHealth` tries the other kind (torture / real point) before giving up on a budget, and healing-source health below a point is kept as `g_healCredit` instead of being taken back as regen once the session ends.
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.5
 
 Healing and integration release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.

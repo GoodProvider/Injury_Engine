@@ -8,6 +8,9 @@
     "medium": "#e0508f",
     "severe": "#8c1f52"
   },
+  "classify": [
+    { "priority": 100, "weapon_file": "DiaryOfMine.esm", "weapon_id": "0x404724" }
+  ],
   "damage_max": 20,
   "thresholds": {
     "medium": 4,

@@ -117,6 +117,9 @@ classify           (optional) how incoming damage picks this source. Highest `pr
                    resist           ResistFire, ResistFrost or ResistShock (health spell damage)
                    effect_file / effect_id   this exact magic effect is the torture spell (local form id, hex string)
                    ignore_weapon_file / ignore_weapon_id   this weapon is not injury damage (the padded whip)
+                   weapon_file / weapon_id   this exact weapon is this source, in or out of combat, before its weapon
+                                    type (slapping: DiaryOfMine.esm 0x404724 "Slap with hand", a OneHandSword); a
+                                    plugin that is not loaded leaves the rule inactive
                    unarmed          true: no weapon, or the fist weapon. npc / combat are true, false, or omitted (either)
                    falling          true: landing damage (no hit, no attacker, still falling)
                    drowning         true: damage with no hit and no attacker while under water (engine underwater

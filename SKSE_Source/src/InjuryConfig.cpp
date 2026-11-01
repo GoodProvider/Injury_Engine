@@ -82,6 +82,9 @@ namespace InjuryConfig
                     r.ignoreFile = rule.value("ignore_weapon_file", "");
                     r.ignoreId = FormIdOf(rule, "ignore_weapon_id");
                     r.hasIgnore = r.ignoreId != 0 && !r.ignoreFile.empty();
+                    r.weaponFile = rule.value("weapon_file", "");
+                    r.weaponId = FormIdOf(rule, "weapon_id");
+                    r.hasWeapon = r.weaponId != 0 && !r.weaponFile.empty();
                     r.unarmed = rule.value("unarmed", false);
                     r.npc = TriBool(rule, "npc");
                     r.combat = TriBool(rule, "combat");

@@ -75,13 +75,13 @@ namespace Classifier
         // victim -> last whip lash, for the kIgnoreFriendlyHits flags SuppressFriendHits set (own lock: the fight
         // reaction hook runs inside the engine's hit handling)
         std::mutex g_friendLock;
-        std::atomic<bool> g_punchCombatHealth{ false };
         std::unordered_map<RE::FormID, double> g_friendFlag;
         // Resolved once in Init (the rules do not change after kDataLoaded and their vector is not touched again):
         // classify rule -> runtime MGEF form id (ESL light masters need explicit resolution), and the ignore weapons.
         // The damage hooks compare ids; a by-name LookupForm walks the whole file list.
         std::unordered_map<const InjuryConfig::ClassifyRule*, RE::FormID> g_ruleEffect;
         std::vector<RE::FormID> g_ignoreWeapons;
+        std::vector<std::pair<RE::FormID, int>> g_ruleWeapons;  // weapon_file / weapon_id rules: weapon -> source
         std::atomic<bool> g_releaseTimer{ false };  // the friend-hit release thread is running
 
         double NowSeconds()
@@ -172,7 +172,17 @@ namespace Classifier
         {
             g_ruleEffect.clear();
             g_ignoreWeapons.clear();
+            g_ruleWeapons.clear();
             for (const auto& rule : InjuryConfig::ClassifyRules()) {
+                if (rule.hasWeapon) {
+                    // usually another mod's weapon (DOM's slap): not installed is fine
+                    if (const RE::FormID id = ResolveClassifyEffectForm(rule.weaponFile, rule.weaponId); id) {
+                        g_ruleWeapons.emplace_back(id, rule.source);
+                        SKSE::log::info("Classifier: weapon {} 0x{:X} -> {:08X} ({})", rule.weaponFile, rule.weaponId, id, IdOf(rule.source));
+                    } else {
+                        SKSE::log::info("Classifier: weapon {} 0x{:X} not loaded, rule inactive", rule.weaponFile, rule.weaponId);
+                    }
+                }
                 if (rule.hasIgnore) {
                     if (const RE::FormID id = ResolveClassifyEffectForm(rule.ignoreFile, rule.ignoreId); id) {
                         if (std::ranges::find(g_ignoreWeapons, id) == g_ignoreWeapons.end()) {
@@ -268,12 +278,10 @@ namespace Classifier
             if (rule.combat == 1 && !combat) {
                 return false;
             }
+            // In combat a punch is always real damage (a mage out of magicka fights with fists): only the torture
+            // spells and the padded whip stay torture there.
             if (rule.combat == 0 && combat) {
-                // Setting injury_engine.body.punch_combat_health off: torture punches stay torture in combat.
-                const auto* conf = g_punchCombatHealth.load() ? nullptr : InjuryConfig::Find(rule.source);
-                if (!conf || !conf->IsTorture()) {
-                    return false;
-                }
+                return false;
             }
             return true;
         }
@@ -303,10 +311,31 @@ namespace Classifier
             return id && std::ranges::find(g_ignoreWeapons, id) != g_ignoreWeapons.end();
         }
 
+        // Source of a weapon_file / weapon_id rule naming this weapon, else -2.
+        int WeaponRuleSource(RE::FormID id)
+        {
+            for (const auto& [form, source] : g_ruleWeapons) {
+                if (form == id) {
+                    return source;
+                }
+            }
+            return -2;
+        }
+
+        bool IsTortureWeaponId(RE::FormID id)
+        {
+            const int source = id ? WeaponRuleSource(id) : -2;
+            return source >= 0 && InjuryConfig::IsTorture(source);
+        }
+
         Match MatchWeapon(const RE::TESObjectWEAP* weapon, RE::Actor* attacker)
         {
             if (IsIgnoredId(weapon->GetFormID())) {
                 return { -1, false };
+            }
+            // a named weapon (DOM's slap -> slapping) holds in or out of combat
+            if (const int source = WeaponRuleSource(weapon->GetFormID()); source >= 0) {
+                return { source, false };
             }
             // A fist weapon is an unarmed hit when an unarmed rule claims this attacker. A mace stays a weapon rule.
             if (weapon->GetWeaponType() == RE::WEAPON_TYPE::kHandToHandMelee) {
@@ -636,10 +665,13 @@ namespace Classifier
                         }
                     }
                     const bool whip = torture < 0 && IsIgnoredWeapon(event->source);
-                    SKSE::log::debug("hit event target:{:08X} source:{:08X} cause:{:08X} torture:{} whip:{}", event->target->GetFormID(),
-                        event->source, event->cause ? event->cause->GetFormID() : 0, IdOf(torture), whip);
+                    // a torture weapon (DOM's slap): calm only, the spell-tick cache below stays spells only
+                    const bool tortureWeapon = torture < 0 && IsTortureWeaponId(event->source);
+                    SKSE::log::debug("hit event target:{:08X} source:{:08X} cause:{:08X} torture:{} whip:{} torture weapon:{}",
+                        event->target->GetFormID(), event->source, event->cause ? event->cause->GetFormID() : 0, IdOf(torture), whip,
+                        tortureWeapon);
                     std::lock_guard lock(g_lock);
-                    if ((torture >= 0 || whip) && event->cause && event->target->Is(RE::FormType::ActorCharacter)) {
+                    if ((torture >= 0 || whip || tortureWeapon) && event->cause && event->target->Is(RE::FormType::ActorCharacter)) {
                         NoteCalmLocked(event->target->GetFormID(), event->cause->GetFormID(), NowSeconds());
                     }
                     if (g_recent.size() > 512) {
@@ -697,17 +729,21 @@ namespace Classifier
         return false;
     }
 
-    void SetPunchCombatHealth(bool enabled)
-    {
-        g_punchCombatHealth.store(enabled);
-    }
-
     bool IsTortureAttacker(RE::Actor* attacker)
     {
         if (IsWhipAttacker(attacker)) {
             return true;
         }
-        if (!attacker || attacker->GetEquippedObject(false) || attacker->GetEquippedObject(true)) {
+        if (!attacker) {
+            return false;
+        }
+        // a torture weapon (DOM's slap) in either hand
+        for (const bool left : { false, true }) {
+            if (const auto* equipped = attacker->GetEquippedObject(left); equipped && IsTortureWeaponId(equipped->GetFormID())) {
+                return true;
+            }
+        }
+        if (attacker->GetEquippedObject(false) || attacker->GetEquippedObject(true)) {
             return false;
         }
         // out-of-combat fists (punching): the same unarmed rule Classify uses
