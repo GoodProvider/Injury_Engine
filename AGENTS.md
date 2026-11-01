@@ -16,7 +16,7 @@ If a fix “does nothing” in-game, confirm MO2 is loading this folder (not a d
 
 ## What this is
 
-Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real damage is classified by type (slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / falling / generic, plus types other mods ship as injury JSON) and torture (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock; the padded whip is one torture source) holds health down without killing. `Injury_Engine.dll` (`InjuryEngine`) tracks injury per source per part (co-saved; each part counts its worst torture type), reads all wound data and text from `SKSE/Plugins/Injury_Engine/injuries/*.json`, Papyrus narrates hits, torture scenes, healing and killing blows, prompts tell the LLM how wounds look and feel, and a PrismaUI overlay (PrismaUI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
+Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real damage is classified by type (slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / falling / generic, plus types other mods ship as injury JSON) and torture (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock; the padded whip is one torture source) holds health down without killing. `Injury_Engine.dll` (`InjuryEngine`) tracks injury per source per part (co-saved; each part counts its worst torture type), reads all wound data and text from `SKSE/Plugins/Injury_Engine/injuries/*.json`, Papyrus narrates hits, torture scenes, healing and killing blows, prompts tell the LLM how wounds look and feel, and a Magelight UI overlay (Magelight UI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
 
 ## Key paths
 
@@ -31,7 +31,7 @@ Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real 
 | `SKSE/Plugins/Injury_Engine/injuries/` | Injury data + text per source (`whipping.json`, `slashing.json`, ...; schema in `guide.md`) |
 | `SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine/` | Beta 25 LLM plugin (prompts; folder name = `manifest.json` `id`) |
 | `SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml` | Dashboard settings schema (`Plugin_Injury_Engine`, `injury_engine.*`) |
-| `PrismaUI/views/Injury_Engine/overlay.html` | Injury overlay page |
+| `Magelight/Injury_Engine/views/overlay/index.html` | Injury overlay page |
 
 Repo root: `c:\Skyrim\dev\mods\Injury_Engine`.
 
@@ -43,6 +43,7 @@ Documents is OneDrive-redirected — not `%USERPROFILE%\Documents\...`.
 |-----|------|
 | Crash Logger | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\crash-*.log` |
 | Injury_Engine (DLL, `plugin.cpp` spdlog) | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\Injury_Engine.log` |
+| Magelight UI (host, views, page errors) | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\Magelight.log` |
 | Papyrus (`Trace` → `Debug.Trace`) | `C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\Logs\Script\Papyrus.0.log` |
 | SkyrimNet conversation (dialogue history) | `C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\conversation_log.log` |
 | SkyrimNet LLM requests (full prompts sent) | `C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\openrouter_input.log` (rotated: `openrouter_input.<timestamp>.log`) |
@@ -62,7 +63,7 @@ Relative paths for other machines: [docs/reference/papyrus-rules.md](docs/refere
 | Prompts | [docs/authors/prompts.md](docs/authors/prompts.md) |
 | LLM actions (YAML: `Torture_Target`, `Stop_Fighting`, `Stop_Fighting_by_Yielding`, `Start_Fighting`) | [docs/authors/actions.md](docs/authors/actions.md) |
 | Papyrus / ESP / settings | [docs/developers/papyrus.md](docs/developers/papyrus.md) |
-| SKSE plugin / PrismaUI overlay | [docs/developers/overlay.md](docs/developers/overlay.md) |
+| SKSE plugin / Magelight UI overlay | [docs/developers/overlay.md](docs/developers/overlay.md) |
 | Quirks | [KNOWLEDGEBASE.md](KNOWLEDGEBASE.md) |
 | Release (version sources, changelogs, packaging) | [release-guide.md](release-guide.md); agent skill `.claude/skills/release/SKILL.md` |
 
@@ -98,7 +99,7 @@ First ~72 characters summarize the commit. Prefer a multi-line body with concret
 
 ### Top gotchas (see KNOWLEDGEBASE for detail)
 
-PrismaUI views load from `Data/PrismaUI/views/`; separate PrismaUI `Invoke`s are not applied in order; Papyrus default args are filled at the caller's compile; ESL FormIDs are signed in Papyrus; decorators return empty in action eligibility; `.pex` and `.dll` deploy in opposite directions; Wait() under 100ms unreliable; non-auto properties blank on load.
+Magelight pages load by absolute path from `Data/Magelight/<modId>/`; never call SKSE `AddTask` from a Magelight DOM-ready or JS callback; Papyrus default args are filled at the caller's compile; ESL FormIDs are signed in Papyrus; decorators return empty in action eligibility; `.pex` and `.dll` deploy in opposite directions; Wait() under 100ms unreliable; non-auto properties blank on load.
 
 ## Safety rules
 

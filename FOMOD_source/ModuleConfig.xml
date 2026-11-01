@@ -21,7 +21,7 @@
 							</typeDescriptor>
 						</plugin>
 						<plugin name="Show torture overlay">
-							<description> A "Torture Damage" bar per tortured actor (PrismaUI). Unchecked: the dashboard setting "Show torture overlay" defaults to off; it can still be turned on in the SkyrimNet dashboard. A value already saved in the dashboard is kept.</description>
+							<description> A "Torture Damage" bar per tortured actor (Magelight UI). Unchecked: the dashboard setting "Show torture overlay" defaults to off; it can still be turned on in the SkyrimNet dashboard. A value already saved in the dashboard is kept.</description>
 							<image path="images\injury-engine.jpg"/>
 							<files>
 								<folder source="overlay" destination="" priority="1"/>

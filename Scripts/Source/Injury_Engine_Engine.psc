@@ -164,7 +164,7 @@ Function SetUncausedMinPercent(Float percent) global native
 ; Below minor a wound has no stage and is not narrated. The DLL clamps to 1..100 and keeps minor < major < severe.
 Function SetInjuryRanges(Int minor, Int major, Int severe) global native
 
-; "Show whipping overlay": PrismaUI bars for whipped actors.
+; "Show whipping overlay": Magelight UI bars for whipped actors.
 Function SetOverlayEnabled(Bool enabled) global native
 
 ; "Include sexual body parts": new hits, prompts and the overlay use parts 6..10 too.

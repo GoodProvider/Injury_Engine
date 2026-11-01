@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 # Project name = SKSE .dll name.
-project(Injury_Engine VERSION 0.1.6 LANGUAGES CXX)
+project(Injury_Engine VERSION 0.1.7 LANGUAGES CXX)
 
 # This repo is the MO2 mod folder, so the .dll is copied straight into ../SKSE/Plugins.
 set(OUTPUT_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/..")
@@ -28,7 +28,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE src/PCH.h)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/PrismaUI
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/MagelightUI
     # SkyrimNet public API (PublicAPI.h; the decision request needs API v12+)
     "${CMAKE_CURRENT_SOURCE_DIR}/../../SkyrimNet devkit/CppAPI"
 )

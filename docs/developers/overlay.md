@@ -1,6 +1,6 @@
-# SKSE plugin + PrismaUI overlay
+# SKSE plugin + Magelight UI overlay
 
-C++ plugin `Injury_Engine.dll` (injury engine, damage classification and healing hooks, Papyrus natives) and the PrismaUI torture overlay.
+C++ plugin `Injury_Engine.dll` (injury engine, damage classification and healing hooks, Papyrus natives) and the Magelight UI torture overlay.
 
 Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/json-keys.md](../reference/json-keys.md#overlay-injuryengineupdate).
 
@@ -15,11 +15,11 @@ Quirks: [../../KNOWLEDGEBASE.md](../../KNOWLEDGEBASE.md). JSON: [../reference/js
 | `SKSE/Plugins/Injury_Engine/injuries/` | Injury data and text per source; `guide.md` is the agent-facing editing guide |
 | `SKSE_Source/src/Papyrus_Engine.cpp` | Natives bound to `Injury_Engine_Engine.psc` |
 | `SKSE_Source/src/Hooks.cpp` | Vtable hooks: `MagicTarget::AddTarget` (healing sources), `Actor::HandleHealthDamage` (SE / AE) and `ActorValueOwner::ModActorValue` (damage intake, classify, `InjuryEngine::OnDamage`, may reduce the damage) |
-| `SKSE_Source/src/Overlay.cpp`, `include/Overlay.h` | PrismaUI view + push |
+| `SKSE_Source/src/Overlay.cpp`, `include/Overlay.h` | Magelight UI view + push |
 | `SKSE_Source/src/TruceDecision.cpp`, `include/TruceDecision.h` | `Stop_Fighting` / `Stop_Fighting_by_Yielding`: asks SkyrimNet's decision model (`PublicSendCustomDecisionToLLM`, API v12+; template `accept_truce` or `accept_surrender`) whether the target accepts; answers queued for Papyrus (`TakeTruces`, mod event `Injury_Engine_Truce`). The only file that includes `PublicAPI.h` (it defines its globals) |
-| `SKSE_Source/lib/PrismaUI/` | Vendored PrismaUI API header |
+| `SKSE_Source/lib/MagelightUI/` | Vendored Magelight UI API header (`MagelightUI_API.h`, MIT) |
 | `SKSE/Plugins/Injury_Engine.dll` | Built plugin (copied by the build) |
-| `PrismaUI/views/Injury_Engine/overlay.html` | Overlay page under `Data/PrismaUI/views/` |
+| `Magelight/Injury_Engine/views/overlay/index.html` | Overlay page under `Data/Magelight/` |
 
 ## Build
 
@@ -36,9 +36,9 @@ Declared in `Scripts/Source/Injury_Engine_Engine.psc`, registered in `Papyrus_En
 ## Overlay
 
 - Setting `injury_engine.overlay.enabled` ("Show torture overlay").
-- `Overlay::Init` on `kDataLoaded`: PrismaUI API, `CreateView("Injury_Engine/overlay.html")`. PrismaUI is a listed requirement; if it is missing anyway → no overlay, everything else works.
-- The natives `Hit`, `SyncHealth`, `TakeHits` and `Forget` call `Overlay::Notify`, which pushes `OverlayJson` to JS `injuryEngineUpdate(json, seq, reset)` only when it differs from the last push. One pending payload and at most one queued task: the task sends the newest state when it runs. `seq` grows with every push and the page ignores an older one (separate PrismaUI invokes are not applied in order). `Overlay::Reset` (load, new game, overlay off) is the same call with `reset` true, so it can't overtake an update.
-- The view is shown, never focused (no pause, no cursor).
+- `Overlay::Init` on `kDataLoaded`: `RequestApi4`, `RegisterMod` (modId `Injury_Engine`, minimum host 1.7.1), `CreateViewEx` (absolute path from the exe folder; fullscreen, click-through, hidden, `Layer::Hud`). No `manifest.json`: the DLL owns the view. Magelight UI is a listed requirement; if it is missing or older anyway → a warning, no overlay, everything else works. There is no DOM-ready gate: calls made before the page loads are queued and delivered after it, and the `onEvent` callback only logs.
+- The natives `Hit`, `SyncHealth`, `TakeHits` and `Forget` call `Overlay::Notify`, which pushes `OverlayJson` to JS `injuryEngineUpdate(json, seq, reset)` only when it differs from the last push. One pending payload and at most one queued task: the task sends the newest state when it runs. `seq` grows with every push and the page ignores an older one (`InvokeJS` is first in, first out, so `seq` is only a guard). The single pending payload also keeps the view's capped outbound queue from filling while the page loads. `Overlay::Reset` (load, new game, overlay off) is the same call with `reset` true, so it can't overtake an update.
+- The view is shown, never focused (a click-through Hud view: no pause, no cursor).
 - Page: `#InjuryEnginePanel` with a white title ("Torture Damage", from `whipping.json` `overlay.title`) above `.actor-injuryengine-damage-bars`: one name-only bar per tortured actor, most recently hit first; the bar shows the actor's latest torture type only (`OverlaySource`: open type hit most recently, transient `g_lastTorture`; most points after a load): width = that type's points out of the parts it reaches (`SourceReach`, shared with `TortureHit`), filled in that type's `overlay_colors` by average stage, light blue (`overlay.colors.healing`) while a healing source works on the actor (heal session). Real damage replacing torture damage grows a red segment (`overlay.colors.replaced`) from the left while the torture fill shrinks; an actor with no torture damage left is dropped and the panel hides when nobody has torture damage; the whole overlay fades 3 s after the last change. Numbers, thresholds and colors come from the JSON in every push (the page has no copies).
 
 ## Lifecycle

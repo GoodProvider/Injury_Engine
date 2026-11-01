@@ -1,3 +1,9 @@
+## 0.1.7
+
+### Install
+- New requirement: Magelight UI 1.7.1 or later, a separate download. Install it before updating.
+- The torture overlay now runs on Magelight UI. PrismaUI is no longer needed by this mod.
+
 ## 0.1.6
 
 ### Combat

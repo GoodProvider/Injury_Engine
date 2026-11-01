@@ -1,12 +1,12 @@
 #pragma once
 
-// Whipping overlay: a PrismaUI view (Data/PrismaUI/views/Injury_Engine/overlay.html) with
+// Whipping overlay: a Magelight UI Hud view (Data/Magelight/Injury_Engine/views/overlay/index.html) with
 // per-part damage/healing bars for loaded tracked actors. Never focused (no cursor, no input).
 // C++ pushes InjuryEngine::OverlayJson() whenever it changes; the page decides which
 // panels show (changed recently) and fades idle ones.
 namespace Overlay
 {
-    // kDataLoaded: request the PrismaUI API and create the (hidden) view.
+    // kDataLoaded: request the Magelight UI API, register the mod and create the (hidden) view.
     void Init();
 
     // "Show whipping overlay" setting; off hides the view and stops pushes.

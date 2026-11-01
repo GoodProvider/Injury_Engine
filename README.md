@@ -60,7 +60,7 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 
 ## Requirements
 
-SKSE, Address Library for SKSE Plugins, SkyrimNet (Beta 25+), PapyrusUtil SE, and **PrismaUI** (required: the overlay is built on it).
+SKSE, Address Library for SKSE Plugins, SkyrimNet (Beta 25+), PapyrusUtil SE, and **Magelight UI** 1.7.1+ (Nexus mod 193303; required: the overlay is built on it). PrismaUI is no longer used.
 
 ## Install
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.7](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.7) — since [0.1.6](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6)
+
+### SKSE / overlay
+- The overlay moved from PrismaUI to Magelight UI. `Overlay.cpp` uses the raw v4 API (vendored `SKSE_Source/lib/MagelightUI/MagelightUI_API.h`): `RegisterMod` (modId `Injury_Engine`, minimum host 1.7.1) and `CreateViewEx` (fullscreen, click-through, hidden, `Layer::Hud`). The page moved to `Magelight/Injury_Engine/views/overlay/index.html`. `injuryEngineUpdate(state, seq, reset)` and `OverlayJson` are unchanged. See [docs/developers/overlay.md](docs/developers/overlay.md).
+- The DOM-ready gate and its `AddTask` callback are gone: calls made before the page loads are queued by the host, and an `onEvent` callback logs DOM ready, load failures, render death and page errors to `Injury_Engine.log`.
+
+### Install / settings
+- Requires Magelight UI 1.7.1 or later as a separate download (not bundled); PrismaUI is no longer required. Without a suitable Magelight UI the log warns, there is no overlay and the rest of the mod works.
+- `make release` stages `Magelight/` instead of `PrismaUI/`.
+
 ## [0.1.6](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6) — since [0.1.5](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.5)
 
 ### Combat

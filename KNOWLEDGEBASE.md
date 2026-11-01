@@ -102,17 +102,21 @@ Sparks / Flames / Frostbite `Torture` are concentration spells with a projectile
 
 Whipping is now one of eight `model: "torture"` types (`"whip"` is still read as torture). Each (type, part) holds torture points (0 .. part max); a part counts only its **largest** type for the health hold, the overlay and the stage. Healing lowers the part's maximum and clamps every type to it (slap 3, pinch 4, fire 1, heal 2 gives 2 / 2 / 1), so a heal costs exactly the health the torture took, mixed types or not; healing-source health left over below a point is kept as `g_healCredit` and never taken back as regen; real damage replacing torture lowers the maximum by one and clamps every type to it (convert 2 gives 2 / 2 / 1). A hit on a type that sits below the part's maximum costs no health. Co-save record 5. Record 4 stored `healing_max (11) + damage`, so it loads as `max(0, deficit - 11)`; records 2 / 3 load as whipping damage only. The old healing range (recovering / mostly healed) is gone: a part healing from severe goes through the heal levels low, mid, high on the same points. Unverified, check the `classify` / `torture damage` lines with verbose logging: (1) fire / frost / shock torture comes only from the "Torture" spells (MGEF 0x813–0x815, copies of vanilla Flames / Frostbite / Sparks effects; matched by form, in or out of combat; vanilla spells are always real damage); (2) concentration spells may tick after the 0.6 s `TESHitEvent` window, so `Classifier` falls back to scanning the victim's active effects for a torture MGEF; (3) an out-of-combat punch is classified before combat starts (the attacker's `IsInCombat()` at the hit); (4) the hooks return 0 for torture, so the game applies no damage and `TakeHealth` applies the floor-limited torture loss instead. **(4) was false for `HandleHealthDamage`; see 2026-10-15.** `kMaxSources` is 32 (8 torture + 8 health files already filled 16).
 
-## PrismaUI view path (from SkyrimNet_SexLab, 2026-07-24)
+## Magelight view path (2026-11-01)
 
-`CreateView("Injury_Engine/overlay.html")` loads from **`Data/PrismaUI/views/`**, not `SKSE/Plugins/`. `make release` copies `PrismaUI/` into the package. A missing file gives a valid-looking C++ path but no visible UI. Do not `Focus` a view that should not pause the game; the overlay is `Show`-only.
+The page is **`Data/Magelight/Injury_Engine/views/overlay/index.html`**, not under `SKSE/Plugins/`; the folder name equals the `modId`. `htmlPath` must be absolute and UTF-8 (`GetModuleFileNameW`, exe folder + `Data\Magelight\...`), which MO2's virtual filesystem resolves to this repo's `Magelight/`. `make release` copies `Magelight/` into the package. A missing file logs `Overlay: page load failed`. The overlay is a click-through `Layer::Hud` view, which the host refuses UI mode, so it can't pause the game or take the cursor.
 
-## Separate PrismaUI Invokes are not applied in order (from SkyrimNet_SexLab, 2026-10-03)
+## `InvokeJS` is in order but its queue is capped (2026-11-01)
 
-`PrismaUI->Invoke` is async; two Invokes can land in either order. A state change that must not interleave goes out as **one** Invoke calling one JS entry point (here: `injuryEngineUpdate(json)` with the whole state).
+`InvokeJS` works from any thread and each view has one first-in, first-out outbound queue. The queue has a cap and drops new calls when full, logging once, so `Overlay::Push` keeps one pending payload and one queued task, and a whole state goes out as **one** call to one JS entry point (`injuryEngineUpdate(json, seq, reset)`). `seq` stayed from the PrismaUI port, where invokes could land out of order; it is now only a guard.
 
-## `window.prompt` / `confirm` do nothing in PrismaUI (from SkyrimNet_SexLab, 2026-09-27)
+## `window.prompt` / `confirm` do nothing in Ultralight (from SkyrimNet_SexLab, 2026-09-27)
 
-Ultralight returns as if cancelled. Build text entry and confirmations in HTML.
+Ultralight returns as if cancelled, under Magelight UI too. Build text entry and confirmations in HTML.
+
+## Magelight: no DOM-ready gate, hidden pages pause, text gamma differs (2026-11-01)
+
+From the host source (Magelight 1.7.1), not yet seen in game. (1) The DOM-ready callback runs inside a frame (in Present or on Magelight's page thread); calling SKSE `AddTask` there can hang on VR (`MagelightUI_API.h`, threading contract). A hidden view's DOM ready can also come about a second after a load. `IsViewValid` is true right after creation and calls made before the page loads are queued, so the overlay has no gate and no DOM-ready callback. (2) Hidden pages pause from host 1.5.0: CSS transitions stop, timers and `InvokeJS` keep running. The page's logic uses `setTimeout` / `setInterval`, never `transitionend`; a fade interrupted by a hide finishes on the next show. (3) Magelight runs Ultralight 2.0 with text gamma 2.2 (PrismaUI's 1.4 used 1.8), so bar labels may look slightly different. `fontGamma` in `Magelight.json` belongs to the player: do not change it for this.
 
 ## Papyrus default args are filled at the caller's compile (from SkyrimNet_SexLab)
 
@@ -134,7 +138,7 @@ Natives take `RE::Actor*`, `RE::BSFixedString`, etc. Mismatched types fail to bi
 
 `CallDecoratorDirect` returns empty on a cache miss. Use inventory, factions, globals, or Papyrus eligibility functions (as `Whip_IsEligible` does).
 
-## Papyrus runs while a focused PrismaUI view pauses the game (from SkyrimNet_SexLab, 2026-09-28)
+## Papyrus runs while a focused pausing view pauses the game (from SkyrimNet_SexLab, 2026-09-28)
 
 Paused game time does not stop Papyrus. Not an issue for the Show-only overlay, but matters if a focused panel is ever added.
 

@@ -5,10 +5,10 @@
     <project>Injury_Engine</project>
     <summary>Per-body-part injury tracking for SkyrimNet: real damage by type, torture damage and a padded whip, with healing, narration, prompts and an overlay.</summary>
     <repository_root>c:\Skyrim\dev\mods\Injury_Engine</repository_root>
-    <updated>2026-10-26</updated>
-    <base_tag>0.1.5</base_tag>
-    <next_version>0.1.6</next_version>
-    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.6 (check-version.py); changelogs cover 0.1.6 (in-combat punches real bludgeoning, punch_combat_health removed, DOMSlap slapping torture via weapon_file / weapon_id, healing costs vanilla health / g_healCredit); 0.1.5 committed (c16e0e2) but not tagged; 0.1.6 built by make release, not committed or tagged; origin still SkyrimNet_Whipped</version_status>
+    <updated>2026-11-01</updated>
+    <base_tag>0.1.6</base_tag>
+    <next_version>0.1.7</next_version>
+    <version_status>Makefile, manifest.json, manifest.yaml, CMakeLists.txt and version.rc all 0.1.7 (check-version.py); changelogs cover 0.1.7 (overlay moved from PrismaUI to Magelight UI 1.7.1+); 0.1.7 not committed, packaged or tagged, in-game tests pending (checkpoints/magelight/checkpoint-02.md); tag 0.1.6 points at c16e0e2, one commit before "Prepare 0.1.6" (c6cabaf, not pushed), so check it before tagging 0.1.7</version_status>
     <related_artifacts>
       <artifact role="release rules">release-guide.md</artifact>
       <artifact role="release skill">.claude/skills/release/SKILL.md</artifact>

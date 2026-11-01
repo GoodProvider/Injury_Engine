@@ -12,7 +12,7 @@
         injuries/<type>.json overlay_colors); parts are head, body, right arm, left arm, right leg, left leg, then
         (with "include sexual parts") nipples, pussy, penis, lips, ass hole; part_max is each part's damage points in
         that order. Every push is injuryEngineUpdate(state, seq, reset): `seq` grows with each push and an older one is
-        ignored (invokes are not applied in order); `reset` drops everything first (new game / load / overlay turned
+        ignored (a guard: InvokeJS is in order); `reset` drops everything first (new game / load / overlay turned
         off; state null leaves the panel empty).
         Layout: #InjuryEnginePanel holds the title ("Torture Damage", white) above .actor-injuryengine-damage-bars, one bar per
         tortured actor, most recently hit first. Each bar shows the actor's latest torture type (`source`) alone:
@@ -237,7 +237,7 @@
             }
         }
 
-        // Separate PrismaUI invokes may land out of order: C++ numbers every push (`seq`) and an older one is ignored.
+        // C++ numbers every push (`seq`) and an older one is ignored. InvokeJS is in order, so this is only a guard.
         // `reset` (new game / load / overlay off) drops every bar first; a null state then leaves the panel empty.
         let lastSeq = -1;
         function injuryEngineUpdate(state, seq, reset) {

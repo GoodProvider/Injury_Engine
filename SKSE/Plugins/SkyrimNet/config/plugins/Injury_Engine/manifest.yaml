@@ -1,6 +1,6 @@
 plugin:
   name: "Injury_Engine"
-  version: "0.1.6"
+  version: "0.1.7"
   description: "Torture damage for SkyrimNet: whipping, pinching, slapping, pulling, punching and companion fire / frost / shock, with wound narration and a Torture_Target action"
   icon: "🪢"
 
@@ -230,7 +230,7 @@ schema:
     - name: "Show torture overlay"
       path: "injury_engine.overlay.enabled"
       type: "bool"
-      description: "Show bars for each body part (head, body, arms, legs) of an actor while they are tortured or their wounds are healing (each part shows its worst torture type). Red bars grow with damage and darken through the stages; once a part's damage is gone a yellow bar shows its healing, and the bar disappears when the part is healed. Needs PrismaUI."
+      description: "Show bars for each body part (head, body, arms, legs) of an actor while they are tortured or their wounds are healing (each part shows its worst torture type). Red bars grow with damage and darken through the stages; once a part's damage is gone a yellow bar shows its healing, and the bar disappears when the part is healed. Needs Magelight UI."
       defaultValue: true
       category: "Overlay"
 

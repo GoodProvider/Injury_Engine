@@ -1,27 +1,31 @@
 #include "Overlay.h"
 
 #include "InjuryEngine.h"
-#include "PrismaUI_API.h"
 
 #include <atomic>
+#include <filesystem>
 #include <mutex>
 #include <string>
+
+// Includes <windows.h>, so it comes after CommonLib (PCH) and last here.
+#include "MagelightUI_API.h"
 
 namespace Overlay
 {
     namespace
     {
-        PRISMA_UI_API::IVPrismaUI1* g_prisma = nullptr;
-        PrismaView g_view = 0;
-        std::atomic<bool> g_domReady = false;
+        const MAGELIGHT_API::MagelightApi4* g_api = nullptr;
+        MAGELIGHT_API::ModId g_mod = 0;
+        MAGELIGHT_API::ViewId g_view = 0;
         std::atomic<bool> g_enabled = false;
         bool g_shown = false;  // game thread only
 
         std::mutex g_lock;
         std::string g_lastPush;  // last OverlayJson sent to the page
-        // One pending push and at most one queued task: the task sends whatever is newest when it runs. Each push
-        // carries a growing sequence number and the page ignores an older one, since separate PrismaUI invokes may be
-        // applied out of order. A reset rides on the same call, so it can't overtake (or be overtaken by) an update.
+        // One pending push and at most one queued task: the task sends whatever is newest when it runs, so the view's
+        // capped outbound queue can't fill while the page loads. Each push carries a growing sequence number and the
+        // page ignores an older one (InvokeJS is in order, so this is only a guard). A reset rides on the same call,
+        // so it can't overtake (or be overtaken by) an update.
         std::string g_pendingJson;
         bool g_pendingReset = false;
         bool g_taskQueued = false;
@@ -29,7 +33,42 @@ namespace Overlay
 
         bool Ready()
         {
-            return g_prisma && g_domReady.load() && g_prisma->IsValid(g_view);
+            return g_api && g_view && g_api->IsViewValid(g_view);
+        }
+
+        // Absolute UTF-8 path: Data\Magelight\Injury_Engine\views\overlay\index.html next to the exe.
+        std::string PagePath()
+        {
+            wchar_t buf[MAX_PATH]{};
+            GetModuleFileNameW(nullptr, buf, MAX_PATH);
+            const auto path = std::filesystem::path(buf).parent_path() / L"Data" / L"Magelight" / L"Injury_Engine" /
+                              L"views" / L"overlay" / L"index.html";
+            const auto u = path.u8string();
+            return std::string(reinterpret_cast<const char*>(u.data()), u.size());
+        }
+
+        // Game thread (ModDesc default). Logging only.
+        void OnEvent(const MAGELIGHT_API::EventData* ev, void*)
+        {
+            using MAGELIGHT_API::Event;
+            switch (ev->type) {
+            case Event::ViewDomReady:
+                SKSE::log::info("Overlay: DomReady");
+                break;
+            case Event::ViewLoadFailed:
+                SKSE::log::error("Overlay: page load failed: {}", ev->detail);
+                break;
+            case Event::RenderDead:
+                SKSE::log::warn("Overlay: Magelight disabled itself after a render fault");
+                break;
+            case Event::ConsoleMessage:
+                if (ev->x == 2) {
+                    SKSE::log::error("Overlay: page error: {}", ev->detail);
+                }
+                break;
+            default:
+                break;
+            }
         }
 
         bool BlockingMenuOpen()
@@ -54,11 +93,7 @@ namespace Overlay
                 return;
             }
             g_shown = show;
-            if (show) {
-                g_prisma->Show(g_view);
-            } else {
-                g_prisma->Hide(g_view);
-            }
+            g_api->ShowView(g_view, show);
         }
 
         // `json` is an OverlayJson state, or "null" (reset only: the panel stays empty).
@@ -88,7 +123,7 @@ namespace Overlay
                     g_pendingReset = false;
                 }
                 if (Ready()) {
-                    g_prisma->Invoke(g_view, script.c_str());
+                    g_api->InvokeJS(g_view, script.c_str());
                 }
             });
         }
@@ -112,30 +147,40 @@ namespace Overlay
     {
         static std::once_flag once;
         std::call_once(once, []() {
-            g_prisma = static_cast<PRISMA_UI_API::IVPrismaUI1*>(
-                PRISMA_UI_API::RequestPluginAPI(PRISMA_UI_API::InterfaceVersion::V1));
-            if (!g_prisma) {
-                SKSE::log::warn("Overlay: PrismaUI not installed, overlay disabled");
+            g_api = MAGELIGHT_API::RequestApi4();
+            if (!g_api) {
+                SKSE::log::warn("Overlay: Magelight UI not installed, overlay disabled");
                 return;
             }
-            // Resolves under Data/PrismaUI/views/.
-            g_view = g_prisma->CreateView("Injury_Engine/overlay.html", [](PrismaView view) {
-                g_view = view;
-                g_domReady = true;
-                SKSE::log::info("Overlay: DomReady");
-                if (auto* tasks = SKSE::GetTaskInterface()) {
-                    tasks->AddTask([]() {
-                        UpdateVisibility();
-                        Notify();
-                    });
-                }
-            });
-            if (!g_prisma->IsValid(g_view)) {
-                SKSE::log::error("Overlay: CreateView failed (missing PrismaUI/views/Injury_Engine/overlay.html?)");
-                g_prisma = nullptr;
+
+            MAGELIGHT_API::ModDesc mod{};
+            mod.size = sizeof(mod);
+            mod.modId = "Injury_Engine";
+            mod.displayName = "Injury Engine";
+            mod.minHostVersion = MAGELIGHT_API::PackVersion(1, 7, 1);
+            mod.onEvent = OnEvent;
+            if (const auto result = g_api->RegisterMod(&mod, &g_mod); result != MAGELIGHT_API::Result::Ok) {
+                SKSE::log::warn("Overlay: Magelight UI {} refused the mod (result {}; 1.7.1+ required), overlay disabled",
+                    g_api->hostVersion, static_cast<int>(result));
+                g_api = nullptr;
                 return;
             }
-            g_prisma->Hide(g_view);
+
+            // No DOM-ready gate: calls made before the page loads are queued and delivered after it.
+            const std::string page = PagePath();
+            MAGELIGHT_API::ViewDesc view{};
+            view.size = sizeof(view);
+            view.name = "overlay";
+            view.htmlPath = page.c_str();
+            view.fullscreen = true;
+            view.clickThrough = true;
+            view.startVisible = false;
+            view.layer = MAGELIGHT_API::Layer::Hud;
+            if (g_api->CreateViewEx(g_mod, &view, &g_view) != MAGELIGHT_API::Result::Ok) {
+                SKSE::log::error("Overlay: CreateViewEx failed: {}", g_api->GetLastErrorMessage(g_mod));
+                g_api = nullptr;
+                return;
+            }
             g_shown = false;
             if (auto* ui = RE::UI::GetSingleton()) {
                 static MenuSink sink;

@@ -1,3 +1,12 @@
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.7
+
+Overlay host release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and Magelight UI 1.7.1 or later.
+
+- **Overlay moved to Magelight UI.** PrismaUI is removed, with no fallback. The overlay is a fullscreen, click-through `Layer::Hud` view; the page's `injuryEngineUpdate(state, seq, reset)` API and `OverlayJson` are unchanged.
+- **New page path.** `Magelight/Injury_Engine/views/overlay/index.html`, with the API header vendored in `SKSE_Source/lib/MagelightUI/`. `make release` stages `Magelight/`.
+- **No DOM-ready gate.** The host queues calls made before the page loads, so the callback that called `AddTask` inside a frame is gone. `onEvent` only logs.
+- **Separate dependency.** Magelight UI is not bundled. A missing or older host logs a warning and only the overlay is off.
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6
 
 Combat and healing fix release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and PrismaUI.

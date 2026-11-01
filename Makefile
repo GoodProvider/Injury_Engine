@@ -1,4 +1,4 @@
-VERSION=0.1.6
+VERSION=0.1.7
 NAME=Injury Engine
 
 RELEASE_FILE=versions/Injury_Engine ${VERSION}.7z
@@ -32,7 +32,7 @@ release:
 	if exist "$(subst /,\,fight_actions)" rmdir /s /q "$(subst /,\,fight_actions)"
 	if exist "$(subst /,\,overlay)" rmdir /s /q "$(subst /,\,overlay)"
 	mkdir core
-	powershell -NoProfile -Command "Copy-Item -Path 'Scripts','SKSE','meshes','textures','Sound','PrismaUI','Seq','Injury_Engine.esp','CHANGELOG-player.md' -Destination 'core/.' -Recurse -Force"
+	powershell -NoProfile -Command "Copy-Item -Path 'Scripts','SKSE','meshes','textures','Sound','Magelight','Seq','Injury_Engine.esp','CHANGELOG-player.md' -Destination 'core/.' -Recurse -Force"
 # FOMOD option "Add fight/stop/yield actions": move the fight actions and their decision prompts out of core.
 	powershell -NoProfile -Command "foreach ($$f in 'actions/Start_Fighting.yaml','actions/Stop_Fighting.yaml','actions/Stop_Fighting_by_Yielding.yaml','prompts/decisions/injury_engine/accept_truce.prompt','prompts/decisions/injury_engine/accept_surrender.prompt') { $$s = Join-Path 'core/SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine' $$f; $$d = Split-Path (Join-Path 'fight_actions/SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine' $$f); New-Item -ItemType Directory -Force $$d | Out-Null; Move-Item $$s $$d -Force -ErrorAction Stop }"
 # FOMOD option "Show torture overlay": core defaults the overlay off, the option restores the originals (default on).
