@@ -11,8 +11,8 @@
 // Vtable hooks on Character and PlayerCharacter:
 //   MagicTarget::AddTarget          every effect applied to an actor, with the magic item and caster
 //                                   (instant potions included), so healing sources can be named.
-//   Actor::HandleHealthDamage       weapon and projectile hits including concentration beam ticks (SE / AE only;
-//                                   the VR slot is not verified). It reports health already taken, so it gives back
+//   Actor::HandleHealthDamage       weapon and projectile hits including concentration beam ticks (slot 0x104 on
+//                                   SE / AE, 0x106 on VR). It reports health already taken, so it gives back
 //                                   what the engine did not keep (punches, real hits replacing torture, missed ticks)
 //   ActorValueOwner::ModActorValue  other health damage when not nested inside HandleHealthDamage
 // Vtable hooks on ValueModifierEffect and DualValueModifierEffect:
@@ -37,6 +37,9 @@ namespace
     constexpr std::size_t kSetActorValueIdx = 0x7;      // drowning probe only
     constexpr std::size_t kModifyEffectActorValueIdx = 0x20;  // ValueModifierEffect::ModifyActorValue (DualValueModifierEffect overrides it)
     constexpr std::size_t kHandleHealthDamageIdx = 0x104;  // Actor::HandleHealthDamage (SE / AE); CommonLib slot comments are hex
+    // VR moves Actor's virtuals from 0xA6 on by +2 (0x104 on VR is StartPowerAttackCoolDown); CommonLib dispatches
+    // HandleHealthDamage as RelocateVirtual(0x104, 0x106) (src/RE/A/Actor.cpp)
+    constexpr std::size_t kHandleHealthDamageIdxVR = 0x106;
 
     thread_local int g_inHandle = 0;
 
@@ -532,13 +535,11 @@ void Install_Hooks()
     InstallFightReaction();
     InstallProcessHitData();
 
-    if (REL::Module::IsVR()) {
-        SKSE::log::warn("Actor::HandleHealthDamage hook skipped on VR (vtable slot not verified); melee damage is seen through ModActorValue only");
-        return;
-    }
+    const bool vr = REL::Module::IsVR();
+    const std::size_t handleHealthDamageIdx = vr ? kHandleHealthDamageIdxVR : kHandleHealthDamageIdx;
     REL::Relocation<std::uintptr_t> characterActor{ RE::VTABLE_Character[0] };
-    HandleHealthDamage<RE::Character>::func = characterActor.write_vfunc(kHandleHealthDamageIdx, HandleHealthDamage<RE::Character>::thunk);
+    HandleHealthDamage<RE::Character>::func = characterActor.write_vfunc(handleHealthDamageIdx, HandleHealthDamage<RE::Character>::thunk);
     REL::Relocation<std::uintptr_t> playerActor{ RE::VTABLE_PlayerCharacter[0] };
-    HandleHealthDamage<RE::PlayerCharacter>::func = playerActor.write_vfunc(kHandleHealthDamageIdx, HandleHealthDamage<RE::PlayerCharacter>::thunk);
-    SKSE::log::info("Actor::HandleHealthDamage hooks installed");
+    HandleHealthDamage<RE::PlayerCharacter>::func = playerActor.write_vfunc(handleHealthDamageIdx, HandleHealthDamage<RE::PlayerCharacter>::thunk);
+    SKSE::log::info("Actor::HandleHealthDamage hooks installed{}", vr ? " (VR, vtable slot 0x106)" : "");
 }
