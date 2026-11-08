@@ -1,0 +1,147 @@
+{
+  "_note": "Insectoid text for every source without its own file in this folder: chitin, ichor, legs; no blood, no skin, no lungs. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": ["drowning"],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the chitin is scored and chipped, and a bead of pale ichor wells at one crack near the eyes.",
+          "{name}'s head: a split runs through the head plate; two of the glossy eyes are clouded and pale ichor seeps steadily. A sharp, bitter smell rises from it.",
+          "{name}'s head: the head plate is caved in and leaking; several eyes are burst and the mandibles hang crooked. {name} reeks of spilled ichor, sour and acrid."
+        ],
+        "body": [
+          "{name}'s {part}: a pale scratch across the chitin, a little ichor glistening in it.",
+          "{name}'s {part}: the shell is cracked open and ichor runs down the plates in a slick sheen. The air near {him} smells bitter and wet.",
+          "{name}'s {part}: the chitin is shattered and the soft insides show through, pulsing and leaking thick ichor. A heavy, acrid stench hangs around {him}."
+        ],
+        "leg": [
+          "{name}'s {part}: a joint is nicked, and one leg twitches a little out of rhythm.",
+          "{name}'s {part}: one leg is cracked through at a joint and drags, oozing pale ichor. A sour smell rises from the wound.",
+          "{name}'s {part}: the legs on that side are snapped or torn away to stumps that leak ichor; {name} lurches and lists badly. The bitter smell of ichor is strong."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head stings where the chitin cracked; {he} clicks {his} mandibles and is jittery, quick to lunge.",
+          "{name}'s head throbs and {his} broken eyes see only blur; {he} hisses constantly, enraged and unsteady.",
+          "{name}'s head is crushed agony; {he} can barely orient, mandibles twitching uselessly, frantic and close to death."
+        ],
+        "body": [
+          "{name}'s {part} aches under the scratched shell; {he} is wary and keeps {his} body low.",
+          "{name}'s {part} burns where the shell split; every step jars it. {name} is furious and hissing, but slower.",
+          "{name}'s {part} is a pulsing ruin; {he} shudders and curls in on {reflexive}, near collapse, striking out in blind panic."
+        ],
+        "leg": [
+          "{name}'s {part} twinge at the joints; {he} skitters a little unevenly but is still fast.",
+          "{name}'s {part} are hurt and one drags; {name} limps sideways, hissing, more careful how {he} lunges.",
+          "{name}'s {part} are broken and failing; {he} can barely hold {his} body up, staggering and desperate."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the chitin cracks with a dry snap. {name} hisses and recoils, legs scrabbling.",
+          " on chitin that is already cracked. The split widens and pale ichor seeps out; {name} shrieks and thrashes. The air turns bitter with the smell of ichor.",
+          ", and the blow drives deep into the broken shell. Ichor spurts in thick gouts, and {name} shrieks and convulses, legs clawing at nothing. An acrid stench fills the air.",
+          ", and it is too much. The shell gives way completely; {name} folds up, legs curling and twitching, ichor pooling beneath {name}."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s head plate caves in with a wet crunch; the eyes burst and the mandibles open wide and lock. {name}'s legs curl in under {name}'s body, twitching for a long while, as pale ichor spreads in a bitter-smelling pool.",
+          "the blow splits {name}'s head apart down the middle; ichor and soft grey pulp spill out, and {name} collapses onto {name}'s back, legs drawing in tight and trembling until they are still."
+        ],
+        "body": [
+          "{name}'s shell bursts open and the soft insides spill out in a slick, steaming heap of ichor and pale organs. {name} shrieks, rears, and falls over, legs folding up as the acrid stench spreads.",
+          "the chitin shatters and {name}'s body splits; thick ichor gushes out over the ground. {name} lurches a few paces on failing legs, then sags and curls up, legs twitching."
+        ],
+        "leg": [
+          "{name}'s {part} are torn away and ichor pours from the broken joints; {name} topples, scrabbling in circles on the remaining legs until the strength runs out and the legs curl in.",
+          "the {part} snap off one after another; {name} collapses onto the stumps, leaking ichor in a spreading pool, and the last legs curl up and stop moving."
+        ]
+      },
+      "soil": [
+        "As {name}'s body goes still, a slick of milky fluid leaks from the abdomen and the sour stench of it mixes with the ichor.",
+        "{name}'s abdomen spasms and voids a foul, milky slurry that spreads with the ichor."
+      ],
+      "soil_chance": 0.3
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the chitin around the eyes is scuffed and dull, a few fine cracks showing.",
+          "{name}'s head: the head plate is crazed with cracks and the eyes on one side are cloudy and weeping.",
+          "{name}'s head: the head plate is cracked all over, eyes clouded and leaking, the mandibles twitching on their own."
+        ],
+        "body": [
+          "{name}'s {part}: the chitin is scuffed and marked, a few dull welts across the plates.",
+          "{name}'s {part}: the shell is crazed with fine cracks, weeping beads of pale ichor at the seams.",
+          "{name}'s {part}: the plates are split and lifted at the seams; ichor oozes from every crack."
+        ],
+        "leg": [
+          "{name}'s {part}: the joints are scuffed and a leg trembles when it takes weight.",
+          "{name}'s {part}: the joints are swollen and seeping, and the legs on that side shake.",
+          "{name}'s {part}: the joints are cracked and leaking; the legs fold under {him} whenever {he} tries to rise."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head stings; {he} flinches and clicks {his} mandibles, agitated.",
+            "{name}'s head aches deep in the plate; {he} keeps lowering it, hissing, frightened and angry.",
+            "{name}'s head is blinding agony; {he} shudders and sways, mandibles chattering, utterly cowed."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} shifts restlessly and keeps {his} body pressed low.",
+            "{name}'s {part} throbs at every cracked seam; {he} trembles and hisses at any movement near {him}.",
+            "{name}'s {part} is raw agony; {he} curls up tight and shakes, too hurt to strike back."
+          ],
+          "leg": [
+            "{name}'s {part} prickle at the joints; {he} lifts them and sets them down gingerly.",
+            "{name}'s {part} ache and tremble; {he} limps and keeps them tucked under {him}.",
+            "{name}'s {part} are agony and will not hold; {he} sprawls and shivers, unable to stand."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head barely aches now; {his} eyes are clearing.",
+            "{name}'s head still throbs, but less; {he} raises it more easily.",
+            "{name}'s head is sore and tender as the cracks begin to seal."
+          ],
+          "body": [
+            "{name}'s {part} feels almost whole; only a faint stiffness at the seams remains.",
+            "{name}'s {part} aches dully as the plates knit; {he} moves more freely.",
+            "{name}'s {part} is still very sore while the cracked shell begins to harden over."
+          ],
+          "leg": [
+            "{name}'s {part} are steady again, only a little stiff.",
+            "{name}'s {part} ache but hold {his} weight better.",
+            "{name}'s {part} are weak and sore while the joints begin to mend."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the chitin. {name} jerks and hisses, legs drawing in.",
+          " on chitin that is already cracked. The sore seams split wider and {name} shrieks, thrashing.",
+          ", and the blow lands on the weeping cracks. Ichor beads and runs, and {name} convulses, legs scrabbling for purchase.",
+          ", and it is too much. {name} folds up, legs curled tight and trembling, unable to move."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The chitin on {name}'s {parts} has nearly hardened smooth again.",
+          "mid": "The cracks in {name}'s {parts} have sealed over with fresh, pale chitin.",
+          "low": "The cracks in {name}'s {parts} have stopped weeping ichor."
+        }
+      }
+    }
+  }
+}

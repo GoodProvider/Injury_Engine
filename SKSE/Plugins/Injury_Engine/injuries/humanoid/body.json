@@ -1,0 +1,36 @@
+{
+  "_note": "Body of the humanoid group (playable races, giants, falmer, hagravens, ...). Parts are ordered core, sexual (setting include_sexual_parts), lungs; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": true,
+  "lungs": {
+    "medium": 0.25,
+    "severe": 0.5
+  },
+  "regions": ["head", "body", "arm", "leg", "nipple", "vulva", "penis", "lips", "anus", "lungs"],
+  "parts": [
+    { "name": "face", "region": "head" },
+    { "name": "left arm", "region": "arm" },
+    { "name": "right arm", "region": "arm" },
+    { "name": "back", "region": "body" },
+    { "name": "left leg", "region": "leg" },
+    { "name": "right leg", "region": "leg" },
+    { "name": "nipples", "region": "nipple", "sexual": true, "max": 8, "real_max": 10, "weight": 0.2 },
+    { "name": "pussy", "region": "vulva", "sexual": true, "sex": "female", "max": 8, "real_max": 10, "weight": 0.2 },
+    { "name": "penis", "region": "penis", "sexual": true, "sex": "male", "max": 8, "real_max": 10, "weight": 0.2 },
+    { "name": "lips", "region": "lips", "sexual": true, "max": 6, "real_max": 5, "weight": 0.25 },
+    { "name": "ass hole", "region": "anus", "sexual": true, "max": 6, "real_max": 5, "weight": 0.15 },
+    { "name": "lungs", "region": "lungs", "lungs": true }
+  ],
+  "overlay_order": ["face", "back", "right arm", "left arm", "right leg", "left leg"],
+  "disabled_sources": []
+}

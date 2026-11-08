@@ -1,0 +1,450 @@
+[21:38:15] Injury_Engine loading
+[21:38:15] MagicTarget::AddTarget hooks installed
+[21:38:15] ActorValueOwner::ModActorValue hooks installed
+[21:38:15] ActorValueOwner::ModBaseActorValue / SetActorValue probe hooks installed (drowning diagnosis)
+[21:38:15] ValueModifierEffect::ModifyActorValue hooks installed (plain and dual)
+[21:38:15] GetFactionFightReaction hook installed
+[21:38:15] ProcessHitData hook installed
+[21:38:15] Actor::HandleHealthDamage hooks installed
+[21:38:15] Papyrus functions registered
+[21:38:42] injuries: loading from C:\Skyrim\dev\skyrim\data\SKSE\Plugins\Injury_Engine\injuries
+[21:38:42] injuries: loaded whipping.json (whipping, model torture)
+[21:38:42] injuries: loaded bludgeoning.json (bludgeoning, model health)
+[21:38:42] injuries: loaded burning.json (burning, model health)
+[21:38:42] injuries: loaded drowning.json (drowning, model health)
+[21:38:42] injuries: loaded falling.json (falling, model torture)
+[21:38:42] injuries: loaded falling.json (falling_real, model health)
+[21:38:42] injuries: loaded fire.json (fire, model torture)
+[21:38:42] injuries: loaded freezing.json (freezing, model health)
+[21:38:42] injuries: loaded frost.json (frost, model torture)
+[21:38:42] injuries: loaded generic.json (generic, model health)
+[21:38:42] injuries: loaded leash_dragging.json (leash_dragging, model torture)
+[21:38:42] injuries: loaded mauling.json (mauling, model health)
+[21:38:42] injuries: loaded piercing.json (piercing, model health)
+[21:38:42] injuries: loaded pinching.json (pinching, model torture)
+[21:38:42] injuries: loaded pulling.json (pulling, model torture)
+[21:38:42] injuries: loaded punching.json (punching, model torture)
+[21:38:42] injuries: loaded shock.json (shock, model torture)
+[21:38:42] injuries: loaded shocking.json (shocking, model health)
+[21:38:42] injuries: loaded slapping.json (slapping, model torture)
+[21:38:42] injuries: loaded slashing.json (slashing, model health)
+[21:38:42] injuries: 18 classify rules
+[21:38:42] Classifier: torture MGEF Injury_Engine.esp 0x813 -> FE05B813 (fire)
+[21:38:42] Classifier: torture MGEF Injury_Engine.esp 0x814 -> FE05B814 (frost)
+[21:38:42] Classifier: torture MGEF Injury_Engine.esp 0x815 -> FE05B815 (shock)
+[21:38:42] Classifier: hit and combat event sinks registered
+[21:38:42] InjuryEngine: death event sink registered
+[21:38:42] InjuryEngine: scene factions SexLab:found OStim:found
+[21:38:42] truce: SkyrimNet API found (version 12), decisions available
+[21:38:42] Overlay: view created
+[21:39:05] Overlay: DomReady
+[21:39:14] co-save loaded 1 actors (record version 7)
+[21:39:16] Overlay: enabled
+[21:39:16] verbose logging on
+[21:39:17] [hook] AddTarget victim:00000014 effect:1C00182C item:1C00182E caster:00000014 added:true torture source:-1
+[21:39:17] [hook] AddTarget victim:00000014 effect:1C000D63 item:1C000D64 caster:00000014 added:true torture source:-1
+[21:40:10] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:10] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:10] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:10] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:10] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:10] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:10] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0001348C effect:FE047818 item:FE047804 caster:0001348C added:true torture source:-1
+[21:40:11] [hook] AddTarget victim:0001348C effect:000AA024 item:000AA025 caster:0001348C added:true torture source:-1
+[21:40:11] [hook] AddTarget victim:0001348C effect:000E40D3 item:000AA025 caster:0001348C added:true torture source:-1
+[21:40:11] [hook] AddTarget victim:0001348C effect:1C00182C item:1C00182E caster:0001348C added:true torture source:-1
+[21:40:11] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:11] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] take health FE04C83C points:1 health:580.0 -> 576.7 (max 550.0, floor 55.0)
+[21:40:12] [hook] ModActorValue victim:FE04C83C damage:-3.34 skipped (in HandleHealthDamage:false internal:true)
+[21:40:12] [hook] HandleHealthDamage victim:FE04C83C damage:-3.34 internal, passed
+[21:40:12] torture: Bob (00000014) ➤ Skadi (FE04C83C) | falling back point:0+1 level:undamaged amount:0.0 health:104.8% actual:576.7/550.0 skipped:0
+[21:40:12] hit FE04C83C falling part:back level:0 types:falling:1 fresh:true deficit:0 -> 1
+[21:40:12] Overlay: push 1010 bytes
+[21:40:12] take health FE04C83C points:1 health:576.7 -> 573.3 (max 550.0, floor 55.0)
+[21:40:12] [hook] ModActorValue victim:FE04C83C damage:-3.34 skipped (in HandleHealthDamage:false internal:true)
+[21:40:12] [hook] HandleHealthDamage victim:FE04C83C damage:-3.34 internal, passed
+[21:40:12] hit FE04C83C falling part:face level:0 types:falling:1 fresh:false deficit:1 -> 2
+[21:40:12] Overlay: push 1010 bytes
+[21:40:12] [hook] ModActorValue victim:FE04C83C damage:-30.00 skipped (in HandleHealthDamage:false internal:true)
+[21:40:12] [hook] HandleHealthDamage victim:FE04C83C damage:-30.00 internal, passed
+[21:40:12] scan effects FE04C83C
+[21:40:12] [hook] AddTarget victim:00013489 effect:FE047823 item:FE04780F caster:00013489 added:true torture source:-1
+[21:40:12] [hook] AddTarget victim:00013489 effect:00024315 item:000AA020 caster:00013489 added:true torture source:-1
+[21:40:12] [hook] AddTarget victim:00013489 effect:1C00182C item:1C00182E caster:00013489 added:true torture source:-1
+[21:40:12] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:12] Torture:Short:Start The rope leash yanks Skadi off their feet toward Bob. Skadi's face and back are scraped and bruised twice, the ground rushing up as Skadi goes down. The skin scrapes raw with a hot sting and Skadi grunts as Skadi hits the dirt.
+[21:40:12] [hook] AddTarget victim:00000014 effect:23499213 item:23499214 caster:00000014 added:true torture source:-1
+[21:40:13] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] ModActorValue victim:FE04C83C damage:-2.96 skipped (in HandleHealthDamage:false internal:true)
+[21:40:13] [hook] HandleHealthDamage victim:FE04C83C damage:-2.96 internal, passed
+[21:40:13] Torture:direct:Start The rope leash yanks Skadi off their feet toward Bob. Skadi hits the rough ground, The skin scrapes raw with a hot sting and Skadi grunts as Skadi hits the dirt.
+[21:40:13] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:13] scan effects FE04C83C
+[21:40:13] take health FE04C83C points:1 health:543.9 -> 540.6 (max 550.0, floor 55.0)
+[21:40:13] [hook] ModActorValue victim:FE04C83C damage:-3.34 skipped (in HandleHealthDamage:false internal:true)
+[21:40:13] [hook] HandleHealthDamage victim:FE04C83C damage:-3.34 internal, passed
+[21:40:13] torture: Someone (00000000) ➤ Skadi (FE04C83C) | leash_dragging right leg point:0+1 level:undamaged amount:0.0 health:98.3% actual:540.6/550.0 skipped:0
+[21:40:13] hit FE04C83C leash_dragging part:right leg level:0 types:leash_dragging:1 fresh:false deficit:2 -> 3
+[21:40:13] Overlay: push 1017 bytes
+[21:40:14] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] convert FE04C83C excess:0.59 budget:3.36 spent:3.34 source:false full_speed:false points left:2
+[21:40:14] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:14] [hook] ModActorValue victim:FE04C83C damage:-0.35 skipped (in HandleHealthDamage:false internal:true)
+[21:40:14] [hook] HandleHealthDamage victim:FE04C83C damage:-0.35 internal, passed
+[21:40:27] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:27] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:27] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:27] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:27] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:27] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:27] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] scan effects FE04C83C
+[21:40:28] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:28] [hook] ModActorValue victim:FE04C83C damage:-2.37 skipped (in HandleHealthDamage:false internal:true)
+[21:40:28] [hook] HandleHealthDamage victim:FE04C83C damage:-2.37 internal, passed
+[21:40:36] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:36] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:36] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:36] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:36] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:36] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:36] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:36] scan effects FE04C83C
+[21:40:40] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:40] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:40] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:40] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:40] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:40] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:40] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:40] [hook] ModActorValue victim:FE04C83C damage:-1.33 skipped (in HandleHealthDamage:false internal:true)
+[21:40:40] [hook] HandleHealthDamage victim:FE04C83C damage:-1.33 internal, passed
+[21:40:40] scan effects FE04C83C
+[21:40:41] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:41] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:41] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:41] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:42] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:42] scan effects FE04C83C
+[21:40:42] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:42] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:42] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:42] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:43] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:43] scan effects FE04C83C
+[21:40:43] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:43] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:43] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:44] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:44] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:44] scan effects FE04C83C
+[21:40:44] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:44] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] ModActorValue victim:FE04C83C damage:-1.03 skipped (in HandleHealthDamage:false internal:true)
+[21:40:45] [hook] HandleHealthDamage victim:FE04C83C damage:-1.03 internal, passed
+[21:40:45] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:45] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:45] scan effects FE04C83C
+[21:40:45] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:45] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:00000014 effect:11038058 item:11038059 caster:00000014 added:true torture source:-1
+[21:40:46] [hook] AddTarget victim:00000014 effect:1103FC37 item:11038059 caster:00000014 added:true torture source:-1
+[21:40:46] [hook] AddTarget victim:00000014 effect:1103FC38 item:11038059 caster:00000014 added:true torture source:-1
+[21:40:46] [hook] AddTarget victim:00000014 effect:1107E075 item:11038059 caster:00000014 added:true torture source:-1
+[21:40:46] [hook] AddTarget victim:00000014 effect:1107F09D item:11038059 caster:00000014 added:true torture source:-1
+[21:40:46] [hook] AddTarget victim:00000014 effect:1107E073 item:11038059 caster:00000014 added:true torture source:-1
+[21:40:46] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:46] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:46] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:40:46] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:40:46] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:40:46] scan effects FE04C83C
+[21:41:56] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:56] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:56] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:56] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:56] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:56] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:56] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:57] scan effects FE04C83C
+[21:41:57] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:57] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:57] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:57] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:57] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:57] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:41:57] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:12] [hook] ModActorValue victim:FE04C83C damage:-3.93 skipped (in HandleHealthDamage:false internal:true)
+[21:42:12] [hook] HandleHealthDamage victim:FE04C83C damage:-3.93 internal, passed
+[21:42:12] scan effects FE04C83C
+[21:42:13] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:42:13] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:42:13] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:13] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:42:13] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:42:13] scan effects FE04C83C
+[21:42:14] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:42:14] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:42:14] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:14] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] ModActorValue victim:FE04C83C damage:-1.04 skipped (in HandleHealthDamage:false internal:true)
+[21:42:15] [hook] HandleHealthDamage victim:FE04C83C damage:-1.04 internal, passed
+[21:42:15] scan effects FE04C83C
+[21:42:15] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] hit event target:FE04C83C source:000B62EE cause:00000014 torture:none whip:false
+[21:42:15] [hook] AddTarget victim:FE04C83C effect:000B62ED item:000B62EE caster:00000014 added:true torture source:-1
+[21:42:15] healing effect on FE04C83C item:000B62EE caster:00000014 magnitude:200.0 tracked:true
+[21:42:15] heal start FE04C83C source:1 caster:00000014 item:000B62EE Grand Healing points:2
+[21:42:15] hit event target:FE04C83C source:000B62EE cause:00000014 torture:none whip:false
+[21:42:15] [hook] AddTarget victim:FE04C83C effect:000B62F2 item:000B62EE caster:00000014 added:true torture source:-1
+[21:42:15] [hook] AddTarget victim:00000014 effect:000DD642 item:000B62EE caster:00000014 added:true torture source:-1
+[21:42:15] healing effect on 00000014 item:000B62EE caster:00000014 magnitude:200.0 tracked:false
+[21:42:15] heal start 00000014 source:1 caster:00000014 item:000B62EE Grand Healing points:0
+[21:42:15] [hook] AddTarget victim:00000014 effect:001031D5 item:000B62EE caster:00000014 added:true torture source:-1
+[21:42:15] Overlay: push 1016 bytes
+[21:42:15] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:15] convert FE04C83C excess:36.69 budget:36.69 spent:6.69 source:true full_speed:true points left:0
+[21:42:15] pain gone FE04C83C
+[21:42:15] forget FE04C83C (healed)
+[21:42:15] Overlay: push 888 bytes
+[21:42:16] sync event FE04C83C kind:0 source:1 percent:0 caster:00000014
+[21:42:16] sync event 00000014 kind:0 source:1 percent:0 caster:00000014
+[21:42:16] sync event FE04C83C kind:1 source:1 percent:100 caster:00000014
+[21:42:16] sync event FE04C83C kind:2 source:1 percent:100 caster:00000014
+[21:42:16] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] heal:Short:Start Bob casts Grand Healing around Skadi and Bob. With no wounds to mend, the warm yellow swirling light simply washes over them, warm and soothing.
+[21:42:16] heal:direct:Start Bob casts Grand Healing around Skadi and Bob. With no wounds to mend, the warm yellow swirling light simply washes over them, warm and soothing.
+[21:42:16] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:16] heal:Short:Start The warm light of Bob's spell has taken the pain from Skadi's injuries, but the healing continues.
+[21:42:17] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] heal:Short:Start Bob casts a warm yellow swirling light around Skadi. Skadi's injuries are now fully healed, leaving Skadi without pain or blemish.
+[21:42:17] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:17] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:18] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:19] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:19] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:19] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:19] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:19] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:19] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:19] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:32] [hook] AddTarget victim:0001EBA1 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:32] [hook] AddTarget victim:0001EBF6 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:32] [hook] AddTarget victim:0001EBF0 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:32] [hook] AddTarget victim:0006E297 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:32] [hook] AddTarget victim:0008480B effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:32] [hook] AddTarget victim:00105A25 effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1
+[21:42:32] [hook] AddTarget victim:FE04C83C effect:1C000D65 item:1C00182B caster:00000014 added:false torture source:-1

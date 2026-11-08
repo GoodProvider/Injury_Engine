@@ -160,7 +160,7 @@ In cross-runtime builds (SE+AE+VR, our default) `MagicTarget::GetActiveEffectLis
 
 ## CommonLibSSE moved to MIT MinLL/CommonLibVR 4.39.5 via overlay port (2026-10-09)
 
-`SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` pins `MinLL/CommonLibVR` 4.39.5 (`550cc4f`, MIT; branched from v4.39.3, the last MIT CommonLibVR, upstream is GPL-3.0 from v5.0.0) and adds SE 1.7.99 / 1.7.104. It is a copy of `../SkyrimNet_SexLab/extern/vcpkg-ports/commonlibsse-ng-fork` (also used by Leashed and DOM); bump all copies together. Before this the plugin `add_subdirectory`'d SexLab's alandtse v11.0.0 (GPL-3.0, not compatible with the Skyrim EULA). The portfile fetches ValveSoftware/openvr into `extern/openvr` (the GitHub tarball leaves the submodule empty) and builds with `SKSE_SUPPORT_XBYAK=off` (we only use `write_vfunc`, no trampoline). `CMakeLists.txt` uses `find_package(CommonLibSSE CONFIG REQUIRED)` plus `find_package(directxtk)` (named in CommonLib's link interface). After switching, delete `SKSE_Source/build/release` (its cache still holds `CommonLibPath`). Plugin source needed no API changes.
+`SKSE_Source/vcpkg-ports/commonlibsse-ng-fork` pins `MinLL/CommonLibVR` 4.39.5 (`550cc4f`, MIT; branched from v4.39.3, the last MIT CommonLibVR, upstream is GPL-3.0 from v5.0.0) and adds SE 1.7.99 / 1.7.104. It is a copy of `../SkyrimNet_SexLab/extern/vcpkg-ports/commonlibsse-ng-fork` (also used by Leashed and DOM); bump all copies together. Before this the plugin `add_subdirectory`'d SexLab's alandtse v11.0.0 (GPL-3.0, not compatible with the Skyrim EULA). The portfile fetches ValveSoftware/openvr into `extern/openvr` (the GitHub tarball leaves the submodule empty) and builds with `SKSE_SUPPORT_XBYAK=off` (no xbyak: the vtable hooks use `write_vfunc`, and the two call hooks, `GetFactionFightReaction` and `ProcessHitData`, use `write_call<5>` from one `SKSE::AllocTrampoline(28)`). `CMakeLists.txt` uses `find_package(CommonLibSSE CONFIG REQUIRED)` plus `find_package(directxtk)` (named in CommonLib's link interface). After switching, delete `SKSE_Source/build/release` (its cache still holds `CommonLibPath`). Plugin source needed no API changes.
 
 ## Injury data lives in `SKSE/Plugins/Injury_Engine/injuries/*.json`; the DLL reads them at kDataLoaded (2026-10-06)
 
@@ -278,7 +278,7 @@ Papyrus is compiled with `c:/Skyrim/tools/papyrus-compiler/papyrus.exe` (VS Code
 ## Drowning has no attacker and no hit form (2026-10-17)
 Vanilla drowning (about 20 s under water, then health drains every second until the actor surfaces) arrives in the health hooks like a landing: no `TESHitEvent`, no attacker. `Classifier::ClassifyDrown` runs before `ClassifyFall` in that branch and calls it drowning when `Actor::BOOL_FLAGS::kUnderwater` is set (it is in `boolFlags`, not `boolBits`; `kInWater` / `kSwimming` are in `boolBits`) or `GetSubmergedLevel(z, cell) >= 0.85`, and the WaterBreathing AV is 0. Which signal is reliable for NPCs is not confirmed: the verbose log prints `underwater / swimming / underWaterTimer / submerged / waterBreathing` on each such tick. The lungs (part 11) are outside the health capacity and uncapped; their stage is lung points / `CapacityDamage()` (share of max health).
 
-**2026-10-17 game run:** the player nearly drowned with no narration, and `Injury_Engine.log` had no line for it at all (no `health:`, no `uncaused`). The ticks most likely never reached `HandleHealthDamage` or ActorValueOwner 0x06. An always-on `[probe]` (info level, at most one line per second per hook and actor, logged only while the actor shows a water signal) now sits in `HandleHealthDamage`, AV 0x06, and pass-through hooks on AV 0x05 `ModBaseActorValue` / 0x07 `SetActorValue`, to find the path. Remove the 0x05 / 0x07 hooks once it is known.
+**2026-10-17 game run:** the player nearly drowned with no narration, and `Injury_Engine.log` had no line for it at all (no `health:`, no `uncaused`). The ticks most likely never reached `HandleHealthDamage` or ActorValueOwner 0x06. An always-on `[probe]` (info level, at most one line per second per hook and actor, logged only while the actor shows a water signal) now sits in `HandleHealthDamage`, AV 0x06, and pass-through hooks on AV 0x05 `ModBaseActorValue` / 0x07 `SetActorValue`, to find the path. **2026-11-06:** drowning verified in game by the user; the `[probe]` lines and the pass-through 0x05 / 0x07 hooks are removed (`ReadDrownSignals` stays, `ClassifyDrown` uses it).
 
 ## A loop under g_lock froze the game with no crash log (2026-10-17)
 Player report: the game froze (no crash log, no CTD) twice, each time right after a Fireball hit a horker that wolves had mauled. The dump showed one actor-update worker thread stuck in `InjuryEngine::OnDamage` (from the `HandleHealthDamage` hook) and the main thread waiting on that worker. The part loop in `OnDamage` had a no-progress case: every tortured part already at its maximum and what was left of the hit smaller than one torture point. Neither "replace a torture point" nor "add to carry" could fire, and `PickPart` returned a tortured part first even when it was full, so it picked the same kind of part forever while holding `g_lock`. The torture point came from the Fireball's second damage call being read as `punching` (no usable hit event, the caster's hands empty, out of combat).
@@ -310,3 +310,68 @@ An area heal (Greater Heal) reaches `AddTarget` once per target, so each target 
 ## Held sync events need a live sync loop; group line facts are taken at heal start (2026-10-24)
 
 `DrainPendingEvents` holds a heal start for `kHealGroupWindow` (0.35 s). The loop in `Main.OnUpdate` stays alive for it because `TrackedCount()` counts `g_events`: a held event is never stranded (a review claimed it could be; it cannot). Keep `g_events` in that count when changing it. The group line is worded after the hold, when a target may already be healed, so `unhurt` and the item come from `g_healStart` (recorded in `Seen`, pruned by age, not erased with the actor), and `Main.SameHealCast` groups only same caster + source + item (`Engine.HealItem`); no caster never groups.
+
+## Health changes under g_lock go through HealthBatch (2026-11-05, needs in-game verification)
+
+The 2026-10-16 freeze note named `ConvertHealth` / `TakeHealth` as the next suspects: they (and `HealPart`) called `DamageActorValue` / `RestoreActorValue` while holding `InjuryEngine::g_lock`, and `SyncHealth` holds that lock for its whole loop while damage hooks on other threads wait for it. These calls now go through `ChangeHealth`. When a `HealthBatch` is open on the thread (in `SyncHealth`, `HitPoints`, the locked block of `OnTortureDamage` and `HealPart`), the change waits in the batch and is applied under `InternalScope` after the unlock. The batch is declared before the `lock_guard`, so it is destroyed after it. Reads made while changes are still pending add `PendingHealth(id)`: `EffectiveHealth`, the `FitRealToHealth` missing health, `UpdateBleedout` and the torture log line. Rule: new code that changes health under `g_lock` calls `ChangeHealth`, never the engine directly, and any health read inside the lock adds `PendingHealth`.
+
+## Fortify Health is not healing and not torture room (2026-11-05, needs in-game verification)
+
+The KB logged 580/550: current health includes temporary buffs, but the permanent max does not include them. `ConvertHealth` used `health - WoundedLevel` as its healing excess, so a Courage / Fortify Health buff did two things:
+- It erased real points while that health was still missing.
+- With torture wounds, it was taken back as regen on every sync. That deepened the damage modifier, and when the buff ended the actor could drop below the torture floor.
+
+`EffectiveHealth = min(health, max - damage modifier) + pending` is now used for the excess and for `TakeHealth`'s floor check. It ignores buffs above the permanent max, and debuffs still count.
+
+## A buff ending on an actor already missing health (2026-11-05, needs in-game verification)
+
+The 2026-10-18 shrink test (reported loss larger than the Health `kDamage` modifier) only works on a near-unhurt actor. When the modifier already holds at least the buff's size, an ending Courage looks exactly like damage inside `HandleHealthDamage` (the hook runs after the change, so there is no "before" to compare), and the loss could land as a `generic` wound. Fix: `Classifier::EffectSink` (`TESActiveEffectApplyRemoveEvent`).
+- The apply event queues an SKSE task. The task finds the effect by `usUniqueID` with `VisitEffects` and records it in `g_buffEffects` when it is a max-health buff: Health primary AV, not detrimental, magnitude > 0, and either PeakValueModifier or a Recover-flagged ValueModifier / DualValueModifier.
+- The task exists because the event can arrive inside the engine's effect update, where walking the effect list crashes (see the `g_torture` comment in `Classifier.cpp`).
+- The removal event only checks the record, then calls `NoteBuffChange` and writes `[buff] effect <id> ended on <actor>: max health buff ...` (info).
+- Either order works. If the mark comes first, `BuffChange`'s 1 s window passes the loss through. If it comes just after, `ResolveUncaused` drops the held chunk (`RecentBuffChange(kUncausedHold + 1)`).
+- Not covered: buffs already running when a save loads (the record is not saved) and the gap between applying and the recording task (one frame). The shrink test still covers near-unhurt actors there.
+
+## The sync loop runs for loaded actors only (2026-11-05)
+
+`TrackedCount` used to count every `g_actors` entry, but `SyncHealth` skips actors without 3D, so one wounded NPC left in another cell kept `Main.OnUpdate` running at 5 Hz forever and stayed in the co-save. Now:
+- `TrackedCount` counts loaded actors, plus `g_events`, `g_hits` and `g_uncaused`. Keep `g_events` in it: held heal starts need the loop.
+- `SyncHealth` advances game-time healing on unloaded entries and erases the healed or dead ones silently.
+- `InjuryEngine`'s `LoadSink` (`TESObjectLoadedEvent`) calls `NotifyPapyrus` when a tracked actor's 3D loads, which restarts the loop.
+
+## MO2 can load the release copy instead of this folder (2026-11-06)
+
+The MO2 profile `SkyrimNet SexLab` (`C:\Skyrim\dev\profiles\SkyrimNet SexLab\modlist.txt`) lists two copies of the mod: `+Injury Engine` (an installed release, folder `C:\Skyrim\dev\mods\Injury Engine`, DLL from 2026-10-26) and `-Injury_Engine` (this repo). With the release enabled and the repo disabled, every game run tests the old build and none of the fixes, while the repo's DLL and `.pex` look deployed.
+- Check it in `Injury_Engine.log` before reading any test result: the init lines must match the current source (2026-11-06: `Classifier: hit, combat and active effect event sinks registered` and `InjuryEngine: death and object load event sinks registered`). The old build prints `hit and combat event sinks` / `death event sink`.
+- Keep only one of the two enabled. Changing the profile is a load-order edit, so ask the user first (AGENTS.md).
+
+## Heal session writes find the session again; each session keeps its own event method (2026-11-06)
+
+- `HealSend` calls `PairVisible`, `ClaimNarration` and `HealMapText`, which all yield. Another thread can add or remove `hs_*` entries in the meantime, so each StorageUtil write goes through `HealFind(target)` again. A stale index would write into another actor's session.
+- The method leg of the `healing_<method>_<caster>_to_<target>` id used to be one script variable for every session, so an `again` event could carry the last healed actor's method. It is now the list `hs_meth`, set by `HealOpen` / `HealRefresh`.
+
+## Torture_Target: one action per speaker, lent whips come back on load (2026-11-06)
+
+- `injury_engine.action_start` on the speaker ignores a second `Torture_Target` while the first is under 60 real seconds old. Two actions on one speaker used to share the whip, the in-action flag and the re-equip.
+- A whip the action lent is marked (`whip_lent`, `whip_previous`, quest list `whip_lent_actors`). A later action reuses it instead of treating it as the speaker's own, and `Actions.ReturnLentWhips` (every load, from `Setup`) takes it back from a speaker whose action is no longer running.
+
+## Fight reaction and handled marks look at the attacker (2026-11-06)
+
+- `Classifier::IsTortureAttacker` (the `GetFactionFightReaction` hook) is false whenever either hand holds a real weapon. The hook does not know which hand struck, so whip + sword could turn a sword hit into an ally hit. Such a lash is calmed after the fact by the `CombatSink` instead.
+- `ProcessHitData`'s handled mark stores the attacker. `TakeHandled` uses it only for the same attacker (a null attacker on either side still matches), so another attacker's hit in the 100 ms window is no longer restored in full.
+
+## Instant heals land inside AddTarget (2026-11-07)
+
+- A fire-and-forget restore-health effect with no duration (werewolf `FeedBoost`, cast by vanilla `PlayerWerewolfChangeScript.Feed()` on the player) may already have healed the actor when `MagicTarget::AddTarget` returns. Anything that needs the health from before the heal ("was the actor hurt?") must read it before the original call. The hook passes `hurt` (Health `kDamage` modifier below -0.5) to `NoteHealingSource`.
+- Feeding counts only as a self-heal in a `heal_feed.races` beast race. Mods that heal with `RestoreActorValue` (Devour may do this) apply no magic effect, so their feeding is not seen and the heal is silent, like passive regeneration.
+
+## Race groups: 16 parts, thread group, critters (2026-11-07, needs in-game verification)
+
+- A body has at most 16 parts: the hit code `fresh*100000000 + source*1000000 + mask*10 + level` and Papyrus `MaskOf` = `(code % 1000000) / 10` leave a 16-bit mask. More parts need a new code (and Papyrus changes).
+- `InjuryConfig` lookups read a thread-local group. A new `InjuryEngine` entry point must take a `GroupScope` for its actor (`GroupFor` locks `g_lock`: call it before taking the lock, never under it); otherwise it reads humanoid's body and text.
+- Race EditorIDs are kept in memory (`TESRace::formEditorID`), actor base EditorIDs are not: `races.json` `actors` use file + form.
+- Critters (butterflies, moths, dragonflies, torchbugs, salmon) are activators, not actors: nothing to map.
+- Durnehviir most likely shares `DLC1UndeadDragonRace` with the skeletal dragons: give him a `races.json` `actors` entry once his form is verified.
+- Reanimated thralls keep their living race's group: an active-effect scan in the damage hook is unsafe (see the effect-list crash), so there is no Reanimate override.
+- Before this change every actor used the humanoid body: a Frostbite Spider got "face", "right arm", "penis" and "torn flesh" (checkpoints/groups/logs/2026-11-07-17-07-42/Injury_Engine.log, 16:59:47).
+

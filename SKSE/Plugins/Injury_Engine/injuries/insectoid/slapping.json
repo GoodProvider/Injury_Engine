@@ -1,0 +1,12 @@
+{
+  "_note": "Only part_weights by this group's part names; text comes from common.json. Schema: ../guide.md (Groups).",
+  "part_weights": {
+    "head": 2,
+    "thorax": 1,
+    "abdomen": 1.2,
+    "left front legs": 0.3,
+    "right front legs": 0.3,
+    "left hind legs": 0.3,
+    "right hind legs": 0.3
+  }
+}

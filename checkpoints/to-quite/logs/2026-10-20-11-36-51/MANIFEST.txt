@@ -1,0 +1,6 @@
+708423	2026-10-20T11:29:11	C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\Injury_Engine.log
+687260	2026-10-20T11:28:53	C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\Logs\Script\Papyrus.0.log
+1759514	2026-10-20T11:28:32	C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\conversation_log.log
+1949860	2026-10-20T11:29:12	C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\SkyrimNet.log
+397985	2026-10-20T11:28:32	C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\openrouter_input.log (last 3000 lines)
+newest crash (not copied unless this session): crash-2026-10-18-10-47-20.log 2026-10-18T10:47:21

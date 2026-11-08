@@ -26,6 +26,10 @@ Int Function HitPart(Actor akActor, Actor attacker, String sourceId, Int part) g
 ; attack. Returns the source index, or -1 for None/dead actors and unknown sources.
 Int Function RealHit(Actor akActor, Actor attacker, String sourceId, Int points) global native
 
+; RealHit without narration: the wound lands the same way, but no hit is queued for NarrateRealHits (a killing blow
+; is still narrated). External_Damage uses it for narrate False.
+Int Function RealHitQuiet(Actor akActor, Actor attacker, String sourceId, Int points) global native
+
 ; True when sourceId (a file id) has a health model: a "health" file or a "both" file.
 Bool Function HasHealth(String sourceId) global native
 
@@ -135,7 +139,7 @@ String Function HealMapText(Actor victim) global native
 ; The feeling sentence of a hit level 0-3 (narration.hit.levels), rendered for the victim.
 String Function LevelText(String sourceId, Actor victim, Int level) global native
 String Function SourceHealText(Int kind, Int source, Int percent, Actor caster, Actor target) global native
-; One line for several targets of the same cast (session.json heal_group), empty for food. Targets: Actor or Form array.
+; One line for several targets of the same cast (session.json heal_group), empty for food and feeding. Targets: Actor or Form array.
 String Function SourceHealGroupText(Int source, Actor caster, Form[] targets) global native
 ; The spell / staff / potion of the actor's last heal start (None if unknown); heal starts group only on the same item.
 Form Function HealItem(Actor akActor) global native

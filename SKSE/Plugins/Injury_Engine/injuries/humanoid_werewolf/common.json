@@ -1,0 +1,204 @@
+{
+  "_note": "Were-beast text (werewolf, werebear) for every source without its own file in this folder: thick fur, hide, muzzle, claws, tail; bleeds like any beast. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text (drowning: lungs are lungs). Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": ["drowning"],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s muzzle: the fur is matted with a little blood along a fresh cut near the snout.",
+          "{name}'s muzzle: a deep wound splits the fur of the snout, blood dripping from the lips over the fangs. The smell of blood and wet fur hangs around {him}.",
+          "{name}'s muzzle: the snout is torn open to the bone, one ear ripped, blood soaking the ruff of the neck. {name} reeks of blood and musk."
+        ],
+        "body": [
+          "{name}'s back: a patch of fur is torn away and the hide beneath is scored and bleeding a little.",
+          "{name}'s back: a long wound parts the thick fur, blood matting it dark down the flank. The smell of blood and wet fur follows {him}.",
+          "{name}'s back: the hide is laid open through the fur and muscle; blood runs freely and the fur is sodden and clumped. The heavy smell of blood and beast hangs around {him}."
+        ],
+        "arm": [
+          "{name}'s {part}: the fur is ruffled and bloodied over a shallow wound.",
+          "{name}'s {part}: a deep wound in the forearm, blood running down the fur to the claws. A sharp tang of blood rises from it.",
+          "{name}'s {part}: torn to the bone, the clawed hand hanging heavy and dripping. It smells strongly of blood and musk."
+        ],
+        "leg": [
+          "{name}'s {part}: a shallow wound in the haunch, the fur matted with blood.",
+          "{name}'s {part}: a deep wound in the thigh, blood running down the fur to the hind paw. The tang of blood rises from it.",
+          "{name}'s {part}: the haunch is torn through the muscle; the leg buckles and the fur is slick with blood."
+        ],
+        "tail": [
+          "{name}'s tail: a few tufts of fur are torn out and a little blood beads at the base.",
+          "{name}'s tail: a deep wound halfway down; the tail hangs low and drips blood.",
+          "{name}'s tail: torn and half-severed, dragging limp behind {him} in a smear of blood."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s muzzle stings; {he} snorts and licks the cut, bristling and wary.",
+          "{name}'s muzzle throbs and {he} tastes {his} own blood; {name} snarls constantly, enraged and half-blinded by pain.",
+          "{name}'s muzzle is agony; {he} whines and shakes {his} head, dazed, the beast's fury guttering into panic."
+        ],
+        "body": [
+          "{name}'s back stings under the torn fur; {name} hunches and bristles, more savage for it.",
+          "{name}'s back burns with every lunge; {name} moves stiffly, growling through clenched fangs.",
+          "{name}'s back is tearing agony; {name} drops to all fours, panting and shaking, close to collapse."
+        ],
+        "arm": [
+          "{name}'s {part} stings, and {he} flexes the claws to test it.",
+          "{name}'s {part} burns deep and bleeds whenever {he} swipes; {name} snarls and favors it.",
+          "{name}'s {part} barely answers; {he} cannot rake with it and holds it tucked against {his} chest, whimpering."
+        ],
+        "leg": [
+          "{name}'s {part} stings with each bound; a small hitch shows in {his} stride.",
+          "{name}'s {part} burns and bleeds with every step; {name} limps, snarling, slower to spring.",
+          "{name}'s {part} will hardly bear weight; {name} drags it and cannot leap, panicked and dangerous."
+        ],
+        "tail": [
+          "{name}'s tail smarts; {he} lashes it once, irritated.",
+          "{name}'s tail throbs and {he} keeps it clamped low, ears flat.",
+          "{name}'s tail is agony with every movement; {he} cowers and whines whenever it is touched."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", parting the fur and biting the hide beneath. {name} snarls and recoils, hackles up.",
+          " into hide that is already torn. The wound opens again under the matted fur and {name} howls in pain. The smell of blood and wet fur thickens.",
+          ", and it bites deep into the bleeding wound. Blood soaks the fur in dark streams and {name} roars and staggers, fangs bared. The stench of blood and musk is overwhelming.",
+          ", and it is too much. {name} drops to all fours, blood pouring through the fur, the howl fading to a ragged whine."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s skull splits under the blow; the muzzle sags open over bloodied fangs and one eye is lost in a welter of blood and fur. {name} gives a choked howl and crashes down, the thick reek of blood and wet fur spreading around the body.",
+          "the blow tears through {name}'s throat beneath the jaw; blood fountains into the ruff of fur and {name} falls, kicking, the howl drowning in a wet gurgle."
+        ],
+        "body": [
+          "{name}'s belly is torn open through the fur; steaming loops of gut spill out over the claws as {name} tries to hold them in. {name} sinks with a last, broken howl as the smell of blood and torn bowel fills the air.",
+          "the blow caves in {name}'s ribs through the fur; blood froths at the muzzle and {name} falls on {name}'s side, chest heaving, until the great body shudders and lies still."
+        ],
+        "arm": [
+          "{name}'s {part} is torn off at the shoulder and falls, claws still twitching; blood pumps from the ragged stump in hard spurts, matting the fur black, and {name} collapses howling as the howls fade.",
+          "the blow shears through {name}'s {part} at the elbow; the clawed forearm hangs by a flap of hide and fur. Blood pours out in a dark sheet and {name} sags down, whining, until the whining stops."
+        ],
+        "leg": [
+          "{name}'s {part} is hewn through above the knee and {name} crashes down beside it; blood gushes from the stump into the fur, and {name} bleeds out with a long, fading howl.",
+          "the blow opens {name}'s {part} at the haunch and the great vessel with it; bright blood pours over the ground and {name} goes down, thrashing, then still."
+        ],
+        "tail": [
+          "the blow severs {name}'s tail and drives on into the spine above it; {name}'s hind legs give out and {name} drags {name}'s body forward on the forelimbs, bleeding heavily, until {name} slumps and dies."
+        ]
+      },
+      "soil": [
+        "As {name}'s body goes slack, the stink of {name}'s dung and piss mixes with the blood and wet fur.",
+        "In death {name}'s bowels let go, and the rank stench of a dying beast joins the smell of blood."
+      ],
+      "soil_chance": 0.4
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s muzzle: the fur is ruffled and a welt shows on the bare skin of the snout.",
+          "{name}'s muzzle: the snout is swollen and split at the lip, the fur matted with spit and a little blood.",
+          "{name}'s muzzle: the snout is badly swollen, the lips torn and bloody, one eye puffed shut."
+        ],
+        "body": [
+          "{name}'s back: the fur is flattened in stripes and the hide beneath is welted.",
+          "{name}'s back: angry welts show through parted fur, some split and beading blood.",
+          "{name}'s back: the fur is torn away in patches over raw, bleeding welts."
+        ],
+        "arm": [
+          "{name}'s {part}: the fur is ruffled over a reddened welt.",
+          "{name}'s {part}: swollen welts run through the fur, a little blood in them.",
+          "{name}'s {part}: the fur is matted over raw, split welts; the claws hang slack."
+        ],
+        "leg": [
+          "{name}'s {part}: a welt shows through the fur of the haunch.",
+          "{name}'s {part}: the haunch is welted and swollen, fur matted in places.",
+          "{name}'s {part}: the haunch is raw and bleeding through torn fur; the leg trembles."
+        ],
+        "tail": [
+          "{name}'s tail: the fur is ruffled and kinked where it was struck.",
+          "{name}'s tail: swollen and sore, the fur matted, held low.",
+          "{name}'s tail: raw and bleeding in patches, hanging limp."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s muzzle stings sharply; {he} snorts and flattens {his} ears, more humiliated than hurt.",
+            "{name}'s muzzle aches and throbs; {he} growls low but flinches whenever a hand comes near.",
+            "{name}'s muzzle is blinding pain; {he} whines and shakes {his} head, the beast cowed and trembling."
+          ],
+          "body": [
+            "{name}'s back stings under the fur; {he} bristles and shifts, snarling softly.",
+            "{name}'s back throbs with every breath; {he} hunches, growling, unable to lie back.",
+            "{name}'s back is raw agony; {he} shudders and whimpers, too hurt to rise up tall."
+          ],
+          "arm": [
+            "{name}'s {part} smarts; {he} shakes it out and flexes the claws.",
+            "{name}'s {part} aches deep; {he} holds it close and growls when it is touched.",
+            "{name}'s {part} is agony; {he} cradles it against {his} chest, whining."
+          ],
+          "leg": [
+            "{name}'s {part} stings; {he} stamps once and shifts {his} weight.",
+            "{name}'s {part} throbs; {he} limps and keeps off it when {he} can.",
+            "{name}'s {part} is agony and buckles under {him}; {he} sinks down, panting."
+          ],
+          "tail": [
+            "{name}'s tail stings; {he} lashes it, irritated.",
+            "{name}'s tail aches; {he} keeps it clamped low between {his} legs.",
+            "{name}'s tail is agony; {he} cowers and cannot bear it touched."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s muzzle barely aches now; {he} breathes easily through it.",
+            "{name}'s muzzle is sore but the swelling is going down.",
+            "{name}'s muzzle still throbs as the split lips begin to close."
+          ],
+          "body": [
+            "{name}'s back feels almost whole; only faint tenderness under the fur.",
+            "{name}'s back aches dully as the welts fade under the fur.",
+            "{name}'s back is still very sore while the raw welts begin to close."
+          ],
+          "arm": [
+            "{name}'s {part} is nearly right again.",
+            "{name}'s {part} aches but grips better.",
+            "{name}'s {part} is weak and sore while it mends."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} aches but bears weight better.",
+            "{name}'s {part} is still sore and shaky as it mends."
+          ],
+          "tail": [
+            "{name}'s tail moves freely again.",
+            "{name}'s tail is sore but lifts a little.",
+            "{name}'s tail still hangs low and tender as it mends."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp sting through the fur. {name} yelps and bristles, ears flattening.",
+          " on hide that is already welted under the fur. The sore spot flares and {name} howls, twisting away.",
+          ", and the blow lands on raw, split welts. Blood mats the fur and {name} snarls and whines in the same breath, shaking.",
+          ", and it is too much. {name} sinks down whimpering, tail clamped and ears flat, the fight gone out of {name}."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The fur has nearly grown back over {name}'s {parts}; those wounds have almost healed.",
+          "mid": "The welts on {name}'s {parts} have closed under the fur, leaving tender bald patches.",
+          "low": "The wounds on {name}'s {parts} have scabbed over under the matted fur."
+        }
+      }
+    }
+  }
+}

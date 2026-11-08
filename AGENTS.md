@@ -9,14 +9,14 @@ If this is possible step by step instructions should be left for the developer.
 **Deploy before you stop.** This repo is the MO2 mod folder (`Injury_Engine`). After C++, Papyrus, or injury JSON work, always ship the files the game loads:
 
 1. **DLL** — `make dll` → [SKSE/Plugins/Injury_Engine.dll](SKSE/Plugins/Injury_Engine.dll) (CMake copies the build output here; do not hand-copy from `build/` elsewhere).
-2. **Injuries** — [SKSE/Plugins/Injury_Engine/injuries/*.json](SKSE/Plugins/Injury_Engine/injuries/) (edit in place; no separate packaging step).
+2. **Injuries** — [SKSE/Plugins/Injury_Engine/injuries/<group>/*.json](SKSE/Plugins/Injury_Engine/injuries/) and [races.json](SKSE/Plugins/Injury_Engine/races.json) (edit in place; no separate packaging step).
 3. **Papyrus** — VS Code task **`compile: papyrus`** ([.vscode/tasks.json](.vscode/tasks.json); agents run its `papyrus.exe compile ...` line from the repo root) → [Scripts/*.pex](Scripts/) (writes into this repo, not into overwrite).
 
 If a fix “does nothing” in-game, confirm MO2 is loading this folder (not a disabled release copy) and that overwrite has no stale `Injury_Engine` DLL or `.pex` shadowing it. See [KNOWLEDGEBASE.md](KNOWLEDGEBASE.md) (.pex vs .dll deploy).
 
 ## What this is
 
-Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real damage is classified by type (slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / falling / generic, plus types other mods ship as injury JSON) and torture (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock; the padded whip is one torture source) holds health down without killing. `Injury_Engine.dll` (`InjuryEngine`) tracks injury per source per part (co-saved; each part counts its worst torture type), reads all wound data and text from `SKSE/Plugins/Injury_Engine/injuries/*.json`, Papyrus narrates hits, torture scenes, healing and killing blows, prompts tell the LLM how wounds look and feel, and a Magelight UI overlay (Magelight UI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
+Per-body-part injury tracking for SkyrimNet. Every hit wounds a body part: real damage is classified by type (slashing / piercing / bludgeoning / burning / freezing / shocking / mauling / falling / generic, plus types other mods ship as injury JSON) and torture (whipping, pinching, slapping, pulling, punching, companion fire / frost / shock; the padded whip is one torture source) holds health down without killing. `Injury_Engine.dll` (`InjuryEngine`) tracks injury per source per part (co-saved; each part counts its worst torture type), reads all wound data and text from `SKSE/Plugins/Injury_Engine/injuries/<group>/*.json` (race groups: `races.json`), Papyrus narrates hits, torture scenes, healing and killing blows, prompts tell the LLM how wounds look and feel, and a Magelight UI overlay (Magelight UI is a required dependency; the overlay itself is a setting) shows the bars. Architecture and Form IDs: [CLAUDE.md](CLAUDE.md).
 
 ## Key paths
 
@@ -77,7 +77,7 @@ Relative paths for other machines: [docs/reference/papyrus-rules.md](docs/refere
 
 ## Compile
 
-- Papyrus: VS Code task **`compile: papyrus`** (`c:/Skyrim/tools/papyrus-compiler/papyrus.exe compile -nocache -i Scripts/Source -o Scripts -h ...`, header dirs in [.vscode/tasks.json](.vscode/tasks.json); later `-h` wins). Not Pyro.
+- Papyrus: VS Code task **`compile: papyrus`** (`c:/Skyrim/tools/papyrus-compiler/papyrus.exe compile -nocache -i Scripts/Source -o Scripts -h ...`, header dirs in [.vscode/tasks.json](.vscode/tasks.json); later `-h` wins), or `make papyrus` (the same command; `make release` runs it). Not Pyro.
 - SKSE: `make dll` (CMake + vcpkg, `VCPKG_ROOT` set; CommonLibSSE is MinLL/CommonLibVR 4.39.5 (MIT) from the overlay port `SKSE_Source/vcpkg-ports/commonlibsse-ng-fork`; a clean configure builds it, ~6 min). See [docs/developers/overlay.md](docs/developers/overlay.md).
 - ESP: `make esp` (Spriggit → `.esp`); `make serialize` after xEdit edits.
 - Release: `make release` (version check, `info.json`, FOMOD, dll, esp, pack) → `versions/Injury_Engine <version>.7z`. See [release-guide.md](release-guide.md).

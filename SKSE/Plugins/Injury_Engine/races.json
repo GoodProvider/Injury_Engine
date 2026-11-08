@@ -1,0 +1,704 @@
+{
+  "_note": "Race -> injury group (injuries/<group>/). Order: actors (actor or actor base form), races (exact EditorID), race_forms (file + form), race_contains (EditorID contains the text, first match wins: keep specific texts before general ones), keywords (all listed race keywords), default_group. A group without an injuries/<group>/ folder uses humanoid (warned once). Thralls keep their living race group. Schema: injuries/guide.md (Groups).",
+  "default_group": "humanoid",
+  "actors": [],
+  "races": {
+    "_note": "Exact race EditorIDs (case-insensitive) per group; checked first. Verify against the race dump in Injury_Engine.log.",
+    "humanoid": [
+      "ArgonianRace",
+      "BretonRace",
+      "DarkElfRace",
+      "HighElfRace",
+      "ImperialRace",
+      "KhajiitRace",
+      "NordRace",
+      "OrcRace",
+      "RedguardRace",
+      "WoodElfRace",
+      "ArgonianRaceVampire",
+      "BretonRaceVampire",
+      "DarkElfRaceVampire",
+      "HighElfRaceVampire",
+      "ImperialRaceVampire",
+      "KhajiitRaceVampire",
+      "NordRaceVampire",
+      "OrcRaceVampire",
+      "RedguardRaceVampire",
+      "WoodElfRaceVampire",
+      "ElderRace",
+      "ElderRaceVampire",
+      "DremoraRace",
+      "FalmerRace",
+      "GiantRace",
+      "HagravenRace",
+      "DLC2RieklingRace"
+    ],
+    "humanoid_undead": [
+      "DraugrRace",
+      "DraugrMagicRace",
+      "SkeletonRace",
+      "SkeletonNecroRace",
+      "DragonPriestRace"
+    ],
+    "humanoid_werewolf": [
+      "WerewolfBeastRace",
+      "DLC2WerebearBeastRace"
+    ],
+    "humanoid_vampire": [
+      "DLC1VampireBeastRace"
+    ],
+    "insectoid": [
+      "FrostbiteSpiderRace",
+      "FrostbiteSpiderRaceGiant",
+      "FrostbiteSpiderRaceLarge",
+      "ChaurusRace",
+      "ChaurusReaperRace"
+    ],
+    "construct": [
+      "DwarvenSpiderRace",
+      "DwarvenSphereRace",
+      "DwarvenCenturionRace"
+    ],
+    "dragon": [
+      "DragonRace"
+    ],
+    "dragon_skeletal": [
+      "DLC1UndeadDragonRace"
+    ]
+  },
+  "race_forms": [
+    {
+      "name": "Bear",
+      "file": "Skyrim.esm",
+      "id": "0x131E7",
+      "group": "quadruped"
+    },
+    {
+      "name": "Cave Bear",
+      "file": "Skyrim.esm",
+      "id": "0x131E8",
+      "group": "quadruped"
+    },
+    {
+      "name": "Chaurus",
+      "file": "Skyrim.esm",
+      "id": "0xA5601",
+      "group": "insectoid"
+    },
+    {
+      "name": "ChaurusFlyer",
+      "file": "Dawnguard.esm",
+      "id": "0x51FB",
+      "group": "insectoid"
+    },
+    {
+      "name": "chicken",
+      "file": "Skyrim.esm",
+      "id": "0xA919D",
+      "group": "bird"
+    },
+    {
+      "name": "Deathhound",
+      "file": "Dawnguard.esm",
+      "id": "0x3D02",
+      "group": "quadruped"
+    },
+    {
+      "name": "Deer",
+      "file": "Skyrim.esm",
+      "id": "0x104F45",
+      "group": "quadruped"
+    },
+    {
+      "name": "Dog",
+      "file": "Dawnguard.esm",
+      "id": "0x18B33",
+      "group": "quadruped"
+    },
+    {
+      "name": "Dragon Priest",
+      "file": "Dragonborn.esm",
+      "id": "0x3911A",
+      "group": "humanoid_undead"
+    },
+    {
+      "name": "Dragon Race",
+      "file": "Skyrim.esm",
+      "id": "0x1052A3",
+      "group": "dragon"
+    },
+    {
+      "name": "draugr",
+      "file": "Dragonborn.esm",
+      "id": "0x1B637",
+      "group": "humanoid_undead"
+    },
+    {
+      "name": "Dwarven Centurion",
+      "file": "Skyrim.esm",
+      "id": "0x131F1",
+      "group": "construct"
+    },
+    {
+      "name": "Dwarven Sphere",
+      "file": "Skyrim.esm",
+      "id": "0x131F2",
+      "group": "construct"
+    },
+    {
+      "name": "Dwarven Spider",
+      "file": "Skyrim.esm",
+      "id": "0x131F3",
+      "group": "construct"
+    },
+    {
+      "name": "falmer",
+      "file": "Skyrim.esm",
+      "id": "0x131F4",
+      "group": "humanoid"
+    },
+    {
+      "name": "Flame Atronach",
+      "file": "Skyrim.esm",
+      "id": "0x131F5",
+      "group": "elemental"
+    },
+    {
+      "name": "Fox",
+      "file": "Skyrim.esm",
+      "id": "0x109C7C",
+      "group": "quadruped"
+    },
+    {
+      "name": "Frost Atronach",
+      "file": "Skyrim.esm",
+      "id": "0x131F6",
+      "group": "elemental"
+    },
+    {
+      "name": "Frostbite Spider",
+      "file": "Skyrim.esm",
+      "id": "0x4E507",
+      "group": "insectoid"
+    },
+    {
+      "name": "gargoyle",
+      "file": "Dawnguard.esm",
+      "id": "0x10D00",
+      "group": "elemental"
+    },
+    {
+      "name": "Giant",
+      "file": "Skyrim.esm",
+      "id": "0x131F9",
+      "group": "humanoid"
+    },
+    {
+      "name": "goat",
+      "file": "Skyrim.esm",
+      "id": "0x131FA",
+      "group": "quadruped"
+    },
+    {
+      "name": "Hagraven",
+      "file": "Skyrim.esm",
+      "id": "0x131FB",
+      "group": "humanoid"
+    },
+    {
+      "name": "highlandcow",
+      "file": "Skyrim.esm",
+      "id": "0x4E785",
+      "group": "quadruped"
+    },
+    {
+      "name": "HMDaedra",
+      "file": "Dragonborn.esm",
+      "id": "0x1DCB9",
+      "group": "tentacled"
+    },
+    {
+      "name": "Horker",
+      "file": "Skyrim.esm",
+      "id": "0x131FC",
+      "group": "quadruped"
+    },
+    {
+      "name": "Horse",
+      "file": "Skyrim.esm",
+      "id": "0x131FD",
+      "group": "quadruped"
+    },
+    {
+      "name": "Ice Wraith",
+      "file": "Skyrim.esm",
+      "id": "0x131FE",
+      "group": "spirit"
+    },
+    {
+      "name": "Lurker",
+      "file": "Dragonborn.esm",
+      "id": "0x14495",
+      "group": "beast_humanoid"
+    },
+    {
+      "name": "Mammoth",
+      "file": "Skyrim.esm",
+      "id": "0x131FF",
+      "group": "quadruped"
+    },
+    {
+      "name": "mudcrab",
+      "file": "Skyrim.esm",
+      "id": "0xBA545",
+      "group": "crustacean"
+    },
+    {
+      "name": "Netch",
+      "file": "Dragonborn.esm",
+      "id": "0x1FEB8",
+      "group": "tentacled"
+    },
+    {
+      "name": "rabbit",
+      "file": "Skyrim.esm",
+      "id": "0x6DC99",
+      "group": "quadruped"
+    },
+    {
+      "name": "Sabre Cat",
+      "file": "Dawnguard.esm",
+      "id": "0xD0B6",
+      "group": "quadruped"
+    },
+    {
+      "name": "Scrib",
+      "file": "Dragonborn.esm",
+      "id": "0x1B658",
+      "group": "insectoid"
+    },
+    {
+      "name": "skeever",
+      "file": "Skyrim.esm",
+      "id": "0xC3EDF",
+      "group": "quadruped"
+    },
+    {
+      "name": "Skeleton",
+      "file": "Skyrim.esm",
+      "id": "0xB7998",
+      "group": "humanoid_undead"
+    },
+    {
+      "name": "SlaughterFish",
+      "file": "Skyrim.esm",
+      "id": "0x13203",
+      "group": "fish"
+    },
+    {
+      "name": "Snow Bear",
+      "file": "Skyrim.esm",
+      "id": "0x131E9",
+      "group": "quadruped"
+    },
+    {
+      "name": "Snow Troll",
+      "file": "Dawnguard.esm",
+      "id": "0x117F4",
+      "group": "beast_humanoid"
+    },
+    {
+      "name": "Snowy Sabre Cat",
+      "file": "Skyrim.esm",
+      "id": "0x13202",
+      "group": "quadruped"
+    },
+    {
+      "name": "Spectral Dragon",
+      "file": "Dragonborn.esm",
+      "id": "0x1F98F",
+      "group": "spectral_dragon"
+    },
+    {
+      "name": "Spriggan",
+      "file": "Skyrim.esm",
+      "id": "0xF3903",
+      "group": "plant"
+    },
+    {
+      "name": "Storm Atronach",
+      "file": "Dragonborn.esm",
+      "id": "0x27BFC",
+      "group": "elemental"
+    },
+    {
+      "name": "The Forgemaster",
+      "file": "Dawnguard.esm",
+      "id": "0x15C34",
+      "group": "construct"
+    },
+    {
+      "name": "Troll",
+      "file": "Dawnguard.esm",
+      "id": "0x117F5",
+      "group": "beast_humanoid"
+    },
+    {
+      "name": "Vampire Lord",
+      "file": "Dawnguard.esm",
+      "id": "0x283A",
+      "group": "humanoid_vampire"
+    },
+    {
+      "name": "Werebear",
+      "file": "Dragonborn.esm",
+      "id": "0x1E17B",
+      "group": "humanoid_werewolf"
+    },
+    {
+      "name": "Werewolf",
+      "file": "Skyrim.esm",
+      "id": "0xCDD84",
+      "group": "humanoid_werewolf"
+    },
+    {
+      "name": "Wisp",
+      "file": "Skyrim.esm",
+      "id": "0x13208",
+      "group": "spirit"
+    },
+    {
+      "name": "Witchlight",
+      "file": "Dawnguard.esm",
+      "id": "0x2AE0",
+      "group": "spirit"
+    },
+    {
+      "name": "wolf",
+      "file": "Skyrim.esm",
+      "id": "0x1320A",
+      "group": "quadruped"
+    }
+  ],
+  "race_contains": [
+    {
+      "text": "dwarven",
+      "group": "construct"
+    },
+    {
+      "text": "forgemaster",
+      "group": "construct"
+    },
+    {
+      "text": "ballista",
+      "group": "construct"
+    },
+    {
+      "text": "werewolf",
+      "group": "humanoid_werewolf"
+    },
+    {
+      "text": "werebear",
+      "group": "humanoid_werewolf"
+    },
+    {
+      "text": "vampirebeast",
+      "group": "humanoid_vampire"
+    },
+    {
+      "text": "vampirelord",
+      "group": "humanoid_vampire"
+    },
+    {
+      "text": "draugr",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "skeleton",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "dragonpriest",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "boneman",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "mistman",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "wrathman",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "zombie",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "lich",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "mummy",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "spider",
+      "group": "insectoid"
+    },
+    {
+      "text": "chaurus",
+      "group": "insectoid"
+    },
+    {
+      "text": "scrib",
+      "group": "insectoid"
+    },
+    {
+      "text": "ashhopper",
+      "group": "insectoid"
+    },
+    {
+      "text": "hopper",
+      "group": "insectoid"
+    },
+    {
+      "text": "beetle",
+      "group": "insectoid"
+    },
+    {
+      "text": "undeaddragon",
+      "group": "dragon_skeletal"
+    },
+    {
+      "text": "skeletondragon",
+      "group": "dragon_skeletal"
+    },
+    {
+      "text": "spectraldragon",
+      "group": "spectral_dragon"
+    },
+    {
+      "text": "dragon",
+      "group": "dragon"
+    },
+    {
+      "text": "troll",
+      "group": "beast_humanoid"
+    },
+    {
+      "text": "lurker",
+      "group": "beast_humanoid"
+    },
+    {
+      "text": "spriggan",
+      "group": "plant"
+    },
+    {
+      "text": "atronach",
+      "group": "elemental"
+    },
+    {
+      "text": "ashspawn",
+      "group": "elemental"
+    },
+    {
+      "text": "ashguardian",
+      "group": "elemental"
+    },
+    {
+      "text": "gargoyle",
+      "group": "elemental"
+    },
+    {
+      "text": "wisp",
+      "group": "spirit"
+    },
+    {
+      "text": "witchlight",
+      "group": "spirit"
+    },
+    {
+      "text": "icewraith",
+      "group": "spirit"
+    },
+    {
+      "text": "wraith",
+      "group": "spirit"
+    },
+    {
+      "text": "ghost",
+      "group": "spirit"
+    },
+    {
+      "text": "netch",
+      "group": "tentacled"
+    },
+    {
+      "text": "hmdaedra",
+      "group": "tentacled"
+    },
+    {
+      "text": "seeker",
+      "group": "tentacled"
+    },
+    {
+      "text": "mudcrab",
+      "group": "crustacean"
+    },
+    {
+      "text": "crab",
+      "group": "crustacean"
+    },
+    {
+      "text": "slaughterfish",
+      "group": "fish"
+    },
+    {
+      "text": "fish",
+      "group": "fish"
+    },
+    {
+      "text": "chicken",
+      "group": "bird"
+    },
+    {
+      "text": "cliffracer",
+      "group": "bird"
+    },
+    {
+      "text": "hawk",
+      "group": "bird"
+    },
+    {
+      "text": "bird",
+      "group": "bird"
+    },
+    {
+      "text": "bear",
+      "group": "quadruped"
+    },
+    {
+      "text": "wolf",
+      "group": "quadruped"
+    },
+    {
+      "text": "dog",
+      "group": "quadruped"
+    },
+    {
+      "text": "husky",
+      "group": "quadruped"
+    },
+    {
+      "text": "deathhound",
+      "group": "quadruped"
+    },
+    {
+      "text": "hound",
+      "group": "quadruped"
+    },
+    {
+      "text": "horse",
+      "group": "quadruped"
+    },
+    {
+      "text": "sabrecat",
+      "group": "quadruped"
+    },
+    {
+      "text": "sabercat",
+      "group": "quadruped"
+    },
+    {
+      "text": "deer",
+      "group": "quadruped"
+    },
+    {
+      "text": "elk",
+      "group": "quadruped"
+    },
+    {
+      "text": "goat",
+      "group": "quadruped"
+    },
+    {
+      "text": "cow",
+      "group": "quadruped"
+    },
+    {
+      "text": "mammoth",
+      "group": "quadruped"
+    },
+    {
+      "text": "horker",
+      "group": "quadruped"
+    },
+    {
+      "text": "fox",
+      "group": "quadruped"
+    },
+    {
+      "text": "hare",
+      "group": "quadruped"
+    },
+    {
+      "text": "rabbit",
+      "group": "quadruped"
+    },
+    {
+      "text": "skeever",
+      "group": "quadruped"
+    },
+    {
+      "text": "boar",
+      "group": "quadruped"
+    },
+    {
+      "text": "cat",
+      "group": "quadruped"
+    }
+  ],
+  "keywords": [
+    {
+      "all": [
+        "ActorTypeDwarven"
+      ],
+      "group": "construct"
+    },
+    {
+      "all": [
+        "ActorTypeUndead",
+        "ActorTypeNPC"
+      ],
+      "group": "humanoid_undead"
+    },
+    {
+      "all": [
+        "ActorTypeDragon"
+      ],
+      "group": "dragon"
+    },
+    {
+      "all": [
+        "ActorTypeNPC"
+      ],
+      "group": "humanoid"
+    },
+    {
+      "all": [
+        "ActorTypeAnimal"
+      ],
+      "group": "quadruped"
+    },
+    {
+      "all": [
+        "ActorTypeDaedra"
+      ],
+      "group": "humanoid"
+    }
+  ]
+}

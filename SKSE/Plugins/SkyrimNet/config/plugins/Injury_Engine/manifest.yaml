@@ -9,7 +9,7 @@ schema:
     - name: "Injury Narration"
       path: "injury_engine.narration.injury_mode"
       type: "select"
-      description: "Real-damage hits (slashing, piercing, burning, ...). Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      description: "Real-damage hits (slashing, piercing, burning, ...). Direct Narration: narrated when the actors are in sight and SkyrimNet has answered the last narration, otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
       defaultValue: "Direct Narration"
       options:
         - "Direct Narration"
@@ -20,7 +20,7 @@ schema:
     - name: "Healing Narration"
       path: "injury_engine.narration.healing_mode"
       type: "select"
-      description: "Healing of wounds (spells, staffs, potions): start, progress, pain gone, fully healed. Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      description: "Healing of wounds (spells, staffs, potions, food): start, progress, fully healed or stopped. Direct Narration: narrated when the actors are in sight and SkyrimNet has answered the last narration, otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
       defaultValue: "Direct Narration"
       options:
         - "Direct Narration"
@@ -31,7 +31,7 @@ schema:
     - name: "Death Narration"
       path: "injury_engine.narration.death_mode"
       type: "select"
-      description: "Killing blows from real damage: the killing wound and the last moment. Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      description: "Killing blows from real damage: the killing wound and the last moment. Direct Narration: narrated when the actors are in sight and SkyrimNet has answered the last narration, otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
       defaultValue: "Direct Narration"
       options:
         - "Direct Narration"
@@ -42,7 +42,7 @@ schema:
     - name: "Torture Narration"
       path: "injury_engine.narration.torture_mode"
       type: "select"
-      description: "Torture (whipping, pinching, slapping, pulling, punching, fire / frost / shock). Direct Narration: narrated when allowed (in sight, speech queue free), otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
+      description: "Torture (whipping, pinching, slapping, pulling, punching, fire / frost / shock). Direct Narration: narrated when the actors are in sight and SkyrimNet has answered the last narration, otherwise a short-lived event. Event: always a short-lived event only. Silent: nothing."
       defaultValue: "Direct Narration"
       options:
         - "Direct Narration"
@@ -54,7 +54,7 @@ schema:
       path: "injury_engine.ranges.minor_min"
       type: "int"
       description: "Percent of a body part's maximum where a real wound becomes minor. Below it the wound counts (it holds health) but is not narrated and not described. Real damage only (slashing, piercing, burning, ...); torture keeps its own stages. One real point is 1% of max health; a core body part holds 100, small parts 10 or 5. No body part can hold a larger share of its maximum than the body has lost health, so while health is between 75% and 26% no part gets past minor."
-      min: 0
+      min: 1
       max: 100
       defaultValue: 25
       category: "Injury Ranges"
@@ -63,7 +63,7 @@ schema:
       path: "injury_engine.ranges.major_min"
       type: "int"
       description: "Percent of a body part's maximum where a real wound becomes major (from minor's minimum up to this: minor narration). Real damage only (slashing, piercing, burning, ...); torture keeps its own stages. One real point is 1% of max health; a core body part holds 100, small parts 10 or 5. No body part can hold a larger share of its maximum than the body has lost health, so while health is between 75% and 26% no part gets past minor."
-      min: 0
+      min: 1
       max: 100
       defaultValue: 75
       category: "Injury Ranges"
@@ -72,7 +72,7 @@ schema:
       path: "injury_engine.ranges.severe_min"
       type: "int"
       description: "Percent of a body part's maximum where a real wound becomes severe (from major's minimum up to this: major narration; this and above: severe narration). Real damage only (slashing, piercing, burning, ...); torture keeps its own stages. One real point is 1% of max health; a core body part holds 100, small parts 10 or 5. No body part can hold a larger share of its maximum than the body has lost health, so while health is between 75% and 26% no part gets past minor."
-      min: 0
+      min: 1
       max: 100
       defaultValue: 90
       category: "Injury Ranges"
@@ -82,15 +82,6 @@ schema:
       type: "bool"
       description: "Send Direct Narrations for torture and healing. Torture is narrated when it starts, every few seconds while it continues, and when the method changes (the speech queue is cleared first when the player is involved); hits in between are short-lived events. Off: everything is recorded as short-lived events."
       defaultValue: true
-      category: "Narration Options"
-
-    - name: "Torture narration window (sec)"
-      path: "injury_engine.narration.torture_narration_window_size"
-      type: "float"
-      description: "After a torture hit, ordinary passive healing is not reported for this long, so it does not undo the punishment just narrated."
-      min: 0
-      max: 300
-      defaultValue: 30.0
       category: "Narration Options"
 
     - name: "Torture maximum break (sec)"
@@ -123,19 +114,10 @@ schema:
     - name: "Health narration cooloff (sec)"
       path: "injury_engine.narration.health_narration_cooloff"
       type: "float"
-      description: "Real damage: at most one spoken narration this often (when the speech queue is empty); hits in between are short-lived events."
+      description: "Real damage: at most one spoken narration this often (and only after SkyrimNet has answered the last narration); hits in between are short-lived events."
       min: 0
       max: 120
       defaultValue: 6.0
-      category: "Narration Options"
-
-    - name: "Narration cooldown (sec)"
-      path: "injury_engine.narration.cooldown"
-      type: "float"
-      description: "Healing: minimum seconds between narrations for the same actor; the speech queue must also be empty. Healing in between becomes short-lived events and is combined into the next narration. Torture uses the torture break and gap settings instead."
-      min: 0
-      max: 120
-      defaultValue: 8.0
       category: "Narration Options"
 
     - name: "Narration max distance (m)"
@@ -182,7 +164,7 @@ schema:
     - name: "Game hours per heal point"
       path: "injury_engine.healing.hours_per_point"
       type: "float"
-      description: "Torture wounds lower health: each body part holds health down by its worst torture type (damage plus missing healing), up to 90% of max health when every part is at maximum damage. Torture never takes health below 10% of max health, so it can't kill. Any healing heals wounds: health restored above the wounded level becomes wound points, one point at a time on a random wounded part, and each point lowers every torture type on that part. Each body part also drains one point of damage per this many game hours, then gains one healing point at the same rate until healed (11 points). The visible decal is controlled by the engine and can vanish earlier (cell change or reload)."
+      description: "Torture wounds lower health: each body part holds health down by its worst torture type, up to 90% of max health when every part is at maximum damage. Torture never takes health below 10% of max health, so it can't kill. Any healing heals wounds: health restored above the wounded level heals wound points, one at a time on a random wounded part, and each point lowers every torture type on that part. On top of that each body part loses one point of torture damage per this many game hours until it is healed. The visible decal is controlled by the engine and can vanish earlier (cell change or reload)."
       min: 0.1
       max: 24
       defaultValue: 1.0
@@ -200,7 +182,7 @@ schema:
     - name: "Add Healing Hands to player"
       path: "injury_engine.healing.give_healing_hands"
       type: "bool"
-      description: "On: teach the player Healing Hands on load. Any healing source (spell, staff, scroll, potion) on a tortured actor is narrated as it starts, when the pain is gone, and when the wounds are fully healed or the healing stops. Healing by the player is always narrated; other healing follows the narration settings."
+      description: "On: teach the player Healing Hands on load. Any healing source (spell, staff, scroll, potion, food) on a wounded actor is narrated as it starts, while it continues, and when the wounds are fully healed or the healing stops. Healing by the player is always narrated; other healing follows the narration settings."
       defaultValue: true
       category: "Healing"
 
@@ -230,7 +212,7 @@ schema:
     - name: "Show torture overlay"
       path: "injury_engine.overlay.enabled"
       type: "bool"
-      description: "Show bars for each body part (head, body, arms, legs) of an actor while they are tortured or their wounds are healing (each part shows its worst torture type). Red bars grow with damage and darken through the stages; once a part's damage is gone a yellow bar shows its healing, and the bar disappears when the part is healed. Needs Magelight UI."
+      description: "Show a \"Torture Damage\" panel with one bar per tortured actor, most recently hit first. The bar shows the torture type that hit the actor last: its length is how much of that damage the actor holds, its color follows the type and the stage (light, medium, severe), and it turns light blue while a healing source works on the actor. Real damage that replaces torture damage grows a red part from the left. An actor drops off once their torture damage is gone, and the overlay fades a few seconds after the last change. Needs Magelight UI."
       defaultValue: true
       category: "Overlay"
 

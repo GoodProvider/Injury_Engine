@@ -130,7 +130,8 @@
 
         const noParts = () => cfg.partMax.map(() => 0);
 
-        function maxDamage(i) { return cfg.partMax[i] ?? cfg.max / cfg.partMax.length; }
+        // partMax: the actor's own (its race group's body), else the global one
+        function maxDamage(i, partMax) { const pm = partMax || cfg.partMax; return pm[i] ?? cfg.max / pm.length; }
 
         function damageStage(damage) {
             if (damage >= cfg.severe) return 'severe';
@@ -139,11 +140,11 @@
         }
 
         // Summary of the shown torture type: {state: hurting|healed, width % of max, cls, damage total}.
-        function summarize(parts, healing, max) {
+        function summarize(parts, healing, max, partMax) {
             let damage = 0, damaged = 0;
             for (const [i, p] of parts.entries()) {
                 if (p > 0) {
-                    damage += Math.min(p, maxDamage(i));
+                    damage += Math.min(p, maxDamage(i, partMax));
                     damaged++;
                 }
             }
@@ -189,12 +190,12 @@
         }
 
         // Returns true when the shown type, its parts, the replaced count or the heal session changed.
-        function apply(a, source, max, parts, replaced, healing, now) {
+        function apply(a, source, max, parts, replaced, healing, now, partMax) {
             if (source === a.source && max === a.max && replaced === a.replaced && healing === a.healing &&
                 JSON.stringify(parts) === JSON.stringify(a.parts)) return false;
             const prev = a.sum;
             const switched = source !== a.source && source !== '';
-            const sum = summarize(parts, healing, max);
+            const sum = summarize(parts, healing, max, partMax);
             a.source = source;
             a.max = max;
             a.parts = parts.slice();
@@ -262,7 +263,8 @@
                 a = a || create(id);
                 a.name = s.name || '';
                 const max = typeof s.max === 'number' && s.max > 0 ? s.max : cfg.max;
-                if (apply(a, s.source || '', max, s.parts || noParts(), s.replaced || 0, !!s.healing, now)) lastChange = now;
+                const partMax = Array.isArray(s.part_max) && s.part_max.length ? s.part_max : null;
+                if (apply(a, s.source || '', max, s.parts || noParts(), s.replaced || 0, !!s.healing, now, partMax)) lastChange = now;
                 if (a.sum.state === 'healed') retire(id, a, now, false);
             }
             for (const [id, a] of actors) {

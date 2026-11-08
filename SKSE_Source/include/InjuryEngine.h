@@ -4,6 +4,8 @@
 #include <string_view>
 #include <vector>
 
+#include "InjuryConfig.h"
+
 // Per-actor, per-body-part, per-source injury tracking. Data and text come from InjuryConfig
 // (injuries/<source>.json).
 //
@@ -14,8 +16,8 @@
 //           type: its points give the torture stage (light / medium / severe) and, inverted, the heal level
 //           (high / mid / low). Wounds hold health down by the sum of the part maxima * RatioTorture, never
 //           below the floor. Healing a part lowers its maximum by one and clamps every type to it.
-//   health  Real damage (slashing, freezing, ...): the health the attack takes becomes damage points
-//           (100% of max health = every part at damage_max), tagged with the classified source.
+//   health  Real damage (slashing, freezing, ...): the health the attack takes becomes real points
+//           (1 point = 1% of max health; a part holds up to its real_max), tagged with the classified source.
 // Real damage first replaces torture points (the hit does not lower health by that part; the part's maximum
 // drops by one and every type above it is clamped down), then takes health as normal, so a tortured actor only
 // dies after the torture is all replaced.
@@ -24,21 +26,24 @@
 namespace InjuryEngine
 {
     constexpr std::uint32_t kRecord = 'DHEN';
+    // 8: race groups: per actor its group id and part count (7 and older load as humanoid, 12 parts);
     // 7: real points on their own scale (1 point = 1% of max health; 6 and older are rescaled from the old
     // 1 / capacity points); 6: 12 parts (lungs); 5: torture points per type, 11 parts; 4: per-type deficit (healing_max + damage);
     // 3: whipping only, 11 parts; 2: 6 parts (5 loads as is, 4, 3 and 2 keep the damage only)
-    constexpr std::uint32_t kRecordVersion = 7;
+    constexpr std::uint32_t kRecordVersion = 8;
 
-    constexpr int kCoreParts = 6;    // face, left arm, right arm, back, left leg, right leg
-    constexpr int kPartCount = 12;   // + nipples, pussy, penis, lips, ass hole (only used with "include sexual parts"), lungs
-    constexpr int kPartLungs = 11;   // drowning only: no cap, outside the health capacity, stage by share of max health
+    // Parts per body (the group's body.json; humanoid: 6 core, 5 sexual, lungs). The hit code's part mask has
+    // 16 bits (mask * 10 < 1000000, Papyrus MaskOf), so no body may have more.
+    constexpr int kMaxParts = 16;
+    static_assert(kMaxParts == InjuryConfig::kMaxParts);
+    static_assert(kMaxParts <= 16, "the hit code carries a 16-bit part mask");
 
     // Hit levels (the part's state before the hit), used to pick the narration.
     enum HitLevel : int { kUndamaged = 0, kLight = 1, kMedium = 2, kSevere = 3 };
 
     // SyncHealth events and the healing source attached to them.
     enum SyncKind : int { kHealStart = 0, kPainGone = 1, kFullyHealed = 2, kHealStopped = 3 };
-    enum SourceKind : int { kSourceNone = 0, kSourceSpell = 1, kSourceStaff = 2, kSourcePotion = 3, kSourceMagic = 4, kSourceFood = 5 };
+    enum SourceKind : int { kSourceNone = 0, kSourceSpell = 1, kSourceStaff = 2, kSourcePotion = 3, kSourceMagic = 4, kSourceFood = 5, kSourceFeed = 6 };
 
     // Hit code: fresh * 100000000 + source * 1000000 + partMask * 10 + level
     //   fresh: the victim had no open wounds before; level: worst part stage before the hit (HitLevel).
@@ -66,8 +71,9 @@ namespace InjuryEngine
     std::int32_t HitPart(RE::Actor* actor, RE::Actor* attacker, std::string_view sourceId, int part);
     // Scripted real damage: `points` real points (1% of max health each) of the health source with file id `base` (a "health" file, or the
     // health half of a "both" file), applied like a hooked hit (the part is picked as for an attack; the hit is
-    // queued for narration). Returns the source index, -1 for None/dead actors or no such health source.
-    std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points);
+    // queued for narration unless `narrate` is false). Returns the source index, -1 for None/dead actors or no such
+    // health source.
+    std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points, bool narrate = true);
 
     // A caller's heal (spell, potion): `health` becomes torture points healed on `part` first (-1: random parts),
     // then any part (each point lowers its part's maximum and clamps every type to it); health rises by the points healed.
@@ -85,8 +91,10 @@ namespace InjuryEngine
     // unarmedForm: the hit matched an "unarmed" classify rule, so narration uses narration.form_unarmed when that key exists.
     // applied: the game has already taken `amount` (HandleHealthDamage, held uncaused damage); false when it is taken
     // after this call (ModActorValue, RealHit). Real points are capped by the health missing after the hit.
+    // narrate: false queues no hit for narration (External_Damage narrate False); the wound and the killing-blow
+    // record still land.
     float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm = false,
-        bool applied = true);
+        bool applied = true, bool narrate = true);
 
     // True if the actor has any damage left (any source).
     bool HasOpenWounds(RE::Actor* actor);
@@ -117,8 +125,9 @@ namespace InjuryEngine
     std::vector<RE::Actor*> DeathAttackers();
     std::vector<std::string> DeathSources();
 
-    // Called from the MagicTarget::AddTarget hook for every effect applied to an actor.
-    void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect);
+    // Called from the MagicTarget::AddTarget hook for every effect applied to an actor. hurt: the target's health
+    // was below its max before the effect was added (an instant heal has already landed when AddTarget returns).
+    void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect, bool hurt);
 
     // Pending sync events (heal start / pain gone / ...) not yet taken; does not run health conversion.
     // kind * 10000 + source * 1000 + percent. SyncActors/SyncCasters are parallel to the last result.

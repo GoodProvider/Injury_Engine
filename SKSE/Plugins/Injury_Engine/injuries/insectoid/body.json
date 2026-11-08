@@ -1,0 +1,32 @@
+{
+  "_note": "Body of the insectoid group (frostbite spiders, chaurus, chaurus hunters, scribs, ash hoppers): chitin, many legs, ichor instead of blood, no lungs (drowning passes through), no torture bleedout. Parts are ordered core, sexual (setting include_sexual_parts), lungs; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": false,
+  "regions": ["head", "body", "leg", "nipple", "vulva", "penis", "lips", "anus"],
+  "parts": [
+    { "name": "head", "region": "head", "weight": 0.8 },
+    { "name": "thorax", "region": "body" },
+    { "name": "abdomen", "region": "body", "weight": 1.2 },
+    { "name": "left front legs", "region": "leg", "weight": 0.8 },
+    { "name": "right front legs", "region": "leg", "weight": 0.8 },
+    { "name": "left hind legs", "region": "leg", "weight": 0.8 },
+    { "name": "right hind legs", "region": "leg", "weight": 0.8 },
+    { "name": "nipples", "region": "nipple", "sexual": true, "max": 8, "real_max": 10, "weight": 0.2 },
+    { "name": "pussy", "region": "vulva", "sexual": true, "sex": "female", "max": 8, "real_max": 10, "weight": 0.2 },
+    { "name": "penis", "region": "penis", "sexual": true, "sex": "male", "max": 8, "real_max": 10, "weight": 0.2 },
+    { "name": "lips", "region": "lips", "sexual": true, "max": 6, "real_max": 5, "weight": 0.25 },
+    { "name": "ass hole", "region": "anus", "sexual": true, "max": 6, "real_max": 5, "weight": 0.15 }
+  ],
+  "overlay_order": ["head", "thorax", "abdomen", "left front legs", "right front legs", "left hind legs", "right hind legs"],
+  "disabled_sources": []
+}

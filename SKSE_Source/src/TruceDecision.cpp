@@ -1,4 +1,5 @@
 #include "TruceDecision.h"
+#include "InjuryConfig.h"
 
 // PublicAPI.h defines its function-pointer globals: include it in this .cpp only.
 #include <Windows.h>
@@ -228,7 +229,7 @@ namespace TruceDecision
             ctx["target_is_follower"] = target->IsPlayerTeammate();
             ctx["target_fights_speaker"] = target->IsInCombat() && target->GetActorRuntimeData().currentCombatTarget.get().get() == speaker;
             ctx["timeline"] = BuildTimeline(target->GetFormID());
-            return ctx.dump();
+            return InjuryConfig::Dump(ctx);
         }
 
         void NotifyPapyrus()

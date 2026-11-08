@@ -1,0 +1,281 @@
+[04:42:09] Injury_Engine loading
+[04:42:09] MagicTarget::AddTarget hooks installed
+[04:42:09] ActorValueOwner::ModActorValue hooks installed
+[04:42:09] ActorValueOwner::ModBaseActorValue / SetActorValue probe hooks installed (drowning diagnosis)
+[04:42:09] ValueModifierEffect::ModifyActorValue hooks installed (plain and dual)
+[04:42:09] GetFactionFightReaction hook installed
+[04:42:09] ProcessHitData hook installed
+[04:42:09] Actor::HandleHealthDamage hooks installed
+[04:42:09] Papyrus functions registered
+[04:47:52] injuries: loading from C:\Steam\steamapps\common\Skyrim Special Edition\data\SKSE\Plugins\Injury_Engine\injuries
+[04:47:52] injuries: loaded whipping.json (whipping, model torture)
+[04:47:52] injuries: loaded bludgeoning.json (bludgeoning, model health)
+[04:47:52] injuries: loaded burning.json (burning, model health)
+[04:47:52] injuries: loaded drowning.json (drowning, model health)
+[04:47:52] injuries: loaded falling.json (falling, model torture)
+[04:47:52] injuries: loaded falling.json (falling_real, model health)
+[04:47:52] injuries: loaded fire.json (fire, model torture)
+[04:47:52] injuries: loaded freezing.json (freezing, model health)
+[04:47:52] injuries: loaded frost.json (frost, model torture)
+[04:47:52] injuries: loaded generic.json (generic, model health)
+[04:47:52] injuries: loaded leash_dragging.json (leash_dragging, model torture)
+[04:47:52] injuries: loaded mauling.json (mauling, model health)
+[04:47:52] injuries: loaded piercing.json (piercing, model health)
+[04:47:52] injuries: loaded pinching.json (pinching, model torture)
+[04:47:52] injuries: loaded pulling.json (pulling, model torture)
+[04:47:52] injuries: loaded punching.json (punching, model torture)
+[04:47:52] injuries: loaded shock.json (shock, model torture)
+[04:47:52] injuries: loaded shocking.json (shocking, model health)
+[04:47:52] injuries: loaded slapping.json (slapping, model torture)
+[04:47:52] injuries: loaded slashing.json (slashing, model health)
+[04:47:52] injuries: 18 classify rules
+[04:47:52] Classifier: torture MGEF Injury_Engine.esp 0x813 -> FE481813 (fire)
+[04:47:52] Classifier: torture MGEF Injury_Engine.esp 0x814 -> FE481814 (frost)
+[04:47:52] Classifier: torture MGEF Injury_Engine.esp 0x815 -> FE481815 (shock)
+[04:47:52] Classifier: hit and combat event sinks registered
+[04:47:52] InjuryEngine: death event sink registered
+[04:47:52] truce: SkyrimNet API found (version 12), decisions available
+[04:47:52] Overlay: view created
+[04:50:20] Overlay: DomReady
+[04:51:03] co-save loaded 14 actors (record version 7)
+[04:51:43] [buff] HandleHealthDamage 00000014 value:-50.00 health:340.0/265.0 damageMod:0.0 nested:true shrink:true: health change from a buff ending, not a wound
+[04:56:13] heal start 0001A6D2 source:1 caster:0001A69F points:0
+[04:56:14] heal:Short:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[04:56:16] heal:direct:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:00:33] heal start 0001A6D2 source:1 caster:0001A69F points:0
+[05:00:33] heal:Short:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:00:35] heal:direct:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:03:25] heal start 0001A6D2 source:1 caster:0001A69F points:0
+[05:03:26] heal:Short:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:03:28] heal:direct:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:07:55] heal start 0001A6D2 source:1 caster:0001A69F points:0
+[05:07:55] heal:Short:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:07:58] heal:direct:Start Danica Pure-Spring casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:20:52] [buff] HandleHealthDamage FF000CAA value:-10.00 health:342.0/342.0 damageMod:0.0 nested:false shrink:true: health change from a buff ending, not a wound
+[05:20:52] [buff] HandleHealthDamage FF00BC1B value:-10.00 health:734.0/734.0 damageMod:0.0 nested:false shrink:true: health change from a buff ending, not a wound
+[05:21:00] [buff] HandleHealthDamage FF000CAA value:-10.00 health:342.0/342.0 damageMod:0.0 nested:false shrink:true: health change from a buff ending, not a wound
+[05:21:00] [buff] HandleHealthDamage FF00BC1B value:-10.00 health:734.0/734.0 damageMod:0.0 nested:false shrink:true: health change from a buff ending, not a wound
+[05:50:15] heal start 0001A6D2 source:1 caster:00000014 points:0
+[05:50:16] heal:Short:Start Aurvandil casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:50:17] heal:direct:Start Aurvandil casts a warm yellow swirling light around Aeri. With no wounds to mend, it simply washes over Aeri, warm and soothing.
+[05:58:38] [buff] HandleHealthDamage 00000014 value:-75.00 health:315.0/265.0 damageMod:0.0 nested:false shrink:true: health change from a buff ending, not a wound
+[05:59:26] heal start FE06A87E source:1 caster:FE06A87E points:0
+[05:59:26] heal start 00087750 source:1 caster:00087750 points:0
+[05:59:26] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[05:59:28] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[05:59:31] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[05:59:35] heal start FE06A87E source:1 caster:FE06A87E points:0
+[05:59:35] heal start 00087750 source:1 caster:00087750 points:0
+[05:59:35] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[05:59:36] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[05:59:37] heal start FE06A87E source:1 caster:FE06A87E points:0
+[05:59:37] heal start 00087750 source:1 caster:00087750 points:0
+[05:59:38] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[05:59:38] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[05:59:40] heal start FE06A87E source:1 caster:FE06A87E points:0
+[05:59:40] heal start 00087750 source:1 caster:00087750 points:0
+[05:59:40] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[05:59:41] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[05:59:41] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:16] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:00:16] heal start 00087750 source:1 caster:00087750 points:0
+[06:00:17] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:00:18] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:00:18] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:21] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:00:22] heal start 00087750 source:1 caster:00087750 points:0
+[06:00:22] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:00:23] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:24] heal start FE0C8831 source:1 caster:FE0C8831 points:0
+[06:00:24] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:00:24] heal start 00087750 source:1 caster:00087750 points:0
+[06:00:26] heal:Short:Start Silvia casts a warm yellow swirling light around Silvia. With no wounds to mend, it simply washes over Silvia, warm and soothing.
+[06:00:27] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:00:27] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:29] heal:direct:Start Silvia casts a warm yellow swirling light around Silvia. With no wounds to mend, it simply washes over Silvia, warm and soothing.
+[06:00:29] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:00:29] heal start 00087750 source:1 caster:00087750 points:0
+[06:00:30] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:00:30] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:34] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:00:34] heal start 00087750 source:1 caster:00087750 points:0
+[06:00:34] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:00:35] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:35] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:52] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:00:52] heal start 00087750 source:1 caster:00087750 points:0
+[06:00:53] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:00:57] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:00:59] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:00:59] heal start 00087750 source:1 caster:00087750 points:0
+[06:01:00] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:01:01] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:01:01] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:01:02] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:01:05] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:01:08] heal start FE0C8831 source:1 caster:FE0C8831 points:0
+[06:01:09] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:01:11] heal:Short:Start Silvia casts a warm yellow swirling light around Silvia. With no wounds to mend, it simply washes over Silvia, warm and soothing.
+[06:01:15] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:01:15] heal start 00087750 source:1 caster:00087750 points:0
+[06:01:16] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:01:17] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:01:21] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:01:21] heal start 00087750 source:1 caster:00087750 points:0
+[06:01:21] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:01:23] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:01:24] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:01:44] heal start 00087750 source:1 caster:00087750 points:0
+[06:01:44] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:01:45] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:01:45] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:01:46] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:01:58] heal start 00087750 source:1 caster:00087750 points:0
+[06:01:58] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:01:59] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:01:59] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:02:01] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:02:01] heal start 00087750 source:1 caster:00087750 points:0
+[06:02:01] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:02:02] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:02:03] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:02:04] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:02:06] heal start 00087750 source:1 caster:00087750 points:0
+[06:02:06] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:02:07] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:02:08] heal start FE0C8831 source:1 caster:FE0C8831 points:0
+[06:02:09] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:02:10] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:02:12] heal:Short:Start Silvia casts a warm yellow swirling light around Silvia. With no wounds to mend, it simply washes over Silvia, warm and soothing.
+[06:02:43] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:02:43] heal start 00087750 source:1 caster:00087750 points:0
+[06:02:44] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:02:45] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:03:31] heal start 00087750 source:1 caster:00087750 points:0
+[06:03:31] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:03:32] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:03:33] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:03:33] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:03:57] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:03:57] heal start 00087750 source:1 caster:00087750 points:0
+[06:03:58] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:03:58] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:03:59] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:09] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:09] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:09] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:10] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:11] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:15] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:15] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:15] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:16] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:18] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:18] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:19] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:19] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:19] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:24] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:24] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:25] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:25] heal start FE0C8831 source:1 caster:FE0C8831 points:0
+[06:04:26] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:26] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:27] heal:Short:Start Silvia casts a warm yellow swirling light around Silvia. With no wounds to mend, it simply washes over Silvia, warm and soothing.
+[06:04:30] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:30] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:31] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:31] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:32] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:33] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:33] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:48] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:48] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:48] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:49] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:49] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:51] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:51] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:52] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:04:53] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:54] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:55] heal start 00087750 source:1 caster:00087750 points:0
+[06:04:55] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:04:56] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:04:56] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:16] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:05:16] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:19] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:19] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:19] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:05:20] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:20] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:21] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:21] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:25] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:25] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:05:26] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:26] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:38] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:41] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:41] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:05:41] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:42] heal start FE0C8831 source:1 caster:FE0C8831 points:0
+[06:05:42] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:44] heal:Short:Start Silvia casts a warm yellow swirling light around Silvia. With no wounds to mend, it simply washes over Silvia, warm and soothing.
+[06:05:45] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:45] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:49] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:05:49] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:49] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:50] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:51] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:51] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:05:51] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:52] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:05:52] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:55] heal start 00087750 source:1 caster:00087750 points:0
+[06:05:55] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:05:55] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:55] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:05:56] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:17] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:06:17] heal start 00087750 source:1 caster:00087750 points:0
+[06:06:17] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:18] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:19] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:20] heal start 00087750 source:1 caster:00087750 points:0
+[06:06:20] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:06:20] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:21] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:22] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:06:22] heal start 00087750 source:1 caster:00087750 points:0
+[06:06:23] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:24] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:25] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:06:25] heal start 00087750 source:1 caster:00087750 points:0
+[06:06:26] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:26] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:27] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:39] heal start FE0C8831 source:1 caster:FE0C8831 points:0
+[06:06:40] heal:Short:Start Silvia casts a warm yellow swirling light around Silvia. With no wounds to mend, it simply washes over Silvia, warm and soothing.
+[06:06:40] heal start 00087750 source:1 caster:00087750 points:0
+[06:06:40] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:06:42] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:42] heal:direct:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:42] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:44] heal start 00087750 source:1 caster:00087750 points:0
+[06:06:44] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:06:45] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:46] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:47] heal start 00087750 source:1 caster:00087750 points:0
+[06:06:47] heal start FE06A87E source:1 caster:FE06A87E points:0
+[06:06:47] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:06:48] heal:direct:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:49] heal:Short:Start Estra Broken-Oar casts a warm yellow swirling light around Estra Broken-Oar. With no wounds to mend, it simply washes over Estra Broken-Oar, warm and soothing.
+[06:06:59] heal start 00087750 source:1 caster:00087750 points:0
+[06:07:00] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:07:02] heal start 00087750 source:1 caster:00087750 points:0
+[06:07:03] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.
+[06:07:05] heal start 00087750 source:1 caster:00087750 points:0
+[06:07:05] heal:Short:Start Abelone casts a warm yellow swirling light around Abelone. With no wounds to mend, it simply washes over Abelone, warm and soothing.

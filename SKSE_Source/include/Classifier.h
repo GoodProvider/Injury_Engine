@@ -93,7 +93,8 @@ namespace Classifier
 
     // True when `attacker` holds the Torture Padded Whip (a classify rule's ignore weapon) in either hand.
     bool IsWhipAttacker(RE::Actor* attacker);
-    // Torture Padded Whip, or bare fists whose unarmed rule is a torture source (punching out of combat).
+    // Torture Padded Whip or a torture weapon, or bare fists whose unarmed rule is a torture source (punching out of
+    // combat); false whenever either hand holds any other weapon (the hand that struck is unknown).
     bool IsTortureAttacker(RE::Actor* attacker);
 
     // A whip lash is a friendly hit, not an attack (GetFactionFightReaction hook): `victim` gets the ref flag

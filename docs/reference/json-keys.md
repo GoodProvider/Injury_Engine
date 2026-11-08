@@ -24,13 +24,13 @@ Use **bare lowercase** keys only (`parts`, `stage`, `caster_is_target`). Do not 
 | `parts[].look` / `feel` | the finished sentences for the character bio / final instructions (torture `feel` from `text.feels.torture`, or `text.feels.heal` during a heal session) |
 | `healed` | only when `sources` is empty and the actor is alive: `session.json` `healed` ("{name} is completely healed."), printed by the character bio so the LLM drops wounds left in the dialogue history |
 
-## Injury files `injuries/<source>.json`
+## Injury files `injuries/<group>/<source>.json`
 
 Keys and placeholders are documented for authors in `SKSE/Plugins/Injury_Engine/injuries/guide.md`; code reads them by dotted path (`InjuryConfig::Str`, natives `Text` / `TextCount` / `Number`). Same bare-lowercase rule; values shown to the LLM contain no digits.
 
 ## Natives returning text
 
-`HitText`, `HealMapText`, `SourceHealText`, `ActionText`, `DeathText` render the JSON templates in C++ (placeholders `{name}`, `{he}`, `{him}`, `{his}`, `{part}`, `{parts}`, ... listed in `guide.md`). Codes passed in: hit code `fresh * 100000000 + source * 1000000 + part mask * 10 + level` (mask: bit per part, 11 parts); `HealMapText(actor)` takes no codes (it reads the actor's torture points); sync events `kind * 10000 + healing source * 1000 + percent` (kind 0 start, 1 pain gone, 2 fully healed, 3 stopped; healing source 0 none, 1 spell, 2 staff, 3 potion, 4 other).
+`HitText`, `HealMapText`, `SourceHealText`, `ActionText`, `DeathText` render the JSON templates in C++ (placeholders `{name}`, `{he}`, `{him}`, `{his}`, `{part}`, `{parts}`, ... listed in `guide.md`). Codes passed in: hit code `fresh * 100000000 + source * 1000000 + part mask * 10 + level` (mask: bit per part of the victim's race group body, at most 16 parts); `HealMapText(actor)` takes no codes (it reads the actor's torture points); sync events `kind * 10000 + healing source * 1000 + percent` (kind 0 start, 1 pain gone (no longer sent), 2 fully healed, 3 stopped; healing source 0 none, 1 spell, 2 staff, 3 potion, 4 other).
 
 ## Overlay (`injuryEngineUpdate`)
 
@@ -40,7 +40,9 @@ Keys and placeholders are documented for authors in `SKSE/Plugins/Injury_Engine/
 {"title":"Torture Damage","max":120,"part_max":[20,20,20,20,20,20],"medium":4,"severe":11,
  "colors":{"light":"#a8dc8c","healing":"#8fd3ff","replaced":"#c8201e"},
  "source_colors":{"whipping":{"light":"#a8dc8c","medium":"#4caf3a","severe":"#1f5e17"},"pinching":{"light":"#c9a0e8"}},
- "actors":[{"id":20,"name":"Nina","source":"pinching","max":100,"replaced":6,"healing":false,"parts":[3,0]}]}
+ "actors":[{"id":20,"name":"Nina","source":"pinching","max":100,"replaced":6,"healing":false,"parts":[3,0],"part_max":[20,20]}]}
 ```
 
 `parts` is six torture point counts in bar order (`overlay.order` of `whipping.json`: head, body, right arm, left arm, right leg, left leg), eleven with "include sexual parts" (then nipples, pussy, penis, lips, ass hole); the example is cut short. `part_max` is each part's damage points in the same order; `max` is the whole-body capacity (one genital part counted). An unhit or healed part is `0`. Each bar shows one torture type, `source`: the actor's open type hit most recently (after a load, which keeps no hit times, the one with the most points); `parts` are that type's points (`0` on parts it does not reach) and the actor's `max` is the `part_max` sum of the parts it reaches (its `part_weights` above 0, fitting the actor's sex), so the bar is that type's share of what it can wound. The top-level `max` is the whole-body capacity (fallback). `source_colors` maps each torture type id to its `light` / `medium` / `severe` bar colors (`overlay_colors` of its injury file, whipping's `overlay.colors`); the fill uses the stage color of the shown type. `healing` is true while a healing source works on the actor (heal session): the bar is drawn in `colors.healing`. `replaced` = torture damage points already replaced by real damage. Only loaded, living actors that still have torture points are listed (an actor whose torture is fully replaced drops out). The decorator, by contrast, lists every torture type separately, one source block each.
+
+Top-level `part_max`, `medium`, `severe` are humanoid's; each actor's `parts` and `part_max` follow its race group's body (active parts in that body's overlay order).

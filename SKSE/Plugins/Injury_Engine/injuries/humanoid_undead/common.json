@@ -1,0 +1,173 @@
+{
+  "_note": "Undead text (draugr, skeletons, dragon priests) for every source without its own file in this folder: dry leathery or rotted flesh, old bone, grave dust, cold blue eye-light; no blood, no breath, no bodily fluids. Undead feel no pain as the living do: feels describe failing strength and the cold will that drives them. Shared keys first, then the block of the source's model (health / torture). Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": ["drowning"],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: the dried skin is split across the cheek, showing yellowed bone; a little grave dust trickles out.",
+          "{name}'s face: a deep cleft runs through the leathery face into the skull; the glow in one eye socket flickers. The smell of dust and old rot hangs about {him}.",
+          "{name}'s face: half the face is broken away to bare, cracked skull and the jaw hangs crooked; the eye-light gutters. {name} reeks of the grave."
+        ],
+        "body": [
+          "{name}'s back: a gash in the leathery hide, dry and bloodless, edges curling.",
+          "{name}'s back: the dried flesh is laid open to the ribs, dark and bloodless, dust sifting from the wound. A musty smell of rot clings to {him}.",
+          "{name}'s back: ribs are snapped and the spine shows through rags of dried flesh; bits of bone and dust fall with every step. The stench of the crypt follows {him}."
+        ],
+        "arm": [
+          "{name}'s {part}: the shrunken flesh is nicked to the bone, dry and bloodless.",
+          "{name}'s {part}: a deep split through dried sinew; the bone beneath is cracked and the arm swings stiffly.",
+          "{name}'s {part}: the bone is shattered and the arm hangs by strips of dried sinew, the fingers curled and useless."
+        ],
+        "leg": [
+          "{name}'s {part}: a shallow cut in the withered flesh, dry and bloodless.",
+          "{name}'s {part}: the leathery flesh is split to a cracked bone; the leg drags with a dry scrape.",
+          "{name}'s {part}: the bone is splintered at the knee and the leg bends the wrong way; {he} lurches badly."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s face is cracked, but undead feel little; the cold will in {him} only burns brighter, relentless.",
+          "{name}'s skull is split and the eye-light wavers; {he} turns {his} head slowly, as if hearing from far away, still hostile.",
+          "{name}'s skull is broken and the will animating {him} is guttering; {he} sways, slow and confused, barely held together."
+        ],
+        "body": [
+          "{name}'s torso is cut, but {he} does not flinch; the dead do not feel it as the living do.",
+          "{name}'s ribs are laid open and {he} moves stiffly, the strength draining from {his} limbs, yet {he} presses on.",
+          "{name}'s torso is shattered; {he} stoops and staggers, the dark power in {him} failing, close to falling apart."
+        ],
+        "arm": [
+          "{name}'s {part} is nicked; {he} does not even look at it.",
+          "{name}'s {part} is cracked and stiff; {his} grip and swing are weaker now.",
+          "{name}'s {part} is useless, hanging loose; {he} fights with what is left."
+        ],
+        "leg": [
+          "{name}'s {part} is cut; {his} shambling stride does not change.",
+          "{name}'s {part} is cracked; {he} drags it with a dry scrape, slower now.",
+          "{name}'s {part} is broken; {he} lurches and can barely stay upright, yet still advances."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the dry flesh splits without a drop of blood. {name} rasps and keeps coming, unfazed.",
+          " into flesh that is already split. Old bone cracks beneath it and grave dust puffs from the wound; {name} lets out a dry, hollow shriek.",
+          ", and the blow drives deep into the broken body. Bone splinters and dust sprays out; {name} reels, the eye-light flaring and wavering.",
+          ", and it is too much. Bones give way with a dry crack and {name} sags, the cold light in {name}'s eyes flickering low."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s skull splits with a dry crack and the blue light in the eye sockets winks out; the body folds and collapses in a clatter of bone and a puff of grave dust.",
+          "the blow knocks {name}'s head half off the neck; it lolls on a strip of dried sinew as the eye-light dies, and {name} crumples to the ground, still at last."
+        ],
+        "body": [
+          "{name}'s ribs and spine shatter under the blow; the withered body breaks apart at the waist and falls in two, dust drifting from the remains as the eye-light fades.",
+          "the blow caves in {name}'s chest; dry ribs burst outward and the dark power leaves {name} with a hollow exhalation of dust, the body sagging into a heap of bone and leather."
+        ],
+        "arm": [
+          "{name}'s {part} is torn away at the shoulder and spins off in a spray of bone chips; {name} reels, the eye-light flickers out, and the body clatters to the ground.",
+          "the blow shears through {name}'s {part} and into the ribs beneath; old bone shatters and {name} collapses in a dry heap, the cold light in the eyes going dark."
+        ],
+        "leg": [
+          "{name}'s {part} snaps at the knee and {name} pitches forward; the fall breaks the brittle body apart and the eye-light dims to nothing.",
+          "the blow shatters {name}'s {part} at the hip; {name} drops, crawls a moment on clawing hands, then goes still as the light fades from the eye sockets."
+        ]
+      },
+      "soil": [],
+      "soil_chance": 0
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: the leathery skin is scuffed and a flake of it has come away.",
+          "{name}'s face: the dried skin is cracked and peeling, bone showing at the cheek.",
+          "{name}'s face: the skin is split and flaking off the skull in patches; the jaw hangs loose."
+        ],
+        "body": [
+          "{name}'s back: the leathery skin is scuffed and marked.",
+          "{name}'s back: the dried skin is cracked in long lines, flakes of it hanging loose.",
+          "{name}'s back: the skin is split and peeled away, bare ribs and spine showing through."
+        ],
+        "arm": [
+          "{name}'s {part}: the shrunken skin is scuffed.",
+          "{name}'s {part}: the skin is cracked and the sinew beneath creaks.",
+          "{name}'s {part}: the skin is flayed to the bone, the sinew frayed."
+        ],
+        "leg": [
+          "{name}'s {part}: the withered skin is scuffed.",
+          "{name}'s {part}: the skin is cracked and peeling at the knee.",
+          "{name}'s {part}: the skin is torn to the bone; the joint creaks and buckles."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s face is struck, but {he} barely reacts; a low rasp is all {he} gives.",
+            "{name}'s face is cracked; {he} turns away with a hollow hiss, the eye-light narrowing.",
+            "{name}'s face is broken; {his} eye-light flickers and {he} sways, the will in {him} weakening."
+          ],
+          "body": [
+            "{name}'s back is marked; {he} stands rigid, unmoved.",
+            "{name}'s back is cracked open; {he} stoops a little, movements slower and stiffer.",
+            "{name}'s back is flayed to the bone; {he} sags, the dark strength in {him} ebbing."
+          ],
+          "arm": [
+            "{name}'s {part} is scuffed; {he} ignores it.",
+            "{name}'s {part} is cracked; {his} grip weakens.",
+            "{name}'s {part} is flayed and barely obeys {him}."
+          ],
+          "leg": [
+            "{name}'s {part} is scuffed; {he} does not shift.",
+            "{name}'s {part} is cracked; {he} stands lopsided.",
+            "{name}'s {part} buckles; {he} can barely stay on {his} feet."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s face is nearly whole again, the old skin drawn tight.",
+            "{name}'s face is still cracked, but the eye-light burns steady again.",
+            "{name}'s face is mending slowly, the cracks no longer spreading."
+          ],
+          "body": [
+            "{name}'s back is nearly whole, the leathery skin closed.",
+            "{name}'s back is still marked, but {he} stands straighter.",
+            "{name}'s back is mending slowly, bare bone still showing in places."
+          ],
+          "arm": [
+            "{name}'s {part} is nearly whole.",
+            "{name}'s {part} grips more strongly again.",
+            "{name}'s {part} is mending slowly."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} holds {his} weight better.",
+            "{name}'s {part} is mending slowly, still unsteady."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a dry slap against leathery skin. {name} gives a low rasp and barely moves.",
+          " on skin that is already cracked. Flakes of it come away and {name} hisses, a hollow sound.",
+          ", and the blow lands on bare, cracked skin. Dust puffs from the wounds and {name} shudders, the eye-light flaring.",
+          ", and it is too much. {name} sags, joints creaking, the cold light in the eyes dimming."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The dried skin over {name}'s {parts} has almost closed again.",
+          "mid": "The cracks in {name}'s {parts} have drawn shut, leaving dark seams.",
+          "low": "The cracks in {name}'s {parts} have stopped spreading."
+        }
+      }
+    }
+  }
+}

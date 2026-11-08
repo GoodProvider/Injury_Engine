@@ -38,12 +38,10 @@ The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This m
 | `injury_engine.ranges.major_min` | Minimum damage for major | 75 | ... becomes major |
 | `injury_engine.ranges.severe_min` | Minimum damage for severe | 90 | ... becomes severe. No body part can be hurt worse than the body has lost health: while health is between 75% and 26% no part gets past minor. |
 | `injury_engine.narration.enabled` | Narrate lashes | on | Direct Narrations for torture and healing (off = events only) |
-| `injury_engine.narration.torture_narration_window_size` | Torture narration window | 30 s | Passive healing is not reported for this long after a torture hit |
 | `injury_engine.narration.torture_maximum_break` | Torture maximum break | 3 s | A pause this long ends a torture session |
 | `injury_engine.narration.torture_direct_narration_gap` | Torture direct narration gap | 6 s | How often continuous torture is narrated |
 | `injury_engine.narration.reply_timeout` | Wait for reply | 15 s | After a narration, the next one waits for SkyrimNet's spoken reply, or this long without any dialogue |
 | `injury_engine.narration.health_narration_cooloff` | Health narration cooloff | 6 s | At most one real-damage narration this often |
-| `injury_engine.narration.cooldown` | Narration cooldown | 8 s | Per-actor healing narration cooldown |
 | `injury_engine.narration.max_distance` | Narration max distance | 15 m | Farther hits and healing become events |
 | `injury_engine.narration.event_ttl` | Lash event lifetime | 30 s | How long a short-lived hit event stays in the scene context |
 | `injury_engine.action.require_whip` | NPC must already carry a whip | on | Only NPCs carrying the padded whip can whip with Torture_Target. Off: one is handed over for the lashing. |
@@ -110,7 +108,7 @@ Real damage first replaces torture damage. While an actor still has torture woun
 
 ### Editing and adding injury types
 
-Everything about injuries lives in `SKSE/Plugins/Injury_Engine/injuries/*.json`, one file per source:
+Everything about injuries lives in `SKSE/Plugins/Injury_Engine/injuries/humanoid/*.json`, one file per source (other body shapes, such as insects, werewolves and undead, have their own folder next to it; `races.json` picks the folder by race):
 - what the LLM reads about injuries;
 - the Torture_Target text;
 - the overlay title and colors;

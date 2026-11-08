@@ -1,0 +1,9 @@
+{
+  "_note": "Only part_weights by this group's part names; text comes from common.json. Schema: ../guide.md (Groups).",
+  "torture": {
+    "part_weights": {
+      "muzzle": 0.6,
+      "tail": 0.5
+    }
+  }
+}

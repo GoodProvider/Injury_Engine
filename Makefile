@@ -3,6 +3,14 @@ NAME=Injury Engine
 
 RELEASE_FILE=versions/Injury_Engine ${VERSION}.7z
 
+# Compile Scripts/Source/*.psc into Scripts/*.pex: the VS Code task "compile: papyrus" (.vscode/tasks.json), same
+# header dirs in the same order (on duplicate scripts the last -h wins). Override PAPYRUS / PAPYRUS_HEADERS per machine.
+PAPYRUS=c:/Skyrim/tools/papyrus-compiler/papyrus.exe
+PAPYRUS_HEADERS=-h "C:/Skyrim/dev/skyrim/Data/Source/Scripts" -h "C:/Skyrim/dev/mods/PapyrusUtil SE - Modders Scripting Utility Functions/Scripts/Source" -h "C:/Skyrim/dev/mods/SkyrimNet/Source/Scripts" -h "C:/Skyrim/dev/mods/SKSE64/Scripts/Source"
+
+papyrus:
+	"${PAPYRUS}" compile -nocache -i Scripts/Source -o Scripts ${PAPYRUS_HEADERS}
+
 # Build Injury_Engine.dll (SKSE_Source/, needs VCPKG_ROOT); copied into SKSE/Plugins/.
 dll:
 	cd SKSE_Source && cmake --preset release && cmake --build --preset build-release
@@ -24,6 +32,7 @@ release:
 	if not exist FOMOD mkdir FOMOD
 	python3 ./python_scripts/fomod-update-name-version.py -v ${VERSION} -n '${NAME}' -o FOMOD/info.xml FOMOD_source/info.xml
 	python3 ./python_scripts/fomod-update-name-version.py -v ${VERSION} -n '${NAME}' -o FOMOD/ModuleConfig.xml FOMOD_source/ModuleConfig.xml
+	$(MAKE) papyrus
 	$(MAKE) dll
 	$(MAKE) esp
 	if not exist versions mkdir versions
@@ -36,8 +45,8 @@ release:
 # FOMOD option "Add fight/stop/yield actions": move the fight actions and their decision prompts out of core.
 	powershell -NoProfile -Command "foreach ($$f in 'actions/Start_Fighting.yaml','actions/Stop_Fighting.yaml','actions/Stop_Fighting_by_Yielding.yaml','prompts/decisions/injury_engine/accept_truce.prompt','prompts/decisions/injury_engine/accept_surrender.prompt') { $$s = Join-Path 'core/SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine' $$f; $$d = Split-Path (Join-Path 'fight_actions/SKSE/Plugins/SkyrimNet/external/goodprovider.injuryengine' $$f); New-Item -ItemType Directory -Force $$d | Out-Null; Move-Item $$s $$d -Force -ErrorAction Stop }"
 # FOMOD option "Show torture overlay": core defaults the overlay off, the option restores the originals (default on).
-	powershell -NoProfile -Command "foreach ($$f in 'SkyrimNet/config/plugins/Injury_Engine/manifest.yaml','Injury_Engine/injuries/whipping.json') { $$d = Split-Path (Join-Path 'overlay/SKSE/Plugins' $$f); New-Item -ItemType Directory -Force $$d | Out-Null; Copy-Item (Join-Path 'SKSE/Plugins' $$f) $$d -Force -ErrorAction Stop }"
-	python3 ./python_scripts/fomod-overlay-off.py core/SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml core/SKSE/Plugins/Injury_Engine/injuries/whipping.json
+	powershell -NoProfile -Command "foreach ($$f in 'SkyrimNet/config/plugins/Injury_Engine/manifest.yaml','Injury_Engine/injuries/humanoid/whipping.json') { $$d = Split-Path (Join-Path 'overlay/SKSE/Plugins' $$f); New-Item -ItemType Directory -Force $$d | Out-Null; Copy-Item (Join-Path 'SKSE/Plugins' $$f) $$d -Force -ErrorAction Stop }"
+	python3 ./python_scripts/fomod-overlay-off.py core/SKSE/Plugins/SkyrimNet/config/plugins/Injury_Engine/manifest.yaml core/SKSE/Plugins/Injury_Engine/injuries/humanoid/whipping.json
 	7z -bb1 a '${RELEASE_FILE}' -aoa FOMOD core images fight_actions overlay
 	if exist "$(subst /,\,core)" rmdir /s /q "$(subst /,\,core)"
 	if exist "$(subst /,\,fight_actions)" rmdir /s /q "$(subst /,\,fight_actions)"

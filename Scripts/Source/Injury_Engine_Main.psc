@@ -18,9 +18,6 @@ Spell Property TortureSparks Auto
 
 String Property PLUGIN_CONFIG = "Plugin_Injury_Engine" AutoReadOnly
 String Property SOURCE_WHIP = "whipping" AutoReadOnly
-String Property KEY_LAST_NARRATION = "injury_engine.last_narration" AutoReadOnly
-; Real time of the victim's last torture hit (any torture type), for the torture narration window / interval
-String Property KEY_LAST_TORTURE = "injury_engine.last_torture" AutoReadOnly
 String Property KEY_IN_ACTION = "injury_engine.in_action" AutoReadOnly
 ; Real time the in-action flag was last refreshed (each Torture_Target strike). Older than IN_ACTION_STALE, or in the
 ; future (a new game process), the flag is left over from an action a load cut short.
@@ -55,6 +52,8 @@ String Property KEY_HS_LAST = "injury_engine.hs_last" AutoReadOnly
 String Property KEY_HS_NARR = "injury_engine.hs_narr" AutoReadOnly
 String Property KEY_HS_TEXT = "injury_engine.hs_text" AutoReadOnly
 String Property KEY_HS_PEND = "injury_engine.hs_pend" AutoReadOnly
+; per session: method leg of its healing event id (HealSyncSourceMethod of the source that opened / last refreshed it)
+String Property KEY_HS_METH = "injury_engine.hs_meth" AutoReadOnly
 ; Death lines held by a closed reply gate: parallel lists on this quest (no attacker: this quest itself), sent by
 ; DeathTick once the gate opens, or as the short-lived event after DEATH_WAIT
 String Property KEY_DP_VIC = "injury_engine.dp_vic" AutoReadOnly
@@ -74,7 +73,6 @@ Float Property hours_per_point = 1.0 Auto Hidden
 Bool Property give_healing_hands = True Auto Hidden
 Float Property regen_rate = 10.0 Auto Hidden
 Bool Property narration_enabled = True Auto Hidden
-Float Property narration_cooldown = 8.0 Auto Hidden
 ; Health (real damage) hits: one DirectNarration at most this often, hits in between are short-lived events
 Float Property health_narration_cooloff = 6.0 Auto Hidden
 Float Property last_health_narration = -1000.0 Auto Hidden
@@ -84,7 +82,6 @@ int Property injury_mode = 0 Auto Hidden
 int Property healing_mode = 0 Auto Hidden
 int Property death_mode = 0 Auto Hidden
 int Property torture_mode = 0 Auto Hidden
-Float Property torture_narration_window_size = 30.0 Auto Hidden
 ; A pause this long between hits ends the torture (end narration); this often one combined line during it
 Float Property torture_maximum_break = 3.0 Auto Hidden
 Float Property torture_direct_narration_gap = 6.0 Auto Hidden
@@ -118,8 +115,6 @@ Bool Property sync_draining = False Auto Hidden
 Bool Property deaths_draining = False Auto Hidden
 ; True while a 0.2 s sync update is already scheduled (RegisterForSingleUpdate replaces a pending one).
 Bool Property sync_pending = False Auto Hidden
-; Method leg of the last healing short-lived event id (wound source or heal-sync source).
-String heal_short_method = "none"
 
 Function Trace(String func, String msg, Bool notification=False) global
     Debug.Trace("[Injury_Engine_Main] " + func + ": " + msg)
@@ -236,7 +231,7 @@ Function NotifyTorture(Actor attacker, Actor victim, String source, Int hits, St
 EndFunction
 
 ; Mod event "Injury_Engine_HealStart": a healing source opened a heal session on target.
-; Args: Form caster (None when unknown), Form target, Int source (1 spell, 2 staff, 3 potion, 5 food, HealSyncSourceMethod).
+; Args: Form caster (None when unknown), Form target, Int source (1 spell, 2 staff, 3 potion, 5 food, 6 werewolf / werebear feeding, HealSyncSourceMethod).
 ; Sent by NarrateSourceHeal, and by NarrateHealGroup once per target of a grouped cast.
 Function NotifyHealStart(Actor caster, Actor target, Int source) global
     if target == None
@@ -317,6 +312,7 @@ Function ClearSessions()
     StorageUtil.FloatListClear(self, KEY_HS_NARR)
     StorageUtil.StringListClear(self, KEY_HS_TEXT)
     StorageUtil.StringListClear(self, KEY_HS_PEND)
+    StorageUtil.StringListClear(self, KEY_HS_METH)
     StorageUtil.FormListClear(self, KEY_DP_VIC)
     StorageUtil.FormListClear(self, KEY_DP_ATT)
     StorageUtil.StringListClear(self, KEY_DP_TXT)
@@ -429,13 +425,11 @@ Function ApplyPluginConfig()
     give_healing_hands = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "injury_engine.healing.give_healing_hands", DefaultBool("give_healing_hands"))
     regen_rate = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.healing.regen_rate", DefaultNumber("regen_rate", 10.0))
     narration_enabled = SkyrimNetApi.GetConfigBool(PLUGIN_CONFIG, "injury_engine.narration.enabled", DefaultBool("narration_enabled"))
-    narration_cooldown = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.cooldown", DefaultNumber("narration_cooldown", 8.0))
     health_narration_cooloff = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.health_narration_cooloff", DefaultNumber("health_narration_cooloff", 6.0))
     injury_mode = NarrationMode("injury_engine.narration.injury_mode")
     healing_mode = NarrationMode("injury_engine.narration.healing_mode")
     death_mode = NarrationMode("injury_engine.narration.death_mode")
     torture_mode = NarrationMode("injury_engine.narration.torture_mode")
-    torture_narration_window_size = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.torture_narration_window_size", DefaultNumber("torture_narration_window_size", 30.0))
     torture_maximum_break = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.torture_maximum_break", DefaultNumber("torture_maximum_break", 3.0))
     torture_direct_narration_gap = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.torture_direct_narration_gap", DefaultNumber("torture_direct_narration_gap", 6.0))
     reply_timeout = SkyrimNetApi.GetConfigFloat(PLUGIN_CONFIG, "injury_engine.narration.reply_timeout", DefaultNumber("reply_timeout", 15.0))
@@ -465,7 +459,7 @@ Function ApplyPluginConfig()
     endif
     Trace("ApplyPluginConfig", "require_whip:" + require_whip + " give_gear:" + give_gear + " max_strikes:" + max_strikes + " hours_per_point:" + hours_per_point \
         + " give_healing_hands:" + give_healing_hands + " regen_rate:" + regen_rate \
-        + " narration:" + narration_enabled + " modes injury/heal/death/torture:" + injury_mode + "/" + healing_mode + "/" + death_mode + "/" + torture_mode + " cooldown:" + narration_cooldown + " torture_window:" + torture_narration_window_size + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " reply_timeout:" + reply_timeout + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
+        + " narration:" + narration_enabled + " modes injury/heal/death/torture:" + injury_mode + "/" + healing_mode + "/" + death_mode + "/" + torture_mode + " break:" + torture_maximum_break + " gap:" + torture_direct_narration_gap + " reply_timeout:" + reply_timeout + " max_distance:" + narration_max_distance + " event_ttl:" + event_ttl + " sexual_parts:" + include_sexual_parts + " overlay:" + show_overlay + " verbose:" + verbose_logging)
 EndFunction
 
 ;----------------------------------------------------------------------------------------------------
@@ -556,11 +550,8 @@ String Function PartsOf(int code) global
     return PartsText(MaskOf(code))
 EndFunction
 
-String Function BatchKey(String base, String source) global
-    return base + "." + source
-EndFunction
-
-; Real-damage hits are a short-lived event each: never narrated, no batch, no cooldown change.
+; Real-damage hits (NarrateRealHits): a DirectNarration when the pair is in sight, the reply gate is open and
+; health_narration_cooloff has passed, else a short-lived event; no batch.
 ; Torture hits (whipping, slapping, ...) form one scene of (attacker, victim) pairs, see "Torture scene" below:
 ;   - a pair's first hit (pending start) or a method change: NarrateHits sends "start" / "switch" as soon as the reply gate
 ;     (ClaimNarration) is open; until then the pair waits and SceneTick sends it
@@ -608,7 +599,6 @@ Function NarrateHits(Actor attacker, Actor victim, String source, int part_mask,
         endif
         return
     endif
-    StorageUtil.SetFloatValue(victim, KEY_LAST_TORTURE, Utility.GetCurrentRealTime())
     NotifyTorture(attacker, victim, source, hits, cause)
     Bool visible = PairVisible(attacker, victim)
     int i = SceneFind(attacker, victim)
@@ -1079,6 +1069,8 @@ String Function HealSyncSourceMethod(int source) global
         return "potion"
     elseif source == 5
         return "food"
+    elseif source == 6
+        return "feed"
     elseif source == 0
         return "none"
     endif
@@ -1089,26 +1081,11 @@ Bool Function TooFar(Actor akActor)
     return !akActor.Is3DLoaded() || Game.GetPlayer().GetDistance(akActor) > narration_max_distance * UNITS_PER_METER
 EndFunction
 
-; Speech queue empty and the victim's narration cooldown has passed (healing; torture hits use the
-; torture narration window / interval, see NarrateInjury).
-Bool Function NarrationAllowed(Actor victim)
-    if SkyrimNetApi.GetSpeechQueueSize() > 0
-        return false
-    endif
-    float now = Utility.GetCurrentRealTime()
-    float last = StorageUtil.GetFloatValue(victim, KEY_LAST_NARRATION, -1000.0)
-    ; real time restarts each session, so a "last" in the future is stale
-    return !(last <= now && (now - last) < narration_cooldown)
-EndFunction
-
 ; Verbose log: why narration is or is not allowed for this actor.
 String Function GateText(Actor victim)
-    float now = Utility.GetCurrentRealTime()
-    float last = StorageUtil.GetFloatValue(victim, KEY_LAST_NARRATION, -1000.0)
     return "narration:" + narration_enabled + " loaded:" + victim.Is3DLoaded() \
         + " distance_m:" + (Game.GetPlayer().GetDistance(victim) / UNITS_PER_METER) + "/" + narration_max_distance \
-        + " queue:" + SkyrimNetApi.GetSpeechQueueSize() + " since_last:" + (now - last) + "/" + narration_cooldown \
-        + " too_far:" + TooFar(victim) + " allowed:" + NarrationAllowed(victim)
+        + " queue:" + SkyrimNetApi.GetSpeechQueueSize() + " too_far:" + TooFar(victim)
 EndFunction
 
 ; Verbose log: attacker to victim distance in meters.
@@ -1133,11 +1110,6 @@ String Function PartsText(int mask) global
         i += 1
     endwhile
     return text
-EndFunction
-
-; One torture hit by hit code (the type is in the code). Used by the Torture_Target summary.
-String Function LashText(Actor attacker, Actor victim, int code)
-    return Injury_Engine_Engine.HitText(SourceOfCode(code), attacker, victim, MaskOf(code), LevelOf(code), 1)
 EndFunction
 
 ; One scripted torture hit of type source (injuries/<source>.json, model "torture"). Whipping is a Lash
@@ -1224,7 +1196,7 @@ Actor Function HealCaster(int i)
 EndFunction
 
 ; Opens a session for target and sends the start line (lead + heal map) right away. Returns its index.
-int Function HealOpen(Actor target, Actor caster, String lead, Bool send = True)
+int Function HealOpen(Actor target, Actor caster, String lead, String method, Bool send = True)
     Form c = caster
     if c == None
         c = self
@@ -1237,6 +1209,7 @@ int Function HealOpen(Actor target, Actor caster, String lead, Bool send = True)
     StorageUtil.FloatListAdd(self, KEY_HS_NARR, now, true)
     StorageUtil.StringListAdd(self, KEY_HS_TEXT, "", true)
     StorageUtil.StringListAdd(self, KEY_HS_PEND, "", true)
+    StorageUtil.StringListAdd(self, KEY_HS_METH, method, true)
     int i = StorageUtil.FormListCount(self, KEY_HS_TGT) - 1
     if send
         HealSend("start", i, lead)
@@ -1255,6 +1228,16 @@ Function HealRemove(int i)
     StorageUtil.FloatListRemoveAt(self, KEY_HS_NARR, i)
     StorageUtil.StringListRemoveAt(self, KEY_HS_TEXT, i)
     StorageUtil.StringListRemoveAt(self, KEY_HS_PEND, i)
+    StorageUtil.StringListRemoveAt(self, KEY_HS_METH, i)
+EndFunction
+
+; A healing source working on an open session again: refresh its time, caster and event method.
+Function HealRefresh(int s, Actor caster, String method)
+    StorageUtil.FloatListSet(self, KEY_HS_LAST, s, Utility.GetCurrentRealTime())
+    StorageUtil.StringListSet(self, KEY_HS_METH, s, method)
+    if caster != None
+        StorageUtil.FormListSet(self, KEY_HS_CASTER, s, caster)
+    endif
 EndFunction
 
 String Function JoinText(String a, String b) global
@@ -1281,29 +1264,39 @@ Function HealSend(String phase, int i, String lead)
         return
     endif
     Bool direct = DirectAllowed("healing")
+    ; PairVisible, ClaimNarration and HealMapText yield: another thread may add or remove sessions meanwhile, so
+    ; every write below finds this session again first (an index from before a yield may name another session)
     if direct && !ClaimNarration()
-        if phase == "start"
+        i = HealFind(target)
+        if phase == "start" && i >= 0
             StorageUtil.StringListSet(self, KEY_HS_PEND, i, lead)
             Verbose("HealSend", "start of " + target.GetDisplayName() + " waits for a reply")
         endif
         return
     endif
-    i = HealFind(target) ; the lists may have changed during the claim
+    String map = Injury_Engine_Engine.HealMapText(target)
+    i = HealFind(target)
     if i < 0
-        ReleaseNarration()
+        if direct
+            ReleaseNarration()
+        endif
         return
     endif
     StorageUtil.StringListSet(self, KEY_HS_PEND, i, "")
-    String map = Injury_Engine_Engine.HealMapText(target)
     if phase == "again" && map == StorageUtil.StringListGet(self, KEY_HS_TEXT, i)
-        ReleaseNarration()
+        if direct
+            ReleaseNarration()
+        endif
         return
     endif
+    String method = StorageUtil.StringListGet(self, KEY_HS_METH, i)
     StorageUtil.StringListSet(self, KEY_HS_TEXT, i, map)
     StorageUtil.FloatListSet(self, KEY_HS_NARR, i, Utility.GetCurrentRealTime())
     String msg = JoinText(lead, map)
     if msg == ""
-        ReleaseNarration()
+        if direct
+            ReleaseNarration()
+        endif
         return
     endif
     Actor toward = caster
@@ -1313,7 +1306,7 @@ Function HealSend(String phase, int i, String lead)
     Actor player = Game.GetPlayer()
     Trace("HealSend", phase + " " + target.GetDisplayName() + " caster:" + NameOf(caster) + ": " + msg)
     if !direct
-        RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target, SessionOf(phase))
+        RegisterInjuryShortEvent(msg, target, toward, "healing", method, caster, target, SessionOf(phase))
     else
         if target == player || caster == player
             SkyrimNetApi.PurgeDialogue(true)
@@ -1377,6 +1370,7 @@ Int Property HEAL_PAIN_GONE = 1 AutoReadOnly
 Int Property HEAL_FULL = 2 AutoReadOnly
 Int Property HEAL_STOPPED = 3 AutoReadOnly
 Int Property HEAL_SOURCE_FOOD = 5 AutoReadOnly ; SyncHealth source: food or ingredient (eaten by the healed actor, no caster)
+Int Property HEAL_SOURCE_FEED = 6 AutoReadOnly ; SyncHealth source: a werewolf / werebear feeding (healed itself, no caster)
 Int Property HEAL_SOURCE_NONE = 0 AutoReadOnly ; SyncHealth source: no healing source (natural healing)
 
 Float Property SYNC_INTERVAL = 0.2 AutoReadOnly
@@ -1413,7 +1407,7 @@ Function NarrateSyncCodes(int[] codes)
     int i = 0
     while i < count
         int source = (codes[i] / 1000) % 10
-        if !done[i] && casters[i] != None && targets[i] != None && codes[i] / 10000 == HEAL_START && source != HEAL_SOURCE_NONE && source != HEAL_SOURCE_FOOD
+        if !done[i] && casters[i] != None && targets[i] != None && codes[i] / 10000 == HEAL_START && source != HEAL_SOURCE_NONE && source != HEAL_SOURCE_FOOD && source != HEAL_SOURCE_FEED
             int n = 1
             int j = i + 1
             while j < count
@@ -1480,8 +1474,8 @@ Bool Function NarrateHealGroup(Actor caster, int source, Form[] group)
         toward = caster
     endif
     Trace("NarrateHealGroup", "source:" + source + " caster:" + NameOf(caster) + " targets:" + group.Length + ": " + msg)
-    heal_short_method = HealSyncSourceMethod(source)
-    RegisterInjuryShortEvent(msg, first, toward, "healing", heal_short_method, caster, first)
+    String method = HealSyncSourceMethod(source)
+    RegisterInjuryShortEvent(msg, first, toward, "healing", method, caster, first)
     Bool playerInvolved = caster == Game.GetPlayer()
     int k = 0
     while k < group.Length
@@ -1492,12 +1486,9 @@ Bool Function NarrateHealGroup(Actor caster, int source, Form[] group)
         NotifyHealStart(caster, t, source)
         int s = HealFind(t)
         if s >= 0
-            StorageUtil.FloatListSet(self, KEY_HS_LAST, s, Utility.GetCurrentRealTime())
-            if caster != None
-                StorageUtil.FormListSet(self, KEY_HS_CASTER, s, caster)
-            endif
+            HealRefresh(s, caster, method)
         else
-            HealOpen(t, caster, "", False)
+            HealOpen(t, caster, "", method, False)
         endif
         k += 1
     endwhile
@@ -1736,22 +1727,19 @@ Function NarrateSourceHeal(int kind, int source, int percent, Actor caster, Acto
         Verbose("NarrateSourceHeal", target.GetDisplayName() + " kind:" + kind + " source:" + source + " percent:" + percent \
             + " caster:" + NameOf(caster) + " session:" + HealFind(target) + " " + GateText(target))
     endif
-    heal_short_method = HealSyncSourceMethod(source)
+    String method = HealSyncSourceMethod(source)
     Trace("NarrateSourceHeal", "short-lived kind:" + kind + " source:" + source + ": " + msg)
-    RegisterInjuryShortEvent(msg, target, toward, "healing", heal_short_method, caster, target)
+    RegisterInjuryShortEvent(msg, target, toward, "healing", method, caster, target)
     if source == HEAL_SOURCE_NONE || kind != HEAL_START
         return
     endif
     NotifyHealStart(caster, target, source)
     int s = HealFind(target)
     if s >= 0
-        StorageUtil.FloatListSet(self, KEY_HS_LAST, s, Utility.GetCurrentRealTime())
-        if caster != None
-            StorageUtil.FormListSet(self, KEY_HS_CASTER, s, caster)
-        endif
+        HealRefresh(s, caster, method)
         return
     endif
-    HealOpen(target, caster, msg)
+    HealOpen(target, caster, msg, method)
 EndFunction
 
 String Function NameOf(Actor akActor) global
@@ -1780,8 +1768,8 @@ EndFunction
 ; or real damage for a health-only type) on body_part (part name or region, "" = random; ignored for real damage).
 ; narrate True: the usual torture narration rules (NarrateInjury: a narration or a short-lived event), with cause
 ;   ("Bob yanks Nina off her feet") leading the text in place of our own "as Bob ..." / "by the fall".
-;   Real damage is narrated as any real hit; cause alone becomes a short-lived event.
-; narrate False: silent (no narration, no event).
+;   Real damage is narrated as any real hit; cause alone becomes a short-lived event of its own.
+; narrate False: silent (no narration, no event). A killing blow is still narrated (a death is its own event).
 ; Returns the last hit code (torture) or the source index (real damage), or -1.
 Int Function External_Damage(Actor attacker, Actor victim, String cause = "", String body_part = "", String damage_type = "whipping", Int damage_amount = 1, Bool narrate = True) global
     Injury_Engine_Main main = Get()
@@ -1798,10 +1786,16 @@ Int Function External_Damage(Actor attacker, Actor victim, String cause = "", St
         Trace("External_Damage", "unknown injury type: " + damage_type)
         return -1
     endif
-    int source = Injury_Engine_Engine.RealHit(victim, attacker, damage_type, damage_amount)
-    Trace("External_Damage", NameOf(attacker) + " -> " + NameOf(victim) + " " + damage_type + " real points:" + damage_amount + " source:" + source)
-    if narrate && cause != ""
-        main.RegisterInjuryShortEvent(cause, attacker, victim, "health", damage_type, attacker, victim)
+    int source = -1
+    if narrate
+        source = Injury_Engine_Engine.RealHit(victim, attacker, damage_type, damage_amount)
+    else
+        source = Injury_Engine_Engine.RealHitQuiet(victim, attacker, damage_type, damage_amount)
+    endif
+    Trace("External_Damage", NameOf(attacker) + " -> " + NameOf(victim) + " " + damage_type + " real points:" + damage_amount + " source:" + source + " narrate:" + narrate)
+    if narrate && cause != "" && main.ModeOf("health") != 2
+        ; its own id: the hit's event (health_<type>_...) must not overwrite it, nor it the hit's
+        ShortEvent(cause, attacker, victim, "health", InjuryShortEventId("cause", damage_type, attacker, victim), "injury_hit", (main.event_ttl * 1000.0) as int)
     endif
     return source
 EndFunction

@@ -37,5 +37,14 @@
     "eat": "{name} eats the {item} and feels better.",
     "drink": "{name} drinks the {item} and feels better.",
     "eat_unknown": "{name} eats something and feels better."
+  },
+  "heal_feed": {
+    "races": [
+      { "file": "Skyrim.esm", "id": "0x0CDD84", "key": "werewolf" },
+      { "file": "Dragonborn.esm", "id": "0x01E17B", "key": "werebear" }
+    ],
+    "werewolf": "As a werewolf, {name}'s fangs tear into the corpse's warm throat and intestines, the blood regenerating and strengthening {name}.",
+    "werebear": "As a werebear, {name}'s jaws tear into the corpse's warm throat and intestines, the blood regenerating and strengthening {name}.",
+    "wounds": "{name}'s wounds begin to close."
   }
 }

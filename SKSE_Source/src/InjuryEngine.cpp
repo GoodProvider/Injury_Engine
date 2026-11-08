@@ -64,16 +64,17 @@ namespace InjuryEngine
             bool hit = false;
             std::int32_t deficit = 0;  // torture points
         };
-        using Torture = std::array<std::array<Cell, kPartCount>, kMaxSources>;       // [source][part]
-        using Real = std::array<std::array<std::int32_t, kPartCount>, kMaxSources>;  // health model: [source][part] damage
+        using Torture = std::array<std::array<Cell, kMaxParts>, kMaxSources>;       // [source][part]
+        using Real = std::array<std::array<std::int32_t, kMaxParts>, kMaxSources>;  // health model: [source][part] damage
 
         struct State
         {
             Torture torture{};
-            std::array<double, kPartCount> lastHours{};  // game hours when time was last applied to the part
+            std::array<double, kMaxParts> lastHours{};  // game hours when time was last applied to the part
             Real real{};
             std::int32_t replaced = 0;  // torture damage points replaced by real damage (overlay)
             float carry = 0.0f;         // real damage (health) not yet a whole point
+            int group = InjuryConfig::kHumanoid;  // race group (InjuryConfig::GroupOf) when the entry was made; never changes
         };
 
         // The healing source (spell, staff, potion, ...) currently working on an actor. Transient.
@@ -139,6 +140,9 @@ namespace InjuryEngine
         // Last food (or ingredient) that healed each actor, for the food heal line. Kept when the actor is forgotten
         // (the fully healed line comes after). Not saved.
         std::unordered_map<RE::FormID, RE::FormID> g_healFood;
+        // heal_feed key ("werewolf", "werebear") of the beast race each actor last fed in, for the feed heal line.
+        // Kept like g_healFood. Not saved.
+        std::unordered_map<RE::FormID, std::string> g_healFeed;
         // What the last heal start on each actor looked like (item, whether the actor was unhurt), for the group heal
         // line: that line is worded after kHealGroupWindow, when the actor may already be healed or forgotten, so
         // entries are not dropped with the actor but pruned by age in Seen. Not saved.
@@ -157,7 +161,9 @@ namespace InjuryEngine
         // open a session every few seconds. Not saved.
         std::unordered_map<RE::FormID, double> g_unhurtHealAt;
         constexpr double kUnhurtHealGap = 60.0;
-        std::unordered_map<RE::FormID, bool> g_pained;      // had damage at the last sync
+        // heal_events source of each wounded actor at the last sync (HealEventsSource): the fully healed line is worded
+        // after the actor's State is gone and its torture cells are cleared. Not erased with the State; not saved.
+        std::unordered_map<RE::FormID, int> g_healEventSource;
         std::unordered_map<RE::FormID, float> g_regenBank;  // regen health not yet a whole point
         std::unordered_map<RE::FormID, float> g_healCredit;  // health a healing source restored, not yet a whole point (kept after the session, never taken back as regen)
         // Hooked torture damage (spell ticks) not yet a hit, per actor and source. Kept when the actor is
@@ -206,6 +212,23 @@ namespace InjuryEngine
                                 (g_ostimFaction && actor->IsInFaction(g_ostimFaction)));
         }
 
+        // The actor's group: its tracked entry's (picked when the entry was made, kept until it is forgotten, so a
+        // transformation does not remap open wounds), else its race's. Caller holds g_lock.
+        int GroupForLocked(RE::Actor* actor)
+        {
+            if (!actor) {
+                return InjuryConfig::kHumanoid;
+            }
+            const auto it = g_actors.find(actor->GetFormID());
+            return it != g_actors.end() ? it->second.group : InjuryConfig::GroupOf(actor);
+        }
+
+        int GroupFor(RE::Actor* actor)
+        {
+            std::lock_guard lock(g_lock);
+            return GroupForLocked(actor);
+        }
+
         // Queues a hit for narration. A queued hit of the same victim, attacker and source absorbs it (latest mask / level win).
         // Caller holds g_lock.
         void PushHit(const HitEntry& e)
@@ -251,6 +274,91 @@ namespace InjuryEngine
             InternalScope() { ++g_internal; }
             ~InternalScope() { --g_internal; }
         };
+
+        // Health changes made while g_lock is held wait here and are applied after the unlock: an engine health call
+        // under g_lock can wait on the actor's value lock while a damage hook on another thread holds that and waits
+        // for g_lock (freeze). Declare the batch BEFORE the lock_guard so it is destroyed after it. Batches nest: an
+        // inner one hands its changes to the outer one.
+        struct HealthChange
+        {
+            RE::FormID id;
+            float delta;  // < 0 damage, > 0 restore
+        };
+
+        struct HealthBatch;
+        thread_local HealthBatch* g_healthBatch = nullptr;
+
+        void ApplyHealth(RE::FormID id, float delta)
+        {
+            auto* actor = RE::TESForm::LookupByID<RE::Actor>(id);
+            if (!actor || actor->IsDead() || delta == 0.0f) {
+                return;
+            }
+            InternalScope scope;
+            if (delta < 0.0f) {
+                actor->AsActorValueOwner()->DamageActorValue(RE::ActorValue::kHealth, -delta);
+            } else {
+                actor->AsActorValueOwner()->RestoreActorValue(RE::ActorValue::kHealth, delta);
+            }
+        }
+
+        struct HealthBatch
+        {
+            std::vector<HealthChange> changes;
+            HealthBatch* outer;
+
+            HealthBatch() : outer(g_healthBatch) { g_healthBatch = this; }
+            ~HealthBatch()
+            {
+                g_healthBatch = outer;
+                if (outer) {
+                    outer->changes.insert(outer->changes.end(), changes.begin(), changes.end());
+                    return;
+                }
+                for (const auto& c : changes) {
+                    ApplyHealth(c.id, c.delta);
+                }
+            }
+            HealthBatch(const HealthBatch&) = delete;
+            HealthBatch& operator=(const HealthBatch&) = delete;
+        };
+
+        // Changes health now, or after the unlock when a HealthBatch is open on this thread.
+        void ChangeHealth(RE::Actor* actor, float delta)
+        {
+            if (!actor || delta == 0.0f) {
+                return;
+            }
+            if (g_healthBatch) {
+                g_healthBatch->changes.push_back({ actor->GetFormID(), delta });
+            } else {
+                ApplyHealth(actor->GetFormID(), delta);
+            }
+        }
+
+        // Health changes of this actor queued in the open batches and not applied yet.
+        float PendingHealth(RE::FormID id)
+        {
+            float sum = 0.0f;
+            for (const HealthBatch* b = g_healthBatch; b; b = b->outer) {
+                for (const auto& c : b->changes) {
+                    if (c.id == id) {
+                        sum += c.delta;
+                    }
+                }
+            }
+            return sum;
+        }
+
+        // Health for the wound model: a temporary buff above the permanent max (Fortify Health, Courage) is not
+        // healing and not health torture may take (it goes when the buff ends), so health counts at most
+        // max - what the Health damage modifier holds; a debuff below that still counts. Pending batch changes included.
+        float EffectiveHealth(RE::Actor* actor, float maxHealth)
+        {
+            auto* av = actor->AsActorValueOwner();
+            const float damaged = -actor->GetActorValueModifier(RE::ACTOR_VALUE_MODIFIER::kDamage, RE::ActorValue::kHealth);
+            return std::min(av->GetActorValue(RE::ActorValue::kHealth), maxHealth - damaged) + PendingHealth(actor->GetFormID());
+        }
 
         double NowHours()
         {
@@ -313,12 +421,10 @@ namespace InjuryEngine
         // Parts that new hits, prompts and the overlay use.
         int ActiveParts()
         {
-            // lungs (the last index) are never an active part: only drowning reaches them, through PartActive
-            return g_sexualParts ? kPartLungs : kCoreParts;
+            // core then sexual parts; the lungs are never an active part: only drowning reaches them, through PartActive
+            const auto& b = GetBody();
+            return g_sexualParts ? b.coreCount + b.sexualCount : b.coreCount;
         }
-
-        constexpr int kPartPussy = 7;
-        constexpr int kPartPenis = 8;
 
         bool IsFemale(RE::Actor* actor)
         {
@@ -329,12 +435,16 @@ namespace InjuryEngine
         // Only the genital part matching the actor's sex can be wounded.
         bool PartFits(bool female, int part)
         {
-            return part != (female ? kPartPenis : kPartPussy);
+            if (part < 0 || part >= kMaxParts) {
+                return false;
+            }
+            const int sex = GetBody().partSex[part];
+            return sex == 0 || sex == (female ? 1 : 2);
         }
 
         // Random pick from candidate parts, weighted by `weight` (body.partWeight: small parts are hit less
         // often; a torture type's part_weights). Every weight 0: an even pick.
-        int WeightedPart(const std::array<int, kPartCount>& candidates, int count, const std::array<float, kPartCount>& weight)
+        int WeightedPart(const std::array<int, kMaxParts>& candidates, int count, const std::array<float, kMaxParts>& weight)
         {
             float total = 0.0f;
             for (int i = 0; i < count; ++i) {
@@ -381,7 +491,7 @@ namespace InjuryEngine
             if (damage <= 0) {
                 return -1;
             }
-            if (part == kPartLungs) {
+            if (part == b.lungs) {
                 const float share = static_cast<float>(damage) / 100.0f;
                 if (share >= b.lungSevere) return 2;
                 if (share >= b.lungMedium) return 1;
@@ -411,7 +521,7 @@ namespace InjuryEngine
         int Deficit(const State& st)
         {
             int total = 0;
-            for (int i = 0; i < kPartCount; ++i) {
+            for (int i = 0; i < kMaxParts; ++i) {
                 total += PartTorture(st, i);
             }
             return total;
@@ -503,18 +613,18 @@ namespace InjuryEngine
             return AnyTortureHit(st) || RealTotal(st) > 0;
         }
 
-        // Torture points of every part an actor has (woundShare of max health); one genital part counted.
+        // Torture points of every part an actor has (woundShare of max health); of the sex-specific parts only one
+        // sex's are counted (the larger total).
         int CapacityTorture()
         {
             const auto& b = GetBody();
             int total = 0;
+            int female = 0;
+            int male = 0;
             for (int i = 0; i < ActiveParts(); ++i) {
-                total += b.partMax[i];
+                (b.partSex[i] == 1 ? female : b.partSex[i] == 2 ? male : total) += b.partMax[i];
             }
-            if (ActiveParts() > kPartPenis) {
-                total -= std::max(b.partMax[kPartPussy], b.partMax[kPartPenis]);
-            }
-            return total;
+            return std::max(1, total + std::max(female, male));
         }
 
         float RatioTorture(float maxHealth)
@@ -538,12 +648,12 @@ namespace InjuryEngine
 
         // Real points each part may hold while `missing` percent of max health is gone: no part holds a larger share
         // of its real max than the body has lost (lungs: no cap).
-        std::array<int, kPartCount> RealCaps(float missing)
+        std::array<int, kMaxParts> RealCaps(float missing)
         {
             const auto& b = GetBody();
-            std::array<int, kPartCount> caps{};
-            for (int i = 0; i < kPartCount; ++i) {
-                caps[i] = i == kPartLungs ? std::numeric_limits<int>::max()
+            std::array<int, kMaxParts> caps{};
+            for (int i = 0; i < b.partCount; ++i) {
+                caps[i] = i == b.lungs ? std::numeric_limits<int>::max()
                                           : std::clamp(static_cast<int>(std::floor(missing * b.realMax[i] / 100.0f + 1e-3f)), 0, b.realMax[i]);
             }
             return caps;
@@ -585,7 +695,7 @@ namespace InjuryEngine
         void Advance(State& st, double now)
         {
             const double step = g_hoursPerPoint;
-            for (int i = 0; i < kPartCount; ++i) {
+            for (int i = 0; i < kMaxParts; ++i) {
                 double& last = st.lastHours[i];
                 if (PartTorture(st, i) == 0 || now < last) {
                     last = now;
@@ -604,9 +714,9 @@ namespace InjuryEngine
         // False when nothing is left. only >= 0: that part alone.
         bool HealTorturePoint(State& st, double now, int only = -1)
         {
-            std::array<int, kPartCount> open{};
+            std::array<int, kMaxParts> open{};
             int count = 0;
-            for (int i = 0; i < kPartCount; ++i) {
+            for (int i = 0; i < kMaxParts; ++i) {
                 if ((only < 0 || i == only) && PartTorture(st, i) > 0) {
                     open[count++] = i;
                 }
@@ -656,12 +766,12 @@ namespace InjuryEngine
         // The active parts a torture type lands on for this actor: the parts it fits with part_weights above 0;
         // a type that lands on none of them reaches every part it fits, by the body's weights. `weight` gets the
         // weights to pick by.
-        std::array<bool, kPartCount> SourceReach(int source, bool female, const std::array<float, kPartCount>*& weight)
+        std::array<bool, kMaxParts> SourceReach(int source, bool female, const std::array<float, kMaxParts>*& weight)
         {
             const auto& body = GetBody();
             const auto* conf = InjuryConfig::Find(source);
             weight = conf ? &conf->partWeight : &body.partWeight;
-            std::array<bool, kPartCount> reach{};
+            std::array<bool, kMaxParts> reach{};
             bool any = false;
             for (int i = 0; i < ActiveParts(); ++i) {
                 reach[i] = PartFits(female, i) && (*weight)[i] > 0.0f;
@@ -718,15 +828,15 @@ namespace InjuryEngine
         }
 
         // Real fullness: the part holds its cap (RealCaps) in real points.
-        bool PartFullReal(const State& st, int part, const std::array<int, kPartCount>& caps)
+        bool PartFullReal(const State& st, int part, const std::array<int, kMaxParts>& caps)
         {
-            return part != kPartLungs && RealOnPart(st, part) >= caps[part];  // lungs have no cap
+            return part != GetBody().lungs && RealOnPart(st, part) >= caps[part];  // lungs have no cap
         }
 
         // Real damage may land here: an active part (or the lungs) that fits the actor's sex.
         bool PartActive(int part, bool female)
         {
-            return (part < ActiveParts() || part == kPartLungs) && PartFits(female, part);
+            return part >= 0 && (part < ActiveParts() || part == GetBody().lungs) && PartFits(female, part);
         }
 
         // The part a real attack of a source with these part weights lands on (only active parts weighted above 0:
@@ -735,18 +845,19 @@ namespace InjuryEngine
         // damage (caps: RealCaps); -1 when every part is full. canReplace: what is left of the attack can still replace a torture
         // point. Without it a tortured part at max damage can take nothing, and picking it again would never end
         // the OnDamage loop (a frozen game: it runs on the actor-update threads with g_lock held).
-        int PickPart(const State& st, bool female, const std::array<float, kPartCount>& weight, bool canReplace,
-            const std::array<int, kPartCount>& caps)
+        int PickPart(const State& st, bool female, const std::array<float, kMaxParts>& weight, bool canReplace,
+            const std::array<int, kMaxParts>& caps)
         {
-            std::array<int, kPartCount> open{};
+            std::array<int, kMaxParts> open{};
             int count = 0;
-            for (int i = 0; i < kPartCount; ++i) {
+            const int partCount = GetBody().partCount;
+            for (int i = 0; i < partCount; ++i) {
                 if (weight[i] > 0.0f && PartActive(i, female) && TortureOpen(st, i) && (canReplace || !PartFullReal(st, i, caps))) {
                     open[count++] = i;
                 }
             }
             if (count == 0) {
-                for (int i = 0; i < kPartCount; ++i) {
+                for (int i = 0; i < partCount; ++i) {
                     if (weight[i] > 0.0f && PartActive(i, female) && !PartFullReal(st, i, caps)) {
                         open[count++] = i;
                     }
@@ -758,10 +869,10 @@ namespace InjuryEngine
         // One real point healed on a random (source, part) that has damage. False when nothing is left.
         bool HealRealPoint(State& st)
         {
-            std::array<std::pair<int, int>, kMaxSources * kPartCount> open{};
+            std::array<std::pair<int, int>, kMaxSources * kMaxParts> open{};
             int count = 0;
             for (int s = 0; s < kMaxSources; ++s) {
-                for (int p = 0; p < kPartCount; ++p) {
+                for (int p = 0; p < kMaxParts; ++p) {
                     if (st.real[s][p] > 0) {
                         open[count++] = { s, p };
                     }
@@ -788,10 +899,10 @@ namespace InjuryEngine
             if (maxHealth <= 0.0f) {
                 return;
             }
-            const float missing = MissingPercent(actor, maxHealth, 0.0f);
+            const float missing = MissingPercent(actor, maxHealth, -PendingHealth(actor->GetFormID()));
             const auto caps = RealCaps(missing);
             int trimmed = 0;
-            for (int part = 0; part < kPartCount; ++part) {
+            for (int part = 0; part < kMaxParts; ++part) {
                 while (RealOnPart(st, part) > caps[part]) {
                     int top = 0;
                     for (int s = 1; s < kMaxSources; ++s) {
@@ -890,7 +1001,6 @@ namespace InjuryEngine
             g_actors.erase(id);
             g_healers.erase(id);
             g_unhurtHealAt.erase(id);
-            g_pained.erase(id);
             g_regenBank.erase(id);
             g_healCredit.erase(id);
             g_lastScan.erase(id);
@@ -908,6 +1018,7 @@ namespace InjuryEngine
                 return nullptr;
             }
             State& st = it->second;
+            InjuryConfig::SetGroup(st.group);  // callers hold a GroupScope
             Advance(st, now);
             if (actor->IsDead()) {
                 SKSE::log::info("forget {:08X} (dead)", id);
@@ -922,6 +1033,50 @@ namespace InjuryEngine
                 return nullptr;
             }
             return &st;
+        }
+
+        // The actor's entry, made in the thread's current group when there is none. Caller holds g_lock.
+        State& Track(RE::Actor* actor, State* existing)
+        {
+            if (existing) {
+                return *existing;
+            }
+            State& st = g_actors[actor->GetFormID()];
+            st.group = InjuryConfig::CurrentGroup();
+            return st;
+        }
+
+        // A part index from Papyrus (PartIndex resolves names in the humanoid body) in the current group: the same
+        // part name, else the first part of the same region ("face" -> "muzzle"), else -1 (random).
+        int TranslatePart(int part)
+        {
+            const int group = InjuryConfig::CurrentGroup();
+            if (part < 0 || group == InjuryConfig::kHumanoid) {
+                return part;
+            }
+            std::string name;
+            std::string region;
+            {
+                InjuryConfig::GroupScope human(InjuryConfig::kHumanoid);
+                const auto& h = GetBody();
+                if (part >= h.partCount) {
+                    return -1;
+                }
+                name = h.partName[part];
+                region = h.regionName[h.partRegion[part]];
+            }
+            const auto& b = GetBody();
+            for (int i = 0; i < b.partCount; ++i) {
+                if (InjuryConfig::IEquals(b.partName[i], name)) {
+                    return i;
+                }
+            }
+            for (int i = 0; i < b.partCount; ++i) {
+                if (InjuryConfig::IEquals(b.regionName[b.partRegion[i]], region)) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         bool IsHealing(const RE::EffectSetting* mgef, float magnitude)
@@ -985,22 +1140,62 @@ namespace InjuryEngine
             return sound;
         }
 
+        // heal_feed key of the actor's race when it is a feeding beast form (session.json heal_feed.races: werewolf,
+        // werebear), else empty. The races are looked up once (forms are loaded before any effect lands).
+        std::string FeedRace(RE::Actor* actor)
+        {
+            static const std::vector<std::pair<RE::FormID, std::string>> races = [] {
+                std::vector<std::pair<RE::FormID, std::string>> list;
+                auto* data = RE::TESDataHandler::GetSingleton();
+                for (const auto& r : InjuryConfig::FeedRaces()) {
+                    auto* race = data ? data->LookupForm<RE::TESRace>(r.id, r.file) : nullptr;
+                    if (race) {
+                        list.emplace_back(race->GetFormID(), r.key);
+                        SKSE::log::info("feed race {} {:08X} ({}:{:06X})", r.key, race->GetFormID(), r.file, r.id);
+                    } else {
+                        SKSE::log::warn("feed race {} not found ({}:{:06X}), feeding there is a plain heal", r.key, r.file, r.id);
+                    }
+                }
+                return list;
+            }();
+            const auto* race = actor ? actor->GetRace() : nullptr;
+            if (!race) {
+                return {};
+            }
+            for (const auto& [id, key] : races) {
+                if (race->GetFormID() == id) {
+                    return key;
+                }
+            }
+            return {};
+        }
+
         // A healing source touched an actor: refresh its session, or start one (queuing kHealStart). An unhurt actor
         // (st null or no points) still gets the start line: healing feels nice anyway.
         // Food and ingredients: the eater healed themself, so the session has no caster (the line must not read as
         // someone else healing them).
-        void Seen(RE::FormID id, const State* st, RE::Actor* caster, RE::MagicItem* item, double now)
+        // feedKey: the actor is a beast form (werewolf, werebear) healing itself, i.e. feeding (kSourceFeed, no caster,
+        // like food). hurt: health was below max before the effect; feeding at full health opens nothing (no line).
+        void Seen(RE::FormID id, const State* st, RE::Actor* caster, RE::MagicItem* item, double now,
+            const std::string& feedKey = {}, bool hurt = true)
         {
-            const int source = SourceOf(item);
+            const int source = feedKey.empty() ? SourceOf(item) : kSourceFeed;
             if (source == kSourceFood && item) {
                 g_healFood[id] = item->GetFormID();
+            }
+            const int points = st ? TotalPoints(*st) : 0;
+            if (source == kSourceFeed) {
+                if (!hurt && points <= 0) {
+                    SKSE::log::debug("feed at full health {:08X} item:{:08X}: no heal line", id, item ? item->GetFormID() : 0);
+                    return;
+                }
+                g_healFeed[id] = feedKey;
             }
             if (const auto it = g_healers.find(id); it != g_healers.end()) {
                 it->second.lastSeen = now;
                 return;
             }
-            const int points = st ? TotalPoints(*st) : 0;
-            if (points <= 0) {
+            if (points <= 0 && source != kSourceFeed) {
                 // Unhurt: only a deliberate heal gets a line. A spell an actor casts on itself (not the player) is
                 // ambient (regen abilities from other mods), and any unhurt start is limited to one per gap.
                 const bool self = !caster || caster->GetFormID() == id;
@@ -1015,14 +1210,14 @@ namespace InjuryEngine
                 g_unhurtHealAt[id] = now;
             }
             Healer healer;
-            if (caster && source != kSourceFood) {
+            if (caster && source != kSourceFood && source != kSourceFeed) {
                 healer.caster = caster->GetHandle();
             }
             healer.source = source;
             healer.startPoints = points;
             healer.lastSeen = now;
             g_healers[id] = healer;
-            if (source != kSourceFood) {
+            if (source != kSourceFood && source != kSourceFeed) {
                 std::erase_if(g_healStart, [now](const auto& kv) { return now - kv.second.time > kHealStartKeep; });
                 g_healStart[id] = { item ? item->GetFormID() : 0, points <= 0, now };
             }
@@ -1089,7 +1284,7 @@ namespace InjuryEngine
             }
             const float ratioT = RatioTorture(maxHealth);
             const float ratioR = RatioReal(maxHealth);
-            const float excess = av->GetActorValue(RE::ActorValue::kHealth) - WoundedLevel(st, maxHealth);
+            const float excess = EffectiveHealth(actor, maxHealth) - WoundedLevel(st, maxHealth);
             if (excess <= 0.0f) {
                 g_healCredit.erase(id);
                 return;
@@ -1149,8 +1344,7 @@ namespace InjuryEngine
             }
             g_regenBank[id] = std::max(0.0f, budget - credit - bankSpent);
             if (const float extra = regen - bankSpent; extra > 0.0f) {
-                InternalScope scope;
-                av->DamageActorValue(RE::ActorValue::kHealth, extra);
+                ChangeHealth(actor, -extra);
             }
         }
 
@@ -1159,7 +1353,7 @@ namespace InjuryEngine
         {
             auto* av = actor->AsActorValueOwner();
             const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
-            const float health = av->GetActorValue(RE::ActorValue::kHealth);
+            const float health = EffectiveHealth(actor, maxHealth);
             const float floor = GetBody().floor * maxHealth;
             if (points <= 0 || maxHealth <= 0.0f || health <= floor) {
                 SKSE::log::debug("take health {:08X} skipped: points:{} health:{:.1f} floor:{:.1f}", actor->GetFormID(), points, health, floor);
@@ -1168,8 +1362,7 @@ namespace InjuryEngine
             const float loss = std::min(points * RatioTorture(maxHealth), health - floor);
             SKSE::log::debug("take health {:08X} points:{} health:{:.1f} -> {:.1f} (max {:.1f}, floor {:.1f})", actor->GetFormID(), points,
                 health, health - loss, maxHealth, floor);
-            InternalScope scope;
-            av->DamageActorValue(RE::ActorValue::kHealth, loss);
+            ChangeHealth(actor, -loss);
         }
 
         void NotifyPapyrus()
@@ -1306,6 +1499,10 @@ namespace InjuryEngine
                 const std::string key = std::format("{}|{:08X}|{:08X}|{}", kind, attacker ? attacker->GetFormID() : 0u,
                     victim->GetFormID(), source);
                 std::lock_guard lock(throttleLock);
+                if (throttles.size() > 512) {
+                    // drop keys idle for 10 s (their skipped counts are lost, as for a burst with no later line)
+                    std::erase_if(throttles, [&](const auto& entry) { return now - entry.second.last > std::chrono::seconds(10); });
+                }
                 const auto it = throttles.find(key);
                 if (it == throttles.end()) {
                     throttles[key] = { now, 0 };
@@ -1319,7 +1516,7 @@ namespace InjuryEngine
             }
             const auto* conf = InjuryConfig::Find(source);
             const auto& body = GetBody();
-            const char* partName = partIndex >= 0 && partIndex < kPartCount ? body.partName[partIndex].c_str() : "?";
+            const char* partName = partIndex >= 0 && partIndex < kMaxParts ? body.partName[partIndex].c_str() : "?";
             auto* av = victim->AsActorValueOwner();
             const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
             // `health` is the engine's value for this point; `actual` is the victim's live game health right now.
@@ -1375,7 +1572,7 @@ namespace InjuryEngine
             const std::string comma = InjuryConfig::Str(source, "narration.list.comma", ", ");
             std::string text;
             int remaining = mask;
-            for (int i = 0; i < kPartCount && remaining != 0; ++i) {
+            for (int i = 0; i < kMaxParts && remaining != 0; ++i) {
                 const int bit = 1 << i;
                 if (!(remaining & bit)) {
                     continue;
@@ -1415,6 +1612,7 @@ namespace InjuryEngine
         std::string AttackLine(int source, RE::Actor* attacker, RE::Actor* victim, int mask, int level, bool again, bool unarmed,
             bool sceneStart = false)
         {
+            InjuryConfig::GroupScope groupScope(GroupFor(victim));
             const std::string phase = again ? "again" : "start";
             auto vars = NarrationVars(victim);
             vars["target"] = NameOf(victim);
@@ -1471,11 +1669,11 @@ namespace InjuryEngine
 
             // Candidates: the parts this type reaches; full parts are skipped while any can still take a point
             // (a point there adds nothing).
-            std::array<int, kPartCount> candidates{};
+            std::array<int, kMaxParts> candidates{};
             int count = 0;
             const bool female = IsFemale(actor);
             const auto* conf = InjuryConfig::Find(source);
-            const std::array<float, kPartCount>* weight = nullptr;
+            const std::array<float, kMaxParts>* weight = nullptr;
             const auto reach = SourceReach(source, female, weight);
             for (int i = 0; i < ActiveParts(); ++i) {
                 if (reach[i] && !PartFullTorture(st, i)) {
@@ -1506,10 +1704,9 @@ namespace InjuryEngine
             g_lastTorture[id][source] = NowRealSeconds();
             // A hit ends the victim's heal session (no event: Papyrus closes its side on the hit).
             g_healers.erase(id);
-            g_pained[id] = true;
             TakeHealth(actor, Deficit(st) - deficitBefore);
             const int pointAdded = c.deficit - pointBefore;
-            const float healthAfter = actor->AsActorValueOwner()->GetActorValue(RE::ActorValue::kHealth);
+            const float healthAfter = actor->AsActorValueOwner()->GetActorValue(RE::ActorValue::kHealth) + PendingHealth(id);
             LogInjuryPoint("torture", attacker, actor, source, index, pointBefore, pointAdded, level, amount, healthAfter);
             SKSE::log::debug("hit {:08X} {} part:{} level:{} types:{} fresh:{} deficit:{} -> {}", id, conf ? conf->id : "?",
                 body.partName[index], level, CellsText(st, index), fresh, deficitBefore, Deficit(st));
@@ -1621,10 +1818,18 @@ namespace InjuryEngine
             if (!actor || actor->IsDead() || !InjuryConfig::IsTorture(source)) {
                 return -1;
             }
+            InjuryConfig::GroupScope groupScope(GroupFor(actor));
+            if (InjuryConfig::IsDisabled(source)) {
+                SKSE::log::debug("hit {:08X} {}: disabled for group {}, ignored", actor->GetFormID(), sourceId,
+                    InjuryConfig::GroupName(InjuryConfig::CurrentGroup()));
+                return -1;
+            }
+            part = TranslatePart(part);
+            HealthBatch batch;  // applied after the unlock (declared first, destroyed last)
             std::lock_guard lock(g_lock);
             const double now = NowHours();
             State* existing = Current(actor, now);
-            State& st = existing ? *existing : g_actors[actor->GetFormID()];
+            State& st = Track(actor, existing);
             int index = -1;
             const std::int32_t code = TortureHit(actor, attacker, st, source, part, now, index, 0.0f);
             // hook.points_per_hit: the rest of the points land on the part the first one picked
@@ -1646,7 +1851,7 @@ namespace InjuryEngine
         return HitPoints(actor, attacker, sourceId, part, false);
     }
 
-    std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points)
+    std::int32_t RealHit(RE::Actor* actor, RE::Actor* attacker, std::string_view base, int points, bool narrate)
     {
         const int source = InjuryConfig::IndexOf(base, false);
         if (!actor || actor->IsDead() || source < 0 || points < 1) {
@@ -1659,9 +1864,9 @@ namespace InjuryEngine
         }
         // the same path as hooked damage: points worth of health, torture wounds absorb their share first
         const float amount = points * RatioReal(maxHealth);
-        const float pass = OnDamage(actor, attacker, amount, source, false, false, false);
-        SKSE::log::debug("real hit {:08X} {} points:{} amount:{:.1f} pass:{:.1f}", actor->GetFormID(), InjuryConfig::Find(source)->id, points,
-            amount, pass);
+        const float pass = OnDamage(actor, attacker, amount, source, false, false, false, narrate);
+        SKSE::log::debug("real hit {:08X} {} points:{} amount:{:.1f} pass:{:.1f} narrate:{}", actor->GetFormID(), InjuryConfig::Find(source)->id, points,
+            amount, pass, narrate);
         if (pass > 0.0f) {
             InternalScope scope;
             av->DamageActorValue(RE::ActorValue::kHealth, pass);
@@ -1683,6 +1888,7 @@ namespace InjuryEngine
                 return amount;
             }
             {
+                HealthBatch batch;  // health lands after the unlock, still before this returns to the hook
                 std::lock_guard lock(g_lock);
                 const RE::FormID id = victim->GetFormID();
                 const TortureBatchKey batchKey{ id, attacker ? attacker->GetFormID() : 0, source };
@@ -1717,7 +1923,7 @@ namespace InjuryEngine
                 }
                 const double now = NowHours();
                 State* existing = Current(victim, now);
-                State& st = existing ? *existing : g_actors[id];
+                State& st = Track(victim, existing);
                 int mask = 0;
                 int level = 0;
                 int lastPart = -1;
@@ -1757,11 +1963,21 @@ namespace InjuryEngine
         }
     }
 
-    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm, bool applied)
+    float OnDamage(RE::Actor* victim, RE::Actor* attacker, float amount, int source, bool physicalMelee, bool unarmedForm, bool applied,
+        bool narrate)
     {
-        const auto* conf = InjuryConfig::Find(source);
-        if (!victim || amount <= 0.0f || !conf || victim->IsDead()) {
+        if (!victim || amount <= 0.0f || !InjuryConfig::Find(source) || victim->IsDead()) {
             return amount;
+        }
+        InjuryConfig::GroupScope groupScope(GroupFor(victim));
+        const auto* conf = InjuryConfig::Find(source);
+        if (InjuryConfig::IsDisabled(source) || conf->unreachable) {
+            // disabled torture on this group: ignored (no wound, no health lost); a health source the group has no
+            // part for (drowning without lungs) or one it disables: the game's damage passes through untracked
+            SKSE::log::debug("damage {:08X} {}: {} for group {}, {}", victim->GetFormID(), conf->id,
+                conf->unreachable ? "no part" : "disabled", InjuryConfig::GroupName(InjuryConfig::CurrentGroup()),
+                conf->IsTorture() ? "ignored" : "passed through");
+            return conf->IsTorture() ? 0.0f : amount;
         }
         if (conf->IsTorture()) {
             return OnTortureDamage(victim, attacker, amount, *conf, source, physicalMelee);
@@ -1781,12 +1997,13 @@ namespace InjuryEngine
             return amount;
         }
         float pass = amount;
+        bool notify = false;  // only when Papyrus has something to do: a hit, a new tracked actor, torture replaced, a heal dropped
         {
             std::lock_guard lock(g_lock);
             const double now = NowHours();
             const RE::FormID id = victim->GetFormID();
             State* existing = Current(victim, now);
-            State& st = existing ? *existing : g_actors[id];
+            State& st = Track(victim, existing);
             const bool fresh = !HasOpenDamage(st);
             const bool female = IsFemale(victim);
             const float ratioT = RatioTorture(maxHealth);
@@ -1882,8 +2099,11 @@ namespace InjuryEngine
             ClearTortureIfDone(st);
             const char* firstName = firstPart >= 0 ? GetBody().partName[firstPart].c_str() : "none";
 
-            g_pained[id] = true;
-            g_healers.erase(id);  // real damage ends the heal session too (silently)
+            if (!narrate && narrateMask != 0) {
+                SKSE::log::debug("damage {:08X} {}: silent (caller narrates), no hit queued", id, conf->id);
+                narrateMask = 0;
+            }
+            notify = g_healers.erase(id) > 0 || replacedNow > 0 || narrateMask != 0;  // real damage ends the heal session too (silently)
             if (g_lastReal.size() > 512) {
                 g_lastReal.clear();
             }
@@ -1892,7 +2112,7 @@ namespace InjuryEngine
                 SKSE::log::debug("damage {:08X} {} part:{} amount:{:.1f} absorbed:{:.1f} torture_replaced:{}: no new point (carry {:.2f})", id,
                     conf->id, firstName, amount, absorbed, replacedNow, st.carry);
             }
-            if (mask != 0 && narrateMask == 0) {
+            if (mask != 0 && narrateMask == 0 && narrate) {
                 SKSE::log::debug("damage {:08X} {}: parts {} below minor, not narrated", id, conf->id, PartsText(source, mask));
             }
             if (mask != 0) {
@@ -1916,7 +2136,7 @@ namespace InjuryEngine
                     const float healthAfter = i + 1 == healthLogs.size() ? finalHealth : currentHealth - ratioR * static_cast<float>(i + 1);
                     LogInjuryPoint("health", attacker, victim, source, entry.part, entry.countBefore, 1, entry.level, ratioR, healthAfter);
                 }
-                SKSE::log::info("health: {} â¤ {} | {} total:{:.1f} points:{} parts:{} level:{} health:{:.1f}->{:.1f}/{:.1f}",
+                SKSE::log::info("health: {} -> {} | {} total:{:.1f} points:{} parts:{} level:{} health:{:.1f}->{:.1f}/{:.1f}",
                     LogActor(attacker), LogActor(victim), conf->id, amount, points, PartsText(source, mask), LogLevelName(level), currentHealth,
                     finalHealth, maxHealth);
                 if (replacedNow > 0 && firstPart >= 0) {
@@ -1933,9 +2153,13 @@ namespace InjuryEngine
                     g_realCarry[id] = carry;
                     SKSE::log::debug("damage {:08X} {}: carry {:.2f} kept for the next hit", id, conf->id, carry);
                 }
+            } else if (!existing) {
+                notify = true;  // a newly tracked actor: the sync loop must start
             }
         }
-        NotifyPapyrus();
+        if (notify) {
+            NotifyPapyrus();
+        }
         return pass;
     }
 
@@ -1951,6 +2175,9 @@ namespace InjuryEngine
         }
         int healedPoints = 0;
         {
+            InjuryConfig::GroupScope groupScope(GroupFor(actor));
+            part = TranslatePart(part);
+            HealthBatch batch;
             std::lock_guard lock(g_lock);
             const double now = NowHours();
             const RE::FormID id = actor->GetFormID();
@@ -1968,8 +2195,7 @@ namespace InjuryEngine
             ClearTortureIfDone(*st);
             if (healedPoints > 0) {
                 // Raise health with the wounded level so SyncHealth sees no excess to convert again.
-                InternalScope internal;
-                av->RestoreActorValue(RE::ActorValue::kHealth, healedPoints * RatioTorture(maxHealth));
+                ChangeHealth(actor, healedPoints * RatioTorture(maxHealth));
             }
             SKSE::log::info("heal part {:08X} part:{} health:{:.1f} points:{}", id, part, health, healedPoints);
         }
@@ -1985,13 +2211,13 @@ namespace InjuryEngine
             return -1;
         }
         const auto& b = GetBody();
-        for (int i = 0; i < kPartCount; ++i) {
+        for (int i = 0; i < b.partCount; ++i) {
             if (InjuryConfig::IEquals(b.partName[i], name)) {
                 return i;
             }
         }
         // Regions: the first part in that region ("head" -> face).
-        for (int i = 0; i < kPartCount; ++i) {
+        for (int i = 0; i < b.partCount; ++i) {
             const int region = b.partRegion[i];
             if (region >= 0 && region < static_cast<int>(b.regionName.size()) && InjuryConfig::IEquals(b.regionName[region], name)) {
                 return i;
@@ -2005,6 +2231,7 @@ namespace InjuryEngine
         if (!actor) {
             return false;
         }
+        InjuryConfig::GroupScope groupScope;
         std::lock_guard lock(g_lock);
         const State* st = Current(actor, NowHours());
         return st && HasOpenDamage(*st);
@@ -2129,7 +2356,7 @@ namespace InjuryEngine
         return ResolveActors(g_hitAttackers);
     }
 
-    void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect)
+    void NoteHealingSource(RE::Actor* target, RE::TESObjectREFR* caster, RE::MagicItem* item, RE::Effect* effect, bool hurt)
     {
         if (!target || !effect || !IsHealing(effect->baseEffect, effect->effectItem.magnitude)) {
             return;
@@ -2137,16 +2364,26 @@ namespace InjuryEngine
         if (target->IsDead()) {
             return;
         }
+        bool notify = false;
         {
             std::lock_guard lock(g_lock);
             const RE::FormID id = target->GetFormID();
             const auto it = g_actors.find(id);
             SKSE::log::debug("healing effect on {:08X} item:{:08X} caster:{:08X} magnitude:{:.1f} tracked:{}", id, item ? item->GetFormID() : 0,
                 caster ? caster->GetFormID() : 0, effect->effectItem.magnitude, it != g_actors.end());
-            Seen(id, it != g_actors.end() ? &it->second : nullptr, caster ? caster->As<RE::Actor>() : nullptr, item, NowSeconds());
+            const bool hadHealer = g_healers.contains(id);
+            const std::size_t events = g_events.size();
+            // a beast form healing itself (no caster or its own cast) is feeding: vanilla Feed() casts FeedBoost on the player
+            auto* casterActor = caster ? caster->As<RE::Actor>() : nullptr;
+            const std::string feedKey = !casterActor || casterActor == target ? FeedRace(target) : std::string{};
+            Seen(id, it != g_actors.end() ? &it->second : nullptr, casterActor, item, NowSeconds(), feedKey, hurt);
+            // a refresh of an open session or a skipped ambient self-heal needs no Papyrus thread
+            notify = g_events.size() != events || (!hadHealer && g_healers.contains(id));
         }
         // Outside g_lock: other plugins' mod event sinks run inside SendEvent.
-        NotifyPapyrus();
+        if (notify) {
+            NotifyPapyrus();
+        }
     }
 
     std::vector<std::int32_t> TakeSyncEvents()
@@ -2167,7 +2404,7 @@ namespace InjuryEngine
             }
             auto* av = actor->AsActorValueOwner();
             const float maxHealth = av->GetPermanentActorValue(RE::ActorValue::kHealth);
-            const float health = av->GetActorValue(RE::ActorValue::kHealth);
+            const float health = av->GetActorValue(RE::ActorValue::kHealth) + PendingHealth(id);
             const float threshold = GetBody().bleedoutBelow * maxHealth;
             // A SexLab / OStim scene owns the actor: let go (stand it up only if still bleeding out, so it can walk
             // to its position; a scene animation that already replaced the bleedout idle is left alone) and do not
@@ -2182,7 +2419,7 @@ namespace InjuryEngine
                 return;
             }
             if (!downed) {
-                if (g_bleedoutEnabled.load() && maxHealth > 0.0f && HasTorture(st) && health <= threshold) {
+                if (g_bleedoutEnabled.load() && GetBody().bleedout && maxHealth > 0.0f && HasTorture(st) && health <= threshold) {
                     g_downed.insert(id);
                     g_collapsePending.insert(id);
                     SendBleedout(id, true);
@@ -2190,7 +2427,7 @@ namespace InjuryEngine
                 }
                 return;
             }
-            if (!g_bleedoutEnabled.load() || health > threshold || !HasTorture(st)) {
+            if (!g_bleedoutEnabled.load() || !GetBody().bleedout || health > threshold || !HasTorture(st)) {
                 // Real damage that replaced the last torture can leave health at zero: that bleedout is the game's own
                 // (an essential actor), so drop ours without standing the actor up.
                 if (health <= 0.0f) {
@@ -2224,6 +2461,8 @@ namespace InjuryEngine
     std::vector<std::int32_t> SyncHealth()
     {
         ResolveUncaused();
+        InjuryConfig::GroupScope groupScope;  // Current sets each actor's group
+        HealthBatch batch;  // take-backs land after the unlock (declared first, destroyed last)
         std::lock_guard lock(g_lock);
         const double nowHours = NowHours();
         const double now = NowSeconds();
@@ -2239,6 +2478,20 @@ namespace InjuryEngine
                 continue;
             }
             if (!actor->Is3DLoaded()) {
+                // Unloaded: no health to sync, but game time still heals torture. Healed or dead entries are dropped
+                // silently (nobody sees it), so the co-save and TrackedCount do not keep them.
+                const auto found = g_actors.find(id);
+                if (actor->IsDead()) {
+                    SKSE::log::info("forget {:08X} (dead while unloaded)", id);
+                    Erase(id);
+                } else if (found != g_actors.end()) {
+                    Advance(found->second, nowHours);
+                    ClearTortureIfDone(found->second);
+                    if (!AnyInjury(found->second)) {
+                        SKSE::log::info("forget {:08X} (healed while unloaded)", id);
+                        Erase(id);
+                    }
+                }
                 continue;
             }
             State* st = Current(actor, nowHours);
@@ -2282,20 +2535,18 @@ namespace InjuryEngine
             ClearTortureIfDone(*st);
             UpdateBleedout(actor, id, *st, scanQueued);
 
-            const bool pained = HasOpenDamage(*st);
-            if (auto [it, inserted] = g_pained.try_emplace(id, pained); !inserted) {
-                if (it->second && !pained) {
-                    PushEvent(id, kPainGone, healer, healer ? Percent(*healer, TotalPoints(*st)) : 0);
-                    SKSE::log::info("pain gone {:08X}", id);
-                }
-                it->second = pained;
-            }
+            // No kPainGone: after ClearTortureIfDone "no open damage" and "no injury" are the same state, so it was
+            // always followed by kFullyHealed in the same pass.
             if (!AnyInjury(*st)) {
                 SKSE::log::info("forget {:08X} (healed)", id);
                 PushEvent(id, kFullyHealed, healer, 100);
                 Erase(id);
                 continue;
             }
+            if (g_healEventSource.size() > 512) {
+                g_healEventSource.clear();
+            }
+            g_healEventSource[id] = HealEventsSource(st);
             // A scan queued this pass may refresh lastSeen on the game thread; do not stop the session yet.
             if (const auto it = g_healers.find(id); it != g_healers.end() && !healer && !scanQueued) {
                 const int percent = Percent(it->second, TotalPoints(*st));
@@ -2337,12 +2588,20 @@ namespace InjuryEngine
     int TrackedCount()
     {
         std::lock_guard lock(g_lock);
-        return static_cast<int>(g_actors.size() + g_events.size() + g_hits.size() + g_uncaused.size());
+        // Only loaded actors keep the sync loop running: SyncHealth skips the others (they heal by game time on their
+        // next access). The load sink (InitDeaths) restarts the loop when one comes back.
+        std::size_t loaded = 0;
+        for (const auto& [id, st] : g_actors) {
+            if (const auto* actor = RE::TESForm::LookupByID<RE::Actor>(id); actor && actor->Is3DLoaded()) {
+                ++loaded;
+            }
+        }
+        return static_cast<int>(loaded + g_events.size() + g_hits.size() + g_uncaused.size());
     }
 
     std::string PartName(int part)
     {
-        if (part < 0 || part >= kPartCount) {
+        if (part < 0 || part >= GetBody().partCount) {
             return {};
         }
         return GetBody().partName[part];
@@ -2363,8 +2622,9 @@ namespace InjuryEngine
     {
         nlohmann::json out = { { "sources", nlohmann::json::array() } };
         if (!actor) {
-            return out.dump();
+            return InjuryConfig::Dump(out);
         }
+        InjuryConfig::GroupScope groupScope;
         std::lock_guard lock(g_lock);
         const State* st = Current(actor, NowHours());
         if (st) {
@@ -2376,8 +2636,8 @@ namespace InjuryEngine
                 const auto* conf = InjuryConfig::Find(s);
                 const bool torture = conf->IsTorture();
                 nlohmann::json parts = nlohmann::json::array();
-                for (int i = 0; i < kPartCount; ++i) {
-                    if (i >= ActiveParts() && i != kPartLungs) {
+                for (int i = 0; i < body.partCount; ++i) {
+                    if (i >= ActiveParts() && i != body.lungs) {
                         continue;
                     }
                     const int stage = torture ? TortureStage(st->torture[s][i].deficit, i) : RealStage(st->real[s][i], i);
@@ -2407,17 +2667,17 @@ namespace InjuryEngine
         if (out["sources"].empty() && !actor->IsDead()) {
             out["healed"] = InjuryConfig::Render(InjuryConfig::SessionStr("healed", "{name} is completely healed."), NarrationVars(actor));
         }
-        return out.dump();
+        return InjuryConfig::Dump(out);
     }
 
     std::string OverlayJson()
     {
         const int whip = WhipIndex();
-        const auto& body = GetBody();
-        const int active = ActiveParts();
+        InjuryConfig::GroupScope human(InjuryConfig::kHumanoid);  // the defaults: humanoid's body
+        const auto& humanBody = GetBody();
         nlohmann::json partMax = nlohmann::json::array();
-        for (int i = 0; i < active; ++i) {
-            partMax.push_back(body.partMax[body.overlayOrder[i]]);
+        for (int i = 0, n = ActiveParts(); i < n; ++i) {
+            partMax.push_back(humanBody.partMax[humanBody.overlayOrder[i]]);
         }
         // Bar colors per torture type: its overlay_colors (light / medium / severe), whipping's overlay.colors.
         nlohmann::json sourceColors = nlohmann::json::object();
@@ -2434,10 +2694,11 @@ namespace InjuryEngine
             }
         }
         nlohmann::json out = { { "title", InjuryConfig::Str(whip, "overlay.title", "Torture Damage") },
-            { "max", CapacityTorture() }, { "part_max", partMax }, { "medium", body.medium }, { "severe", body.severe },
+            { "max", CapacityTorture() }, { "part_max", partMax }, { "medium", humanBody.medium }, { "severe", humanBody.severe },
             { "colors", whip >= 0 ? InjuryConfig::Json(whip, "overlay.colors") : nlohmann::json::object() },
             { "source_colors", sourceColors }, { "actors", nlohmann::json::array() } };
         std::lock_guard lock(g_lock);
+        InjuryConfig::GroupScope groupScope;
         for (const auto& [id, st] : g_actors) {
             if (!AnyTortureHit(st)) {
                 continue;
@@ -2446,13 +2707,21 @@ namespace InjuryEngine
             if (!actor || !actor->Is3DLoaded() || actor->IsDead()) {
                 continue;
             }
+            // Each actor's bar uses its own group's body: its active parts in its overlay order.
+            InjuryConfig::SetGroup(st.group);
+            const auto& body = GetBody();
+            const int active = ActiveParts();
+            nlohmann::json actorPartMax = nlohmann::json::array();
+            for (int i = 0; i < active; ++i) {
+                actorPartMax.push_back(body.partMax[body.overlayOrder[i]]);
+            }
             // The bar shows the latest torture type alone: its points per part, out of the parts it reaches.
             // No open type (healed or replaced away): empty parts, the page retires the bar.
             const int source = OverlaySource(st, id);
             nlohmann::json parts = nlohmann::json::array();
             int max = 0;
             if (source >= 0) {
-                const std::array<float, kPartCount>* weight = nullptr;
+                const std::array<float, kMaxParts>* weight = nullptr;
                 const auto reach = SourceReach(source, IsFemale(actor), weight);
                 for (int i = 0; i < active; ++i) {
                     const int part = body.overlayOrder[i];
@@ -2467,9 +2736,9 @@ namespace InjuryEngine
             const bool healing = ActiveHealer(id, NowSeconds()) != nullptr;
             out["actors"].push_back({ { "id", id }, { "name", NameOf(actor) },
                 { "source", source >= 0 ? InjuryConfig::Find(source)->id : std::string() }, { "max", max > 0 ? max : CapacityTorture() },
-                { "replaced", st.replaced }, { "healing", healing }, { "parts", parts } });
+                { "replaced", st.replaced }, { "healing", healing }, { "parts", parts }, { "part_max", actorPartMax } });
         }
-        return out.dump();
+        return InjuryConfig::Dump(out);
     }
 
     std::string PartPointsJson(RE::Actor* actor)
@@ -2477,20 +2746,21 @@ namespace InjuryEngine
         if (!actor) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(actor));
         const auto& body = GetBody();
         const bool female = IsFemale(actor);
         std::lock_guard lock(g_lock);
         const State* st = Current(actor, NowHours());
         nlohmann::json parts = nlohmann::json::array();
-        for (int i = 0; i < kPartCount; ++i) {
-            if (!PartFits(female, i) || i == kPartLungs) {  // torture points only: never on the lungs
+        for (int i = 0; i < body.partCount; ++i) {
+            if (!PartFits(female, i) || i == body.lungs) {  // torture points only: never on the lungs
                 continue;
             }
             parts.push_back({ { "name", body.partName[i] }, { "points", st ? PartTorture(*st, i) : 0 },
                 { "max", body.partMax[i] } });
         }
         const nlohmann::json out = { { "total", st ? Deficit(*st) : 0 }, { "max", CapacityTorture() }, { "parts", parts } };
-        return out.dump();
+        return InjuryConfig::Dump(out);
     }
 
     std::string HitText(std::string_view sourceId, RE::Actor* attacker, RE::Actor* victim, int mask, int level, int count, bool noCause,
@@ -2500,16 +2770,15 @@ namespace InjuryEngine
         if (source < 0 || !victim) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(victim));
         const std::string levelText = LevelText(sourceId, victim, level);
         const std::string parts = PartsText(source, mask);
         if (!noCause && attacker && attacker != victim) {
             return AttackLine(source, attacker, victim, mask, level, count > 1, unarmedForm);
         }
         auto vars = NarrationVars(victim);
-        std::string by = noCause ? std::string() : InjuryConfig::Str(source, "narration.hit.by_none");
-        if (!noCause && attacker && attacker != victim) {
-            by = InjuryConfig::Render(InjuryConfig::Str(source, "narration.hit.by_attacker"), { { "attacker", NameOf(attacker) } });
-        }
+        // an attacker's hit returned AttackLine above: only "no cause" or "by nobody" is left
+        const std::string by = noCause ? std::string() : InjuryConfig::Str(source, "narration.hit.by_none");
         std::string times;
         if (count == 2) {
             times = InjuryConfig::Str(source, "narration.hit.times.two");
@@ -2533,6 +2802,7 @@ namespace InjuryEngine
         if (source < 0 || !victim) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(victim));
         return InjuryConfig::Render(
             InjuryConfig::Str(source, "narration.hit.levels." + std::to_string(std::clamp(level, 0, 3))), NarrationVars(victim));
     }
@@ -2542,14 +2812,15 @@ namespace InjuryEngine
         if (!victim || !InjuryConfig::Find(source)) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(victim));
         const auto& body = GetBody();
-        if (part < 0 || part >= kPartCount) {
-            part = RandomIndex(kCoreParts);
+        if (part < 0 || part >= body.partCount) {
+            part = RandomIndex(body.coreCount);
         }
         // death text exists for the main regions and the lungs: a sexual part dies as the nearest one (lips: head,
         // else body)
         std::string region = "body";
-        if (part < kCoreParts || part == kPartLungs) {
+        if (!body.IsSexual(part)) {
             region = body.regionName[body.partRegion[part]];
         } else if (body.partName[part] == "lips") {
             region = "head";
@@ -2619,13 +2890,16 @@ namespace InjuryEngine
                     SKSE::log::debug("death {:08X}: last real hit {:.1f}s old, no killing blow", victim->GetFormID(), age);
                     return RE::BSEventNotifyControl::kContinue;
                 }
-                RE::Actor* attacker = rec.attacker.get().get();
+                const auto attackerPtr = rec.attacker.get();  // keeps the attacker alive while the text is built
+                RE::Actor* attacker = attackerPtr.get();
                 if (!attacker && event->actorKiller) {
                     attacker = event->actorKiller->As<RE::Actor>();
                 }
                 std::string text = DeathText(rec.source, attacker, victim, rec.part, rec.unarmed);
-                SKSE::log::info("death {} by {}: {} part:{} text:{}", LogActor(victim), LogActor(attacker), conf->id,
-                    rec.part >= 0 ? GetBody().partName[rec.part] : "none", text.empty() ? "(none)" : "yes");
+                InjuryConfig::GroupScope groupScope(GroupFor(victim));
+                SKSE::log::info("death {} by {} ({}): {} part:{} text:{}", LogActor(victim), LogActor(attacker),
+                    InjuryConfig::GroupName(InjuryConfig::CurrentGroup()), conf->id,
+                    rec.part >= 0 && rec.part < kMaxParts ? GetBody().partName[rec.part] : "none", text.empty() ? "(none)" : "yes");
                 if (text.empty()) {
                     return RE::BSEventNotifyControl::kContinue;
                 }
@@ -2640,14 +2914,39 @@ namespace InjuryEngine
                 return RE::BSEventNotifyControl::kContinue;
             }
         };
+
+        // A tracked (wounded) actor's 3D loads again: restart the sync loop, which stops while only unloaded actors
+        // are tracked (TrackedCount).
+        class LoadSink : public RE::BSTEventSink<RE::TESObjectLoadedEvent>
+        {
+        public:
+            RE::BSEventNotifyControl ProcessEvent(const RE::TESObjectLoadedEvent* event, RE::BSTEventSource<RE::TESObjectLoadedEvent>*) override
+            {
+                if (!event || !event->loaded) {
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                bool tracked = false;
+                {
+                    std::lock_guard lock(g_lock);
+                    tracked = g_actors.contains(event->formID);
+                }
+                if (tracked) {
+                    SKSE::log::debug("tracked actor {:08X} loaded, sync restarts", event->formID);
+                    NotifyPapyrus();
+                }
+                return RE::BSEventNotifyControl::kContinue;
+            }
+        };
     }
 
     void InitDeaths()
     {
         static DeathSink sink;
+        static LoadSink loadSink;
         if (auto* holder = RE::ScriptEventSourceHolder::GetSingleton()) {
             holder->AddEventSink<RE::TESDeathEvent>(&sink);
-            SKSE::log::info("InjuryEngine: death event sink registered");
+            holder->AddEventSink<RE::TESObjectLoadedEvent>(&loadSink);
+            SKSE::log::info("InjuryEngine: death and object load event sinks registered");
         }
     }
 
@@ -2711,6 +3010,7 @@ namespace InjuryEngine
         if (!victim) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(victim));
         // (source, level) -> parts at that heal level, in first-seen part order.
         struct Group
         {
@@ -2763,26 +3063,52 @@ namespace InjuryEngine
         if (!target) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(target));
         int conf;
         bool unhurt;
         RE::FormID foodId = 0;
+        std::string feedKey;
+        bool realOnly = false;  // real wounds and no torture: the heal map says nothing, so the feed line adds heal_feed.wounds
         {
             std::lock_guard lock(g_lock);
             const auto it = g_actors.find(target->GetFormID());
             conf = HealEventsSource(it != g_actors.end() ? &it->second : nullptr);
+            // fully healed: the State is gone, so word it after the wounds the actor had at the last sync
+            if (const auto last = g_healEventSource.find(target->GetFormID());
+                kind == kFullyHealed && it == g_actors.end() && last != g_healEventSource.end() && InjuryConfig::Find(last->second)) {
+                conf = last->second;
+            }
             unhurt = it == g_actors.end() || TotalPoints(it->second) <= 0;
             if (const auto f = g_healFood.find(target->GetFormID()); f != g_healFood.end()) {
                 foodId = f->second;
             }
+            if (const auto f = g_healFeed.find(target->GetFormID()); f != g_healFeed.end()) {
+                feedKey = f->second;
+            }
+            realOnly = it != g_actors.end() && RealTotal(it->second) > 0 && Deficit(it->second) <= 0;
         }
         auto vars = NarrationVars(target);
         const std::string name = vars["name"];
         // Food: the eater healed themself. "Amy eats the Apple Pie and feels better."; no stopped line (no light fades).
-        const bool food = healingSource == kSourceFood;
+        // Feeding (werewolf, werebear): "As a werewolf, Bob's fangs tear into ..."; Papyrus follows it with the heal map.
+        // Afterwards it reads like food: no caster, no stopped line, the .none wording.
+        const bool feed = healingSource == kSourceFeed;
+        if (feed && kind == kHealStart) {
+            std::string text = InjuryConfig::Render(
+                InjuryConfig::SessionStr("heal_feed." + (feedKey.empty() ? std::string("werewolf") : feedKey)), vars);
+            if (realOnly) {
+                const std::string wounds = InjuryConfig::Render(InjuryConfig::SessionStr("heal_feed.wounds"), vars);
+                if (!wounds.empty()) {
+                    text += (text.empty() ? "" : " ") + wounds;
+                }
+            }
+            return text;
+        }
+        const bool food = healingSource == kSourceFood || feed;
         if (food && kind == kHealStopped) {
             return {};
         }
-        if (food && kind == kHealStart) {
+        if (healingSource == kSourceFood && kind == kHealStart) {
             const auto* item = foodId ? RE::TESForm::LookupByID(foodId) : nullptr;
             const char* itemName = item ? item->GetName() : nullptr;
             if (!itemName || !*itemName) {
@@ -2841,9 +3167,10 @@ namespace InjuryEngine
                 list.push_back(t);
             }
         }
-        if (list.empty() || healingSource == kSourceFood) {
+        if (list.empty() || healingSource == kSourceFood || healingSource == kSourceFeed) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(list.front()));
         // "Unhurt" is what each target was at its heal start (g_healStart), not now: one may be healed by the time
         // this line is worded.
         bool unhurt = true;
@@ -2900,6 +3227,7 @@ namespace InjuryEngine
         if (source < 0) {
             return {};
         }
+        InjuryConfig::GroupScope groupScope(GroupFor(target));
         const char* times = count == 1 ? "once" : count == 2 ? "twice" : count > 4 ? "many" : "several";
         return InjuryConfig::Render(InjuryConfig::Str(source, path),
             { { "speaker", NameOf(speaker) }, { "target", NameOf(target) },
@@ -2998,6 +3326,7 @@ namespace InjuryEngine
         };
         const auto hasAttacker = [](const Pair& p) { return p.attacker && p.attacker != p.victim; };
         const auto feeling = [&](const Pair& p) {
+            InjuryConfig::GroupScope groupScope(GroupFor(p.victim));
             auto vars = NarrationVars(p.victim);
             vars["target"] = NameOf(p.victim);
             vars["attacker"] = NameOf(p.attacker);
@@ -3007,6 +3336,7 @@ namespace InjuryEngine
                    LevelText(InjuryConfig::Find(p.source)->id, p.victim, p.level);
         };
         const auto inlineHit = [&](const Pair& p) {
+            InjuryConfig::GroupScope groupScope(GroupFor(p.victim));
             auto vars = NarrationVars(p.victim);
             vars["target"] = NameOf(p.victim);
             vars["parts"] = PartsText(p.source, p.mask);
@@ -3018,6 +3348,7 @@ namespace InjuryEngine
         if (ph == "switch") {
             // one clause per pair: "Bob switches to punching"
             for (const auto& p : pairs) {
+                InjuryConfig::GroupScope groupScope(GroupFor(p.victim));
                 auto vars = NarrationVars(p.victim);
                 vars["target"] = NameOf(p.victim);
                 sentences.push_back(NameOf(p.attacker) + " " + InjuryConfig::Render(sess(p.source, "switch"), vars));
@@ -3030,6 +3361,7 @@ namespace InjuryEngine
                 }
             }
             for (auto* victim : order) {
+                InjuryConfig::GroupScope groupScope(GroupFor(victim));
                 std::vector<const Pair*> group;
                 std::vector<const Pair*> alone;  // no attacker: its own clause each
                 for (const auto& p : pairs) {
@@ -3167,7 +3499,7 @@ namespace InjuryEngine
                 if (!ReadId(intfc, sid)) {
                     return false;
                 }
-                std::array<std::int32_t, kPartCount> damage{};
+                std::array<std::int32_t, kMaxParts> damage{};
                 for (int i = 0; i < parts; ++i) {
                     if (!intfc->ReadRecordData(damage[i])) {
                         return false;
@@ -3209,12 +3541,12 @@ namespace InjuryEngine
         {
             const float factor = 100.0f / static_cast<float>(std::max(1, CapacityTorture()));
             for (auto& source : st.real) {
-                for (int i = 0; i < kPartCount; ++i) {
+                for (int i = 0; i < kMaxParts; ++i) {
                     if (source[i] <= 0) {
                         continue;
                     }
                     const int scaled = std::max(1, static_cast<int>(std::lround(source[i] * factor)));
-                    source[i] = i == kPartLungs ? scaled : std::min(scaled, GetBody().realMax[i]);
+                    source[i] = i == GetBody().lungs ? scaled : std::min(scaled, GetBody().realMax[i]);
                 }
             }
         }
@@ -3237,7 +3569,7 @@ namespace InjuryEngine
                 if (!ReadId(intfc, sid)) {
                     return false;
                 }
-                std::array<Cell, kPartCount> cells{};
+                std::array<Cell, kMaxParts> cells{};
                 for (int i = 0; i < parts; ++i) {
                     Cell& c = cells[i];
                     if (!intfc->ReadRecordData(c.hit) || !intfc->ReadRecordData(c.deficit)) {
@@ -3268,11 +3600,18 @@ namespace InjuryEngine
         }
         intfc->WriteRecordData(static_cast<std::uint32_t>(g_actors.size()));
         SKSE::log::debug("co-save: saving {} actors", g_actors.size());
+        InjuryConfig::GroupScope groupScope;
         for (const auto& [id, st] : g_actors) {
-            SKSE::log::debug("co-save: {:08X} torture deficit:{} real points:{}", id, Deficit(st), RealTotal(st));
+            InjuryConfig::SetGroup(st.group);
+            const int parts = GetBody().partCount;
+            SKSE::log::debug("co-save: {:08X} group:{} torture deficit:{} real points:{}", id, InjuryConfig::GroupName(st.group), Deficit(st),
+                RealTotal(st));
             intfc->WriteRecordData(id);
-            for (const double last : st.lastHours) {
-                intfc->WriteRecordData(last);
+            // v8: group id, part count; then every per-part array holds `parts` entries
+            WriteId(intfc, InjuryConfig::GroupName(st.group));
+            intfc->WriteRecordData(static_cast<std::uint8_t>(parts));
+            for (int i = 0; i < parts; ++i) {
+                intfc->WriteRecordData(st.lastHours[i]);
             }
             intfc->WriteRecordData(st.replaced);
             std::uint32_t torture = 0;
@@ -3287,9 +3626,9 @@ namespace InjuryEngine
                     continue;
                 }
                 WriteId(intfc, InjuryConfig::Find(s)->id);
-                for (const Cell& c : st.torture[s]) {
-                    intfc->WriteRecordData(c.hit);
-                    intfc->WriteRecordData(c.deficit);
+                for (int i = 0; i < parts; ++i) {
+                    intfc->WriteRecordData(st.torture[s][i].hit);
+                    intfc->WriteRecordData(st.torture[s][i].deficit);
                 }
             }
             std::uint32_t sources = 0;
@@ -3304,8 +3643,8 @@ namespace InjuryEngine
                     continue;
                 }
                 WriteId(intfc, InjuryConfig::Find(s)->id);
-                for (const int d : st.real[s]) {
-                    intfc->WriteRecordData(static_cast<std::int32_t>(d));
+                for (int i = 0; i < parts; ++i) {
+                    intfc->WriteRecordData(static_cast<std::int32_t>(st.real[s][i]));
                 }
             }
         }
@@ -3313,19 +3652,22 @@ namespace InjuryEngine
 
     void Load(SKSE::SerializationInterface* intfc, std::uint32_t version, std::uint32_t)
     {
-        if (version != kRecordVersion && version != 6 && version != 5 && version != 4 && version != 3 && version != 2) {
+        if (version != kRecordVersion && version != 7 && version != 6 && version != 5 && version != 4 && version != 3 && version != 2) {
             SKSE::log::warn("co-save version {} unsupported, skipped (old wounds are dropped)", version);
             return;
         }
-        // v2: 6 parts, sexual parts start empty; v3..v5: 11 parts, the lungs start empty
-        const int parts = version == 2 ? kCoreParts : version < 6 ? kPartLungs : kPartCount;
+        // v2: 6 parts, sexual parts start empty; v3..v5: 11 parts, the lungs start empty; v6, v7: 12 parts (humanoid);
+        // v8: per actor
+        const int oldParts = version == 2 ? 6 : version < 6 ? 11 : 12;
+        InjuryConfig::GroupScope groupScope(InjuryConfig::kHumanoid);
         std::lock_guard lock(g_lock);
         g_actors.clear();
         g_healers.clear();
         g_healFood.clear();
+        g_healFeed.clear();
         g_healStart.clear();
         g_unhurtHealAt.clear();
-        g_pained.clear();
+        g_healEventSource.clear();
         g_regenBank.clear();
         g_healCredit.clear();
         g_tortureCarry.clear();
@@ -3346,12 +3688,44 @@ namespace InjuryEngine
         for (std::uint32_t a = 0; a < count; ++a) {
             RE::FormID oldId = 0;
             State st;
-            const bool ok = intfc->ReadRecordData(oldId) &&
-                            (version >= 4 ? ReadTorture(intfc, st, version, parts) : ReadOldWhip(intfc, st, parts)) &&
+            int parts = oldParts;
+            if (!intfc->ReadRecordData(oldId)) {
+                SKSE::log::error("co-save truncated");
+                return;
+            }
+            InjuryConfig::SetGroup(InjuryConfig::kHumanoid);
+            if (version >= 8) {
+                std::string group;
+                std::uint8_t savedParts = 0;
+                if (!ReadId(intfc, group) || !intfc->ReadRecordData(savedParts) || savedParts > kMaxParts) {
+                    SKSE::log::error("co-save truncated (group)");
+                    return;
+                }
+                parts = savedParts;
+                const int index = InjuryConfig::GroupIndex(group);
+                if (index < 0) {
+                    SKSE::log::warn("co-save: {:08X} group \"{}\" is not loaded, its wounds load as humanoid", oldId, group);
+                }
+                st.group = index < 0 ? InjuryConfig::kHumanoid : index;
+                InjuryConfig::SetGroup(st.group);
+                if (parts != GetBody().partCount) {
+                    SKSE::log::warn("co-save: {:08X} group {} had {} parts, now {}: parts past the end are dropped", oldId, group, parts,
+                        GetBody().partCount);
+                }
+            }
+            const bool ok = (version >= 4 ? ReadTorture(intfc, st, version, parts) : ReadOldWhip(intfc, st, parts)) &&
                             ReadReal(intfc, st, parts);
             if (!ok) {
                 SKSE::log::error("co-save truncated");
                 return;
+            }
+            // a body that shrank since the save: nothing may stay on parts it no longer has
+            for (int i = GetBody().partCount; i < kMaxParts; ++i) {
+                for (int s = 0; s < kMaxSources; ++s) {
+                    st.torture[s][i] = Cell{};
+                    st.real[s][i] = 0;
+                }
+                st.lastHours[i] = 0.0;
             }
             if (version < 7) {
                 RescaleOldReal(st);
@@ -3372,9 +3746,10 @@ namespace InjuryEngine
         g_uncaused.clear();
         g_healers.clear();
         g_healFood.clear();
+        g_healFeed.clear();
         g_healStart.clear();
         g_unhurtHealAt.clear();
-        g_pained.clear();
+        g_healEventSource.clear();
         g_regenBank.clear();
         g_healCredit.clear();
         g_tortureCarry.clear();

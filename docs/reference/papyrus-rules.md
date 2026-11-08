@@ -29,7 +29,7 @@ The same holds for natives in `Injury_Engine_Engine.psc`: a changed signature ne
 | Kind | Rule | Example |
 |------|------|---------|
 | Constants | `UPPER_SNAKE` | `KEY_PENDING_PARTS` |
-| Properties / variables | start lowercase; snake or camel | `narration_cooldown` |
+| Properties / variables | start lowercase; snake or camel | `narration_max_distance` |
 | Functions / Events | start Upper case | `NarrateLash` |
 
 ## Debug traces

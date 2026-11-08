@@ -59,6 +59,7 @@ namespace
         switch (msg->type) {
         case SKSE::MessagingInterface::kDataLoaded:
             InjuryConfig::Load();
+            InjuryConfig::DumpRaces();  // every race and its group, to check races.json
             Classifier::Init();
             InjuryEngine::InitDeaths();
             InjuryEngine::InitSceneFactions();

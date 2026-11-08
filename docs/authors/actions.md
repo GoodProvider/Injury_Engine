@@ -59,7 +59,7 @@ The decision context: both names and uuids, the relationship rank as a word, eac
 | `injury_hit` | Every real-damage hit registers immediately. Id `health_<method>_<attacker>_to_<victim>`. |
 | `injury_truce` | `Stop_Fighting` answer: "{speaker} offers to stop fighting, and {target} accepts ..." or "... but {target} refuses." Id `truce_<speaker>_to_<target>`. `Stop_Fighting_by_Yielding` answer: "{speaker} yields to {target}, and {target} accepts the surrender." or "... but {target} refuses the surrender." Id `surrender_<speaker>_to_<target>` |
 | `injury_combat` | `Start_Fighting`: "{speaker} attacks {target}." Id `fight_<speaker>_to_<target>` |
-| `whip_heal` | Every heal registers immediately (part heals, passive, heal start / pain gone / stopped). Id `healing_<method>_<caster>_to_<victim>` (`method` = wound source id, `part`, or heal-sync source `spell` / `staff` / `potion` / `other` / `none`). Session fallbacks when narration is off or the queue is busy use the same id. |
+| `whip_heal` | Every heal registers immediately (part heals, passive, heal start / fully healed / stopped). Id `healing_<method>_<caster>_to_<victim>` (`method` = wound source id, `part`, or heal-sync source `spell` / `staff` / `potion` / `other` / `none`). Session fallbacks when narration is off or the queue is busy use the same id. |
 
 ## Rules
 

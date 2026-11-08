@@ -10,6 +10,7 @@
 #include <string>
 #include <thread>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace Classifier
@@ -62,6 +63,9 @@ namespace Classifier
         std::unordered_map<RE::FormID, MagicSeen> g_realMagic;
         std::unordered_map<RE::FormID, double> g_quiet;  // victim -> last QuietMarker cast
         std::unordered_map<RE::FormID, double> g_buff;  // actor -> last max-health buff change (a fortify ending)
+        // Running max-health buffs (target form id << 16 | active effect unique id), recorded from the apply event so
+        // their removal event can mark the actor (EffectSink).
+        std::unordered_set<std::uint64_t> g_buffEffects;
 
         struct Pair
         {
@@ -686,6 +690,94 @@ namespace Classifier
                 return RE::BSEventNotifyControl::kContinue;
             }
         };
+
+        // A buff that raises max health (Fortify Health, Courage): its end lowers health without a wound.
+        bool IsMaxHealthBuff(const RE::ActiveEffect* ae)
+        {
+            using Archetype = RE::EffectSetting::Archetype;
+            const auto* mgef = ae && ae->effect ? ae->effect->baseEffect : nullptr;
+            if (!mgef || mgef->data.primaryAV != RE::ActorValue::kHealth || mgef->IsDetrimental() || ae->magnitude <= 0.0f) {
+                return false;
+            }
+            const auto archetype = mgef->GetArchetype();
+            if (archetype == Archetype::kPeakValueModifier) {
+                return true;
+            }
+            return (archetype == Archetype::kValueModifier || archetype == Archetype::kDualValueModifier) &&
+                   mgef->data.flags.all(RE::EffectSetting::EffectSettingData::Flag::kRecover);
+        }
+
+        std::uint64_t BuffKey(RE::FormID target, std::uint16_t uniqueId)
+        {
+            return (static_cast<std::uint64_t>(target) << 16) | uniqueId;
+        }
+
+        // Fortify Health ending on an actor already missing health reaches only an attacker-less HandleHealthDamage,
+        // which the damage-modifier shrink test cannot tell from damage (KNOWLEDGEBASE). The effect's removal event
+        // marks the actor instead. The apply event records the buff from an SKSE task: the event can come from inside
+        // the engine's effect update, where walking the effect list crashes; the removal only reads the record.
+        class EffectSink : public RE::BSTEventSink<RE::TESActiveEffectApplyRemoveEvent>
+        {
+        public:
+            RE::BSEventNotifyControl ProcessEvent(const RE::TESActiveEffectApplyRemoveEvent* event,
+                RE::BSTEventSource<RE::TESActiveEffectApplyRemoveEvent>*) override
+            {
+                auto* target = event && event->target ? event->target->As<RE::Actor>() : nullptr;
+                if (!target) {
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                const RE::FormID targetId = target->GetFormID();
+                const std::uint16_t uniqueId = event->activeEffectUniqueID;
+                if (!event->isApplied) {
+                    bool buff = false;
+                    {
+                        std::lock_guard lock(g_lock);
+                        buff = g_buffEffects.erase(BuffKey(targetId, uniqueId)) > 0;
+                    }
+                    if (buff) {
+                        NoteBuffChange(target);
+                        SKSE::log::info("[buff] effect {} ended on {:08X}: max health buff, its health loss is no wound", uniqueId, targetId);
+                    }
+                    return RE::BSEventNotifyControl::kContinue;
+                }
+                if (auto* tasks = SKSE::GetTaskInterface()) {
+                    tasks->AddTask([targetId, uniqueId]() {
+                        auto* actor = RE::TESForm::LookupByID<RE::Actor>(targetId);
+                        auto* magic = actor ? actor->AsMagicTarget() : nullptr;
+                        if (!magic) {
+                            return;
+                        }
+                        // VisitEffects, not GetActiveEffectList / VisitActiveEffects (VR snapshot, SE-only id on AE)
+                        struct Visitor : RE::MagicTarget::ForEachActiveEffectVisitor
+                        {
+                            std::uint16_t id;
+                            bool buff = false;
+                            explicit Visitor(std::uint16_t a_id) : id(a_id) {}
+                            RE::BSContainer::ForEachResult Accept(RE::ActiveEffect* ae) override
+                            {
+                                if (!ae || ae->usUniqueID != id) {
+                                    return RE::BSContainer::ForEachResult::kContinue;
+                                }
+                                buff = !ae->flags.any(RE::ActiveEffect::Flag::kDispelled) && IsMaxHealthBuff(ae);
+                                return RE::BSContainer::ForEachResult::kStop;
+                            }
+                        };
+                        Visitor visitor(uniqueId);
+                        magic->VisitEffects(visitor);
+                        if (!visitor.buff) {
+                            return;
+                        }
+                        std::lock_guard lock(g_lock);
+                        if (g_buffEffects.size() > 1024) {
+                            g_buffEffects.clear();
+                        }
+                        g_buffEffects.insert(BuffKey(targetId, uniqueId));
+                        SKSE::log::debug("[buff] effect {} on {:08X}: max health buff recorded", uniqueId, targetId);
+                    });
+                }
+                return RE::BSEventNotifyControl::kContinue;
+            }
+        };
     }
 
     void Init()
@@ -700,10 +792,12 @@ namespace Classifier
         }
         static HitSink sink;
         static CombatSink combatSink;
+        static EffectSink effectSink;
         if (auto* holder = RE::ScriptEventSourceHolder::GetSingleton()) {
             holder->AddEventSink<RE::TESHitEvent>(&sink);
             holder->AddEventSink<RE::TESCombatEvent>(&combatSink);
-            SKSE::log::info("Classifier: hit and combat event sinks registered");
+            holder->AddEventSink<RE::TESActiveEffectApplyRemoveEvent>(&effectSink);
+            SKSE::log::info("Classifier: hit, combat and active effect event sinks registered");
         }
     }
 
@@ -731,11 +825,20 @@ namespace Classifier
 
     bool IsTortureAttacker(RE::Actor* attacker)
     {
-        if (IsWhipAttacker(attacker)) {
-            return true;
-        }
         if (!attacker) {
             return false;
+        }
+        // The fight-reaction hook does not know which hand struck: a real weapon in either hand (anything but the
+        // padded whip or a torture weapon; spells and shields don't count) makes the hit a possible real attack, and
+        // the torture calm (CombatSink) still covers a whip lash from such an attacker.
+        for (const bool left : { false, true }) {
+            const auto* equipped = attacker->GetEquippedObject(left);
+            if (equipped && equipped->IsWeapon() && !IsIgnoredWeapon(equipped->GetFormID()) && !IsTortureWeaponId(equipped->GetFormID())) {
+                return false;
+            }
+        }
+        if (IsWhipAttacker(attacker)) {
+            return true;
         }
         // a torture weapon (DOM's slap) in either hand
         for (const bool left : { false, true }) {
@@ -905,6 +1008,7 @@ namespace Classifier
             g_realMagic.clear();
             g_quiet.clear();
             g_buff.clear();
+            g_buffEffects.clear();
             g_calm.clear();
             g_combatStart.clear();
         }
@@ -949,7 +1053,10 @@ namespace Classifier
         if (!victim || !effect) {
             return;
         }
-        if (const int health = ResistHealthSourceOf(effect->baseEffect); health >= 0 && caster) {
+        // only an effect that touches Health is real health-damage magic (a resist-tagged Stamina / Magicka drain is not)
+        const auto* base = effect->baseEffect;
+        const bool touchesHealth = base && (base->data.primaryAV == RE::ActorValue::kHealth || base->data.secondaryAV == RE::ActorValue::kHealth);
+        if (const int health = touchesHealth ? ResistHealthSourceOf(base) : -1; health >= 0 && caster) {
             std::lock_guard lock(g_lock);
             if (g_realMagic.size() > 512) {
                 g_realMagic.clear();
@@ -1024,6 +1131,17 @@ namespace Classifier
         // hand or a drowning tick right after must still be classified. Only the hands loop below (this call's own
         // attacker holds the whip) or the last fallback returns ignore for it.
         bool whipEvent = false;
+        if (sourceId) {
+            // Another attacker's event (A's Torture Flames tick while B's sword hit arrives before its own event) does
+            // not name this damage: B's hit would turn into torture and be given back in full.
+            if (auto causeRef = cause.get(); attacker && causeRef) {
+                if (auto* causeActor = causeRef->As<RE::Actor>(); causeActor && causeActor != attacker) {
+                    SKSE::log::debug("classify {:08X}: hit event form {:08X} from {:08X}, not attacker {:08X}: event from another attacker, ignored",
+                        victimId, sourceId, causeActor->GetFormID(), attacker->GetFormID());
+                    sourceId = 0;
+                }
+            }
+        }
         if (sourceId) {
             auto causeRef = cause.get();
             auto* hitter = attacker ? attacker : causeRef ? causeRef->As<RE::Actor>() : nullptr;

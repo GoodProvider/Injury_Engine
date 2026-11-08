@@ -19,8 +19,20 @@ String Property KEY_TRUCE_WITH = "injury_engine.truce_with" AutoReadOnly
 ; The DLL's pair-keyed truce guard is noted again from them on load.
 String Property KEY_TRUCE_PARTNERS = "injury_engine.truce_partners" AutoReadOnly
 String Property KEY_TRUCE_PARTNER_UNTIL = "injury_engine.truce_partner_until" AutoReadOnly
-; TakeTruces / TruceSpeakers / ... share one C++ buffer: only one drain at a time.
+; TakeTruces / TruceSpeakers / ... share one C++ buffer: only one drain at a time. An answer whose event arrives while
+; another thread drains sets truces_again, and the drainer goes round once more, so no answer waits for the next one.
 Bool Property truces_draining = False Auto Hidden
+Bool Property truces_again = False Auto Hidden
+
+; Torture_Target: real time an action started on its speaker (one action per speaker at a time; older than
+; ACTION_MAX, or in the future (a new game process), it is left over from an action a load cut short)
+String Property KEY_ACTION_START = "injury_engine.action_start" AutoReadOnly
+Float Property ACTION_MAX = 60.0 AutoReadOnly
+; Torture_Target lent the speaker a padded whip (int 1) and the weapon it held before (form); the lent-to actors are
+; listed on this quest so a whip an action left behind (a load cut it short) is taken back on the next load
+String Property KEY_WHIP_LENT = "injury_engine.whip_lent" AutoReadOnly
+String Property KEY_WHIP_PREVIOUS = "injury_engine.whip_previous" AutoReadOnly
+String Property KEY_WHIP_LENT_LIST = "injury_engine.whip_lent_actors" AutoReadOnly
 
 Function Trace(String func, String msg, Bool notification=False) global
     Debug.Trace("[Injury_Engine_Actions] " + func + ": " + msg)
@@ -31,6 +43,8 @@ EndFunction
 
 Function Setup()
     truces_draining = False
+    truces_again = False
+    ReturnLentWhips()
     UnRegisterForModEvent("Injury_Engine_Truce")
     RegisterForModEvent("Injury_Engine_Truce", "OnTruce")
     RestoreExpiredTruces(True) ; a truce that ran out while the game was not running; the guard for the others
@@ -69,21 +83,36 @@ Function TortureTarget(Actor speaker, Actor target, String type, String strikeCo
         strikes = whip_main.max_strikes
     endif
     Bool whipping = source == whip_main.SOURCE_WHIP
+    if ActionRunning(speaker)
+        Trace("TortureTarget", speaker.GetDisplayName() + " is already torturing, ignored")
+        return
+    endif
+    StorageUtil.SetFloatValue(speaker, KEY_ACTION_START, Utility.GetCurrentRealTime())
 
     Weapon whip = whip_main.PaddedWhip
-    Bool given = false
+    Bool given = StorageUtil.GetIntValue(speaker, KEY_WHIP_LENT) == 1 ; a whip an earlier action lent is still ours
     Weapon previous = None
     if whipping
-        if speaker.GetItemCount(whip) < 1
-            if whip_main.require_whip
-                String noWhip = Injury_Engine_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0)
-                Injury_Engine_Main.ShortEvent(noWhip, speaker, target, "torture", "whip_lash_no_whip_" + speaker.GetFormID(), "whip_lash", (whip_main.event_ttl * 1000.0) as int)
-                return
+        if given
+            previous = StorageUtil.GetFormValue(speaker, KEY_WHIP_PREVIOUS) as Weapon
+        else
+            if speaker.GetItemCount(whip) < 1
+                if whip_main.require_whip
+                    StorageUtil.UnsetFloatValue(speaker, KEY_ACTION_START)
+                    String noWhip = Injury_Engine_Engine.ActionText(whip_main.SOURCE_WHIP, "action.no_whip", speaker, target, 0)
+                    Injury_Engine_Main.ShortEvent(noWhip, speaker, target, "torture", "whip_lash_no_whip_" + speaker.GetFormID(), "whip_lash", (whip_main.event_ttl * 1000.0) as int)
+                    return
+                endif
+                given = true
             endif
-            speaker.AddItem(whip, 1, true)
-            given = true
+            previous = speaker.GetEquippedWeapon(false)
+            if given
+                StorageUtil.SetIntValue(speaker, KEY_WHIP_LENT, 1)
+                StorageUtil.SetFormValue(speaker, KEY_WHIP_PREVIOUS, previous)
+                StorageUtil.FormListAdd(self, KEY_WHIP_LENT_LIST, speaker, false)
+                speaker.AddItem(whip, 1, true)
+            endif
         endif
-        previous = speaker.GetEquippedWeapon(false)
     endif
 
     Trace("TortureTarget", speaker.GetDisplayName() + " -> " + target.GetDisplayName() + " " + source + " strikes:" + strikes + " given:" + given)
@@ -128,15 +157,64 @@ Function TortureTarget(Actor speaker, Actor target, String type, String strikeCo
     StorageUtil.UnsetFloatValue(speaker, whip_main.KEY_IN_ACTION_TIME)
     if whipping
         speaker.SheatheWeapon()
-        if previous != None && previous != whip
+        if given
+            ReturnWhip(speaker, whip, previous)
+        elseif previous != None && previous != whip
             speaker.EquipItem(previous, false, true)
         else
             speaker.UnequipItem(whip, false, true)
         endif
-        if given
+    endif
+    StorageUtil.UnsetFloatValue(speaker, KEY_ACTION_START)
+EndFunction
+
+; True while a Torture_Target action runs on speaker (started less than ACTION_MAX real seconds ago).
+Bool Function ActionRunning(Actor speaker)
+    if !StorageUtil.HasFloatValue(speaker, KEY_ACTION_START)
+        return False
+    endif
+    Float age = Utility.GetCurrentRealTime() - StorageUtil.GetFloatValue(speaker, KEY_ACTION_START)
+    return age >= 0.0 && age < ACTION_MAX
+EndFunction
+
+; Takes back the padded whip Torture_Target lent the speaker and re-equips the weapon it held before.
+Function ReturnWhip(Actor speaker, Weapon whip, Weapon previous)
+    if whip != None
+        speaker.UnequipItem(whip, false, true)
+        if speaker.GetItemCount(whip) > 0
             speaker.RemoveItem(whip, 1, true)
         endif
     endif
+    if previous != None && previous != whip && speaker.GetItemCount(previous) > 0
+        speaker.EquipItem(previous, false, true)
+    endif
+    StorageUtil.UnsetIntValue(speaker, KEY_WHIP_LENT)
+    StorageUtil.UnsetFormValue(speaker, KEY_WHIP_PREVIOUS)
+    StorageUtil.FormListRemove(self, KEY_WHIP_LENT_LIST, speaker, true)
+EndFunction
+
+; From Setup (every load): a whip lent by an action that is no longer running (a load cut it short) goes back.
+Function ReturnLentWhips()
+    Weapon whip = None
+    if main != None
+        whip = main.PaddedWhip
+    endif
+    int i = StorageUtil.FormListCount(self, KEY_WHIP_LENT_LIST) - 1
+    while i >= 0
+        Actor a = StorageUtil.FormListGet(self, KEY_WHIP_LENT_LIST, i) as Actor
+        if a == None
+            StorageUtil.FormListRemoveAt(self, KEY_WHIP_LENT_LIST, i)
+        elseif !ActionRunning(a)
+            Trace("ReturnLentWhips", "taking back the padded whip lent to " + a.GetDisplayName())
+            ReturnWhip(a, whip, StorageUtil.GetFormValue(a, KEY_WHIP_PREVIOUS) as Weapon)
+            StorageUtil.UnsetFloatValue(a, KEY_ACTION_START)
+            if main != None
+                StorageUtil.UnsetIntValue(a, main.KEY_IN_ACTION)
+                StorageUtil.UnsetFloatValue(a, main.KEY_IN_ACTION_TIME)
+            endif
+        endif
+        i -= 1
+    endwhile
 EndFunction
 
 
@@ -179,24 +257,28 @@ EndFunction
 ; Truce and surrender answers from the DLL (one per answered AskTruce; a repeat to the same target while one is
 ; waiting is ignored, one to another target is refused; refused when no decision could be asked).
 Event OnTruce(String eventName, String strArg, Float numArg, Form sender)
+    truces_again = True
     if truces_draining
-        return
+        return ; the running drain goes round once more for this answer
     endif
     truces_draining = True
-    int n = Injury_Engine_Engine.TakeTruces()
-    while n > 0
-        Actor[] speakers = Injury_Engine_Engine.TruceSpeakers()
-        Actor[] targets = Injury_Engine_Engine.TruceTargets()
-        int[] accepted = Injury_Engine_Engine.TruceAccepted()
-        int[] yields = Injury_Engine_Engine.TruceYields()
-        int i = 0
-        while i < n && i < speakers.Length && i < targets.Length && i < accepted.Length && i < yields.Length
-            ApplyTruce(speakers[i], targets[i], accepted[i] != 0, yields[i] != 0)
-            i += 1
+    while truces_again
+        truces_again = False
+        int n = Injury_Engine_Engine.TakeTruces()
+        while n > 0
+            Actor[] speakers = Injury_Engine_Engine.TruceSpeakers()
+            Actor[] targets = Injury_Engine_Engine.TruceTargets()
+            int[] accepted = Injury_Engine_Engine.TruceAccepted()
+            int[] yields = Injury_Engine_Engine.TruceYields()
+            int i = 0
+            while i < n && i < speakers.Length && i < targets.Length && i < accepted.Length && i < yields.Length
+                ApplyTruce(speakers[i], targets[i], accepted[i] != 0, yields[i] != 0)
+                i += 1
+            endwhile
+            n = Injury_Engine_Engine.TakeTruces()
         endwhile
-        n = Injury_Engine_Engine.TakeTruces()
     endwhile
-    truces_draining = False
+    truces_draining = False ; no call between the loop test and here, so no event can slip in unseen
 EndEvent
 
 ; Truce refused: the speaker stands down (and its alarm), the target too if it is fighting the speaker; no Aggression

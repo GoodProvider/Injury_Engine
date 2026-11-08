@@ -1,0 +1,2 @@
+539963 2026-11-06 08:04:17 C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\Injury_Engine.log
+note: profiles/SkyrimNet SexLab/modlist.txt:257-258 '+Injury Engine' (release copy, DLL Oct 26) enabled, '-Injury_Engine' (dev) disabled

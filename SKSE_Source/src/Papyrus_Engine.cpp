@@ -32,6 +32,14 @@ namespace
         return result;
     }
 
+    // RealHit without narration (External_Damage narrate False): the wound lands, no hit is queued.
+    std::int32_t RealHitQuiet(RE::StaticFunctionTag*, RE::Actor* actor, RE::Actor* attacker, RE::BSFixedString sourceId, std::int32_t points)
+    {
+        const auto result = InjuryEngine::RealHit(actor, attacker, sourceId.c_str(), points, false);
+        Overlay::Notify();
+        return result;
+    }
+
     bool HasHealth(RE::StaticFunctionTag*, RE::BSFixedString sourceId)
     {
         return InjuryConfig::IndexOf(sourceId.c_str(), false) >= 0;
@@ -457,6 +465,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("Hit", s, Hit);
     a_vm->RegisterFunction("HitPart", s, HitPart);
     a_vm->RegisterFunction("RealHit", s, RealHit);
+    a_vm->RegisterFunction("RealHitQuiet", s, RealHitQuiet);
     a_vm->RegisterFunction("HasHealth", s, HasHealth);
     a_vm->RegisterFunction("HealPart", s, HealPart);
     a_vm->RegisterFunction("PartIndex", s, PartIndex);

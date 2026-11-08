@@ -1,12 +1,14 @@
 # Injury metadata guide (agent instructions)
 
-You are improving the injury data of Injury_Engine in a chat. Edit only the `*.json` files in this folder
-(and this guide). Do **not** edit C++ (`SKSE_Source/`), Papyrus (`Scripts/Source/`) or prompts unless the user asks.
+You are improving the injury data of Injury_Engine in a chat. Edit only the `*.json` files in this folder, its group
+folders and `../races.json` (and this guide). Do **not** edit C++ (`SKSE_Source/`), Papyrus (`Scripts/Source/`) or prompts unless the user asks.
 `guide.md` is not loaded by the game; every `*.json` here is.
 
 ## What these files are
 
-One file = one injury **source**. `Injury_Engine.dll` loads every `injuries/*.json` at game start
+Every folder here is one race **group** (body shape, see "Groups" below); the source files live in
+`injuries/humanoid/`, and `session.json` and this guide stay at the root. One file = one injury **source**.
+`Injury_Engine.dll` loads every `injuries/humanoid/*.json` at game start
 (`InjuryConfig`), tracks damage per source per body part (`InjuryEngine`), and uses the files for all text the LLM
 sees (character bio, "how it feels", hit narration, healing narration), the Torture_Target action text and the
 torture overlay. Restart the game to see edits. Look in `Injury_Engine.log` (`injuries: ...` lines) for load errors:
@@ -95,7 +97,8 @@ model              "torture" | "health" | "both"   ("whip" is still read as "tor
                    torture flag. Example: falling.json.
 requires           "whip" | "sexlab" | ""   (metadata only; stored, not enforced)
 damage_max, thresholds, health_link, regions, parts
-                   BODY BLOCK: must be identical in every file (only the first loaded file is read, whipping first).
+                   BODY BLOCK: legacy, read only when humanoid/body.json is missing (then from the first loaded file,
+                   whipping first). The body of every group is its body.json (see "Groups").
                    Do not change numbers or part order without asking the user; the overlay and decorators depend on it.
                    health_link: wound_share (share of max health torture holds down), floor (torture never takes
                    health below it), bleedout_below (torture at or below it holds the victim in bleedout until health
@@ -156,9 +159,14 @@ narration.session  (torture) switch, end, hit_noun; shared hit / mixed_hit / no_
                    session.json "heal_food" eat / drink / eat_unknown ({name}, {item}): heal start line when food
                    or an ingredient heals an actor (no caster; replaces narration.heal_events.start); drink when the
                    food uses the sound most potions are drunk with.
+                   session.json "heal_feed": races ([{file, id, key}], the beast races whose self-heal is feeding:
+                   WerewolfBeastRace "werewolf", DLC2WerebearBeastRace "werebear"), one line per key ({name}) as the
+                   lead of the feed heal start line (source 6, no caster, followed by the heal map), and "wounds"
+                   ({name}) added after it when the actor has only real wounds (the heal map is torture only).
+                   Feeding at full health has no line.
 narration.heal.level   (torture) high / mid / low: one heal-session sentence for the parts ({parts}) of this type
                    at that heal level, e.g. "The wounds on {name}'s {parts} have scabbed over." (low)
-narration.heal_events   (whipping and generic) spell / staff / potion healing: start, start_unhurt (target has no wounds), pain_gone, full, stopped
+narration.heal_events   (whipping and generic) spell / staff / potion healing: start, start_unhurt (target has no wounds), pain_gone (no longer sent, kept for older files), full, stopped
 death              (health files, and the health half of a "both" file) killing-blow narration, sent once when the
                    victim dies within a few seconds of a hit of this source (setting "Narrate killing blows"):
                    lead          "{attacker} kills {name} with {form}: " (an attacker other than the victim)
@@ -176,7 +184,8 @@ same way; torture sources split feelings into `text.feels.torture.<region>` (lig
 ### sexual_parts.json
 
 ```
-parts              exactly 5 entries in this order: nipples, pussy, penis, lips, ass hole
+parts              legacy (read only when humanoid/body.json is missing; body.json defines the parts now):
+                   exactly 5 entries in this order: nipples, pussy, penis, lips, ass hole
                    {name, region, max (damage points, at least 3), weight (hit chance; main parts are 1)}
 text.<source id>   {looks: {region: [...]}, feels: {...}} merged into that source's text.looks / text.feels, in the
                    same shape (torture feels: {torture: {region: [...]}, heal: {region: [...]}}). A source with no entry here has no text
@@ -202,6 +211,55 @@ the last moment. Torture files have no `death` block (torture never kills).
 Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{by}"`, so `verb_one` / `verb_many`,
 `times.*` and `by_*` carry their own leading space, and each `levels` entry starts with a comma, space or period as needed.
 
+## Groups
+
+`../races.json` maps every race to a group; each group is a folder `injuries/<group>/` with its own body and text.
+On a hit the victim's group is looked up and the damage lands on that group's parts with that group's text. An
+actor keeps the group it had when its first wound was tracked until it is fully healed (a werewolf transformation
+does not remap open wounds). Groups with no folder use humanoid (warned once in `Injury_Engine.log`).
+
+Folders shipped: `humanoid` (all source files, `body.json`, `sexual_parts.json`), `insectoid`, `humanoid_werewolf`,
+`humanoid_undead`. Planned (checkpoints/groups): beast_humanoid, plant, dragon, dragon_undead, dragon_skeletal,
+spectral_dragon, quadruped, quadruped_undead, bird, fish, crustacean, tentacled, construct, elemental, spirit.
+
+A group folder holds:
+
+```
+body.json          REQUIRED. The group's body (a group without it is not loaded):
+  damage_max, real_max, thresholds {medium, severe}, health_link {wound_share, floor, bleedout_below}
+  bleedout         true | false: torture bleedout can happen to this group at all
+  lungs            {medium, severe}: lung stage as a share of max health (only with a lungs part)
+  regions          region names (more are added from the parts)
+  parts            up to 16: {name, region, max (torture points, default damage_max), real_max (default real_max,
+                   sexual 10), weight (pick chance, default 1, sexual 0.2, lungs 0), sexual: true (only with the
+                   setting include_sexual_parts), sex: "female" | "male", lungs: true (one part at most: drowning
+                   lands only there; no cap, outside the capacity)}. Loaded order: core, sexual, lungs. Keep the order
+                   once shipped: co-saves store points by part index. More than 16 parts: the group is not loaded
+                   (the hit code carries a 16-bit part mask).
+  overlay_order    part names, top of the overlay first (others follow in body order)
+  disabled_sources source file ids. A torture source listed here is ignored on this group (no wound, no health
+                   lost); a health source passes through untracked (the game's damage lands as normal).
+common.json        (optional) the group's text for every source WITHOUT its own file here: shared keys, then a
+                   "health": {...} and a "torture": {...} block merged by the source's model; "skip": [ids] keeps
+                   humanoid text for those sources (drowning: lungs are lungs). Write it material-true and neutral
+                   enough for every damage type (no blood on undead, chitin on insects).
+<source>.json      (optional) merged over the humanoid file of the same name (after common.json): objects merge,
+                   arrays replace. Usually text, narration.hit.levels, death and part_weights by this group's part
+                   names. A "both" file (falling) takes "torture" / "health" blocks like the humanoid file.
+sexual_parts.json  (optional) only "text" (same shape as humanoid's); without it the sexual parts keep humanoid text.
+```
+
+A source whose part_weights give weight only to parts the group lacks (drowning without lungs) is not tracked there:
+its damage passes through. `classify` rules are read from the humanoid files only. Part names from Papyrus
+(`External_Torture`, `Torture_Target`, `HealPart`) resolve by name in the victim's group, else by region
+("face" -> "muzzle"), else random.
+
+`../races.json` order: `actors` (`{file, id, group}`: an actor or actor base form, e.g. one dragon on a shared race),
+`races` (`{"<group>": [EditorIDs]}`, case-insensitive), `race_forms` (`{file, id, group}`), `race_contains`
+(`{text, group}`: the race EditorID contains the text, first match wins: specific texts before general ones),
+`keywords` (`{all: [race keywords], group}`), `default_group`. With the DLL loaded, `Injury_Engine.log` lists every
+race with its group (`race dump:` lines at game start, `race <id> ... -> <group> (<rule>)` on first use).
+
 ## Writing rules
 
 1. **No numbers** in anything the LLM reads: no digits, percentages or point counts (`docs/authors/prompts.md#no-numbers`).
@@ -220,7 +278,7 @@ Hit narration is `lead + levels[n]`: `lead` is `"{name}'s {parts}{verb}{times}{b
 
 1. Read the file(s) you will change and, for wording consistency, `whipping.json` (richest) and `generic.json`.
 2. Propose changes in plain language first when the user's request is open-ended, then edit.
-3. After editing, validate: `python -c "import json,sys;[json.load(open(f,encoding='utf-8')) for f in sys.argv[1:]]" injuries/*.json`
+3. After editing, validate: `python -c "import json,sys;[json.load(open(f,encoding='utf-8')) for f in sys.argv[1:]]" injuries/*/*.json ../races.json`
    and check every `looks` / `feels` region array has exactly one entry per stage (6 for whipping, 3 for others),
    including the per-source blocks in `sexual_parts.json`. Every health file's `death.regions` needs head, body, arm
    and leg, each with at least one line (two or more so deaths do not repeat); drowning.json lands only on the

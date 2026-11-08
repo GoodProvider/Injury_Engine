@@ -1,0 +1,7 @@
+{
+  "_note": "Only part_weights by this group's part names; text comes from common.json. Schema: ../guide.md (Groups). Other parts keep humanoid's weights (same names).",
+  "part_weights": {
+    "muzzle": 2,
+    "tail": 0.4
+  }
+}
