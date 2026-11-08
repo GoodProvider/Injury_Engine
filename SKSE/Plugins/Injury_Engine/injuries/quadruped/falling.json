@@ -1,0 +1,14 @@
+{
+  "_note": "Only part_weights by this group's part names; text comes from common.json. A fall lands on the legs and the back. Schema: ../guide.md (Groups).",
+  "torture": {
+    "part_weights": {
+      "head": 0.6,
+      "back": 1.5,
+      "left foreleg": 1.5,
+      "right foreleg": 1.5,
+      "left hind leg": 1.5,
+      "right hind leg": 1.5,
+      "tail": 0.3
+    }
+  }
+}

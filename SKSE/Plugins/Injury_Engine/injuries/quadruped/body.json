@@ -1,0 +1,32 @@
+{
+  "_note": "Body of the quadruped group (wolves, dogs, bears, sabre cats, horses, deer, elk, goats, cows, mammoths, horkers, foxes, hares, skeevers, boars): a four-legged animal with fur or hide; bleeds, breathes (drowning lands in the lungs), no torture bleedout (many creatures have no bleedout animation). No sexual parts. Parts are ordered core, lungs; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": false,
+  "lungs": {
+    "medium": 0.25,
+    "severe": 0.5
+  },
+  "regions": ["head", "body", "leg", "tail", "lungs"],
+  "parts": [
+    { "name": "head", "region": "head", "weight": 0.8 },
+    { "name": "back", "region": "body" },
+    { "name": "left foreleg", "region": "leg", "weight": 0.8 },
+    { "name": "right foreleg", "region": "leg", "weight": 0.8 },
+    { "name": "left hind leg", "region": "leg", "weight": 0.8 },
+    { "name": "right hind leg", "region": "leg", "weight": 0.8 },
+    { "name": "tail", "region": "tail", "max": 8, "real_max": 30, "weight": 0.3 },
+    { "name": "lungs", "region": "lungs", "lungs": true }
+  ],
+  "overlay_order": ["head", "back", "right foreleg", "left foreleg", "right hind leg", "left hind leg", "tail"],
+  "disabled_sources": []
+}

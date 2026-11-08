@@ -219,8 +219,12 @@ actor keeps the group it had when its first wound was tracked until it is fully 
 does not remap open wounds). Groups with no folder use humanoid (warned once in `Injury_Engine.log`).
 
 Folders shipped: `humanoid` (all source files, `body.json`, `sexual_parts.json`), `insectoid`, `humanoid_werewolf`,
-`humanoid_undead`. Planned (checkpoints/groups): beast_humanoid, plant, dragon, dragon_undead, dragon_skeletal,
-spectral_dragon, quadruped, quadruped_undead, bird, fish, crustacean, tentacled, construct, elemental, spirit.
+`humanoid_undead`, `quadruped` (no sexual parts). Planned (checkpoints/groups): beast_humanoid, plant, dragon,
+dragon_undead, dragon_skeletal, spectral_dragon, quadruped_undead, bird, fish, crustacean, tentacled, construct,
+elemental, spirit.
+
+`race_contains` is a plain case-insensitive substring test: a short text matches inside unrelated EditorIDs ("cat"
+matched `GoblinRaceDuplicate`). Prefer long texts and check every new rule against the `race dump:` lines.
 
 A group folder holds:
 

@@ -31,7 +31,8 @@
       "FalmerRace",
       "GiantRace",
       "HagravenRace",
-      "DLC2RieklingRace"
+      "DLC2RieklingRace",
+      "BretonRaceChildVampire"
     ],
     "humanoid_undead": [
       "DraugrRace",
@@ -446,6 +447,18 @@
       "group": "humanoid_undead"
     },
     {
+      "text": "wight",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "bonecolossus",
+      "group": "humanoid_undead"
+    },
+    {
+      "text": "elytra",
+      "group": "insectoid"
+    },
+    {
       "text": "spider",
       "group": "insectoid"
     },
@@ -655,10 +668,6 @@
     },
     {
       "text": "boar",
-      "group": "quadruped"
-    },
-    {
-      "text": "cat",
       "group": "quadruped"
     }
   ],
