@@ -1,0 +1,206 @@
+{
+  "_note": "Dragon text for every source without its own file in this folder: scales, hot dark blood, wing membranes, a long tail. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: a few scales around the horns are chipped, and a thin line of dark blood runs along the jaw.",
+          "{name}'s head: scales are torn from the brow and cheek, the hide beneath split and bleeding freely; one eye is swollen half shut. The smell of hot blood and scorched breath hangs about {him}.",
+          "{name}'s head: the skull plates are cracked and the jaw hangs crooked; blood pours over the teeth and one eye is gone. A heavy, coppery reek surrounds {him}."
+        ],
+        "body": [
+          "{name}'s {part}: a scrape across the scales, a few of them loose and a little dark blood seeping between them.",
+          "{name}'s {part}: a stretch of scales is ripped away, and the raw hide beneath bleeds in thick, steaming runnels.",
+          "{name}'s {part}: the scales are shattered and the flesh beneath is laid open deep; hot blood sheets down {his} flanks and pools beneath {him}."
+        ],
+        "wing": [
+          "{name}'s {part}: the membrane is nicked, a small tear at the edge fluttering as {he} moves.",
+          "{name}'s {part}: the membrane is torn in long rents and a wing bone is cracked; the wing droops and bleeds along the struts.",
+          "{name}'s {part}: the wing is shredded and broken, membrane hanging in bloody tatters; it drags uselessly at {his} side."
+        ],
+        "leg": [
+          "{name}'s {part}: a few scales are scraped off near the claws, and the leg is marked with dark blood.",
+          "{name}'s {part}: the hide is gashed to the muscle and blood runs down over the talons; {he} favors it.",
+          "{name}'s {part}: the leg is mangled, bone showing through torn scales; {he} can hardly put weight on it."
+        ],
+        "tail": [
+          "{name}'s {part}: a few scales are scuffed and loose along the tail.",
+          "{name}'s {part}: a deep gash cuts across the tail, which leaves a smear of dark blood as it sweeps the ground.",
+          "{name}'s {part}: the tail is half severed, hanging by hide and sinew and bleeding heavily."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head stings where the scales broke; {he} is angered more than hurt and snorts smoke, eager to strike back.",
+          "{name}'s head throbs and {his} vision swims on one side; {he} roars in fury but {his} lunges are less sure.",
+          "{name}'s head is a blaze of agony; {he} can barely lift it, and {his} rage is turning to desperation."
+        ],
+        "body": [
+          "{name}'s {part} smarts under the loose scales; {he} is irritated and proud, unwilling to show it.",
+          "{name}'s {part} burns with every breath; {he} is enraged but holds {reflexive} lower and moves with care.",
+          "{name}'s {part} is torn open agony; each breath rattles and {he} is near collapse, fury giving way to fear of death."
+        ],
+        "wing": [
+          "{name}'s {part} twinges when it beats; {he} keeps it folded a little closer.",
+          "{name}'s {part} aches deeply and will not spread fully; {he} feels grounded and is furious about it.",
+          "{name}'s {part} is broken agony; flight is impossible and {he} knows it, a cornered, desperate beast."
+        ],
+        "leg": [
+          "{name}'s {part} prickles where the scales scraped; {he} barely notices.",
+          "{name}'s {part} hurts with every step; {he} shifts {his} weight off it, growling.",
+          "{name}'s {part} is ruined and screams with pain; {he} lurches and staggers, the enormous body failing {him}."
+        ],
+        "tail": [
+          "{name}'s {part} stings a little when it sweeps; {he} lashes it in annoyance.",
+          "{name}'s {part} throbs; {he} holds it stiff and low.",
+          "{name}'s {part} is agony to the root; {he} cannot lift it, and every movement drags fresh pain through {him}."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and a few scales crack and fly loose. {name} snarls, smoke curling from the nostrils.",
+          " on scales that are already broken. The hide splits and hot blood runs; {name} roars in pain and rage.",
+          ", and the blow tears deep into the open wound. Dark blood gushes in steaming torrents and {name} bellows, thrashing, wings beating wildly. The air reeks of blood.",
+          ", and it is too much. {name} crashes to the ground with a shudder that shakes the earth, wings sprawled, blood spreading in a vast pool."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s skull splits beneath the scales; the great jaw falls open and a last breath of smoke spills out as {name} crashes down, the light going out of the huge eyes while hot blood pools around the horns.",
+          "the blow caves in {name}'s brow; {name} rears, shrieks once, and topples, neck sprawling across the ground as dark blood steams from the shattered head."
+        ],
+        "body": [
+          "{name}'s {part} is torn wide open and the hot insides spill out in a steaming flood; {name} staggers, wings half raised, then collapses with a sound like a falling tower, blood soaking the ground.",
+          "the wound drives deep into {name}'s chest; {name} roars, coughs up a gout of dark blood, and sinks down, the great body shuddering until it is still."
+        ],
+        "wing": [
+          "{name}'s {part} is torn from the shoulder in a spray of blood; {name} spins, screaming, and crashes down on the broken side, bleeding out in a widening pool.",
+          "the {part} snaps and folds; {name} falls heavily, tangled in the ruined membrane, and the blood pours from the torn root until {name} stops moving."
+        ],
+        "leg": [
+          "{name}'s {part} gives way with a crack of bone; {name} pitches forward, chin ploughing the ground, and bleeds out from the mangled limb with a long, rattling breath.",
+          "the {part} is ripped open to the bone; {name} collapses onto it, tries once to rise, and sinks back as the blood spreads beneath the huge body."
+        ],
+        "tail": [
+          "{name}'s {part} is hewn through and the stump spurts dark blood; {name} thrashes in a wide circle, weakening, until the great body slumps and lies still."
+        ]
+      },
+      "soil": [
+        "As {name}'s body goes slack, the bowels let go in a foul, steaming heap that adds to the stench of blood.",
+        "{name}'s belly spasms and voids a reeking mass beneath the tail as the last breath leaves."
+      ],
+      "soil_chance": 0.3
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the scales around the eyes and jaw are scuffed dull, a few of them cracked.",
+          "{name}'s head: the scales on the snout are cracked and lifting, the hide beneath swollen and weeping.",
+          "{name}'s head: the face is a mass of cracked scales and raw, swollen hide; one eye is puffed shut."
+        ],
+        "body": [
+          "{name}'s {part}: scales scuffed and dulled, with a few angry red marks between them.",
+          "{name}'s {part}: the scales are cracked and lifting, the hide beneath raw and seeping.",
+          "{name}'s {part}: whole rows of scales are cracked and loose over raw, bleeding hide."
+        ],
+        "wing": [
+          "{name}'s {part}: the membrane is marked with a few red welts.",
+          "{name}'s {part}: the membrane is bruised dark and split in small tears along the edges.",
+          "{name}'s {part}: the membrane is raw and torn in many places; the wing trembles when it opens."
+        ],
+        "leg": [
+          "{name}'s {part}: the scales are scraped and the hide shows red marks.",
+          "{name}'s {part}: the scales are cracked and the hide beneath swollen and tender.",
+          "{name}'s {part}: the hide is raw and weeping under broken scales; the leg shakes under {his} weight."
+        ],
+        "tail": [
+          "{name}'s {part}: a few scales scuffed and marked.",
+          "{name}'s {part}: cracked scales and swollen hide along the length of the tail.",
+          "{name}'s {part}: the tail is raw and bleeding under loosened scales and drags low."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head stings; {he} hisses smoke and jerks it away, insulted.",
+            "{name}'s head aches deep under the scales; {he} keeps it low, growling, humiliated and wary.",
+            "{name}'s head is blinding pain; {he} trembles and shuts {his} eyes, pride broken."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} shifts {his} great bulk restlessly.",
+            "{name}'s {part} throbs with every breath; {he} flinches at movement near {him}.",
+            "{name}'s {part} is raw agony; {he} lies low and shudders, too hurt to rise in anger."
+          ],
+          "wing": [
+            "{name}'s {part} stings; {he} folds it tight against {his} side.",
+            "{name}'s {part} aches badly; {he} will not open it and keeps it clamped down.",
+            "{name}'s {part} is agony; {he} lets it hang and whimpers when it is touched."
+          ],
+          "leg": [
+            "{name}'s {part} prickles; {he} lifts it and sets it down gingerly.",
+            "{name}'s {part} aches and trembles; {he} favors it with every step.",
+            "{name}'s {part} will not hold {him}; {he} sags onto {his} belly, shaking."
+          ],
+          "tail": [
+            "{name}'s {part} stings; {he} curls it close.",
+            "{name}'s {part} throbs; {he} keeps it still and tucked in.",
+            "{name}'s {part} is agony to move; {he} lets it lie limp."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head barely aches now; {his} gaze is clear and proud again.",
+            "{name}'s head is still sore, but {he} lifts it higher.",
+            "{name}'s head is tender as the cracked scales begin to knit."
+          ],
+          "body": [
+            "{name}'s {part} feels almost whole; only a faint stiffness remains under the scales.",
+            "{name}'s {part} aches dully as the hide closes; {he} breathes more easily.",
+            "{name}'s {part} is still very sore while the raw hide begins to heal."
+          ],
+          "wing": [
+            "{name}'s {part} spreads freely again with only a slight pull.",
+            "{name}'s {part} aches but opens wider than before.",
+            "{name}'s {part} is weak and sore while the torn membrane mends."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again, only a little stiff.",
+            "{name}'s {part} aches but holds {his} weight better.",
+            "{name}'s {part} is weak and sore while it mends."
+          ],
+          "tail": [
+            "{name}'s {part} sweeps freely again.",
+            "{name}'s {part} aches but moves more easily.",
+            "{name}'s {part} is still sore and held low while it heals."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the scales. {name} hisses and jerks away.",
+          " on scales that are already cracked. The sore hide splits and {name} roars, writhing.",
+          ", and the blow lands on raw, weeping hide. {name} shrieks and thrashes, wings beating, unable to escape the pain.",
+          ", and it is too much. {name} sinks to the ground, shuddering, wings spread limp and head down."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The scales on {name}'s {parts} have nearly grown back smooth.",
+          "mid": "The hide on {name}'s {parts} has closed, with new scales starting to show.",
+          "low": "The raw hide on {name}'s {parts} has stopped weeping."
+        }
+      }
+    }
+  }
+}

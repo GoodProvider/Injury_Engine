@@ -72,6 +72,8 @@ Int Function TrackedCount() global native
 
 ; Narration noun for a part ("face", "left arm", ...); "" when the .dll is missing.
 String Function PartName(Int part) global native
+; Part name in the actor's own body (its race group: "thorax", "muzzle", ...); "" out of range or when the .dll is missing.
+String Function PartNameFor(Actor akActor, Int part) global native
 
 ; Source id by index ("" out of range) and the number of sources loaded (0 = none found). A "both" file loads as
 ; two sources: the torture half under its id, the health half as "<id>_real".

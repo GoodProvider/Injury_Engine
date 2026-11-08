@@ -399,18 +399,29 @@ namespace InjuryConfig
 
         // sexual_parts.json "text": {"<source id>": {"looks": {region: [..]}, "feels": {...}}} merged into each source
         // of the group (objects merge, region arrays replace; a "both" file's health half falls back to the file id).
+        // A group's file may also hold "health": {...} / "torture": {...} (same looks / feels shape) for every source of
+        // that model without its own "text" entry, so one block covers all damage types.
         void MergeSexualText(Group& g, const nlohmann::json& j)
         {
             const auto t = j.find("text");
-            if (t == j.end() || !t->is_object()) {
-                return;
-            }
+            const bool hasText = t != j.end() && t->is_object();
             for (auto& s : g.sources) {
-                auto st = t->find(s.id);
-                if (st == t->end()) {
-                    st = t->find(s.base);
+                const nlohmann::json* st = nullptr;
+                if (hasText) {
+                    auto it = t->find(s.id);
+                    if (it == t->end()) {
+                        it = t->find(s.base);
+                    }
+                    if (it != t->end() && it->is_object()) {
+                        st = &*it;
+                    }
                 }
-                if (st == t->end() || !st->is_object()) {
+                if (!st) {
+                    if (const auto block = j.find(s.model); block != j.end() && block->is_object()) {
+                        st = &*block;
+                    }
+                }
+                if (!st) {
                     continue;
                 }
                 for (const char* kind : { "looks", "feels" }) {

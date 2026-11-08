@@ -1,0 +1,49 @@
+{
+  "_note": "Body of the dragon_undead group (Durnehviir, set by actor in races.json since he shares DLC1UndeadDragonRace with the skeletal dragons): a rotting dragon, leathery hide and loose scales over exposed bone; no blood, no breath (no lungs: drowning passes through), no torture bleedout. Parts are ordered core; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": false,
+  "regions": [
+    "head",
+    "body",
+    "wing",
+    "leg",
+    "tail"
+  ],
+  "parts": [
+    { "name": "head", "region": "head", "weight": 0.8 },
+    { "name": "neck", "region": "body", "weight": 0.7 },
+    { "name": "back", "region": "body" },
+    { "name": "belly", "region": "body", "weight": 0.8 },
+    { "name": "left wing", "region": "wing" },
+    { "name": "right wing", "region": "wing" },
+    { "name": "left foreleg", "region": "leg", "weight": 0.7 },
+    { "name": "right foreleg", "region": "leg", "weight": 0.7 },
+    { "name": "left hind leg", "region": "leg", "weight": 0.7 },
+    { "name": "right hind leg", "region": "leg", "weight": 0.7 },
+    { "name": "tail", "region": "tail", "weight": 0.6 }
+  ],
+  "overlay_order": [
+    "head",
+    "neck",
+    "back",
+    "belly",
+    "left wing",
+    "right wing",
+    "left foreleg",
+    "right foreleg",
+    "left hind leg",
+    "right hind leg",
+    "tail"
+  ],
+  "disabled_sources": []
+}

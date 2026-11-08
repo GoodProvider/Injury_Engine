@@ -1,0 +1,177 @@
+{
+  "_note": "Mudcrab text for every source without its own file in this folder: hard shell, claws, jointed legs, pale fluid; smells of brine and mud. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s {part}: one eyestalk is nicked and droops.",
+          "{name}'s {part}: an eyestalk is cracked and bent, pale fluid seeping. A brackish smell rises from it.",
+          "{name}'s {part}: the eyestalks are crushed, leaking, and the mouthparts twitch."
+        ],
+        "body": [
+          "{name}'s {part}: the shell is scratched and chipped.",
+          "{name}'s {part}: the shell is cracked through and pale fluid oozes from the split. The smell of brine and mud hangs about {him}.",
+          "{name}'s {part}: the shell is caved in and the soft meat shows through, leaking fluid."
+        ],
+        "claw": [
+          "{name}'s {part}: the claw is chipped at the tip.",
+          "{name}'s {part}: the claw is cracked and opens crookedly, oozing.",
+          "{name}'s {part}: the claw is smashed and hangs from the joint."
+        ],
+        "leg": [
+          "{name}'s {part}: a leg is nicked.",
+          "{name}'s {part}: two legs are cracked and drag, leaking.",
+          "{name}'s {part}: the legs on one side are broken off; {he} scuttles in crooked circles."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s {part} sting; {he} clacks {his} claws in anger.",
+          "{name}'s {part} throb; {he} snaps wildly, half blind.",
+          "{name}'s {part} are agony; {he} lashes about blindly."
+        ],
+        "body": [
+          "{name}'s {part} is chipped; {he} scuttles on, aggressive.",
+          "{name}'s {part} aches where it cracked; {he} hunkers down, defensive.",
+          "{name}'s {part} is broken agony; {he} trembles, barely moving."
+        ],
+        "claw": [
+          "{name}'s {part} twinges; {he} snaps it anyway.",
+          "{name}'s {part} hurts; {he} holds it back.",
+          "{name}'s {part} is useless; {he} waves it feebly."
+        ],
+        "leg": [
+          "{name}'s {part} prickle; {he} scuttles on.",
+          "{name}'s {part} hurt; {he} lurches sideways.",
+          "{name}'s {part} fail; {he} can barely move."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the shell cracks with a sharp snap. {name} clacks and scuttles back.",
+          " on shell that is already cracked. It splits further and pale fluid seeps; {name} snaps wildly.",
+          ", and the blow smashes into the broken shell. Fluid spurts and {name} thrashes, legs scrabbling.",
+          ", and it is too much. {name} sinks flat, legs curling, fluid pooling beneath."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s {part} are crushed and the head of the shell splits; {name} twitches, claws opening and closing slowly, and goes still in a puddle of pale fluid.",
+          "the blow smashes {name}'s front shell; {name} flips over, legs kicking, until they stop."
+        ],
+        "body": [
+          "{name}'s {part} caves in with a crunch and the soft insides spill out; {name}'s legs curl in and the claws fall slack.",
+          "the shell of {name} splits apart; pale fluid gushes out and {name} slumps, legs twitching."
+        ],
+        "claw": [
+          "{name}'s {part} is torn off and fluid pours from the joint; {name} scuttles in a circle, weakening, then sinks and lies still.",
+          "the {part} is wrenched away; {name} collapses on that side and stops moving."
+        ],
+        "leg": [
+          "{name}'s {part} snap off; {name} tips over and lies twitching until the last leg stills.",
+          "the {part} are torn away; {name} sinks flat, leaking, and goes still."
+        ]
+      },
+      "soil": [
+        "As {name} goes still, a smear of grey mud and foul slurry leaks from beneath the shell."
+      ],
+      "soil_chance": 0.2
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s {part}: scuffed.",
+          "{name}'s {part}: swollen and drooping.",
+          "{name}'s {part}: raw and twitching."
+        ],
+        "body": [
+          "{name}'s {part}: the shell is scuffed.",
+          "{name}'s {part}: fine cracks run across the shell.",
+          "{name}'s {part}: the shell is cracked all over and weeping."
+        ],
+        "claw": [
+          "{name}'s {part}: scuffed.",
+          "{name}'s {part}: cracked at the joint.",
+          "{name}'s {part}: cracked and trembling."
+        ],
+        "leg": [
+          "{name}'s {part}: scuffed.",
+          "{name}'s {part}: swollen at the joints.",
+          "{name}'s {part}: the joints are cracked and the legs shake."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s {part} sting; {he} pulls them in.",
+            "{name}'s {part} ache; {he} keeps them low.",
+            "{name}'s {part} are agony; {he} tucks them away and trembles."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} clacks.",
+            "{name}'s {part} throbs; {he} hunkers down.",
+            "{name}'s {part} is agony; {he} shudders, flat to the ground."
+          ],
+          "claw": [
+            "{name}'s {part} stings; {he} pulls it in.",
+            "{name}'s {part} aches; {he} holds it close.",
+            "{name}'s {part} is agony; {he} lets it drop."
+          ],
+          "leg": [
+            "{name}'s {part} prickle.",
+            "{name}'s {part} ache; {he} scuttles unevenly.",
+            "{name}'s {part} will not hold {him}; {he} sinks."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s {part} are clear again.",
+            "{name}'s {part} are less swollen.",
+            "{name}'s {part} are still tender."
+          ],
+          "body": [
+            "{name}'s {part} is nearly whole.",
+            "{name}'s {part} is hardening over the cracks.",
+            "{name}'s {part} is still sore."
+          ],
+          "claw": [
+            "{name}'s {part} snaps freely again.",
+            "{name}'s {part} moves better.",
+            "{name}'s {part} is still weak."
+          ],
+          "leg": [
+            "{name}'s {part} are steady again.",
+            "{name}'s {part} move better.",
+            "{name}'s {part} are still weak."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the shell. {name} clacks and scuttles back.",
+          " on shell that is already cracked. The cracks spread and {name} snaps wildly.",
+          ", and the blow lands on the weeping cracks. {name} thrashes, legs scrabbling.",
+          ", and it is too much. {name} sinks flat, trembling."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The shell of {name}'s {parts} has nearly hardened smooth again.",
+          "mid": "The cracks in {name}'s {parts} have sealed over.",
+          "low": "The cracks in {name}'s {parts} have stopped weeping."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "_note": "Skeletal dragon text for every source without its own file in this folder: bare, old bone bound by magic; no flesh, no blood, no breath. Wounds are cracks, chips and splinters, and a faint glow where the binding magic shows. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the skull is chipped near the horns, a fine crack running along the brow.",
+          "{name}'s head: a crack splits the skull from brow to snout, a faint glow leaking from it; a horn is broken off. Dry bone dust drifts down.",
+          "{name}'s head: the skull is staved in and the jaw hangs loose; the glow in the sockets flickers weakly through the cracks."
+        ],
+        "body": [
+          "{name}'s {part}: a few bones scraped and chipped, white showing through old grime.",
+          "{name}'s {part}: several bones are cracked through and a rib hangs loose, rattling as {he} moves.",
+          "{name}'s {part}: bones are shattered and missing; the frame sags and grinds, held together by a failing glow."
+        ],
+        "wing": [
+          "{name}'s {part}: a strut is chipped.",
+          "{name}'s {part}: two struts are cracked and the wing hangs askew.",
+          "{name}'s {part}: the wing bones are splintered and dangle, scraping the ground."
+        ],
+        "leg": [
+          "{name}'s {part}: the bone is scraped near the claws.",
+          "{name}'s {part}: the leg bone is cracked and grinds at the joint.",
+          "{name}'s {part}: the leg is shattered at the joint, held only by the glow; {he} drags it."
+        ],
+        "tail": [
+          "{name}'s {part}: a vertebra chipped.",
+          "{name}'s {part}: several vertebrae are cracked and the tail sags.",
+          "{name}'s {part}: the tail is broken apart into loose, rattling bones."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head barely registers the blow; {he} is cold, relentless and unmoved.",
+          "{name}'s head is weakened; the binding wavers and {he} moves with a jerky, furious hunger.",
+          "{name}'s head is failing; the magic holding {him} together falters and {he} is erratic, close to falling apart."
+        ],
+        "body": [
+          "{name}'s {part} shows the chip but {he} pays it no mind.",
+          "{name}'s {part} grinds and rattles; {his} movements grow less sure.",
+          "{name}'s {part} is coming apart; {he} lurches, the frame barely holding."
+        ],
+        "wing": [
+          "{name}'s {part} creaks but works.",
+          "{name}'s {part} will not spread fully; {he} cannot fly well.",
+          "{name}'s {part} is useless; {he} is grounded and erratic."
+        ],
+        "leg": [
+          "{name}'s {part} clicks oddly when it lands.",
+          "{name}'s {part} grinds; {he} lurches when weight lands on it.",
+          "{name}'s {part} fails; {he} staggers and drags {reflexive} along."
+        ],
+        "tail": [
+          "{name}'s {part} rattles a little.",
+          "{name}'s {part} sags and swings less.",
+          "{name}'s {part} drags uselessly behind {him}."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and bone chips fly. {name} jerks, jaws snapping.",
+          " on bone that is already cracked. The crack widens with a loud snap and {name} lets out a hollow, rasping roar.",
+          ", and the blow smashes the cracked bone apart. Splinters scatter and the binding glow flares; {name} thrashes, frame rattling.",
+          ", and it is too much. {name} crashes down in a clattering heap of bone, the glow in the sockets dimming."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s skull shatters into pieces; the glow in the sockets snuffs out and the whole frame collapses in a clattering heap of old bones and dust.",
+          "the blow splits {name}'s skull in two; the binding magic fails at once and the bones fall apart and roll across the ground."
+        ],
+        "body": [
+          "{name}'s {part} explodes in a burst of splinters; without it the frame cannot hold and {name} comes apart, bones raining down in a heap.",
+          "the bones of {name}'s {part} give way; {name} sags, the glow fading from the sockets, and the skeleton falls in on itself."
+        ],
+        "wing": [
+          "{name}'s {part} is torn away; {name} lurches, falls on the broken side, and the bones spill apart as the glow dies.",
+          "the {part} shatters at the root; {name} crashes down and the frame breaks into loose bones."
+        ],
+        "leg": [
+          "{name}'s {part} shatters; {name} pitches forward and the skeleton breaks apart on impact, skull rolling free.",
+          "the {part} snaps at the joint; {name} topples and the bones scatter as the binding fails."
+        ],
+        "tail": [
+          "{name}'s {part} breaks apart; the binding glow unravels from the tail upward and {name} collapses into a heap of bones."
+        ]
+      },
+      "soil": [
+        "As {name}'s bones scatter, a puff of grave dust and old grit spills from the hollow belly.",
+        "Dust and dry grave dirt pour from {name}'s cracked ribs as the frame settles."
+      ],
+      "soil_chance": 0.2
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the skull is scuffed and chipped in small places.",
+          "{name}'s head: fine cracks web the skull and the glow in the sockets flickers.",
+          "{name}'s head: the skull is cracked all over and grinds when it moves."
+        ],
+        "body": [
+          "{name}'s {part}: the bones are scuffed and chipped.",
+          "{name}'s {part}: fine cracks run through several bones.",
+          "{name}'s {part}: bones are cracked and loose, rattling at every movement."
+        ],
+        "wing": [
+          "{name}'s {part}: a strut is scuffed.",
+          "{name}'s {part}: struts are cracked and the wing trembles.",
+          "{name}'s {part}: the struts are cracked through and the wing sags."
+        ],
+        "leg": [
+          "{name}'s {part}: the bone is scuffed.",
+          "{name}'s {part}: the bone is cracked near the joint.",
+          "{name}'s {part}: the joint grinds and the leg shakes."
+        ],
+        "tail": [
+          "{name}'s {part}: a few vertebrae scuffed.",
+          "{name}'s {part}: cracked vertebrae along the tail.",
+          "{name}'s {part}: the tail sags, its vertebrae cracked and loose."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head jerks at the impact; {he} snaps {his} jaws, agitated.",
+            "{name}'s head grinds; the binding glow wavers and {he} moves in jerks.",
+            "{name}'s head is cracked and the glow dims; {he} sways, barely held together, subdued."
+          ],
+          "body": [
+            "{name}'s {part} rattles; {he} shifts restlessly.",
+            "{name}'s {part} grinds; {he} recoils from anything near.",
+            "{name}'s {part} is coming loose; {he} sags and trembles."
+          ],
+          "wing": [
+            "{name}'s {part} creaks; {he} folds it in.",
+            "{name}'s {part} shakes; {he} keeps it clamped.",
+            "{name}'s {part} hangs; {he} cannot lift it."
+          ],
+          "leg": [
+            "{name}'s {part} clicks; {he} sets it down carefully.",
+            "{name}'s {part} grinds; {he} favors it.",
+            "{name}'s {part} will not hold; {he} sinks down."
+          ],
+          "tail": [
+            "{name}'s {part} rattles; {he} curls it in.",
+            "{name}'s {part} grinds; {he} keeps it still.",
+            "{name}'s {part} lies limp."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head is nearly whole; the glow in the sockets is steady.",
+            "{name}'s head is mending as the binding glow seals the cracks.",
+            "{name}'s head still grinds while the magic draws the cracks closed."
+          ],
+          "body": [
+            "{name}'s {part} is nearly whole again.",
+            "{name}'s {part} is mending, the cracks filled with a faint glow.",
+            "{name}'s {part} still rattles while the magic binds it."
+          ],
+          "wing": [
+            "{name}'s {part} spreads freely again.",
+            "{name}'s {part} is mending.",
+            "{name}'s {part} still sags while it mends."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} holds {his} weight better.",
+            "{name}'s {part} is still weak while it mends."
+          ],
+          "tail": [
+            "{name}'s {part} swings freely again.",
+            "{name}'s {part} is mending.",
+            "{name}'s {part} still drags while it mends."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the bone. {name} jerks, jaws snapping.",
+          " on bone that is already cracked. The cracks spread and {name} lets out a hollow rasp.",
+          ", and the blow lands on cracked bone. The binding glow flares and {name} writhes, bones rattling.",
+          ", and it is too much. {name} sinks down, frame shaking, the glow in the sockets dim."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The cracks in {name}'s {parts} have almost vanished.",
+          "mid": "The cracks in {name}'s {parts} have sealed into faint glowing lines.",
+          "low": "The cracks in {name}'s {parts} have stopped spreading."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "_note": "Troll and lurker text for every source without its own file in this folder: thick hide or scaled skin, coarse fur or slime, dark blood, brute strength; wounds that should be grave read as grave. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: the thick hide on the brow is split, a thin trickle of dark blood running down.",
+          "{name}'s face: the hide is torn open from brow to jaw and blood runs freely; one eye is swollen shut. A rank, coppery smell clings to {him}.",
+          "{name}'s face: the face is smashed and torn, teeth broken, blood pouring over the chin. The stink of blood and beast is overpowering."
+        ],
+        "body": [
+          "{name}'s {part}: a gash in the tough hide, a little dark blood matting the fur or slime around it.",
+          "{name}'s {part}: the hide is laid open to the muscle and bleeds in heavy runnels; the smell of blood and musk hangs about {him}.",
+          "{name}'s {part}: the hide is ripped wide and the flesh beneath is torn deep; dark blood sheets down {his} body and pools at {his} feet."
+        ],
+        "arm": [
+          "{name}'s {part}: the hide is scraped and bleeding a little.",
+          "{name}'s {part}: the long arm is gashed to the muscle and blood drips from the claws.",
+          "{name}'s {part}: the arm is mangled, bone showing; it hangs heavy and bleeding."
+        ],
+        "leg": [
+          "{name}'s {part}: the hide is scraped and marked.",
+          "{name}'s {part}: the leg is gashed deep and bleeds down to the foot; {he} favors it.",
+          "{name}'s {part}: the leg is torn open to the bone; {he} can barely stand on it."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s face stings; {he} snorts and roars, more enraged than hurt.",
+          "{name}'s face throbs and one eye is blind with blood; {he} bellows, furious and less steady.",
+          "{name}'s face is agony; {he} swings {his} head blindly, enraged and desperate."
+        ],
+        "body": [
+          "{name}'s {part} smarts; {he} pounds {his} chest, unbothered.",
+          "{name}'s {part} burns; {he} snarls and hunches, still dangerous but slower.",
+          "{name}'s {part} is torn agony; {he} sways and gasps, the fight draining out of {him}."
+        ],
+        "arm": [
+          "{name}'s {part} stings; {he} shakes it.",
+          "{name}'s {part} hurts; {his} swings are weaker.",
+          "{name}'s {part} is ruined; {he} fights with the other arm, howling."
+        ],
+        "leg": [
+          "{name}'s {part} prickles; {he} barely notices.",
+          "{name}'s {part} hurts with every step; {he} limps and growls.",
+          "{name}'s {part} fails {him}; {he} drops to all fours, staggering."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the thick hide splits. {name} roars and swings back.",
+          " where the hide is already torn. Dark blood spills and {name} bellows in pain and fury.",
+          ", and the blow tears deep into the open wound. Blood gushes and {name} howls, thrashing wildly. The air reeks of blood and beast.",
+          ", and it is too much. {name} crashes to the ground, blood spreading beneath the heavy body."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s skull caves in with a crunch; {name} lurches, gives a gurgling roar, and falls face down, dark blood spreading from the ruined head.",
+          "the blow splits {name}'s brow open; {name} sways, eyes rolling, and topples like a felled tree into a pool of blood."
+        ],
+        "body": [
+          "{name}'s {part} is torn open and the guts spill out in a steaming heap; {name} clutches at them, roars once, and collapses in the gore.",
+          "the wound drives deep into {name}'s chest; {name} coughs blood, staggers, and crashes down, twitching until the great body goes still."
+        ],
+        "arm": [
+          "{name}'s {part} is half torn off in a spray of blood; {name} howls, staggers in a circle and collapses, bleeding out on the ground.",
+          "the {part} is ripped open to the bone; {name} falls to the knees, then forward, blood pouring from the ruined limb."
+        ],
+        "leg": [
+          "{name}'s {part} gives way with a snap; {name} topples, claws raking the ground, and bleeds out with a long, gurgling breath.",
+          "the {part} is torn open; {name} collapses and tries to crawl, leaving a smear of blood, until the strength runs out."
+        ]
+      },
+      "soil": [
+        "As {name}'s body goes slack, the bowels let go in a reeking mess that mixes with the blood.",
+        "{name}'s belly spasms and voids a foul heap as the last breath rattles out."
+      ],
+      "soil_chance": 0.4
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: the hide is marked with red welts.",
+          "{name}'s face: the hide is swollen and split in places, weeping.",
+          "{name}'s face: the face is swollen and raw, one eye puffed shut."
+        ],
+        "body": [
+          "{name}'s {part}: the hide is marked with angry welts.",
+          "{name}'s {part}: the hide is swollen and split, weeping blood.",
+          "{name}'s {part}: the hide is raw and torn, bleeding in many places."
+        ],
+        "arm": [
+          "{name}'s {part}: welts on the hide.",
+          "{name}'s {part}: the hide is swollen and split.",
+          "{name}'s {part}: the arm is raw and trembling."
+        ],
+        "leg": [
+          "{name}'s {part}: welts on the hide.",
+          "{name}'s {part}: the hide is swollen and weeping.",
+          "{name}'s {part}: the leg is raw and shakes under {his} weight."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s face stings; {he} snarls and turns away.",
+            "{name}'s face aches; {he} keeps it low, growling and wary.",
+            "{name}'s face is agony; {he} whimpers, cowed."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} hunches and grunts.",
+            "{name}'s {part} throbs; {he} flinches from every movement near {him}.",
+            "{name}'s {part} is raw agony; {he} curls up, shaking."
+          ],
+          "arm": [
+            "{name}'s {part} stings; {he} pulls it in.",
+            "{name}'s {part} aches; {he} cradles it.",
+            "{name}'s {part} is agony; {he} lets it hang."
+          ],
+          "leg": [
+            "{name}'s {part} prickles; {he} shifts off it.",
+            "{name}'s {part} aches; {he} limps.",
+            "{name}'s {part} will not hold {him}; {he} sinks down."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s face barely aches; the swelling is gone.",
+            "{name}'s face is still sore but the cuts have closed.",
+            "{name}'s face is tender while it heals."
+          ],
+          "body": [
+            "{name}'s {part} feels almost whole.",
+            "{name}'s {part} aches dully as the hide closes.",
+            "{name}'s {part} is still very sore while it heals."
+          ],
+          "arm": [
+            "{name}'s {part} moves freely again.",
+            "{name}'s {part} aches but moves better.",
+            "{name}'s {part} is still weak while it heals."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} holds {his} weight better.",
+            "{name}'s {part} is still weak while it heals."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the hide. {name} snarls and flinches.",
+          " where the hide is already welted. It splits and {name} bellows.",
+          ", and the blow lands on raw, weeping hide. {name} howls and thrashes.",
+          ", and it is too much. {name} sinks to the ground, shaking, head down."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The hide on {name}'s {parts} has nearly healed over.",
+          "mid": "The splits in {name}'s {parts} have closed into tender ridges.",
+          "low": "The splits in {name}'s {parts} have stopped bleeding."
+        }
+      }
+    }
+  }
+}

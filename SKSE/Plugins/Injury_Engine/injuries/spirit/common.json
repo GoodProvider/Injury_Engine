@@ -1,0 +1,177 @@
+{
+  "_note": "Spirit text for every source without its own file in this folder: a translucent body of spirit, mist or light; wounds are tears that flicker, fray and shed cold light or mist; no blood, no flesh, no breath. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the outline of the head flickers and blurs for a moment.",
+          "{name}'s head: the head is torn, cold light streaming from the rent; the face wavers in and out of sight.",
+          "{name}'s head: the head is fraying apart into mist, the features barely holding."
+        ],
+        "body": [
+          "{name}'s {part}: a faint tear in the glow, a little mist drifting out.",
+          "{name}'s {part}: a wide rent sheds cold light and mist; the body thins around it.",
+          "{name}'s {part}: the body is torn and unravelling, more mist than shape."
+        ],
+        "arm": [
+          "{name}'s {part}: the edges flicker.",
+          "{name}'s {part}: the arms are torn and blurred, trailing mist.",
+          "{name}'s {part}: the arms have frayed to wisps."
+        ],
+        "trail": [
+          "{name}'s {part}: the trailing wisps flicker.",
+          "{name}'s {part}: the trail is torn and thin.",
+          "{name}'s {part}: the trail has frayed to almost nothing."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head flickers; {he} is cold and untroubled.",
+          "{name}'s head dims; {he} grows shrill and wild.",
+          "{name}'s head frays; {he} is fading, frantic and distant."
+        ],
+        "body": [
+          "{name}'s {part} flickers; {he} drifts on.",
+          "{name}'s {part} sheds light; {he} wavers and slows.",
+          "{name}'s {part} unravels; {he} is close to dissolving."
+        ],
+        "arm": [
+          "{name}'s {part} flicker.",
+          "{name}'s {part} blur; {his} reach falters.",
+          "{name}'s {part} fray; {he} can barely strike."
+        ],
+        "trail": [
+          "{name}'s {part} flickers.",
+          "{name}'s {part} thins; {he} drifts unevenly.",
+          "{name}'s {part} is fraying; {he} sinks and wavers."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the glow flickers where it lands. {name} lets out a thin, eerie wail.",
+          " where the shape is already torn. The rent widens and cold light streams out; {name} shrieks.",
+          ", and the blow tears deep. Mist and light pour out and {name} wavers violently, keening.",
+          ", and it is too much. {name} sinks low, the shape dimming and fraying."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s head bursts into cold mist; the rest of the shape unravels after it and drifts away, a last faint wail fading into silence.",
+          "the blow tears {name}'s head apart; the light goes out of {name} at once and the shape scatters like breath on cold air."
+        ],
+        "body": [
+          "{name}'s {part} tears open and the cold light pours out; {name} fades, thinner and thinner, until nothing is left but a chill.",
+          "the rent in {name}'s {part} spreads through the whole shape; {name} dissolves into drifting mist."
+        ],
+        "arm": [
+          "{name}'s {part} unravel and the fraying spreads; {name} comes apart into motes that sink and fade.",
+          "the {part} dissolve; {name} wavers and is gone."
+        ],
+        "trail": [
+          "{name}'s {part} frays away and the rest follows; {name} sinks and disperses like smoke.",
+          "the {part} dissolves; {name} flickers out."
+        ]
+      },
+      "soil": [
+        "As {name} fades, a patch of frost or cold dew forms on the ground where {name} was."
+      ],
+      "soil_chance": 0.1
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the glow flickers.",
+          "{name}'s head: the head is dimmed and blurred.",
+          "{name}'s head: the head wavers, barely holding its shape."
+        ],
+        "body": [
+          "{name}'s {part}: the glow is dimmed in patches.",
+          "{name}'s {part}: the shape is torn and sheds mist.",
+          "{name}'s {part}: the body flickers and thins."
+        ],
+        "arm": [
+          "{name}'s {part}: the arms flicker.",
+          "{name}'s {part}: the arms are dim and blurred.",
+          "{name}'s {part}: the arms waver."
+        ],
+        "trail": [
+          "{name}'s {part}: the trail flickers.",
+          "{name}'s {part}: the trail is dim.",
+          "{name}'s {part}: the trail wavers and thins."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head flickers; {he} hisses.",
+            "{name}'s head dims; {he} shrinks back.",
+            "{name}'s head wavers; {he} cowers."
+          ],
+          "body": [
+            "{name}'s {part} flickers; {he} drifts back.",
+            "{name}'s {part} dims; {he} recoils.",
+            "{name}'s {part} thins; {he} sinks low."
+          ],
+          "arm": [
+            "{name}'s {part} flicker.",
+            "{name}'s {part} dim; {he} draws them in.",
+            "{name}'s {part} waver; {he} lets them fall."
+          ],
+          "trail": [
+            "{name}'s {part} flickers.",
+            "{name}'s {part} dims.",
+            "{name}'s {part} thins."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head glows steady again.",
+            "{name}'s head brightens.",
+            "{name}'s head steadies."
+          ],
+          "body": [
+            "{name}'s {part} glows evenly again.",
+            "{name}'s {part} brightens as the tears close.",
+            "{name}'s {part} steadies."
+          ],
+          "arm": [
+            "{name}'s {part} glow whole.",
+            "{name}'s {part} brighten.",
+            "{name}'s {part} steady."
+          ],
+          "trail": [
+            "{name}'s {part} glows whole.",
+            "{name}'s {part} brightens.",
+            "{name}'s {part} steadies."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the glow flickers. {name} lets out a thin wail.",
+          " on light that is already dimmed. It tears and {name} keens.",
+          ", and the blow lands on the torn glow. Mist streams out and {name} writhes.",
+          ", and it is too much. {name} sinks low, flickering."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The glow of {name}'s {parts} is nearly even again.",
+          "mid": "The tears in {name}'s {parts} have closed to faint seams.",
+          "low": "The mist has stopped streaming from {name}'s {parts}."
+        }
+      }
+    }
+  }
+}

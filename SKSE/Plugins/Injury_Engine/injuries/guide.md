@@ -218,10 +218,12 @@ On a hit the victim's group is looked up and the damage lands on that group's pa
 actor keeps the group it had when its first wound was tracked until it is fully healed (a werewolf transformation
 does not remap open wounds). Groups with no folder use humanoid (warned once in `Injury_Engine.log`).
 
-Folders shipped: `humanoid` (all source files, `body.json`, `sexual_parts.json`), `insectoid`, `humanoid_werewolf`,
-`humanoid_undead`, `quadruped` (no sexual parts). Planned (checkpoints/groups): beast_humanoid, plant, dragon,
-dragon_undead, dragon_skeletal, spectral_dragon, quadruped_undead, bird, fish, crustacean, tentacled, construct,
-elemental, spirit.
+Folders shipped: `humanoid` (all source files, `body.json`, `sexual_parts.json`), `humanoid_undead`, `humanoid_werewolf`,
+`humanoid_vampire` (vampire lord), `insectoid`, `quadruped`, `beast_humanoid` (trolls, lurkers), `plant` (spriggans),
+`dragon`, `dragon_undead` (Durnehviir, by actor), `dragon_skeletal`, `spectral_dragon`, `construct` (Dwarven machines),
+`elemental` (atronachs, gargoyles, ash guardians), `spirit` (wisps, ice wraiths, ghosts), `tentacled` (netch, seekers),
+`crustacean` (mudcrabs), `fish` (slaughterfish), `bird`. Sexual parts exist only in humanoid, humanoid_undead,
+humanoid_werewolf, humanoid_vampire and insectoid. Not shipped: quadruped_undead (no race maps to it).
 
 `race_contains` is a plain case-insensitive substring test: a short text matches inside unrelated EditorIDs ("cat"
 matched `GoblinRaceDuplicate`). Prefer long texts and check every new rule against the `race dump:` lines.
@@ -250,13 +252,15 @@ common.json        (optional) the group's text for every source WITHOUT its own 
 <source>.json      (optional) merged over the humanoid file of the same name (after common.json): objects merge,
                    arrays replace. Usually text, narration.hit.levels, death and part_weights by this group's part
                    names. A "both" file (falling) takes "torture" / "health" blocks like the humanoid file.
-sexual_parts.json  (optional) only "text" (same shape as humanoid's); without it the sexual parts keep humanoid text.
+sexual_parts.json  (optional) "text" (same shape as humanoid's: per source id) and / or "health": {looks, feels} and
+                   "torture": {looks, feels: {torture, heal}}, one block for every source of that model without its
+                   own "text" entry. Without the file the sexual parts keep humanoid text (warned in the log).
 ```
 
 A source whose part_weights give weight only to parts the group lacks (drowning without lungs) is not tracked there:
 its damage passes through. `classify` rules are read from the humanoid files only. Part names from Papyrus
 (`External_Torture`, `Torture_Target`, `HealPart`) resolve by name in the victim's group, else by region
-("face" -> "muzzle"), else random.
+("face" -> "muzzle"), else random. The Papyrus log names parts with `PartNameFor(actor, part)` (the victim's group).
 
 `../races.json` order: `actors` (`{file, id, group}`: an actor or actor base form, e.g. one dragon on a shared race),
 `races` (`{"<group>": [EditorIDs]}`, case-insensitive), `race_forms` (`{file, id, group}`), `race_contains`

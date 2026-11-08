@@ -1,0 +1,144 @@
+{
+  "_note": "Werewolf / werebear text for the small sexual parts (furred hide, thick dark blood, a muzzle instead of lips). The \"health\" / \"torture\" blocks cover every source of that model (a \"text.<source id>\" entry would win for that source). Keep the prose about the wound and the pain, not about sex. Schema: ../guide.md (Groups).",
+  "health": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: a cut in the fur over the chest, a little blood matting it.",
+        "{name}'s {part}: the hide there is torn and bleeds into the fur, which clumps dark and wet.",
+        "{name}'s {part}: the hide is ripped open and blood soaks the fur of the chest."
+      ],
+      "vulva": [
+        "{name}'s {part}: a scrape under the fur, a little blood.",
+        "{name}'s {part}: the hide is torn and swollen, blood matting the fur.",
+        "{name}'s {part}: the flesh is badly torn and bleeds steadily into the fur."
+      ],
+      "penis": [
+        "{name}'s {part}: a scrape on the sheath, a little blood in the fur.",
+        "{name}'s {part}: the flesh is torn and swollen, blood matting the fur.",
+        "{name}'s {part}: the flesh is badly torn and bleeds steadily."
+      ],
+      "lips": [
+        "{name}'s {part}: the black lip of the muzzle is split, a bead of blood on the fangs.",
+        "{name}'s {part}: the lips of the muzzle are torn and bleed over the teeth.",
+        "{name}'s {part}: the lips are ripped from the gums, blood dripping from the jaw."
+      ],
+      "anus": [
+        "{name}'s {part}: a scrape under the tail, a little blood.",
+        "{name}'s {part}: the hide under the tail is torn and bleeding into the fur.",
+        "{name}'s {part}: the flesh under the tail is badly torn and bleeds steadily."
+      ]
+    },
+    "feels": {
+      "nipple": [
+        "{name}'s {part} sting; {he} growls.",
+        "{name}'s {part} burn; {he} snarls and hunches.",
+        "{name}'s {part} are agony; {he} howls, hunched over."
+      ],
+      "vulva": [
+        "{name}'s {part} stings; {he} snarls.",
+        "{name}'s {part} burns; {he} hunches, growling.",
+        "{name}'s {part} is agony; {he} howls and doubles over."
+      ],
+      "penis": [
+        "{name}'s {part} stings; {he} snarls.",
+        "{name}'s {part} burns; {he} hunches, growling.",
+        "{name}'s {part} is agony; {he} howls and doubles over."
+      ],
+      "lips": [
+        "{name}'s {part} sting; {he} licks the blood away and snarls.",
+        "{name}'s {part} throb; {his} snarl is pained.",
+        "{name}'s {part} are agony; {he} whines through bared teeth."
+      ],
+      "anus": [
+        "{name}'s {part} stings; {he} clamps {his} tail down.",
+        "{name}'s {part} burns; {he} keeps {his} tail tucked, growling.",
+        "{name}'s {part} is agony; {he} howls, tail clamped tight."
+      ]
+    }
+  },
+  "torture": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: the hide under the fur is reddened.",
+        "{name}'s {part}: the hide is welted and swollen under matted fur.",
+        "{name}'s {part}: the hide is raw and bleeding into the fur."
+      ],
+      "vulva": [
+        "{name}'s {part}: reddened under the fur.",
+        "{name}'s {part}: welted and swollen.",
+        "{name}'s {part}: raw and bleeding."
+      ],
+      "penis": [
+        "{name}'s {part}: reddened under the fur.",
+        "{name}'s {part}: welted and swollen.",
+        "{name}'s {part}: raw and bleeding."
+      ],
+      "lips": [
+        "{name}'s {part}: the black lips of the muzzle are swollen.",
+        "{name}'s {part}: the lips are split and swollen.",
+        "{name}'s {part}: the lips are raw and bleeding over the fangs."
+      ],
+      "anus": [
+        "{name}'s {part}: reddened under the tail.",
+        "{name}'s {part}: welted and swollen under the tail.",
+        "{name}'s {part}: raw and bleeding under the tail."
+      ]
+    },
+    "feels": {
+      "torture": {
+        "nipple": [
+          "{name}'s {part} sting; {he} growls.",
+          "{name}'s {part} throb; {he} whines and hunches.",
+          "{name}'s {part} are agony; {he} cowers, whimpering."
+        ],
+        "vulva": [
+          "{name}'s {part} stings; {he} snarls.",
+          "{name}'s {part} throbs; {he} whines and hunches.",
+          "{name}'s {part} is agony; {he} cowers, whimpering."
+        ],
+        "penis": [
+          "{name}'s {part} stings; {he} snarls.",
+          "{name}'s {part} throbs; {he} whines and hunches.",
+          "{name}'s {part} is agony; {he} cowers, whimpering."
+        ],
+        "lips": [
+          "{name}'s {part} sting; {he} licks them.",
+          "{name}'s {part} throb; {he} whines.",
+          "{name}'s {part} are agony; {he} whimpers through bared teeth."
+        ],
+        "anus": [
+          "{name}'s {part} stings; {he} tucks {his} tail.",
+          "{name}'s {part} throbs; {he} clamps {his} tail down, whining.",
+          "{name}'s {part} is agony; {he} cowers, tail clamped."
+        ]
+      },
+      "heal": {
+        "nipple": [
+          "{name}'s {part} barely ache now.",
+          "{name}'s {part} are still sore but healing.",
+          "{name}'s {part} are tender while they heal."
+        ],
+        "vulva": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} is still sore but healing.",
+          "{name}'s {part} is tender while it heals."
+        ],
+        "penis": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} is still sore but healing.",
+          "{name}'s {part} is tender while it heals."
+        ],
+        "lips": [
+          "{name}'s {part} barely ache now.",
+          "{name}'s {part} are still sore but healing.",
+          "{name}'s {part} are tender while they heal."
+        ],
+        "anus": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} is still sore but healing.",
+          "{name}'s {part} is tender while it heals."
+        ]
+      }
+    }
+  }
+}

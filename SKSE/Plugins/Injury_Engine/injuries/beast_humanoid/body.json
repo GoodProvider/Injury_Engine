@@ -1,0 +1,44 @@
+{
+  "_note": "Body of the beast_humanoid group (trolls, frost trolls, armored trolls, lurkers): a hulking, hide-covered beast on two legs with long arms; bleeds, breathes (drowning lands in the lungs), no torture bleedout. No sexual parts. Part names match humanoid, so humanoid part_weights apply. Parts are ordered core, lungs; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": false,
+  "lungs": {
+    "medium": 0.25,
+    "severe": 0.5
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg",
+    "lungs"
+  ],
+  "parts": [
+    { "name": "face", "region": "head" },
+    { "name": "left arm", "region": "arm" },
+    { "name": "right arm", "region": "arm" },
+    { "name": "back", "region": "body" },
+    { "name": "left leg", "region": "leg" },
+    { "name": "right leg", "region": "leg" },
+    { "name": "lungs", "region": "lungs", "lungs": true }
+  ],
+  "overlay_order": [
+    "face",
+    "back",
+    "right arm",
+    "left arm",
+    "right leg",
+    "left leg"
+  ],
+  "disabled_sources": []
+}

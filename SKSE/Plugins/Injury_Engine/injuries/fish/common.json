@@ -1,0 +1,177 @@
+{
+  "_note": "Slaughterfish text for every source without its own file in this folder: slick scales, fins, a powerful tail, watery blood clouding the water. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: a few scales torn near the gills and a thread of blood clouding the water.",
+          "{name}'s head: the head is gashed across the gills and blood clouds out around {him}; one eye is milky.",
+          "{name}'s head: the head is split open, jaw hanging, blood billowing in a red cloud."
+        ],
+        "body": [
+          "{name}'s {part}: a scrape through the scales, a little blood drifting.",
+          "{name}'s {part}: a deep gash opens the flank and blood clouds the water.",
+          "{name}'s {part}: the flank is torn open and the insides show; blood pours out in a thick cloud."
+        ],
+        "fin": [
+          "{name}'s {part}: a fin is nicked.",
+          "{name}'s {part}: the fins are torn and ragged.",
+          "{name}'s {part}: the fins are shredded to bloody stumps."
+        ],
+        "tail": [
+          "{name}'s {part}: the tail is nicked.",
+          "{name}'s {part}: the tail is gashed and bleeds as it beats.",
+          "{name}'s {part}: the tail is half severed and barely moves."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head stings; {he} darts in, snapping.",
+          "{name}'s head throbs; {he} thrashes and snaps wildly.",
+          "{name}'s head is agony; {he} rolls and twitches, frantic."
+        ],
+        "body": [
+          "{name}'s {part} smarts; {he} circles, hungry.",
+          "{name}'s {part} burns; {he} swims in jerks.",
+          "{name}'s {part} is torn agony; {he} rolls, failing."
+        ],
+        "fin": [
+          "{name}'s {part} twinge.",
+          "{name}'s {part} ache; {he} swims crooked.",
+          "{name}'s {part} are useless; {he} lists and spins."
+        ],
+        "tail": [
+          "{name}'s {part} stings.",
+          "{name}'s {part} hurts; {he} swims slower.",
+          "{name}'s {part} fails; {he} barely moves."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and scales tear loose. {name} darts back, snapping.",
+          " where the scales are already torn. Blood clouds out and {name} thrashes.",
+          ", and the blow tears deep into the wound. Blood billows in a red cloud and {name} spasms violently.",
+          ", and it is too much. {name} rolls onto one side, fins twitching, blood spreading."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s head splits open; blood billows out and {name} rolls belly up, jaw gaping, fins twitching until the body drifts still.",
+          "the blow caves in {name}'s skull; {name} jerks once and floats limp in a red cloud."
+        ],
+        "body": [
+          "{name}'s {part} is torn open and the insides spill out in a red cloud; {name} spasms and rolls belly up.",
+          "the wound opens {name}'s belly; {name} thrashes weakly and drifts, bleeding, until still."
+        ],
+        "fin": [
+          "{name}'s {part} are ripped away; {name} spins helplessly, bleeding out, and turns belly up.",
+          "the {part} are torn off; {name} lists, slows and goes limp."
+        ],
+        "tail": [
+          "{name}'s {part} is hewn through; {name} twists in place, blood pouring, until the body goes slack and drifts.",
+          "the {part} is torn off; {name} sinks, twitching, and stops."
+        ]
+      },
+      "soil": [
+        "As {name} goes still, a foul murk leaks from the vent and spreads with the blood."
+      ],
+      "soil_chance": 0.2
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: scuffed scales.",
+          "{name}'s head: swollen and missing scales.",
+          "{name}'s head: raw and bruised, scales stripped."
+        ],
+        "body": [
+          "{name}'s {part}: scuffed scales.",
+          "{name}'s {part}: welts and missing scales.",
+          "{name}'s {part}: raw patches where the scales are stripped."
+        ],
+        "fin": [
+          "{name}'s {part}: frayed edges.",
+          "{name}'s {part}: split and torn.",
+          "{name}'s {part}: ragged and trembling."
+        ],
+        "tail": [
+          "{name}'s {part}: scuffed.",
+          "{name}'s {part}: welted and split.",
+          "{name}'s {part}: raw and trembling."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head stings; {he} jerks away.",
+            "{name}'s head aches; {he} shies back.",
+            "{name}'s head is agony; {he} trembles."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} flicks.",
+            "{name}'s {part} throbs; {he} recoils.",
+            "{name}'s {part} is raw agony; {he} shudders."
+          ],
+          "fin": [
+            "{name}'s {part} sting.",
+            "{name}'s {part} ache; {he} holds them flat.",
+            "{name}'s {part} are agony; {he} barely moves them."
+          ],
+          "tail": [
+            "{name}'s {part} stings.",
+            "{name}'s {part} aches; {he} beats it weakly.",
+            "{name}'s {part} is agony; {he} lets it hang."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head is nearly whole.",
+            "{name}'s head is less swollen.",
+            "{name}'s head is still tender."
+          ],
+          "body": [
+            "{name}'s {part} is nearly whole; new scales show.",
+            "{name}'s {part} aches dully.",
+            "{name}'s {part} is still sore."
+          ],
+          "fin": [
+            "{name}'s {part} are whole again.",
+            "{name}'s {part} are mending.",
+            "{name}'s {part} are still ragged."
+          ],
+          "tail": [
+            "{name}'s {part} beats freely again.",
+            "{name}'s {part} moves better.",
+            "{name}'s {part} is still weak."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the scales. {name} jerks away.",
+          " where the scales are already stripped. {name} thrashes.",
+          ", and the blow lands on raw flesh. {name} spasms and writhes.",
+          ", and it is too much. {name} rolls onto one side, trembling."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "New scales have nearly covered {name}'s {parts}.",
+          "mid": "The raw patches on {name}'s {parts} have closed.",
+          "low": "The raw patches on {name}'s {parts} have stopped bleeding."
+        }
+      }
+    }
+  }
+}

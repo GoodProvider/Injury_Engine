@@ -1,0 +1,144 @@
+{
+  "_note": "Undead text for the small sexual parts (dried, leathery or rotting flesh over bone; dark ooze or dust, no blood). The \"health\" / \"torture\" blocks cover every source of that model (a \"text.<source id>\" entry would win for that source). Keep the prose about the wound and the pain, not about sex. Schema: ../guide.md (Groups).",
+  "health": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: the dried skin there is scraped and flaking.",
+        "{name}'s {part}: the leathery skin is torn, dark ooze or dust seeping; a grave smell rises from it.",
+        "{name}'s {part}: the withered flesh is torn away, bone showing through."
+      ],
+      "vulva": [
+        "{name}'s {part}: the shrunken flesh is scraped.",
+        "{name}'s {part}: the leathery flesh is torn and seeps dark ooze.",
+        "{name}'s {part}: the withered flesh is ripped open, dry and dark."
+      ],
+      "penis": [
+        "{name}'s {part}: the shrunken flesh is scraped.",
+        "{name}'s {part}: the leathery flesh is torn and seeps dark ooze.",
+        "{name}'s {part}: the withered flesh is ripped half away."
+      ],
+      "lips": [
+        "{name}'s {part}: the dry, cracked lips are split further.",
+        "{name}'s {part}: the lips are torn back from yellowed teeth, dark ooze at the edges.",
+        "{name}'s {part}: the lips are ripped away, leaving a bare grin of teeth."
+      ],
+      "anus": [
+        "{name}'s {part}: the dried flesh is scraped.",
+        "{name}'s {part}: the leathery flesh is torn and seeps dark ooze.",
+        "{name}'s {part}: the withered flesh is ripped open."
+      ]
+    },
+    "feels": {
+      "nipple": [
+        "{name}'s {part} register the blow as a dull sting; {he} is unmoved.",
+        "{name}'s {part} ache coldly; {he} hisses.",
+        "{name}'s {part} are cold agony; {he} shudders."
+      ],
+      "vulva": [
+        "{name}'s {part} registers a dull sting; {he} is unmoved.",
+        "{name}'s {part} aches coldly; {he} hisses.",
+        "{name}'s {part} is cold agony; {he} shudders."
+      ],
+      "penis": [
+        "{name}'s {part} registers a dull sting; {he} is unmoved.",
+        "{name}'s {part} aches coldly; {he} hisses.",
+        "{name}'s {part} is cold agony; {he} shudders."
+      ],
+      "lips": [
+        "{name}'s {part} sting dully; {he} rasps.",
+        "{name}'s {part} ache coldly; {his} rasp is harsher.",
+        "{name}'s {part} are cold agony; {he} hisses through bare teeth."
+      ],
+      "anus": [
+        "{name}'s {part} registers a dull sting; {he} is unmoved.",
+        "{name}'s {part} aches coldly; {he} hisses.",
+        "{name}'s {part} is cold agony; {he} shudders."
+      ]
+    }
+  },
+  "torture": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: the dried skin is scuffed.",
+        "{name}'s {part}: the skin is split and flaking.",
+        "{name}'s {part}: the skin is torn and peeling, dark ooze beading."
+      ],
+      "vulva": [
+        "{name}'s {part}: scuffed.",
+        "{name}'s {part}: split and flaking.",
+        "{name}'s {part}: torn and peeling."
+      ],
+      "penis": [
+        "{name}'s {part}: scuffed.",
+        "{name}'s {part}: split and flaking.",
+        "{name}'s {part}: torn and peeling."
+      ],
+      "lips": [
+        "{name}'s {part}: the dry lips are scuffed.",
+        "{name}'s {part}: the lips are split and flaking.",
+        "{name}'s {part}: the lips are torn and peeling."
+      ],
+      "anus": [
+        "{name}'s {part}: scuffed.",
+        "{name}'s {part}: split and flaking.",
+        "{name}'s {part}: torn and peeling."
+      ]
+    },
+    "feels": {
+      "torture": {
+        "nipple": [
+          "{name}'s {part} sting coldly; {he} hisses.",
+          "{name}'s {part} ache; {he} recoils.",
+          "{name}'s {part} are cold agony; {he} trembles."
+        ],
+        "vulva": [
+          "{name}'s {part} stings coldly; {he} hisses.",
+          "{name}'s {part} aches; {he} recoils.",
+          "{name}'s {part} is cold agony; {he} trembles."
+        ],
+        "penis": [
+          "{name}'s {part} stings coldly; {he} hisses.",
+          "{name}'s {part} aches; {he} recoils.",
+          "{name}'s {part} is cold agony; {he} trembles."
+        ],
+        "lips": [
+          "{name}'s {part} sting coldly; {he} rasps.",
+          "{name}'s {part} ache; {he} hisses.",
+          "{name}'s {part} are cold agony; {he} trembles."
+        ],
+        "anus": [
+          "{name}'s {part} stings coldly; {he} hisses.",
+          "{name}'s {part} aches; {he} recoils.",
+          "{name}'s {part} is cold agony; {he} trembles."
+        ]
+      },
+      "heal": {
+        "nipple": [
+          "{name}'s {part} barely ache now.",
+          "{name}'s {part} ache less as the skin draws together.",
+          "{name}'s {part} still ache coldly."
+        ],
+        "vulva": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} aches less as it draws together.",
+          "{name}'s {part} still aches coldly."
+        ],
+        "penis": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} aches less as it draws together.",
+          "{name}'s {part} still aches coldly."
+        ],
+        "lips": [
+          "{name}'s {part} barely ache now.",
+          "{name}'s {part} ache less as they draw together.",
+          "{name}'s {part} still ache coldly."
+        ],
+        "anus": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} aches less as it draws together.",
+          "{name}'s {part} still aches coldly."
+        ]
+      }
+    }
+  }
+}

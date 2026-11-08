@@ -1,0 +1,177 @@
+{
+  "_note": "Elemental text for every source without its own file in this folder: a body of living fire, ice, storm or stone held together by magic; wounds are cracks and breaches where the inner force leaks, flares and gutters. Neutral enough for every element; no blood, no flesh. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: a small crack in the substance of the head, the inner glow flaring through it.",
+          "{name}'s head: the head is split and chipped; the elemental force spills out in a sputtering stream and the eyes flicker.",
+          "{name}'s head: the head is broken open, its glow guttering and its shape crumbling at the edges."
+        ],
+        "body": [
+          "{name}'s {part}: a chip knocked from the body, the inner force flickering in the wound.",
+          "{name}'s {part}: a deep crack runs across the body and the elemental force leaks out, sputtering and hissing.",
+          "{name}'s {part}: the body is shattered open, the inner force pouring out and the shape struggling to hold."
+        ],
+        "arm": [
+          "{name}'s {part}: a chip knocked from the arm.",
+          "{name}'s {part}: the arm is cracked deep and pieces crumble away as it moves.",
+          "{name}'s {part}: the arm is mostly broken away, a sputtering stump of force."
+        ],
+        "lower": [
+          "{name}'s {part}: a small crack near the base, the glow flaring.",
+          "{name}'s {part}: the lower body is cracked and unsteady, leaking force.",
+          "{name}'s {part}: the lower body is crumbling; {he} sways and drifts, barely upright."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head flares at the blow; {he} is untroubled and burns with purpose.",
+          "{name}'s head flickers; the binding strains and {he} grows wild and erratic.",
+          "{name}'s head gutters; {his} hold on this plane is slipping and {he} lashes out in fury."
+        ],
+        "body": [
+          "{name}'s {part} flares; {he} barely reacts.",
+          "{name}'s {part} leaks force; {he} slows, sputtering.",
+          "{name}'s {part} is breaking apart; {he} wavers, close to being banished."
+        ],
+        "arm": [
+          "{name}'s {part} flickers but strikes true.",
+          "{name}'s {part} crumbles; {his} blows weaken.",
+          "{name}'s {part} is nearly gone; {he} flails with what is left."
+        ],
+        "lower": [
+          "{name}'s {part} flickers.",
+          "{name}'s {part} is unsteady; {he} sways as {he} moves.",
+          "{name}'s {part} is failing; {he} sinks and drifts."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and pieces chip away in a flare of light. {name} flickers and presses on.",
+          " where the body is already cracked. The crack splits wider and force spills out, hissing; {name} lets out a grinding roar.",
+          ", and the blow breaks deep into the wound. The inner force bursts out in a violent flare and {name} staggers, shape buckling.",
+          ", and it is too much. {name} sags, the glow guttering, pieces crumbling away."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s head bursts apart; the binding magic fails, and the body collapses into a heap of cooling fragments as the last of the force flickers out.",
+          "the blow shatters {name}'s head; {name} flares once, blindingly, and crumbles into embers, shards or dust."
+        ],
+        "body": [
+          "{name}'s {part} breaks open and the inner force erupts in a final burst; what is left falls apart in a scatter of fragments that fade and go still.",
+          "the crack in {name}'s {part} runs right through; {name} splits apart and the force inside fades away."
+        ],
+        "arm": [
+          "{name}'s {part} is torn away and the force pours out of the wound; {name} wavers, flickers and collapses into lifeless fragments.",
+          "the {part} shatters; the breach runs up into the body and {name} crumbles."
+        ],
+        "lower": [
+          "{name}'s {part} gives way; {name} topples and breaks apart on the ground, the glow fading from every piece.",
+          "the {part} crumbles; {name} sinks into a heap of fragments as the binding fails."
+        ]
+      },
+      "soil": [
+        "As {name} falls apart, a last wisp of smoke, frost or sparks drifts from the remains and is gone."
+      ],
+      "soil_chance": 0.1
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: small chips and a faint flicker.",
+          "{name}'s head: fine cracks and an unsteady glow.",
+          "{name}'s head: the head is cracked all over and the glow stutters."
+        ],
+        "body": [
+          "{name}'s {part}: small chips across the surface.",
+          "{name}'s {part}: fine cracks leak a little of the inner force.",
+          "{name}'s {part}: cracks web the body and force seeps from every one."
+        ],
+        "arm": [
+          "{name}'s {part}: a few chips.",
+          "{name}'s {part}: fine cracks along the arm.",
+          "{name}'s {part}: the arm is cracked and crumbling at the edges."
+        ],
+        "lower": [
+          "{name}'s {part}: a few chips.",
+          "{name}'s {part}: fine cracks near the base.",
+          "{name}'s {part}: the base is cracked and unsteady."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head flickers; {he} hisses, agitated.",
+            "{name}'s head dims; {he} recoils, wary.",
+            "{name}'s head stutters; {he} cowers, the glow low."
+          ],
+          "body": [
+            "{name}'s {part} flickers; {he} shifts.",
+            "{name}'s {part} sputters; {he} draws back.",
+            "{name}'s {part} leaks force; {he} sinks low and trembles."
+          ],
+          "arm": [
+            "{name}'s {part} flickers; {he} pulls it in.",
+            "{name}'s {part} sputters; {he} favors it.",
+            "{name}'s {part} crumbles; {he} lets it hang."
+          ],
+          "lower": [
+            "{name}'s {part} flickers.",
+            "{name}'s {part} sputters; {he} sways.",
+            "{name}'s {part} wavers; {he} sinks."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head burns steady again.",
+            "{name}'s head brightens as the cracks close.",
+            "{name}'s head still flickers while it reforms."
+          ],
+          "body": [
+            "{name}'s {part} is nearly whole again.",
+            "{name}'s {part} reforms; the leaks slow.",
+            "{name}'s {part} still sputters while it reforms."
+          ],
+          "arm": [
+            "{name}'s {part} is whole again.",
+            "{name}'s {part} reforms.",
+            "{name}'s {part} still crumbles at the edges."
+          ],
+          "lower": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} reforms.",
+            "{name}'s {part} is still unsteady."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the body. {name} flickers and recoils.",
+          " where the body is already cracked. The cracks spread and {name} lets out a hissing roar.",
+          ", and the blow lands on the leaking cracks. The force sputters wildly and {name} writhes.",
+          ", and it is too much. {name} sinks down, glow guttering, unable to rise."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The cracks in {name}'s {parts} have almost reformed.",
+          "mid": "The cracks in {name}'s {parts} have sealed into faint seams.",
+          "low": "The force has stopped leaking from {name}'s {parts}."
+        }
+      }
+    }
+  }
+}

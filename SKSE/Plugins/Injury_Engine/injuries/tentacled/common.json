@@ -1,0 +1,148 @@
+{
+  "_note": "Netch and seeker text for every source without its own file in this folder: rubbery or papery hide, hanging tentacles, thin pale or inky fluid; no bones to break. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s {part}: a small split in the rubbery hide, a little pale fluid seeping.",
+          "{name}'s {part}: the hood is torn in a ragged rent and fluid drips steadily; it sags lopsided. A sour, briny smell rises from it.",
+          "{name}'s {part}: the hood is ripped open and deflating, fluid pouring out in thin streams."
+        ],
+        "body": [
+          "{name}'s {part}: a cut across the hide, oozing.",
+          "{name}'s {part}: the hide is torn wide and fluid runs down in streams; the body droops in the air.",
+          "{name}'s {part}: the body is ripped open, sagging and leaking heavily, barely staying aloft."
+        ],
+        "tentacle": [
+          "{name}'s {part}: one tentacle nicked and curling.",
+          "{name}'s {part}: several tentacles are cut and hang limp, dripping.",
+          "{name}'s {part}: the tentacles are severed to stumps that twitch and leak."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s {part} smarts; {he} pulses angrily and drifts closer.",
+          "{name}'s {part} throbs; {he} bobs erratically, agitated and less steady.",
+          "{name}'s {part} is agony; {he} sinks and spins, frantic."
+        ],
+        "body": [
+          "{name}'s {part} stings; {he} barely reacts.",
+          "{name}'s {part} aches; {he} drifts lower and moves sluggishly.",
+          "{name}'s {part} is torn agony; {he} sags toward the ground, failing."
+        ],
+        "tentacle": [
+          "{name}'s {part} sting; {he} curls them up.",
+          "{name}'s {part} ache; {his} lashes are weaker.",
+          "{name}'s {part} are useless; {he} flails with the stumps."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the hide splits with a wet pop. {name} pulses and recoils.",
+          " where the hide is already torn. Fluid spills out and {name} lets out a deep, hollow moan.",
+          ", and the blow rips the wound wide. Fluid gushes and {name} spins and thrashes, tentacles whipping.",
+          ", and it is too much. {name} sinks low, leaking and limp, tentacles trailing on the ground."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s {part} bursts open and the gas and fluid rush out; {name} deflates, sinks, and lands in a sodden heap, tentacles twitching and then still.",
+          "the blow tears {name}'s {part} apart; {name} lets out a long, hollow moan and drops, sagging and leaking into a spreading pool."
+        ],
+        "body": [
+          "{name}'s {part} rips open and the insides spill in a slick of fluid; {name} falls and lies collapsed like an empty sack.",
+          "the wound splits {name}'s {part} wide; {name} sags to the ground and the last fluid drains away."
+        ],
+        "tentacle": [
+          "{name}'s {part} are torn away and the wounds pour; {name} drifts down, weaker and weaker, and settles limp on the ground.",
+          "the {part} are severed; {name} spins down and collapses, leaking until still."
+        ]
+      },
+      "soil": [
+        "As {name} goes still, a thin, foul-smelling slime drains from beneath the body."
+      ],
+      "soil_chance": 0.2
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s {part}: the hide is marked with welts.",
+          "{name}'s {part}: the hide is swollen and split in places.",
+          "{name}'s {part}: the hood is raw and weeping and sags."
+        ],
+        "body": [
+          "{name}'s {part}: welts across the hide.",
+          "{name}'s {part}: the hide is swollen and seeping.",
+          "{name}'s {part}: the hide is raw and torn, fluid beading."
+        ],
+        "tentacle": [
+          "{name}'s {part}: a few welts.",
+          "{name}'s {part}: swollen and curling.",
+          "{name}'s {part}: raw and trembling."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s {part} stings; {he} pulses and turns away.",
+            "{name}'s {part} aches; {he} drifts back, agitated.",
+            "{name}'s {part} is agony; {he} sinks and trembles."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} bobs.",
+            "{name}'s {part} throbs; {he} recoils.",
+            "{name}'s {part} is raw agony; {he} sags."
+          ],
+          "tentacle": [
+            "{name}'s {part} sting; {he} curls them.",
+            "{name}'s {part} ache; {he} draws them up.",
+            "{name}'s {part} are agony; {he} lets them hang."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s {part} barely aches now.",
+            "{name}'s {part} is still sore but firming.",
+            "{name}'s {part} is tender while it heals."
+          ],
+          "body": [
+            "{name}'s {part} feels almost whole.",
+            "{name}'s {part} aches dully as the hide closes.",
+            "{name}'s {part} is still very sore."
+          ],
+          "tentacle": [
+            "{name}'s {part} move freely again.",
+            "{name}'s {part} ache but move better.",
+            "{name}'s {part} are still weak."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the hide. {name} pulses and recoils.",
+          " where the hide is already welted. It splits and {name} moans.",
+          ", and the blow lands on raw hide. {name} spins and writhes.",
+          ", and it is too much. {name} sinks low, trembling."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The hide of {name}'s {parts} has nearly healed smooth.",
+          "mid": "The splits in {name}'s {parts} have closed.",
+          "low": "The splits in {name}'s {parts} have stopped weeping."
+        }
+      }
+    }
+  }
+}

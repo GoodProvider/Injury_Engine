@@ -1,0 +1,206 @@
+{
+  "_note": "Rotting dragon text (Durnehviir) for every source without its own file in this folder: rotten hide, loose scales, exposed bone, dark grave ooze and a cold soul-light; no blood, no breath. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: a few rotten scales flake from the brow, and a smear of dark ooze marks the jaw.",
+          "{name}'s head: the leathery hide is torn from the cheek, showing yellowed bone; dark ooze drips from the wound and the glow in one eye flickers. A grave stench rises from it.",
+          "{name}'s head: the skull is cracked through the brow, hide hanging in strips and the jaw askew; the soul-light in the eyes gutters. The reek of old rot is overpowering."
+        ],
+        "body": [
+          "{name}'s {part}: a scrape through the rotted hide, a little dark ooze in it.",
+          "{name}'s {part}: the hide is torn open over the ribs, showing grey bone and leaking thick, black ooze. The smell of the grave hangs about {him}.",
+          "{name}'s {part}: the hide is ripped away in great flaps and ribs are snapped; dark ooze and dust spill from the cavity. A choking stench of rot surrounds {him}."
+        ],
+        "wing": [
+          "{name}'s {part}: the ragged membrane has a fresh tear among the old ones.",
+          "{name}'s {part}: the membrane is shredded between the bones and one strut is cracked; the wing hangs crooked.",
+          "{name}'s {part}: the wing bones are splintered and the last of the membrane hangs in grey tatters."
+        ],
+        "leg": [
+          "{name}'s {part}: the rotten hide is scraped near the claws.",
+          "{name}'s {part}: the hide is torn to bare bone and dark ooze runs down over the talons.",
+          "{name}'s {part}: the leg bone is cracked through, held together by dried sinew; {he} drags it."
+        ],
+        "tail": [
+          "{name}'s {part}: a few loose scales knocked from the tail.",
+          "{name}'s {part}: the hide of the tail is torn open over the bone, oozing.",
+          "{name}'s {part}: the tail is broken at the joints and hangs limp, bones grinding."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head registers the blow as a cold sting; {he} is unbothered, ancient and contemptuous.",
+          "{name}'s head aches with a dull, cold pain that unsettles {him}; {his} voice turns harsh and scornful.",
+          "{name}'s head is wracked with cold agony; {his} hold on this body slips and {he} is grim, close to being undone."
+        ],
+        "body": [
+          "{name}'s {part} feels the wound as a faint chill; {he} pays it little mind.",
+          "{name}'s {part} aches coldly where the bone shows; {he} moves more stiffly and with less patience.",
+          "{name}'s {part} is a void of cold pain; {he} sags, the soul inside straining against the ruin of the body."
+        ],
+        "wing": [
+          "{name}'s {part} twinges; {he} folds it with a creak.",
+          "{name}'s {part} aches and will not spread; {he} is bitter at being grounded.",
+          "{name}'s {part} is useless and wracked with pain; {he} cannot fly and is desperate."
+        ],
+        "leg": [
+          "{name}'s {part} stings faintly; {he} ignores it.",
+          "{name}'s {part} aches with each step; {he} shifts off it, scornful of the weakness.",
+          "{name}'s {part} fails {him}; {he} lurches, every step grinding bone on bone."
+        ],
+        "tail": [
+          "{name}'s {part} stings a little; {he} lashes it.",
+          "{name}'s {part} aches; {he} holds it stiff.",
+          "{name}'s {part} is broken agony; {he} cannot move it."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and rotten scales burst loose in a puff of grave dust. {name} snarls.",
+          " on hide that is already torn. It rips further and dark ooze spills out; {name} roars, an echoing, hollow sound.",
+          ", and the blow smashes into bare bone. Bone cracks loudly and black ooze sprays; {name} shrieks and thrashes, the soul-light flaring.",
+          ", and it is too much. {name} collapses in a heap of bone and rotten hide, the cold glow in the eyes guttering low."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s skull bursts apart in shards of bone and dust; the soul-light in the eye sockets flares and goes out, and the great rotten body crashes down, black ooze seeping from the ruin into the ground.",
+          "the blow splits {name}'s skull down the brow; {name} gives a last hollow roar, the jaw falls slack, and the body folds down into a heap of bone and hide that reeks of the grave."
+        ],
+        "body": [
+          "{name}'s {part} caves in and ribs scatter; dark ooze and dust pour from the hollow chest, and {name} sinks down with a groan of grinding bone as the cold light fades from the eyes.",
+          "the wound tears {name}'s body open; the rotten hide sloughs away and the bones collapse in on themselves, black ooze pooling beneath them."
+        ],
+        "wing": [
+          "{name}'s {part} shatters at the root; {name} topples sideways, bones splintering, and lies still in a stinking heap as the soul-light dims.",
+          "the {part} is torn away in a spray of dust; {name} crashes down on the broken side and does not rise again."
+        ],
+        "leg": [
+          "{name}'s {part} snaps at the joint; {name} pitches forward, skull hitting the ground, and the whole frame comes apart in rot and bone.",
+          "the {part} gives way in a shower of bone splinters; {name} collapses and the cold light in the eyes goes dark."
+        ],
+        "tail": [
+          "{name}'s {part} is hewn away; {name} thrashes, bones grinding, until the cold glow leaves the eyes and the body falls still."
+        ]
+      },
+      "soil": [
+        "As {name}'s body falls apart, a slurry of black rot and grave dirt spills from the belly, and the stench thickens.",
+        "{name}'s belly splits and empties a foul, clotted mass of old rot onto the ground."
+      ],
+      "soil_chance": 0.3
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the rotten hide around the jaw is scuffed and flaking.",
+          "{name}'s head: the hide is cracked and lifting, showing yellowed bone at the edges; dark ooze beads.",
+          "{name}'s head: the hide hangs in strips over cracked bone; the soul-light in the eyes flickers."
+        ],
+        "body": [
+          "{name}'s {part}: the leathery hide is scuffed and marked.",
+          "{name}'s {part}: the hide is split in places and dark ooze seeps from the cracks.",
+          "{name}'s {part}: the hide is torn and peeling, bone and dark ooze showing through."
+        ],
+        "wing": [
+          "{name}'s {part}: the ragged membrane is marked with fresh scuffs.",
+          "{name}'s {part}: the membrane is split further between the struts.",
+          "{name}'s {part}: the membrane hangs in strips and the struts creak and shake."
+        ],
+        "leg": [
+          "{name}'s {part}: the hide is scraped and dull.",
+          "{name}'s {part}: the hide is split at the joints and oozing.",
+          "{name}'s {part}: the joints grind under torn hide; the leg shakes under {his} weight."
+        ],
+        "tail": [
+          "{name}'s {part}: a few scuffs along the hide.",
+          "{name}'s {part}: the hide is cracked and oozing along the tail.",
+          "{name}'s {part}: the tail hangs low, hide torn, bones grinding."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head stings with a cold prickle; {he} hisses, offended.",
+            "{name}'s head aches coldly; {he} lowers it, seething with ancient anger and unease.",
+            "{name}'s head is cold agony; {he} trembles, the soul inside shaken and cowed."
+          ],
+          "body": [
+            "{name}'s {part} smarts faintly; {he} shifts with a creak of bone.",
+            "{name}'s {part} aches coldly; {he} flinches from anything near {him}.",
+            "{name}'s {part} is wracked with cold pain; {he} sags low and shudders."
+          ],
+          "wing": [
+            "{name}'s {part} stings; {he} folds it in tight.",
+            "{name}'s {part} aches; {he} keeps it clamped down.",
+            "{name}'s {part} is agony; {he} lets it hang."
+          ],
+          "leg": [
+            "{name}'s {part} prickles; {he} sets it down with care.",
+            "{name}'s {part} aches and trembles; {he} favors it.",
+            "{name}'s {part} will not hold {him}; {he} sinks down, shaking."
+          ],
+          "tail": [
+            "{name}'s {part} stings; {he} curls it in.",
+            "{name}'s {part} aches; {he} keeps it still.",
+            "{name}'s {part} is agony to move; {he} lets it lie."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head barely aches now; the soul-light in {his} eyes is steady.",
+            "{name}'s head is still sore but {he} raises it again.",
+            "{name}'s head aches coldly while the hide draws back together."
+          ],
+          "body": [
+            "{name}'s {part} feels almost whole again, only a faint chill left.",
+            "{name}'s {part} aches dully as the torn hide draws closed.",
+            "{name}'s {part} is still very sore while the hide knits over the bone."
+          ],
+          "wing": [
+            "{name}'s {part} spreads again with only a slight creak.",
+            "{name}'s {part} aches but opens wider.",
+            "{name}'s {part} is weak and sore while it mends."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} aches but holds {his} weight better.",
+            "{name}'s {part} is weak while it mends."
+          ],
+          "tail": [
+            "{name}'s {part} moves freely again.",
+            "{name}'s {part} aches but moves more easily.",
+            "{name}'s {part} is still sore and held low."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the rotten hide. {name} hisses and jerks away.",
+          " on hide that is already split. Dark ooze beads and {name} roars, a hollow, echoing sound.",
+          ", and the blow lands on bare bone. {name} shrieks and writhes, the soul-light in the eyes flaring.",
+          ", and it is too much. {name} sinks down in a heap, trembling, head low."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The hide on {name}'s {parts} has drawn nearly smooth over the bone again.",
+          "mid": "The splits in {name}'s {parts} have closed to dark seams.",
+          "low": "The splits in {name}'s {parts} have stopped oozing."
+        }
+      }
+    }
+  }
+}

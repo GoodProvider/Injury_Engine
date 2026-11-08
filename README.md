@@ -108,7 +108,7 @@ Real damage first replaces torture damage. While an actor still has torture woun
 
 ### Editing and adding injury types
 
-Everything about injuries lives in `SKSE/Plugins/Injury_Engine/injuries/humanoid/*.json`, one file per source (other body shapes, such as insects, werewolves and undead, have their own folder next to it; `races.json` picks the folder by race):
+Everything about injuries lives in `SKSE/Plugins/Injury_Engine/injuries/humanoid/*.json`, one file per source (other body shapes, such as undead, werewolves, insects, animals, dragons, Dwarven machines, atronachs and spirits, have their own folder next to it; `races.json` picks the folder by race):
 - what the LLM reads about injuries;
 - the Torture_Target text;
 - the overlay title and colors;

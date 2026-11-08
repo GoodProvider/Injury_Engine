@@ -1,14 +1,46 @@
 # Changelog
 
-## [0.1.7](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.7) — since [0.1.6](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6)
+## [0.2.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.0) — since [0.1.6](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6)
+
+0.1.7 was never released; its overlay move to Magelight UI ships here.
+
+### Wounds / healing
+- Race groups: every race maps to an injury group (`SKSE/Plugins/Injury_Engine/races.json`: `actors`, `races`, `race_forms`, `race_contains`, `keywords`, `default_group`), and each group has its own body parts and wound text in `injuries/<group>/` (`body.json`, optional `common.json` with `health` / `torture` blocks and `skip`, optional per-source patches, optional `sexual_parts.json`). Schema: `injuries/guide.md` (Groups). The humanoid sources moved to `injuries/humanoid/`.
+- Groups shipped: `humanoid`, `humanoid_undead` (draugr, skeletons, dragon priests), `humanoid_werewolf` (werewolves, werebears), `humanoid_vampire` (vampire lord), `insectoid` (spiders, chaurus, scribs, ash hoppers), `quadruped` (wolves, bears, horses, sabre cats, deer and other animals), `beast_humanoid` (trolls, lurkers), `plant` (spriggans), `dragon`, `dragon_undead` (Durnehviir), `dragon_skeletal`, `spectral_dragon`, `construct` (Dwarven machines), `elemental` (atronachs, gargoyles, ash guardians), `spirit` (wisps, ice wraiths, ghosts), `tentacled` (netch, seekers), `crustacean` (mudcrabs), `fish` (slaughterfish), `bird` (chickens, hawks, cliff racers).
+- Bodies hold up to 16 parts (core, sexual, lungs); a group may set `bleedout` and `disabled_sources`. Groups without lungs let drowning pass through. An actor keeps the group of its first tracked wound until fully healed. Co-save version 8 stores the group and part count per actor; versions 2-7 still load.
+- Sexual parts on insectoid, werewolf, undead and vampire lord bodies have their own text. A group's `sexual_parts.json` may now hold one `health` and one `torture` block that covers every source of that model (a `text.<source id>` entry still wins).
+- `races.json`: Durnehviir (Dawnguard.esm `DLC1Durnehviir` 0x0030D8 and the summon 0x00C71A) is `dragon_undead` by actor, since he shares `DLC1UndeadDragonRace` with the skeletal dragons. Skyrim.esm 0x1052A3 is `UndeadDragonRace` and maps to `dragon_skeletal` (it was listed as the living dragon race).
+- Werewolf and werebear feeding is its own healing source (`kSourceFeed` = 6): the line is `session.json` `heal_feed.<werewolf|werebear>` followed by the heal map (`heal_feed.wounds` when only real wounds), and nothing at all when the beast was at full health.
+- Fortify Health / Courage is not read as healing (`EffectiveHealth`), and a max-health buff ending on a wounded actor no longer leaves a phantom `generic` wound (`EffectSink`, `TESActiveEffectApplyRemoveEvent`).
+- The fully healed line uses the wording of the last torture type (`g_healEventSource`); the separate "pain gone" event is gone.
+
+### Narration / prompts
+- `External_Damage(narrate = False)` lands the wound silently (new native `RealHitQuiet`; a killing blow is still narrated). With `narrate`, the cause event has its own id `cause_<type>_<attacker>_to_<victim>`.
+
+### Torture / action
+- `Torture_Target`: one action per speaker at a time (`injury_engine.action_start`), and a padded whip lent for the action is marked and taken back on load (`Actions.ReturnLentWhips`).
+- A whip or punch from an actor holding any other weapon in either hand is no longer treated as a non-hostile torture hit at the fight-reaction stage (`IsTortureAttacker`); the combat sink still calms it afterwards.
+- Classification ignores a recent hit event from a different attacker, so two attackers on one victim are each classified by their own weapon.
+
+### Papyrus
+- New native `PartNameFor(actor, part)`: the Papyrus log (`Main.PartsText` / `PartsOf`) names the victim's own parts ("thorax", "muzzle", ...) for up to 16 parts instead of the 12 human names.
+- The 0.2 s sync loop runs only for loaded tracked actors; unloaded actors heal by game time, and a `TESObjectLoadedEvent` sink restarts the loop when one loads again.
+- Heal sessions keep their own event method (`KEY_HS_METH`) and find the session again after every yield (`HealFind`); late truce answers are no longer dropped.
 
 ### SKSE / overlay
-- The overlay moved from PrismaUI to Magelight UI. `Overlay.cpp` uses the raw v4 API (vendored `SKSE_Source/lib/MagelightUI/MagelightUI_API.h`): `RegisterMod` (modId `Injury_Engine`, minimum host 1.7.1) and `CreateViewEx` (fullscreen, click-through, hidden, `Layer::Hud`). The page moved to `Magelight/Injury_Engine/views/overlay/index.html`. `injuryEngineUpdate(state, seq, reset)` and `OverlayJson` are unchanged. See [docs/developers/overlay.md](docs/developers/overlay.md).
+- The overlay moved from PrismaUI to Magelight UI. `Overlay.cpp` uses the raw v4 API (vendored `SKSE_Source/lib/MagelightUI/MagelightUI_API.h`): `RegisterMod` (modId `Injury_Engine`, minimum host 1.7.1) and `CreateViewEx` (fullscreen, click-through, hidden, `Layer::Hud`). The page moved to `Magelight/Injury_Engine/views/overlay/index.html`. `injuryEngineUpdate(state, seq, reset)` and `OverlayJson` are unchanged; bars use each actor's own part count. See [docs/developers/overlay.md](docs/developers/overlay.md).
 - The DOM-ready gate and its `AddTask` callback are gone: calls made before the page loads are queued by the host, and an `onEvent` callback logs DOM ready, load failures, render death and page errors to `Injury_Engine.log`.
+- VR: the `Actor::HandleHealthDamage` hook is installed at vtable slot 0x106 (SE / AE keep 0x104). The `ProcessHitData` and `GetFactionFightReaction` call hooks stay off on VR. Not tested in game on VR.
+- Engine health changes made under the plugin lock are batched and applied after the unlock (`HealthBatch`), and JSON with invalid UTF-8 in actor names no longer throws (`error_handler_t::replace`).
+- `DumpRaces` logs every race with its group at game start (`race dump:` lines in `Injury_Engine.log`).
 
 ### Install / settings
 - Requires Magelight UI 1.7.1 or later as a separate download (not bundled); PrismaUI is no longer required. Without a suitable Magelight UI the log warns, there is no overlay and the rest of the mod works.
-- `make release` stages `Magelight/` instead of `PrismaUI/`.
+- Removed the settings `injury_engine.narration.cooldown` and `injury_engine.narration.torture_narration_window_size` (no longer used). The Injury Ranges fields now start at 1. Narration mode descriptions describe the reply gate.
+- `make release` stages `Magelight/` instead of `PrismaUI/`, and runs `make papyrus` (stops on a compile error).
+
+### Docs
+- `injuries/guide.md` Groups section (folder layout, `races.json` order, `sexual_parts.json` model blocks); `KNOWLEDGEBASE.md` race-group pitfalls.
 
 ## [0.1.6](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6) — since [0.1.5](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.5)
 

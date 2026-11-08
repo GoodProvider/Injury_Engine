@@ -150,6 +150,11 @@ namespace
         return InjuryEngine::PartName(part);
     }
 
+    RE::BSFixedString PartNameFor(RE::StaticFunctionTag*, RE::Actor* actor, std::int32_t part)
+    {
+        return InjuryEngine::PartNameFor(actor, part);
+    }
+
     RE::BSFixedString SourceId(RE::StaticFunctionTag*, std::int32_t source)
     {
         return InjuryEngine::SourceId(source);
@@ -495,6 +500,7 @@ bool Register_Engine_Functions(RE::BSScript::IVirtualMachine* a_vm)
     a_vm->RegisterFunction("SyncCasters", s, SyncCasters);
     a_vm->RegisterFunction("TrackedCount", s, TrackedCount);
     a_vm->RegisterFunction("PartName", s, PartName);
+    a_vm->RegisterFunction("PartNameFor", s, PartNameFor);
     a_vm->RegisterFunction("SourceId", s, SourceId);
     a_vm->RegisterFunction("SourceCount", s, SourceCount);
     a_vm->RegisterFunction("IsTorture", s, IsTorture);

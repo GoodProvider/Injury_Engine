@@ -2607,6 +2607,12 @@ namespace InjuryEngine
         return GetBody().partName[part];
     }
 
+    std::string PartNameFor(RE::Actor* actor, int part)
+    {
+        InjuryConfig::GroupScope groupScope(GroupFor(actor));
+        return PartName(part);
+    }
+
     std::string SourceId(int source)
     {
         const auto* s = InjuryConfig::Find(source);

@@ -1,0 +1,177 @@
+{
+  "_note": "Spriggan text for every source without its own file in this folder: bark, wood, sap, leaves and moss; no blood, no flesh, no breath. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: the bark mask is scored, a bead of amber sap welling in the groove.",
+          "{name}'s face: the bark is split across the mask and sap runs freely; the glow in the eyes flickers. A sharp green smell of torn wood rises from {him}.",
+          "{name}'s face: the mask is shattered into splinters, sap streaming and the inner glow dimming. The air is thick with the smell of broken wood and resin."
+        ],
+        "body": [
+          "{name}'s {part}: a strip of bark is scraped away, pale wood showing beneath.",
+          "{name}'s {part}: the bark is torn open in a long gash; sap oozes and leaves drift loose from {his} body.",
+          "{name}'s {part}: the trunk of the body is split deep, wood splintered and sap pouring; the leaves wither as {he} moves."
+        ],
+        "arm": [
+          "{name}'s {part}: a twig-finger snapped and a little sap seeping.",
+          "{name}'s {part}: the limb is cracked and bends wrong, leaking sap.",
+          "{name}'s {part}: the limb is splintered and hangs by strands of fibre."
+        ],
+        "leg": [
+          "{name}'s {part}: the bark is scraped near the roots of the foot.",
+          "{name}'s {part}: the limb is split and creaks as {he} walks, oozing sap.",
+          "{name}'s {part}: the limb is broken through; {he} drags it, splinters scraping the ground."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s face stings where the bark was cut; {he} rustles in anger, eager to strike back.",
+          "{name}'s face aches deep in the wood; {he} hisses and creaks, furious but less sure.",
+          "{name}'s face is splintered agony; the glow wavers and {he} is wild and desperate."
+        ],
+        "body": [
+          "{name}'s {part} smarts; {he} shakes off a few leaves and keeps on.",
+          "{name}'s {part} throbs where the bark split; {he} moves stiffly, creaking with every motion.",
+          "{name}'s {part} is torn open agony; {he} sways, withering, near collapse."
+        ],
+        "arm": [
+          "{name}'s {part} stings; {he} flexes the twig-fingers.",
+          "{name}'s {part} aches; {his} reach is slow and stiff.",
+          "{name}'s {part} is broken and useless; {he} lashes out with the other."
+        ],
+        "leg": [
+          "{name}'s {part} prickles; {he} barely notices.",
+          "{name}'s {part} hurts with every step; {he} creaks and limps.",
+          "{name}'s {part} fails {him}; {he} lurches and staggers."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and bark splinters away. {name} creaks and hisses.",
+          " where the bark is already split. The wood cracks wider and sap runs; {name} lets out a rustling shriek.",
+          ", and the blow splinters deep into the wood. Sap gushes and leaves shower down; {name} thrashes, creaking.",
+          ", and it is too much. {name} sags with a groan of splitting wood, sap pooling at the roots."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s mask splits apart; the glow in the eyes goes out like a snuffed candle, and the body stiffens and topples like a felled sapling, leaves falling all around it.",
+          "the blow shatters {name}'s face into splinters; sap pours out and {name} sinks down, the body withering and drying where it lies."
+        ],
+        "body": [
+          "{name}'s {part} splits open and sap gushes out; {name} creaks, bends, and breaks, falling in a heap of dead wood and drifting leaves.",
+          "the wound cleaves deep into {name}'s body; the inner glow fades and {name} crumples, the leaves turning brown."
+        ],
+        "arm": [
+          "{name}'s {part} is torn away and sap streams from the stump; {name} withers and falls, the glow fading from the eyes.",
+          "the {part} snaps off; {name} staggers, dries and collapses in a clatter of dead wood."
+        ],
+        "leg": [
+          "{name}'s {part} snaps through; {name} topples and lies still, the glow in the eyes fading as the leaves wilt.",
+          "the {part} splinters; {name} falls and does not rise, sap seeping into the earth."
+        ]
+      },
+      "soil": [
+        "As {name} goes still, a gush of dark, rotting sap and mulch spills from the split body."
+      ],
+      "soil_chance": 0.2
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: the bark mask is scuffed.",
+          "{name}'s face: the bark is cracked and seeping sap.",
+          "{name}'s face: the mask is cracked all over, sap weeping from every split."
+        ],
+        "body": [
+          "{name}'s {part}: the bark is scuffed and marked.",
+          "{name}'s {part}: the bark is cracked and lifting, sap beading.",
+          "{name}'s {part}: the bark is split and peeling, sap running."
+        ],
+        "arm": [
+          "{name}'s {part}: the bark is scuffed.",
+          "{name}'s {part}: the limb is cracked and weeping sap.",
+          "{name}'s {part}: the limb is split and trembles."
+        ],
+        "leg": [
+          "{name}'s {part}: the bark is scuffed.",
+          "{name}'s {part}: the limb is cracked and seeping.",
+          "{name}'s {part}: the limb is split and shakes under {his} weight."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s face stings; {he} rustles and turns away.",
+            "{name}'s face aches; {he} lowers it, creaking, wary.",
+            "{name}'s face is agony; {he} trembles, the glow dim, cowed."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} shifts and rustles.",
+            "{name}'s {part} throbs; {he} flinches at every touch.",
+            "{name}'s {part} is raw agony; {he} curls and shudders."
+          ],
+          "arm": [
+            "{name}'s {part} stings; {he} pulls it in.",
+            "{name}'s {part} aches; {he} holds it close.",
+            "{name}'s {part} is agony; {he} lets it hang."
+          ],
+          "leg": [
+            "{name}'s {part} prickles; {he} steps gingerly.",
+            "{name}'s {part} aches; {he} favors it.",
+            "{name}'s {part} will not hold {him}; {he} sinks down."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s face barely aches; fresh green shows at the edges of the bark.",
+            "{name}'s face is still sore but the sap has stopped.",
+            "{name}'s face is tender as the bark begins to close."
+          ],
+          "body": [
+            "{name}'s {part} feels almost whole; new bark covers the splits.",
+            "{name}'s {part} aches dully as the bark knits.",
+            "{name}'s {part} is still sore while the wood mends."
+          ],
+          "arm": [
+            "{name}'s {part} moves freely again.",
+            "{name}'s {part} aches but moves better.",
+            "{name}'s {part} is still weak while it mends."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} holds {his} weight better.",
+            "{name}'s {part} is still weak while it mends."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the bark. {name} jerks and rustles.",
+          " where the bark is already cracked. Sap beads and {name} lets out a creaking hiss.",
+          ", and the blow lands on the weeping splits. {name} shrieks and writhes, leaves shaking loose.",
+          ", and it is too much. {name} sinks down, creaking and trembling, the glow dim."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "New bark has nearly covered {name}'s {parts}.",
+          "mid": "The splits in {name}'s {parts} have closed with fresh green bark.",
+          "low": "The splits in {name}'s {parts} have stopped weeping sap."
+        }
+      }
+    }
+  }
+}

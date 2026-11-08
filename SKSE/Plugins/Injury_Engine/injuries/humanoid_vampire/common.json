@@ -1,0 +1,206 @@
+{
+  "_note": "Vampire lord text for every source without its own file in this folder: grey, leathery skin, sunken muscle, claws, bat-like wings, thick dark blood that steams in the cold. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: a thin cut across the grey cheek, a bead of dark blood welling.",
+          "{name}'s face: the grey skin is torn from brow to jaw and thick dark blood runs over the fangs; one eye is swollen. A cold, metallic smell rises from {him}.",
+          "{name}'s face: the face is torn open, fangs broken and dark blood pouring; the red eyes are dull. The stench of old blood is heavy around {him}."
+        ],
+        "body": [
+          "{name}'s {part}: a gash in the leathery skin, a little dark blood oozing.",
+          "{name}'s {part}: the grey skin is laid open to the corded muscle and dark blood runs thick and slow.",
+          "{name}'s {part}: the body is torn deep and dark blood pours out, steaming; ribs show through the ruined skin."
+        ],
+        "arm": [
+          "{name}'s {part}: a scrape on the grey skin.",
+          "{name}'s {part}: the arm is gashed and dark blood drips from the claws.",
+          "{name}'s {part}: the arm is mangled to the bone and hangs limp."
+        ],
+        "leg": [
+          "{name}'s {part}: a scrape on the grey skin.",
+          "{name}'s {part}: the leg is gashed deep and bleeds dark blood.",
+          "{name}'s {part}: the leg is torn to the bone; {he} can barely stand."
+        ],
+        "wing": [
+          "{name}'s {part}: the membrane is nicked at the edge.",
+          "{name}'s {part}: the membrane is torn in long rents and a wing bone is cracked.",
+          "{name}'s {part}: the wings are shredded and broken, hanging in bloody tatters."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s face stings; {he} hisses, more insulted than hurt.",
+          "{name}'s face throbs; {he} snarls with cold fury, less composed.",
+          "{name}'s face is agony; {his} composure is gone and {he} is feral and desperate."
+        ],
+        "body": [
+          "{name}'s {part} smarts; {he} pays it no mind, aloof.",
+          "{name}'s {part} burns; {he} hunches and moves with care, thirsty for blood.",
+          "{name}'s {part} is torn agony; {he} sags, the hunger and the fear of death fighting in {him}."
+        ],
+        "arm": [
+          "{name}'s {part} stings; {he} flexes the claws.",
+          "{name}'s {part} hurts; {his} strikes slow.",
+          "{name}'s {part} is ruined; {he} clutches it, hissing."
+        ],
+        "leg": [
+          "{name}'s {part} prickles.",
+          "{name}'s {part} hurts with each step; {he} drifts rather than walks.",
+          "{name}'s {part} fails {him}; {he} staggers and sinks."
+        ],
+        "wing": [
+          "{name}'s {part} twinge; {he} folds them closer.",
+          "{name}'s {part} ache and will not spread; {he} cannot rise far.",
+          "{name}'s {part} are broken agony; {he} is grounded and desperate."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the grey skin splits. {name} hisses and recoils.",
+          " where the skin is already torn. Dark blood spills and {name} lets out a piercing shriek.",
+          ", and the blow tears deep into the wound. Dark blood gushes, steaming, and {name} screeches, wings flaring.",
+          ", and it is too much. {name} crumples, wings spread limp, dark blood pooling beneath."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s skull cracks open; the red light fades from the eyes and {name} falls, wings folding over the body as dark blood seeps out and steams.",
+          "the blow tears {name}'s face apart; {name} shrieks, staggers, and collapses, the grey body shuddering until it is still."
+        ],
+        "body": [
+          "{name}'s {part} is torn open and dark blood floods out; {name} clutches at the wound, screeches, and falls, wings sprawled.",
+          "the wound drives deep into {name}'s chest; {name} coughs thick dark blood and sinks to the ground, the light leaving the red eyes."
+        ],
+        "arm": [
+          "{name}'s {part} is torn half away; {name} reels and collapses, dark blood pumping from the wound until it slows and stops.",
+          "the {part} is ripped open; {name} falls to the knees, then forward, bleeding out."
+        ],
+        "leg": [
+          "{name}'s {part} gives way; {name} pitches forward and lies bleeding, wings twitching, until the body goes still.",
+          "the {part} is torn open to the bone; {name} collapses and the dark blood spreads."
+        ],
+        "wing": [
+          "{name}'s {part} are torn apart; {name} falls hard, tangled in the ruined membranes, and bleeds out.",
+          "the {part} snap; {name} crashes to the ground and does not rise."
+        ]
+      },
+      "soil": [
+        "As {name} goes still, the bowels let go, and the foul smell mixes with the reek of old blood."
+      ],
+      "soil_chance": 0.3
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s face: red welts on the grey skin.",
+          "{name}'s face: the skin is swollen and split, weeping dark blood.",
+          "{name}'s face: the face is swollen and raw, one eye shut."
+        ],
+        "body": [
+          "{name}'s {part}: angry welts on the grey skin.",
+          "{name}'s {part}: the skin is swollen and split, weeping.",
+          "{name}'s {part}: the skin is raw and torn, dark blood beading."
+        ],
+        "arm": [
+          "{name}'s {part}: welts on the grey skin.",
+          "{name}'s {part}: the skin is swollen and split.",
+          "{name}'s {part}: the arm is raw and trembling."
+        ],
+        "leg": [
+          "{name}'s {part}: welts on the grey skin.",
+          "{name}'s {part}: the skin is swollen and weeping.",
+          "{name}'s {part}: the leg is raw and shakes."
+        ],
+        "wing": [
+          "{name}'s {part}: a few welts on the membrane.",
+          "{name}'s {part}: the membrane is bruised and split.",
+          "{name}'s {part}: the membrane is raw and torn and trembles."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s face stings; {he} hisses.",
+            "{name}'s face aches; {he} turns away, seething.",
+            "{name}'s face is agony; {he} trembles, pride broken."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} stiffens.",
+            "{name}'s {part} throbs; {he} flinches.",
+            "{name}'s {part} is raw agony; {he} curls in and shudders."
+          ],
+          "arm": [
+            "{name}'s {part} stings; {he} pulls it in.",
+            "{name}'s {part} aches; {he} cradles it.",
+            "{name}'s {part} is agony; {he} lets it hang."
+          ],
+          "leg": [
+            "{name}'s {part} prickles.",
+            "{name}'s {part} aches; {he} favors it.",
+            "{name}'s {part} will not hold {him}; {he} sinks."
+          ],
+          "wing": [
+            "{name}'s {part} sting; {he} folds them tight.",
+            "{name}'s {part} ache; {he} keeps them clamped.",
+            "{name}'s {part} are agony; {he} lets them drag."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s face barely aches; the grey skin is smooth again.",
+            "{name}'s face is still sore but closing.",
+            "{name}'s face is tender while it heals."
+          ],
+          "body": [
+            "{name}'s {part} feels almost whole.",
+            "{name}'s {part} aches dully as the skin closes.",
+            "{name}'s {part} is still very sore."
+          ],
+          "arm": [
+            "{name}'s {part} moves freely again.",
+            "{name}'s {part} aches but moves better.",
+            "{name}'s {part} is still weak."
+          ],
+          "leg": [
+            "{name}'s {part} is steady again.",
+            "{name}'s {part} holds {his} weight better.",
+            "{name}'s {part} is still weak."
+          ],
+          "wing": [
+            "{name}'s {part} spread freely again.",
+            "{name}'s {part} ache but open wider.",
+            "{name}'s {part} are still sore while the membranes mend."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the grey skin. {name} hisses and jerks.",
+          " where the skin is already welted. It splits and {name} shrieks.",
+          ", and the blow lands on raw, weeping skin. {name} screeches and writhes, wings shuddering.",
+          ", and it is too much. {name} sinks down, wings limp, trembling."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The grey skin of {name}'s {parts} has nearly healed smooth.",
+          "mid": "The splits in {name}'s {parts} have closed into dark ridges.",
+          "low": "The splits in {name}'s {parts} have stopped weeping."
+        }
+      }
+    }
+  }
+}

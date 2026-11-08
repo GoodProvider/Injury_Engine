@@ -1,0 +1,36 @@
+{
+  "_note": "Body of the crustacean group (mudcrabs): a hard shell, two claws, many legs, pale fluid instead of blood; breathes water and air (no lungs: drowning passes through), no torture bleedout. Parts are ordered core; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": false,
+  "regions": [
+    "head",
+    "body",
+    "claw",
+    "leg"
+  ],
+  "parts": [
+    { "name": "eyes", "region": "head", "weight": 0.5 },
+    { "name": "shell", "region": "body", "weight": 1.5 },
+    { "name": "left claw", "region": "claw" },
+    { "name": "right claw", "region": "claw" },
+    { "name": "legs", "region": "leg" }
+  ],
+  "overlay_order": [
+    "eyes",
+    "shell",
+    "right claw",
+    "left claw",
+    "legs"
+  ],
+  "disabled_sources": []
+}

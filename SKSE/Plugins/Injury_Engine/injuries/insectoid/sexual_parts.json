@@ -1,0 +1,144 @@
+{
+  "_note": "Insectoid text for the small sexual parts (soft membranes between the chitin plates; ichor, no blood). The \"health\" / \"torture\" blocks cover every source of that model (a \"text.<source id>\" entry would win for that source). Keep the prose about the wound and the pain, not about sex. Schema: ../guide.md (Groups).",
+  "health": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: the soft membrane there is nicked, a bead of pale ichor welling.",
+        "{name}'s {part}: the membrane is torn and leaking pale ichor in a slow trickle; a bitter smell rises from it.",
+        "{name}'s {part}: the membrane is ripped open and ichor runs freely over the plates around it."
+      ],
+      "vulva": [
+        "{name}'s {part}: the soft opening between the abdominal plates is scratched and seeping.",
+        "{name}'s {part}: the membrane there is torn and swollen, oozing pale ichor.",
+        "{name}'s {part}: the opening is torn wide and leaks ichor in a steady stream; the plates around it are cracked."
+      ],
+      "penis": [
+        "{name}'s {part}: the soft organ is nicked and seeping ichor.",
+        "{name}'s {part}: the organ is torn and swollen, leaking pale ichor.",
+        "{name}'s {part}: the organ is badly torn and ichor drips from it constantly."
+      ],
+      "lips": [
+        "{name}'s {part}: the soft edges of the mouthparts are scored and seeping.",
+        "{name}'s {part}: the mouthparts are cracked and leak pale ichor; they no longer close fully.",
+        "{name}'s {part}: the mouthparts are broken and hang crooked, ichor dribbling from them."
+      ],
+      "anus": [
+        "{name}'s {part}: the vent at the tip of the abdomen is scratched.",
+        "{name}'s {part}: the vent is torn and swollen, seeping pale ichor.",
+        "{name}'s {part}: the vent is ripped and leaking; the tip of the abdomen is cracked around it."
+      ]
+    },
+    "feels": {
+      "nipple": [
+        "{name}'s {part} sting; {he} twitches and hisses.",
+        "{name}'s {part} burn; {he} keeps {his} body low, jittery and angry.",
+        "{name}'s {part} are agony; {he} shudders and curls in, frantic."
+      ],
+      "vulva": [
+        "{name}'s {part} stings; {he} draws {his} abdomen in.",
+        "{name}'s {part} throbs; {he} keeps {his} abdomen tucked, hissing.",
+        "{name}'s {part} is agony; {he} curls up tight, shaking."
+      ],
+      "penis": [
+        "{name}'s {part} stings; {he} jerks and hisses.",
+        "{name}'s {part} throbs; {he} moves stiffly, guarding it.",
+        "{name}'s {part} is agony; {he} curls in and trembles."
+      ],
+      "lips": [
+        "{name}'s {part} sting; {he} clicks them, agitated.",
+        "{name}'s {part} ache; {he} keeps them still and hisses.",
+        "{name}'s {part} are agony; {he} cannot close them and shrieks."
+      ],
+      "anus": [
+        "{name}'s {part} stings; {he} twitches {his} abdomen.",
+        "{name}'s {part} throbs; {he} keeps {his} abdomen low.",
+        "{name}'s {part} is agony; {he} drags {his} abdomen, shuddering."
+      ]
+    }
+  },
+  "torture": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: the soft membrane is reddened and swollen.",
+        "{name}'s {part}: the membrane is bruised dark and seeping ichor.",
+        "{name}'s {part}: the membrane is raw and split, ichor beading."
+      ],
+      "vulva": [
+        "{name}'s {part}: the membrane there is swollen.",
+        "{name}'s {part}: the membrane is bruised and seeping.",
+        "{name}'s {part}: the membrane is raw and split."
+      ],
+      "penis": [
+        "{name}'s {part}: the organ is swollen.",
+        "{name}'s {part}: the organ is bruised and seeping.",
+        "{name}'s {part}: the organ is raw and split."
+      ],
+      "lips": [
+        "{name}'s {part}: the mouthparts are scuffed.",
+        "{name}'s {part}: the mouthparts are swollen and seeping.",
+        "{name}'s {part}: the mouthparts are cracked and raw."
+      ],
+      "anus": [
+        "{name}'s {part}: the vent is swollen.",
+        "{name}'s {part}: the vent is bruised and seeping.",
+        "{name}'s {part}: the vent is raw and split."
+      ]
+    },
+    "feels": {
+      "torture": {
+        "nipple": [
+          "{name}'s {part} sting; {he} flinches and hisses.",
+          "{name}'s {part} throb; {he} trembles, wary.",
+          "{name}'s {part} are agony; {he} curls up, cowed."
+        ],
+        "vulva": [
+          "{name}'s {part} stings; {he} draws in.",
+          "{name}'s {part} throbs; {he} trembles.",
+          "{name}'s {part} is agony; {he} curls up, shaking."
+        ],
+        "penis": [
+          "{name}'s {part} stings; {he} flinches.",
+          "{name}'s {part} throbs; {he} trembles.",
+          "{name}'s {part} is agony; {he} curls up, shaking."
+        ],
+        "lips": [
+          "{name}'s {part} sting; {he} clicks them shut.",
+          "{name}'s {part} ache; {he} keeps them still.",
+          "{name}'s {part} are agony; {he} trembles."
+        ],
+        "anus": [
+          "{name}'s {part} stings; {he} twitches.",
+          "{name}'s {part} throbs; {he} keeps low.",
+          "{name}'s {part} is agony; {he} shudders."
+        ]
+      },
+      "heal": {
+        "nipple": [
+          "{name}'s {part} barely sting now.",
+          "{name}'s {part} are still sore but sealing.",
+          "{name}'s {part} are tender while they mend."
+        ],
+        "vulva": [
+          "{name}'s {part} barely stings now.",
+          "{name}'s {part} is still sore but sealing.",
+          "{name}'s {part} is tender while it mends."
+        ],
+        "penis": [
+          "{name}'s {part} barely stings now.",
+          "{name}'s {part} is still sore but sealing.",
+          "{name}'s {part} is tender while it mends."
+        ],
+        "lips": [
+          "{name}'s {part} close properly again.",
+          "{name}'s {part} are still sore but close better.",
+          "{name}'s {part} are tender while they mend."
+        ],
+        "anus": [
+          "{name}'s {part} barely stings now.",
+          "{name}'s {part} is still sore but sealing.",
+          "{name}'s {part} is tender while it mends."
+        ]
+      }
+    }
+  }
+}

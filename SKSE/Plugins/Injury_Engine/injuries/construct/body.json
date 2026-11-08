@@ -1,0 +1,38 @@
+{
+  "_note": "Body of the construct group (Dwarven spiders, spheres, centurions, ballistae, the Forgemaster): dwemer metal, gears, steam and oil; no blood, no breath (no lungs: drowning passes through), no torture bleedout. Parts are ordered core; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": false,
+  "regions": [
+    "head",
+    "body",
+    "limb",
+    "core"
+  ],
+  "parts": [
+    { "name": "head", "region": "head", "weight": 0.8 },
+    { "name": "chassis", "region": "body", "weight": 1.2 },
+    { "name": "left arm", "region": "limb", "weight": 0.8 },
+    { "name": "right arm", "region": "limb", "weight": 0.8 },
+    { "name": "legs", "region": "limb" },
+    { "name": "steam core", "region": "core", "weight": 0.6 }
+  ],
+  "overlay_order": [
+    "head",
+    "chassis",
+    "steam core",
+    "right arm",
+    "left arm",
+    "legs"
+  ],
+  "disabled_sources": []
+}

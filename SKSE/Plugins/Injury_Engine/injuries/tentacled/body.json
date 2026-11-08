@@ -1,0 +1,31 @@
+{
+  "_note": "Body of the tentacled group (netch, Hermaeus Mora's seekers): a floating body with a hood or bell and hanging tentacles; no lungs (drowning passes through), no torture bleedout. Parts are ordered core; keep this order: co-saves store points by part index. Schema: ../guide.md (Groups).",
+  "damage_max": 20,
+  "real_max": 100,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "bleedout": false,
+  "regions": [
+    "head",
+    "body",
+    "tentacle"
+  ],
+  "parts": [
+    { "name": "hood", "region": "head", "weight": 0.8 },
+    { "name": "body", "region": "body", "weight": 1.2 },
+    { "name": "tentacles", "region": "tentacle", "weight": 1.2 }
+  ],
+  "overlay_order": [
+    "hood",
+    "body",
+    "tentacles"
+  ],
+  "disabled_sources": []
+}

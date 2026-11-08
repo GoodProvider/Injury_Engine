@@ -1,0 +1,177 @@
+{
+  "_note": "Bird text for every source without its own file in this folder: feathers, hollow bones, wings, beak and thin legs; small, bright blood. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: a few feathers torn from the crown and a fleck of blood on the beak.",
+          "{name}'s head: the head is gashed, feathers matted with blood; one eye is shut.",
+          "{name}'s head: the head is crushed and bloody, the beak cracked."
+        ],
+        "body": [
+          "{name}'s {part}: a few feathers ripped out, a little blood showing.",
+          "{name}'s {part}: a deep cut through the feathers; blood soaks them dark.",
+          "{name}'s {part}: the body is torn open, feathers sodden with blood."
+        ],
+        "wing": [
+          "{name}'s {part}: a few feathers lost.",
+          "{name}'s {part}: the wing is gashed and droops, feathers bloody.",
+          "{name}'s {part}: the wing is broken and hangs twisted."
+        ],
+        "leg": [
+          "{name}'s {part}: scraped.",
+          "{name}'s {part}: one leg is gashed and held up.",
+          "{name}'s {part}: the legs are broken; {he} cannot stand."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head stings; {he} shrieks and flaps in alarm.",
+          "{name}'s head throbs; {he} stumbles and screeches.",
+          "{name}'s head is agony; {he} flops about, dazed."
+        ],
+        "body": [
+          "{name}'s {part} smarts; {he} ruffles {his} feathers, agitated.",
+          "{name}'s {part} burns; {he} pants and shrieks.",
+          "{name}'s {part} is torn agony; {he} lies panting, eyes half shut."
+        ],
+        "wing": [
+          "{name}'s {part} twinges.",
+          "{name}'s {part} hurts; {he} flies low and crooked.",
+          "{name}'s {part} is broken; {he} cannot fly and flaps helplessly."
+        ],
+        "leg": [
+          "{name}'s {part} prickle.",
+          "{name}'s {part} hurt; {he} hops on one.",
+          "{name}'s {part} fail; {he} flops on the ground."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and feathers fly. {name} shrieks and flaps.",
+          " where the feathers are already bloody. More blood spills and {name} screeches.",
+          ", and the blow tears deep. Blood spatters and {name} flaps wildly, shrieking.",
+          ", and it is too much. {name} drops, wings spread, twitching."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s head is crushed; {name} flaps once, twice, and falls still in a scatter of bloody feathers.",
+          "the blow snaps {name}'s neck; {name} drops limp, wings half spread."
+        ],
+        "body": [
+          "{name}'s {part} is torn open; {name} shrieks, flutters, and collapses in a heap of blood-soaked feathers.",
+          "the wound goes through {name}'s small body; {name} twitches and goes still."
+        ],
+        "wing": [
+          "{name}'s {part} is torn half off; {name} spins to the ground and bleeds out, flapping weakly.",
+          "the {part} snaps; {name} falls hard and does not move again."
+        ],
+        "leg": [
+          "{name}'s {part} are broken; {name} flops, bleeding, until the struggling stops.",
+          "the {part} give way; {name} topples and lies still."
+        ]
+      },
+      "soil": [
+        "As {name} goes still, a white-and-green splatter leaks out beneath the tail feathers."
+      ],
+      "soil_chance": 0.4
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: ruffled and a few feathers missing.",
+          "{name}'s head: feathers plucked and the skin red.",
+          "{name}'s head: bare, raw skin and a swollen eye."
+        ],
+        "body": [
+          "{name}'s {part}: ruffled and a few feathers missing.",
+          "{name}'s {part}: bald patches with red welts.",
+          "{name}'s {part}: wide bald patches, raw and weeping."
+        ],
+        "wing": [
+          "{name}'s {part}: a few feathers bent.",
+          "{name}'s {part}: feathers broken and the wing held low.",
+          "{name}'s {part}: the wing is raw and trembling."
+        ],
+        "leg": [
+          "{name}'s {part}: scuffed.",
+          "{name}'s {part}: swollen.",
+          "{name}'s {part}: raw and shaking."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head stings; {he} squawks and ducks.",
+            "{name}'s head aches; {he} hides it under a wing.",
+            "{name}'s head is agony; {he} trembles, eyes shut."
+          ],
+          "body": [
+            "{name}'s {part} smarts; {he} puffs up, alarmed.",
+            "{name}'s {part} throbs; {he} cowers.",
+            "{name}'s {part} is raw agony; {he} huddles, shaking."
+          ],
+          "wing": [
+            "{name}'s {part} stings; {he} tucks it in.",
+            "{name}'s {part} aches; {he} holds it low.",
+            "{name}'s {part} is agony; {he} lets it drag."
+          ],
+          "leg": [
+            "{name}'s {part} prickle.",
+            "{name}'s {part} ache; {he} hops.",
+            "{name}'s {part} will not hold {him}; {he} sinks."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head is nearly feathered over again.",
+            "{name}'s head is less raw.",
+            "{name}'s head is still tender."
+          ],
+          "body": [
+            "{name}'s {part} is nearly feathered over.",
+            "{name}'s {part} shows new pinfeathers.",
+            "{name}'s {part} is still raw."
+          ],
+          "wing": [
+            "{name}'s {part} spreads freely again.",
+            "{name}'s {part} opens wider.",
+            "{name}'s {part} is still sore."
+          ],
+          "leg": [
+            "{name}'s {part} are steady again.",
+            "{name}'s {part} hold {him} better.",
+            "{name}'s {part} are still weak."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack and a puff of feathers. {name} squawks and flaps.",
+          " where the feathers are already plucked. {name} shrieks.",
+          ", and the blow lands on raw skin. {name} screeches and flaps wildly.",
+          ", and it is too much. {name} huddles on the ground, shaking."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "New feathers have nearly covered {name}'s {parts}.",
+          "mid": "Pinfeathers are pushing through on {name}'s {parts}.",
+          "low": "The raw skin on {name}'s {parts} has stopped weeping."
+        }
+      }
+    }
+  }
+}

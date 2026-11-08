@@ -1,7 +1,20 @@
 {
   "_note": "Race -> injury group (injuries/<group>/). Order: actors (actor or actor base form), races (exact EditorID), race_forms (file + form), race_contains (EditorID contains the text, first match wins: keep specific texts before general ones), keywords (all listed race keywords), default_group. A group without an injuries/<group>/ folder uses humanoid (warned once). Thralls keep their living race group. Schema: injuries/guide.md (Groups).",
   "default_group": "humanoid",
-  "actors": [],
+  "actors": [
+    {
+      "name": "Durnehviir (DLC1Durnehviir)",
+      "file": "Dawnguard.esm",
+      "id": "0x30D8",
+      "group": "dragon_undead"
+    },
+    {
+      "name": "Durnehviir, summoned (DLC1DurnehviirSummon)",
+      "file": "Dawnguard.esm",
+      "id": "0xC71A",
+      "group": "dragon_undead"
+    }
+  ],
   "races": {
     "_note": "Exact race EditorIDs (case-insensitive) per group; checked first. Verify against the race dump in Injury_Engine.log.",
     "humanoid": [
@@ -123,13 +136,13 @@
       "group": "humanoid_undead"
     },
     {
-      "name": "Dragon Race",
+      "name": "UndeadDragonRace (skeletal dragons)",
       "file": "Skyrim.esm",
       "id": "0x1052A3",
-      "group": "dragon"
+      "group": "dragon_skeletal"
     },
     {
-      "name": "draugr",
+      "name": "DLC2AshSpawnRace (ash spawn)",
       "file": "Dragonborn.esm",
       "id": "0x1B637",
       "group": "humanoid_undead"

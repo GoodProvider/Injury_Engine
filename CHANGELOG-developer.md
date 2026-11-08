@@ -1,11 +1,16 @@
-https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.7
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.0
 
-Overlay host release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and Magelight UI 1.7.1 or later.
+Race groups release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and Magelight UI 1.7.1 or later. Includes the unreleased 0.1.7 (overlay on Magelight UI).
 
-- **Overlay moved to Magelight UI.** PrismaUI is removed, with no fallback. The overlay is a fullscreen, click-through `Layer::Hud` view; the page's `injuryEngineUpdate(state, seq, reset)` API and `OverlayJson` are unchanged.
-- **New page path.** `Magelight/Injury_Engine/views/overlay/index.html`, with the API header vendored in `SKSE_Source/lib/MagelightUI/`. `make release` stages `Magelight/`.
-- **No DOM-ready gate.** The host queues calls made before the page loads, so the callback that called `AddTask` inside a frame is gone. `onEvent` only logs.
-- **Separate dependency.** Magelight UI is not bundled. A missing or older host logs a warning and only the overlay is off.
+- **Race groups.** `races.json` maps every race (or one actor) to a folder under `injuries/<group>/` with its own `body.json` (up to 16 parts, core / sexual / lungs, `bleedout`, `disabled_sources`) and text (`common.json`, per-source patches, `sexual_parts.json`). Humanoid sources moved to `injuries/humanoid/`. Co-save version 8.
+- **Creature bodies.** 19 groups ship: humanoid, undead, werewolf, vampire lord, insectoid, quadruped, trolls / lurkers, spriggans, four dragon kinds (Durnehviir by actor), Dwarven constructs, elementals, spirits, netch / seekers, mudcrabs, slaughterfish and birds.
+- **Group sexual-part text.** A group's `sexual_parts.json` takes one `health` and one `torture` block for every source of that model; insectoid, werewolf, undead and vampire lord use it.
+- **Werewolf feeding heals.** `kSourceFeed` = 6 with `session.json` `heal_feed` text; silent at full health.
+- **Overlay on Magelight UI.** PrismaUI is removed; the page is `Magelight/Injury_Engine/views/overlay/index.html` and the host queues calls before DOM ready. Magelight UI is not bundled.
+- **VR hook slot.** `HandleHealthDamage` is hooked at vtable 0x106 on VR (untested in game).
+- **Review fixes.** Health changes under the lock are batched, invalid UTF-8 names no longer throw, Fortify Health is not healing, a max-health buff ending leaves no phantom wound, and the sync loop runs only for loaded actors.
+- **Papyrus API.** `External_Damage(narrate = False)` is silent (`RealHitQuiet`); new native `PartNameFor(actor, part)`; `Torture_Target` runs one action per speaker and returns lent whips on load.
+- **Settings removed.** `narration.cooldown` and `narration.torture_narration_window_size`.
 
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6
 

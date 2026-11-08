@@ -143,6 +143,8 @@ namespace InjuryEngine
     int TrackedCount();
 
     std::string PartName(int part);
+    // Part name in the actor's group (tracked group, else its race's); "" out of range.
+    std::string PartNameFor(RE::Actor* actor, int part);
     std::string SourceId(int source);
     int SourceCount();
 

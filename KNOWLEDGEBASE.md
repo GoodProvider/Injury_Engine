@@ -371,8 +371,9 @@ The MO2 profile `SkyrimNet SexLab` (`C:\Skyrim\dev\profiles\SkyrimNet SexLab\mod
 - `InjuryConfig` lookups read a thread-local group. A new `InjuryEngine` entry point must take a `GroupScope` for its actor (`GroupFor` locks `g_lock`: call it before taking the lock, never under it); otherwise it reads humanoid's body and text.
 - Race EditorIDs are kept in memory (`TESRace::formEditorID`), actor base EditorIDs are not: `races.json` `actors` use file + form.
 - Critters (butterflies, moths, dragonflies, torchbugs, salmon) are activators, not actors: nothing to map.
-- Durnehviir most likely shares `DLC1UndeadDragonRace` with the skeletal dragons: give him a `races.json` `actors` entry once his form is verified.
+- Durnehviir shares `DLC1UndeadDragonRace` (Dawnguard.esm 0x0117DE) with the skeletal dragons (verified by reading Dawnguard.esm: NPC_ `DLC1Durnehviir` 0x0030D8 and `DLC1DurnehviirSummon` 0x00C71A, both RNAM 0x0117DE), so `races.json` gives him `actors` entries for both (group `dragon_undead`).
+- Skyrim.esm 0x1052A3 is `UndeadDragonRace` (skeletal dragons), not the living `DragonRace` (0x012E82); the old race_forms entry called it "Dragon Race". Check a race form's EditorID against the ESM or the `race dump:` lines before naming it.
 - Reanimated thralls keep their living race's group: an active-effect scan in the damage hook is unsafe (see the effect-list crash), so there is no Reanimate override.
 - Before this change every actor used the humanoid body: a Frostbite Spider got "face", "right arm", "penis" and "torn flesh" (checkpoints/groups/logs/2026-11-07-17-07-42/Injury_Engine.log, 16:59:47).
 - `races.json` `race_contains` is a substring test: "cat" sent `ccBGSSSE040_GoblinRaceDuplicate` to quadruped, and the `ActorTypeUndead` + `ActorTypeNPC` keyword rule sent `BretonRaceChildVampire` to humanoid_undead (checkpoints/groups/logs/2026-11-07-17-52-18/Injury_Engine.log race dump). Use long texts, give vampire races exact `races` entries, and check the dump after every rule change.
-
+- A group's `sexual_parts.json` can cover every source with one `health` and one `torture` block (`MergeSexualText`: `text.<source id>`, else `text.<base>`, else the block of the source's model). Without the file the group's sexual parts fall back to humanoid text and the log warns `group <id> has no sexual_parts.json`.

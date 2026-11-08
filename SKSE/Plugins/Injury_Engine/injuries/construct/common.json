@@ -1,0 +1,178 @@
+{
+  "_note": "Dwemer construct text for every source without its own file in this folder: bronze-gold metal, gears, pistons, steam and dark oil; no blood, no flesh, no pain as living things know it: the text describes damage and how the machine behaves. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the metal plate is scratched and dented, one lens dimmed.",
+          "{name}'s head: the plate is buckled and a lens is cracked; steam hisses from a split seam and the glow behind the eyes flickers.",
+          "{name}'s head: the head is caved in, lenses shattered and wires spilling out; it twitches and sparks, the inner light stuttering."
+        ],
+        "body": [
+          "{name}'s {part}: the plating is scored and dented, a little dark oil weeping from a seam.",
+          "{name}'s {part}: plates are torn loose and gears show beneath; oil runs down the metal and steam vents in hissing jets. The air smells of hot metal and oil.",
+          "{name}'s {part}: the casing is ripped open and gears grind against broken plates; oil gushes and steam pours out in a scalding cloud."
+        ],
+        "limb": [
+          "{name}'s {part}: a joint is scratched and squeals faintly when it moves.",
+          "{name}'s {part}: a piston is bent and the joint grinds and jerks, leaking oil.",
+          "{name}'s {part}: the limb is wrecked, hanging from torn linkages and spraying oil as it twitches."
+        ],
+        "core": [
+          "{name}'s {part}: the housing is dented and the glow inside wavers.",
+          "{name}'s {part}: the housing is cracked and steam whistles out; the inner glow pulses unevenly.",
+          "{name}'s {part}: the core is breached, venting scalding steam and flickering on the edge of going dark."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head takes the blow and {he} recalibrates, steady and relentless.",
+          "{name}'s head is damaged; {his} movements turn jerky and {his} aim wanders.",
+          "{name}'s head is failing; {he} turns in stuttering circles, barely able to find a target."
+        ],
+        "body": [
+          "{name}'s {part} is scratched; {he} carries on without any sign of it.",
+          "{name}'s {part} is damaged; {he} slows, gears grinding with every motion.",
+          "{name}'s {part} is wrecked; {he} lurches and shudders, close to seizing up."
+        ],
+        "limb": [
+          "{name}'s {part} squeals but works.",
+          "{name}'s {part} grinds and jerks; {his} strikes come late and crooked.",
+          "{name}'s {part} barely answers; {he} drags it and strikes wildly."
+        ],
+        "core": [
+          "{name}'s {part} wavers; {his} hum changes pitch.",
+          "{name}'s {part} pulses unevenly; {he} moves in bursts and stalls.",
+          "{name}'s {part} is failing; {he} shudders and stutters, close to shutting down."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the metal rings and dents. {name} jerks and keeps coming.",
+          " on plating that is already dented. A seam splits and oil sprays as steam hisses out; {name} lurches, gears shrieking.",
+          ", and the blow tears into the damaged machinery. Gears snap, oil gushes and steam bursts out in a scalding cloud; {name} shudders violently.",
+          ", and it is too much. {name} seizes with a grinding shriek of metal, steam pouring out, and slumps, the inner light stuttering."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s head is torn half off in a shower of sparks; the light behind the lenses dies, steam sighs out of every seam, and the machine collapses with a long metallic groan.",
+          "the blow caves in {name}'s head; wires spark and the lenses go dark, and {name} topples in a clatter of plates and spilled oil."
+        ],
+        "body": [
+          "{name}'s {part} bursts open; gears spill out across the ground in a gush of hot oil and steam, and {name} grinds to a halt and falls apart.",
+          "the casing of {name}'s {part} splits wide and the machinery inside seizes with a shriek; {name} shudders once and goes still, oil pooling beneath."
+        ],
+        "limb": [
+          "{name}'s {part} is torn away; {name} lurches, overbalances and crashes down, gears grinding to a stop and steam hissing out.",
+          "the {part} snaps off at the joint; {name} spins, sparks flying, and collapses in a smoking heap."
+        ],
+        "core": [
+          "{name}'s {part} ruptures in a blast of scalding steam; the inner light flares and goes dark, and the whole machine sags and crashes down, metal ticking as it cools.",
+          "the {part} cracks open and the glow inside dies; {name} stops mid-motion and falls, oil and steam leaking from every seam."
+        ]
+      },
+      "soil": [
+        "As {name} goes still, a thick slick of black oil drains from the underside and spreads across the ground.",
+        "{name}'s casing gives a last shudder and vents a cloud of foul steam and sludge."
+      ],
+      "soil_chance": 0.3
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the plate is scuffed and lightly dented.",
+          "{name}'s head: the plate is dented and a lens flickers.",
+          "{name}'s head: the plate is buckled, lenses flickering, and it twitches."
+        ],
+        "body": [
+          "{name}'s {part}: the plating is scuffed and dented.",
+          "{name}'s {part}: plates are dented and a seam weeps oil.",
+          "{name}'s {part}: plates are bent and loose, oil and steam leaking out."
+        ],
+        "limb": [
+          "{name}'s {part}: a joint is scuffed.",
+          "{name}'s {part}: a joint is bent and squeals.",
+          "{name}'s {part}: the joint is bent and grinds, leaking oil."
+        ],
+        "core": [
+          "{name}'s {part}: the housing is scuffed.",
+          "{name}'s {part}: the housing is dented and the glow wavers.",
+          "{name}'s {part}: the housing is cracked and hisses steam."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head jerks at the impact; {he} whirs and refocuses.",
+            "{name}'s head is dented; {he} twitches and clicks erratically.",
+            "{name}'s head is badly damaged; {he} stutters and stalls, barely responding."
+          ],
+          "body": [
+            "{name}'s {part} rings; {he} shifts and hums.",
+            "{name}'s {part} groans; {he} recoils, gears clattering.",
+            "{name}'s {part} grinds; {he} sags and shudders."
+          ],
+          "limb": [
+            "{name}'s {part} squeals; {he} pulls it in.",
+            "{name}'s {part} jerks; {he} favors it.",
+            "{name}'s {part} will not move right; {he} drags it."
+          ],
+          "core": [
+            "{name}'s {part} wavers; {he} hums unevenly.",
+            "{name}'s {part} pulses; {he} stalls and restarts.",
+            "{name}'s {part} flickers; {he} barely moves."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head is nearly sound; the lenses glow steady.",
+            "{name}'s head is mending; the flicker is less.",
+            "{name}'s head is still damaged while it is set right."
+          ],
+          "body": [
+            "{name}'s {part} is nearly sound again.",
+            "{name}'s {part} is mending; the leaks have slowed.",
+            "{name}'s {part} still groans while it is set right."
+          ],
+          "limb": [
+            "{name}'s {part} moves smoothly again.",
+            "{name}'s {part} moves better.",
+            "{name}'s {part} still squeals while it mends."
+          ],
+          "core": [
+            "{name}'s {part} hums steadily again.",
+            "{name}'s {part} pulses more evenly.",
+            "{name}'s {part} still wavers while it settles."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", a sharp crack against the plating. {name} jerks, gears whirring.",
+          " on plating that is already dented. The metal groans and {name} lets out a grinding shriek.",
+          ", and the blow lands on the weakened seams. Oil weeps and steam spits; {name} shudders and stalls.",
+          ", and it is too much. {name} sinks down, gears ticking, the inner light dim."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The dents in {name}'s {parts} have been smoothed almost flat.",
+          "mid": "The seams of {name}'s {parts} have closed and stopped hissing.",
+          "low": "The leaks in {name}'s {parts} have stopped."
+        }
+      }
+    }
+  }
+}

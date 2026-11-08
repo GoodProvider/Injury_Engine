@@ -517,7 +517,7 @@ Int Function OnLash(Actor attacker, Actor victim, Bool narrate=True)
         Verbose("OnLash", victim.GetDisplayName() + " code:" + code + " health " + health_before + " -> " + victim.GetActorValue("Health") \
             + " / " + victim.GetBaseActorValue("Health") + " narrate:" + narrate)
     endif
-    Trace("OnLash", NameOf(attacker) + " -> " + victim.GetDisplayName() + " part:" + PartsOf(code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
+    Trace("OnLash", NameOf(attacker) + " -> " + victim.GetDisplayName() + " part:" + PartsOf(victim, code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
     if narrate
         Injury_Engine_Engine.QueueHit(victim, attacker, code)
         NarrateRealHits()
@@ -546,8 +546,8 @@ int Function LevelOf(int code) global
     return code % 10
 EndFunction
 
-String Function PartsOf(int code) global
-    return PartsText(MaskOf(code))
+String Function PartsOf(Actor victim, int code) global
+    return PartsText(victim, MaskOf(code))
 EndFunction
 
 ; Real-damage hits (NarrateRealHits): a DirectNarration when the pair is in sight, the reply gate is open and
@@ -1096,16 +1096,17 @@ String Function DistanceText(Actor attacker, Actor victim)
     return (victim.GetDistance(attacker) / UNITS_PER_METER) + "m"
 EndFunction
 
-; Part names for a bitmask, e.g. "face, back and left arm" (for the Papyrus log only; narration text comes from the DLL).
-String Function PartsText(int mask) global
+; Part names of victim's body for a bitmask, e.g. "face,back,left arm" (for the Papyrus log only; narration text comes
+; from the DLL). Bit i is part i of the victim's race group (up to 16 parts).
+String Function PartsText(Actor victim, int mask) global
     String text = ""
     int i = 0
-    while i < 12
+    while i < 16
         if Math.LogicalAnd(mask, Math.LeftShift(1, i)) != 0
             if text != ""
                 text += ","
             endif
-            text += Injury_Engine_Engine.PartName(i)
+            text += Injury_Engine_Engine.PartNameFor(victim, i)
         endif
         i += 1
     endwhile
@@ -1130,7 +1131,7 @@ Int Function Torture(Actor attacker, Actor victim, String source, Bool narrate=T
         Verbose("Torture", source + " Hit returned " + code + " for " + victim.GetDisplayName())
         return code
     endif
-    Trace("Torture", NameOf(attacker) + " -> " + victim.GetDisplayName() + " " + source + " part:" + PartsOf(code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
+    Trace("Torture", NameOf(attacker) + " -> " + victim.GetDisplayName() + " " + source + " part:" + PartsOf(victim, code) + " level:" + LevelOf(code) + " fresh:" + FreshOf(code))
     if narrate
         Injury_Engine_Engine.QueueHit(victim, attacker, code)
         NarrateRealHits()
@@ -1694,7 +1695,7 @@ Function NarrateRealHits()
             if victims[i] != None && victims[i].IsDead()
                 Trace("NarrateRealHits", NameOf(victims[i]) + " is dead, hit not narrated (the death line covers it)")
             elseif victims[i] != None
-                Trace("NarrateRealHits", NameOf(attackers[i]) + " -> " + NameOf(victims[i]) + " " + SourceOfCode(codes[i]) + " part:" + PartsOf(codes[i]) \
+                Trace("NarrateRealHits", NameOf(attackers[i]) + " -> " + NameOf(victims[i]) + " " + SourceOfCode(codes[i]) + " part:" + PartsOf(victims[i], codes[i]) \
                     + " level:" + LevelOf(codes[i]) + " fresh:" + FreshOf(codes[i]) + " hits:" + counts[i])
                 NarrateHits(attackers[i], victims[i], SourceOfCode(codes[i]), MaskOf(codes[i]), LevelOf(codes[i]), counts[i], "", unarmed[i])
                 ClearHealBatch(victims[i])
@@ -1931,7 +1932,7 @@ Int Function Damage(Actor attacker, Actor victim, String cause, String source, I
         endif
         i += 1
     endwhile
-    Trace("Damage", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " parts:" + PartsText(mask)         + " level:" + worst + " narrate:" + narrate + " cause:" + cause)
+    Trace("Damage", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " parts:" + PartsText(victim, mask)         + " level:" + worst + " narrate:" + narrate + " cause:" + cause)
     if hits == 0
         return code
     endif
@@ -1967,7 +1968,7 @@ String Function TortureText(Actor attacker, Actor victim, String source, String 
         endif
         i += 1
     endwhile
-    Trace("TortureText", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " hits:" + hits + " parts:" + PartsText(mask) + " level:" + worst)
+    Trace("TortureText", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " hits:" + hits + " parts:" + PartsText(victim, mask) + " level:" + worst)
     if hits == 0
         return ""
     endif
@@ -1998,7 +1999,7 @@ Int Function Strike(Actor attacker, Actor victim, String text, Int count, String
         endif
         i += 1
     endwhile
-    Trace("Strike", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " parts:" + PartsText(mask) + " level:" + worst)
+    Trace("Strike", NameOf(attacker) + " -> " + NameOf(victim) + " " + source + " part:" + part + " count:" + count + " parts:" + PartsText(victim, mask) + " level:" + worst)
     if hits == 0
         if narrate && text != ""
             DirectNarrate(text, attacker, victim, "torture") ; nothing landed: the caller's own line only

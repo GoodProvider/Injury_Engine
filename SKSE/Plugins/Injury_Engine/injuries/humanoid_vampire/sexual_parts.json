@@ -1,0 +1,144 @@
+{
+  "_note": "Vampire lord text for the small sexual parts (grey, leathery skin, thick dark blood). The \"health\" / \"torture\" blocks cover every source of that model (a \"text.<source id>\" entry would win for that source). Keep the prose about the wound and the pain, not about sex. Schema: ../guide.md (Groups).",
+  "health": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: a thin cut on the grey skin, a bead of dark blood.",
+        "{name}'s {part}: the grey skin is torn and dark blood runs thick and slow.",
+        "{name}'s {part}: the skin is ripped open and dark blood streams down the chest."
+      ],
+      "vulva": [
+        "{name}'s {part}: a scrape on the grey skin, a little dark blood.",
+        "{name}'s {part}: the flesh is torn and swollen, oozing dark blood.",
+        "{name}'s {part}: the flesh is badly torn and dark blood flows steadily."
+      ],
+      "penis": [
+        "{name}'s {part}: a scrape on the grey skin, a little dark blood.",
+        "{name}'s {part}: the flesh is torn and swollen, oozing dark blood.",
+        "{name}'s {part}: the flesh is badly torn and dark blood flows steadily."
+      ],
+      "lips": [
+        "{name}'s {part}: the grey lips are split over the fangs.",
+        "{name}'s {part}: the lips are torn and dark blood runs over the fangs.",
+        "{name}'s {part}: the lips are ripped open, dark blood dripping from the jaw."
+      ],
+      "anus": [
+        "{name}'s {part}: a scrape on the grey skin.",
+        "{name}'s {part}: the flesh is torn and oozing dark blood.",
+        "{name}'s {part}: the flesh is badly torn and bleeds steadily."
+      ]
+    },
+    "feels": {
+      "nipple": [
+        "{name}'s {part} sting; {he} hisses.",
+        "{name}'s {part} burn; {he} hunches, snarling.",
+        "{name}'s {part} are agony; {he} shrieks."
+      ],
+      "vulva": [
+        "{name}'s {part} stings; {he} hisses.",
+        "{name}'s {part} burns; {he} hunches, snarling.",
+        "{name}'s {part} is agony; {he} shrieks and doubles over."
+      ],
+      "penis": [
+        "{name}'s {part} stings; {he} hisses.",
+        "{name}'s {part} burns; {he} hunches, snarling.",
+        "{name}'s {part} is agony; {he} shrieks and doubles over."
+      ],
+      "lips": [
+        "{name}'s {part} sting; {he} licks the blood away.",
+        "{name}'s {part} throb; {his} hiss is pained.",
+        "{name}'s {part} are agony; {he} snarls through bloody fangs."
+      ],
+      "anus": [
+        "{name}'s {part} stings; {he} hisses.",
+        "{name}'s {part} burns; {he} moves stiffly.",
+        "{name}'s {part} is agony; {he} shrieks."
+      ]
+    }
+  },
+  "torture": {
+    "looks": {
+      "nipple": [
+        "{name}'s {part}: welts on the grey skin.",
+        "{name}'s {part}: the skin is swollen and split.",
+        "{name}'s {part}: the skin is raw, dark blood beading."
+      ],
+      "vulva": [
+        "{name}'s {part}: welted.",
+        "{name}'s {part}: swollen and split.",
+        "{name}'s {part}: raw and bleeding."
+      ],
+      "penis": [
+        "{name}'s {part}: welted.",
+        "{name}'s {part}: swollen and split.",
+        "{name}'s {part}: raw and bleeding."
+      ],
+      "lips": [
+        "{name}'s {part}: the grey lips are swollen.",
+        "{name}'s {part}: the lips are split.",
+        "{name}'s {part}: the lips are raw and bleeding over the fangs."
+      ],
+      "anus": [
+        "{name}'s {part}: welted.",
+        "{name}'s {part}: swollen and split.",
+        "{name}'s {part}: raw and bleeding."
+      ]
+    },
+    "feels": {
+      "torture": {
+        "nipple": [
+          "{name}'s {part} sting; {he} hisses.",
+          "{name}'s {part} throb; {he} recoils, seething.",
+          "{name}'s {part} are agony; {he} trembles, pride broken."
+        ],
+        "vulva": [
+          "{name}'s {part} stings; {he} hisses.",
+          "{name}'s {part} throbs; {he} recoils.",
+          "{name}'s {part} is agony; {he} trembles."
+        ],
+        "penis": [
+          "{name}'s {part} stings; {he} hisses.",
+          "{name}'s {part} throbs; {he} recoils.",
+          "{name}'s {part} is agony; {he} trembles."
+        ],
+        "lips": [
+          "{name}'s {part} sting; {he} hisses.",
+          "{name}'s {part} throb; {he} snarls.",
+          "{name}'s {part} are agony; {he} trembles."
+        ],
+        "anus": [
+          "{name}'s {part} stings; {he} hisses.",
+          "{name}'s {part} throbs; {he} recoils.",
+          "{name}'s {part} is agony; {he} trembles."
+        ]
+      },
+      "heal": {
+        "nipple": [
+          "{name}'s {part} barely ache now.",
+          "{name}'s {part} are still sore but closing.",
+          "{name}'s {part} are tender while they heal."
+        ],
+        "vulva": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} is still sore but closing.",
+          "{name}'s {part} is tender while it heals."
+        ],
+        "penis": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} is still sore but closing.",
+          "{name}'s {part} is tender while it heals."
+        ],
+        "lips": [
+          "{name}'s {part} barely ache now.",
+          "{name}'s {part} are still sore but closing.",
+          "{name}'s {part} are tender while they heal."
+        ],
+        "anus": [
+          "{name}'s {part} barely aches now.",
+          "{name}'s {part} is still sore but closing.",
+          "{name}'s {part} is tender while it heals."
+        ]
+      }
+    }
+  }
+}

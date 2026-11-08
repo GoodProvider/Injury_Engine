@@ -1,8 +1,22 @@
-## 0.1.7
+## 0.2.0
 
 ### Install
 - New requirement: Magelight UI 1.7.1 or later, a separate download. Install it before updating.
 - The torture overlay now runs on Magelight UI. PrismaUI is no longer needed by this mod.
+
+### Creatures
+- Creatures have their own body parts and wound text instead of reading as human wounds.
+- Covered: undead, werewolves, the vampire lord, insects, animals, trolls, spriggans and dragons.
+- Also covered: Durnehviir, Dwarven machines, atronachs, spirits, netch, mudcrabs, fish and birds.
+- Optional sexual parts on insects, werewolves, undead and the vampire lord have their own text.
+
+### Healing
+- Werewolves and werebears feeding on a corpse get their own healing line; none at full health.
+- Fortify Health and Courage are no longer read as healing.
+- A health buff ending no longer leaves a made-up wound behind.
+
+### Settings
+- Removed the unused settings "Narration cooldown" and "Torture narration window".
 
 ## 0.1.6
 

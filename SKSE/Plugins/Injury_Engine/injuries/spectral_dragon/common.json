@@ -1,0 +1,205 @@
+{
+  "_note": "Spectral dragon text for every source without its own file in this folder: a translucent, glowing body of spirit; wounds are rents in the light that flicker, fray and shed motes of light; no blood, no flesh, no breath. Shared keys first, then the block of the source's model (health / torture). Sources in skip keep humanoid text. Schema: ../guide.md (Groups). No numbers in narration.",
+  "skip": [
+    "drowning"
+  ],
+  "health": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the glow around the horns flickers, a faint rent in the light along the jaw.",
+          "{name}'s head: a deep rent splits the glowing skull; motes of light stream from it and the shape blurs at the edges.",
+          "{name}'s head: the head is torn and guttering, its outline breaking apart into drifting light."
+        ],
+        "body": [
+          "{name}'s {part}: a faint tear in the glow, a few motes of light drifting out.",
+          "{name}'s {part}: a wide rent in the shimmering body sheds a steady stream of light.",
+          "{name}'s {part}: the shape is torn open and fraying, light pouring out like smoke."
+        ],
+        "wing": [
+          "{name}'s {part}: the edge of the glowing wing flickers.",
+          "{name}'s {part}: the wing is torn in long rents and flickers in and out of sight.",
+          "{name}'s {part}: the wing is mostly gone, a guttering outline trailing light."
+        ],
+        "leg": [
+          "{name}'s {part}: the glow flickers around the claws.",
+          "{name}'s {part}: the leg is rent and blurred, shedding light.",
+          "{name}'s {part}: the leg is a fraying wisp, barely holding its shape."
+        ],
+        "tail": [
+          "{name}'s {part}: the tip of the tail flickers.",
+          "{name}'s {part}: the tail is torn and trails light.",
+          "{name}'s {part}: the tail has dissolved into drifting motes."
+        ]
+      },
+      "feels": {
+        "head": [
+          "{name}'s head flickers with the blow; {he} is calm and unshaken.",
+          "{name}'s head dims; {his} hold on this world weakens and {he} grows fierce.",
+          "{name}'s head gutters; {he} is fading, distant and desperate to finish the fight."
+        ],
+        "body": [
+          "{name}'s {part} flickers; {he} pays it no mind.",
+          "{name}'s {part} sheds light; {he} moves more slowly, the glow dimmer.",
+          "{name}'s {part} frays apart; {he} wavers, close to being unmade."
+        ],
+        "wing": [
+          "{name}'s {part} flickers but holds.",
+          "{name}'s {part} beats weakly; {he} flies lower.",
+          "{name}'s {part} cannot bear {him}; {he} drifts down."
+        ],
+        "leg": [
+          "{name}'s {part} flickers.",
+          "{name}'s {part} blurs; {he} steps unevenly.",
+          "{name}'s {part} barely holds its shape; {he} lists."
+        ],
+        "tail": [
+          "{name}'s {part} flickers.",
+          "{name}'s {part} dims.",
+          "{name}'s {part} is gone to light."
+        ]
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the glow flickers where it lands. {name} lets out an echoing snarl.",
+          " on light that is already torn. The rent widens and motes of light pour out; {name} roars, the sound distant and hollow.",
+          ", and the blow rips deep. The shape blurs and gutters, streaming light, and {name} thrashes, shrieking.",
+          ", and it is too much. {name} sinks down, the glow dimming and the outline breaking apart."
+        ]
+      }
+    },
+    "death": {
+      "regions": {
+        "head": [
+          "{name}'s head bursts into a cloud of light; the glowing body unravels from the neck down and drifts away like smoke until nothing is left.",
+          "the blow splits {name}'s glowing skull; {name} gives one echoing roar and dissolves in a rush of motes that fade into the air."
+        ],
+        "body": [
+          "{name}'s {part} tears apart in a flare of light; the whole shape collapses inward and scatters into drifting motes.",
+          "the rent in {name}'s {part} widens until the body can no longer hold; {name} fades, the glow thinning to nothing."
+        ],
+        "wing": [
+          "{name}'s {part} dissolves; {name} tilts, falls, and breaks apart into light before touching the ground.",
+          "the {part} unravels; {name}'s shape follows it into a fading cloud of motes."
+        ],
+        "leg": [
+          "{name}'s {part} frays away; {name} sinks and the glow pours out of the body until it is gone.",
+          "the {part} dissolves; {name} collapses into a shower of light that fades."
+        ],
+        "tail": [
+          "{name}'s {part} unravels and the glow runs up the body like a fuse; {name} fades away in a spray of light."
+        ]
+      },
+      "soil": [
+        "As {name} fades, a last thin smoke of cold light drifts low over the ground and is gone."
+      ],
+      "soil_chance": 0.1
+    }
+  },
+  "torture": {
+    "text": {
+      "looks": {
+        "head": [
+          "{name}'s head: the glow flickers around the eyes.",
+          "{name}'s head: the light is dimmed and torn in places.",
+          "{name}'s head: the head flickers badly, its outline wavering."
+        ],
+        "body": [
+          "{name}'s {part}: the glow is dimmed in small patches.",
+          "{name}'s {part}: the light is torn in places and sheds motes.",
+          "{name}'s {part}: the shape is torn and flickering."
+        ],
+        "wing": [
+          "{name}'s {part}: the wing flickers.",
+          "{name}'s {part}: the wing is torn and dim.",
+          "{name}'s {part}: the wing flickers in and out of sight."
+        ],
+        "leg": [
+          "{name}'s {part}: the glow flickers.",
+          "{name}'s {part}: the leg is dimmed and blurred.",
+          "{name}'s {part}: the leg barely holds its shape."
+        ],
+        "tail": [
+          "{name}'s {part}: the tail flickers.",
+          "{name}'s {part}: the tail is dim and torn.",
+          "{name}'s {part}: the tail wavers and fades."
+        ]
+      },
+      "feels": {
+        "torture": {
+          "head": [
+            "{name}'s head flickers; {he} snarls, offended.",
+            "{name}'s head dims; {he} lowers it, uneasy.",
+            "{name}'s head gutters; {he} trembles, cowed."
+          ],
+          "body": [
+            "{name}'s {part} flickers; {he} shifts.",
+            "{name}'s {part} dims; {he} recoils.",
+            "{name}'s {part} wavers; {he} sinks low."
+          ],
+          "wing": [
+            "{name}'s {part} flickers; {he} folds it.",
+            "{name}'s {part} dims; {he} holds it close.",
+            "{name}'s {part} fades; {he} lets it hang."
+          ],
+          "leg": [
+            "{name}'s {part} flickers.",
+            "{name}'s {part} dims; {he} favors it.",
+            "{name}'s {part} wavers; {he} sinks down."
+          ],
+          "tail": [
+            "{name}'s {part} flickers.",
+            "{name}'s {part} dims.",
+            "{name}'s {part} fades."
+          ]
+        },
+        "heal": {
+          "head": [
+            "{name}'s head glows steady again.",
+            "{name}'s head brightens.",
+            "{name}'s head steadies as the light gathers."
+          ],
+          "body": [
+            "{name}'s {part} glows almost evenly again.",
+            "{name}'s {part} brightens as the rents close.",
+            "{name}'s {part} steadies as the light gathers."
+          ],
+          "wing": [
+            "{name}'s {part} glows whole again.",
+            "{name}'s {part} brightens.",
+            "{name}'s {part} steadies."
+          ],
+          "leg": [
+            "{name}'s {part} glows steady.",
+            "{name}'s {part} brightens.",
+            "{name}'s {part} steadies."
+          ],
+          "tail": [
+            "{name}'s {part} glows whole.",
+            "{name}'s {part} brightens.",
+            "{name}'s {part} steadies."
+          ]
+        }
+      }
+    },
+    "narration": {
+      "hit": {
+        "levels": [
+          ", and the glow flickers. {name} snarls.",
+          " on light that is already dimmed. It tears and {name} lets out an echoing cry.",
+          ", and the blow lands on the torn glow. Motes stream out and {name} writhes.",
+          ", and it is too much. {name} sinks down, flickering, the outline wavering."
+        ]
+      },
+      "heal": {
+        "level": {
+          "high": "The glow of {name}'s {parts} is nearly even again.",
+          "mid": "The rents in {name}'s {parts} have closed to faint, dim seams.",
+          "low": "The light has stopped streaming from {name}'s {parts}."
+        }
+      }
+    }
+  }
+}
