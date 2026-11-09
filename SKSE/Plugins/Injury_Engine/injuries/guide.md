@@ -36,7 +36,8 @@ array in that file (see below). A type that only scripts call (a `torture` file 
 
 ### Injury types from other mods
 
-Another mod can add its own types: it ships `SKSE/Plugins/Injury_Engine/injuries/<id>.json` in its own archive,
+Another mod can add its own types: it ships `SKSE/Plugins/Injury_Engine/injuries/humanoid/<id>.json` in its own archive
+(a file directly in `injuries/` is not loaded),
 and the mod manager merges that folder with this one at runtime (nothing to register). Then it calls
 `Injury_Engine_Main.External_Injure(attacker, victim, text, "<id>", count, part, narrate, torture)` (see
 `docs/developers/papyrus.md`), usually only when `Injury_Engine.esp` is loaded. Rules for such a file:
@@ -48,6 +49,14 @@ and the mod manager merges that folder with this one at runtime (nothing to regi
 - `sexual_parts.json` has no text for it: set the five sexual parts to `0` in `part_weights` (torture types).
 - At most 32 sources load in total (a `both` file counts twice); the log names any that are skipped.
 - Uninstalling the other mod is safe: on the next load its wounds are dropped from the save with a warning.
+
+A weapon from another mod needs no script: a `classify` rule in the new file claims it, and every description of its
+wounds then comes from that file. Walkthrough: `docs/authors/custom-weapons.md` (in the mod's source repository). In short:
+
+- `"weapon_file": "MyWeapons.esp", "weapon_id": "0xD62"`: the file-local form ID as a `0x` string (no load-order
+  prefix; for an ESL, the last three digits). Without `0x` the value is read as decimal.
+- `keyword` only works together with `weapon_types`, and needs a `priority` above 50 to beat the shipped rules.
+- If copied from a torture file, change or remove `action.alias`, or it collides with the original.
 
 ## How damage becomes injury (so you can judge the wording)
 

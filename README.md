@@ -22,7 +22,7 @@ Torture is built in: whipping (with a padded whip), pinching, slapping, pulling,
 
   A lash leaves the same welt decal as DOM.
 - **Torture overlay**: a "Torture Damage" bar per tortured actor. It shows how much the last kind of torture (whip, pinch, fire, ...) has wounded the parts it can reach, each kind in its own color. It is light blue while the actor is being healed and red where real damage has replaced torture. It fades out by itself.
-- **Extensible**: other mods can add their own injury types as `injuries/<id>.json`; SkyrimNet_Leashed adds leash dragging. Other mods can also wound or heal a chosen body part through the External API ([docs/developers/papyrus.md](docs/developers/papyrus.md)).
+- **Extensible**: other mods can add their own injury types as `injuries/humanoid/<id>.json`, including wound text for their own weapons ([docs/authors/custom-weapons.md](docs/authors/custom-weapons.md)); SkyrimNet_Leashed adds leash dragging. Other mods can also wound or heal a chosen body part through the External API ([docs/developers/papyrus.md](docs/developers/papyrus.md)).
 
 The whip, its welt decal, and its sounds come from **PAH Diary Of Mine**. This mod does not need DOM.
 
@@ -114,7 +114,7 @@ Everything about injuries lives in `SKSE/Plugins/Injury_Engine/injuries/humanoid
 - the overlay title and colors;
 - the setting defaults.
 
-Other mods can ship their own `<id>.json` there, and it loads like the built-in ones. `injuries/guide.md` explains the format and is a ready-made instruction sheet you can give to a chat assistant to improve or extend the files.
+Other mods can ship their own `<id>.json` there, and it loads like the built-in ones. To give a weapon from your own mod its own wound descriptions, see [docs/authors/custom-weapons.md](docs/authors/custom-weapons.md). `injuries/guide.md` explains the format and is a ready-made instruction sheet you can give to a chat assistant to improve or extend the files.
 
 ## Building
 

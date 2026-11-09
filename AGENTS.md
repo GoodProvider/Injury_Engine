@@ -61,6 +61,7 @@ Relative paths for other machines: [docs/reference/papyrus-rules.md](docs/refere
 | Players / settings / install | [README.md](README.md) |
 | Architecture, flow, Form IDs | [CLAUDE.md](CLAUDE.md) |
 | Prompts | [docs/authors/prompts.md](docs/authors/prompts.md) |
+| Adding a weapon mod's own injury text | [docs/authors/custom-weapons.md](docs/authors/custom-weapons.md) |
 | LLM actions (YAML: `Torture_Target`, `Stop_Fighting`, `Stop_Fighting_by_Yielding`, `Start_Fighting`) | [docs/authors/actions.md](docs/authors/actions.md) |
 | Papyrus / ESP / settings | [docs/developers/papyrus.md](docs/developers/papyrus.md) |
 | SKSE plugin / Magelight UI overlay | [docs/developers/overlay.md](docs/developers/overlay.md) |
