@@ -1,4 +1,4 @@
-VERSION=0.2.0
+VERSION=0.2.1
 NAME=Injury Engine
 
 RELEASE_FILE=versions/Injury_Engine ${VERSION}.7z

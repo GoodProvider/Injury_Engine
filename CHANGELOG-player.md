@@ -1,3 +1,15 @@
+## 0.2.1
+
+### Wounds
+- Bow and crossbow hits are arrow wounds, narrated as shots instead of stabs.
+- Vampiric Drain and Absorb Health spells drain life instead of reading as a blow.
+- Poison spells, poisoned weapons and venom have their own poison wounds.
+- Vampire Lord claws read as claw wounds instead of chewing.
+- Spell mods can mark spells as blood magic for their own wounds.
+- Every creature has its own text for arrows, drain, poison, claws and blood magic.
+- Spells no longer read as the weapon in the caster's other hand.
+- A bash with a bow or crossbow is a blunt blow.
+
 ## 0.2.0
 
 ### Magelight UI

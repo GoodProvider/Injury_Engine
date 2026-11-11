@@ -1,3 +1,14 @@
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.1
+
+Arrow and vampire / spell wounds release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and Magelight UI 1.7.1 or later.
+
+- **Arrow wounds.** New health source `arrow` claims bow and crossbow hits (`"bash": false`); `piercing` keeps daggers. Every group has its own `arrow.json`.
+- **Vampire and spell sources.** `draining` (Vampiric Drain 0x0F5B57, every Absorb Health effect), `poisoning` (ResistPoison), `clawing` (Vampire Lord unarmed, `attacker_races`) and `blood_magic` (keywords `Injury_Engine_BloodMagic` / `MagicBloodMagic`). All 19 groups have their own text for each.
+- **Spells classify by their own effect.** An unmatched Health damage effect is `generic`, never the weapon in the other hand; value-modifier ticks (plain, dual, Absorb via a new vtable hook) run inside `Classifier::MagicScope`.
+- **New classify keys.** `absorb`, `effect_keywords`, `attacker_races`, `bash`, `resist: ResistPoison`; `effect_file` / `effect_id` work for health sources. Throttled `health effect:` log line.
+- **Bow bash is bludgeoning.** `TESHitEvent` kBashAttack and `HitData` kBash / kTimedBash.
+- **Docs.** `docs/authors/custom-weapons.md` covers weapon and spell mods.
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.0
 
 Race groups release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and Magelight UI 1.7.1 or later. Includes the unreleased 0.1.7 (overlay on Magelight UI).
