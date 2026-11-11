@@ -1,0 +1,93 @@
+{
+  "_note": "Blood magic on spectral dragons: no blood at all; the magic tugs at the spirit instead. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the magic groping for blood and finding only light. {name} flickers.",
+        ", the spirit tugged and twisted. {name} jerks.",
+        ", and the spirit is wrenched. {name} jerks like a puppet.",
+        ", and it is too much. The spirit tears loose; {name} dissolves."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: flickering.",
+        "{name}'s head: jerking.",
+        "{name}'s head: flaring wildly."
+      ],
+      "body": [
+        "{name}'s body: flickering.",
+        "{name}'s body: jerking.",
+        "{name}'s body: flaring wildly."
+      ],
+      "wing": [
+        "{name}'s {part}: flickering.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ],
+      "leg": [
+        "{name}'s {part}: flickering.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ],
+      "tail": [
+        "{name}'s {part}: flickering.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} falters.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} presses on.",
+        "{name} jerks.",
+        "{name} is helpless."
+      ],
+      "wing": [
+        "{name}'s {part} beat.",
+        "{name}'s {part} jerk.",
+        "{name}'s {part} won't obey."
+      ],
+      "leg": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "tail": [
+        "{name}'s {part} lashes.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the magic tears the spirit out of {name}'s head; the form dissolves.",
+        "{name}'s head jerks back and the light fades."
+      ],
+      "body": [
+        "the magic wrenches {name}'s spirit apart; the form dissolves.",
+        "{name} jerks like a puppet, then fades away."
+      ],
+      "wing": [
+        "{name}'s {part} tear loose; {name} dissolves.",
+        "the magic rips {name}'s {part} apart; {name} fades."
+      ],
+      "leg": [
+        "{name}'s {part} tears loose; {name} dissolves.",
+        "the magic rips {name}'s {part} apart; {name} fades."
+      ],
+      "tail": [
+        "{name}'s {part} tears loose; {name} dissolves.",
+        "the magic rips {name}'s {part} apart; {name} fades."
+      ]
+    }
+  }
+}

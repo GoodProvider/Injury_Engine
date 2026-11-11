@@ -1,0 +1,93 @@
+{
+  "_note": "Life drain on dragons: the fierce heat and life pulled out through the scales; even a dragon's vast vitality ebbs. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull as a red thread of life is drawn out through the scales. {name} snarls and shakes the great head.",
+        ", the life torn from a body already chilled. The scales dull and {name}'s breath comes slower.",
+        ", and the drain bites deep. {name}'s wings droop and the fire in the throat gutters.",
+        ", and it is too much. The last fire is pulled out of {name}; the great body sags and crashes down."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the eyes a little dimmer.",
+        "{name}'s head: the scales dull, the eyes clouded.",
+        "{name}'s head: grey and drawn, the eyes dim, smoke barely rising."
+      ],
+      "body": [
+        "{name}'s body: the scales a shade duller.",
+        "{name}'s body: dull scales, the heat fading.",
+        "{name}'s body: ashen scales, the flesh shrunken beneath."
+      ],
+      "wing": [
+        "{name}'s {part}: a little slack.",
+        "{name}'s {part}: drooping.",
+        "{name}'s {part}: hanging limp and grey."
+      ],
+      "leg": [
+        "{name}'s {part}: a little weak.",
+        "{name}'s {part}: trembling.",
+        "{name}'s {part}: buckling."
+      ],
+      "tail": [
+        "{name}'s {part}: lashing slower.",
+        "{name}'s {part}: dragging.",
+        "{name}'s {part}: limp."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} snorts, angered.",
+        "{name} is slow and dazed.",
+        "{name} is fading, the fire dying."
+      ],
+      "body": [
+        "{name} feels a chill.",
+        "{name} is drained and heavy.",
+        "{name} is empty and close to falling."
+      ],
+      "wing": [
+        "{name}'s {part} beat slower.",
+        "{name}'s {part} barely lift.",
+        "{name}'s {part} cannot fly."
+      ],
+      "leg": [
+        "{name}'s {part} drags.",
+        "{name}'s {part} trembles.",
+        "{name}'s {part} gives way."
+      ],
+      "tail": [
+        "{name}'s {part} slows.",
+        "{name}'s {part} drags.",
+        "{name}'s {part} is still."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last fire out of {name}; the eyes go dark, the head drops and the great body crashes down, cold and grey.",
+        "{name}'s heart slows and stops as the crimson thread pulls away; the dragon sags and lies still."
+      ],
+      "body": [
+        "the drain empties {name}'s vast body; the scales go ashen and {name} crashes to the earth, a withered husk.",
+        "all of {name}'s fire flows out in a red stream; the great frame shrinks and falls."
+      ],
+      "wing": [
+        "the withering spreads from {name}'s {part} into the body; {name} plunges and lies still.",
+        "{name}'s {part} go limp and grey and the drain takes the rest; {name} falls from the sky."
+      ],
+      "leg": [
+        "{name}'s {part} withers and buckles; the drain takes the rest and {name} crashes down.",
+        "the drain climbs from {name}'s {part} to the heart; {name} sprawls, cold."
+      ],
+      "tail": [
+        "the drain pulls the life up {name}'s {part} to the heart; {name} sags and dies.",
+        "{name}'s {part} withers and the cold spreads; the dragon collapses."
+      ]
+    }
+  }
+}

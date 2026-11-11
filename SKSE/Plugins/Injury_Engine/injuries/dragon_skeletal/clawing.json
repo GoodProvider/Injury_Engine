@@ -1,0 +1,93 @@
+{
+  "_note": "Vampire lord claw wounds on skeletal dragons: great talons scraping and cracking old bone. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons scraping across bone. {name} hisses.",
+        ", the claws cracking old bone. Splinters fly.",
+        ", and the talons smash through the bones. {name} reels.",
+        ", and it is too much. The claws shatter {name}; the bones scatter."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s skull: scored.",
+        "{name}'s skull: cracked.",
+        "{name}'s skull: smashed open."
+      ],
+      "body": [
+        "{name}'s ribs: scored.",
+        "{name}'s ribs: cracked.",
+        "{name}'s ribs: smashed."
+      ],
+      "wing": [
+        "{name}'s {part}: scored.",
+        "{name}'s {part}: cracked.",
+        "{name}'s {part}: shattered."
+      ],
+      "leg": [
+        "{name}'s {part}: scored.",
+        "{name}'s {part}: cracked.",
+        "{name}'s {part}: shattered."
+      ],
+      "tail": [
+        "{name}'s {part}: scored.",
+        "{name}'s {part}: cracked.",
+        "{name}'s {part}: shattered."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} hisses.",
+        "{name} falters.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} rattles.",
+        "{name} sags."
+      ],
+      "wing": [
+        "{name}'s {part} work.",
+        "{name}'s {part} rattle.",
+        "{name}'s {part} fail."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} rattles.",
+        "{name}'s {part} fails."
+      ],
+      "tail": [
+        "{name}'s {part} works.",
+        "{name}'s {part} rattles.",
+        "{name}'s {part} fails."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws smash {name}'s skull; the eye-light dies and the bones collapse.",
+        "a talon cracks {name}'s skull in two; the skeleton falls apart."
+      ],
+      "body": [
+        "the claws smash through {name}'s ribs; the bones scatter.",
+        "a swipe shatters {name}'s spine; the skeleton collapses."
+      ],
+      "wing": [
+        "the claws shatter {name}'s {part} and the body; {name} falls apart.",
+        "the talons rip {name}'s {part} away; the rest collapses."
+      ],
+      "leg": [
+        "the claws shatter {name}'s {part}; {name} collapses.",
+        "a swipe smashes {name}'s {part}; the bones scatter."
+      ],
+      "tail": [
+        "the claws shatter {name}'s {part}; the rest falls apart.",
+        "a swipe smashes {name}'s {part}; {name} collapses."
+      ]
+    }
+  }
+}

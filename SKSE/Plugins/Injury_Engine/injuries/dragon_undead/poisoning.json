@@ -1,0 +1,93 @@
+{
+  "_note": "Poison on rotting dragons: dead flesh cannot be poisoned; the venom only sizzles in the rot. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison sizzling in the rotten hide. {name} pays it no mind.",
+        ", the venom eating into dead flesh. The rot blackens and drips.",
+        ", and the poison eats deep into the rotten body. Flesh sloughs away.",
+        ", and it is too much. The poison has eaten through what held {name} together; the corpse collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a hissing stain.",
+        "{name}'s head: blackened, dripping rot.",
+        "{name}'s head: flesh sloughing from the skull."
+      ],
+      "body": [
+        "{name}'s body: a stain.",
+        "{name}'s body: blackened rot dripping.",
+        "{name}'s body: flesh sloughing off the bones."
+      ],
+      "wing": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: blackened.",
+        "{name}'s {part}: sloughing."
+      ],
+      "leg": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: blackened.",
+        "{name}'s {part}: sloughing."
+      ],
+      "tail": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: blackened.",
+        "{name}'s {part}: sloughing."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} ignores it.",
+        "{name} falters."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} drags on.",
+        "{name} sags."
+      ],
+      "wing": [
+        "{name}'s {part} work.",
+        "{name}'s {part} drip.",
+        "{name}'s {part} sag."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} drips.",
+        "{name}'s {part} sags."
+      ],
+      "tail": [
+        "{name}'s {part} works.",
+        "{name}'s {part} drips.",
+        "{name}'s {part} sags."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison eats through {name}'s skull; the eye-light dies and the corpse collapses.",
+        "{name}'s head sloughs to bare bone; {name} falls still."
+      ],
+      "body": [
+        "the poison eats through {name}'s rotten body; it collapses in a reeking heap.",
+        "{name}'s flesh sloughs away and the bones fall."
+      ],
+      "wing": [
+        "{name}'s {part} slough away and the rest follows.",
+        "the poison eats through {name}'s {part}; {name} falls."
+      ],
+      "leg": [
+        "{name}'s {part} gives way; {name} collapses.",
+        "the poison eats through {name}'s {part}; the corpse falls."
+      ],
+      "tail": [
+        "{name}'s {part} sloughs away and the rest follows.",
+        "the poison eats up {name}'s {part}; {name} collapses."
+      ]
+    }
+  }
+}

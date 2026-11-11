@@ -1,0 +1,65 @@
+{
+  "_note": "Vampire lord claw wounds on netch and seekers: great talons tearing rubbery or papery hide. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons tearing the hide. {name} recoils.",
+        ", the claws ripping torn hide. Thin fluid leaks.",
+        ", and the talons tear deep. {name} lurches, fluid spraying.",
+        ", and it is too much. The claws rip {name} open; {name} drops."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: scratched.",
+        "{name}'s head: torn, fluid leaking.",
+        "{name}'s head: torn open."
+      ],
+      "body": [
+        "{name}'s body: scratched.",
+        "{name}'s body: long tears, fluid leaking.",
+        "{name}'s body: torn open, deflating."
+      ],
+      "tentacle": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: torn away."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} recoils.",
+        "{name} drifts unsteadily.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} sags.",
+        "{name} is collapsing."
+      ],
+      "tentacle": [
+        "{name}'s {part} work.",
+        "{name}'s {part} are weak.",
+        "{name}'s {part} hang."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws rip {name}'s head open; {name} drops.",
+        "a talon tears through {name}'s head; {name} falls."
+      ],
+      "body": [
+        "the claws tear {name}'s body open; fluid gushes and {name} deflates and falls.",
+        "a swipe splits {name}; {name} drops, dead."
+      ],
+      "tentacle": [
+        "the claws tear {name}'s {part} away and rake the body open; {name} falls.",
+        "{name}'s {part} are torn off; {name} drops."
+      ]
+    }
+  }
+}

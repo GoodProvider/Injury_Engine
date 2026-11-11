@@ -1,0 +1,79 @@
+{
+  "_note": "Blood magic on wisps, wraiths and ghosts: no blood; the magic tugs at the essence instead. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the magic groping for blood and finding only mist. {name} flickers.",
+        ", the essence tugged and twisted. {name} jerks.",
+        ", and the essence is wrenched. {name} jerks like a puppet.",
+        ", and it is too much. The essence tears loose; {name} disperses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: flickering.",
+        "{name}'s head: jerking.",
+        "{name}'s head: flaring wildly."
+      ],
+      "body": [
+        "{name}'s core: flickering.",
+        "{name}'s core: jerking.",
+        "{name}'s core: flaring wildly."
+      ],
+      "arm": [
+        "{name}'s {part}: flickering.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ],
+      "trail": [
+        "{name}'s {part}: flickering.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} falters.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} drifts on.",
+        "{name} jerks.",
+        "{name} is helpless."
+      ],
+      "arm": [
+        "{name}'s {part} reaches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "trail": [
+        "{name}'s {part} drifts.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the magic tears the essence out of {name}'s head; the form disperses.",
+        "{name}'s head jerks back and the glow fades."
+      ],
+      "body": [
+        "the magic wrenches {name} apart; the form disperses.",
+        "{name} jerks like a puppet, then fades away."
+      ],
+      "arm": [
+        "{name}'s {part} tears loose; {name} disperses.",
+        "the magic rips {name}'s {part} apart; {name} fades."
+      ],
+      "trail": [
+        "{name}'s {part} tears loose; {name} disperses.",
+        "the magic rips {name}'s {part} apart; {name} fades."
+      ]
+    }
+  }
+}

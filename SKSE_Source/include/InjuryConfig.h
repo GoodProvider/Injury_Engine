@@ -104,7 +104,10 @@ namespace InjuryConfig
         std::vector<std::string> weaponTypes;
         std::string keyword;
         std::string withoutKeyword;
-        std::string resist;  // "ResistFire", "ResistFrost", "ResistShock"
+        std::string resist;  // "ResistFire", "ResistFrost", "ResistShock", "ResistPoison"
+        bool absorb = false;  // magic: an Absorb-flagged MGEF on Health (Absorb Health, Vampiric Drain)
+        std::vector<std::string> effectKeywords;  // magic: the MGEF carries any of these keyword EditorIDs
+        std::vector<std::string> attackerRaces;  // unarmed: the attacker's race EditorID is one of these
         std::string effectFile;
         std::uint32_t effectId = 0;
         bool hasEffect = false;

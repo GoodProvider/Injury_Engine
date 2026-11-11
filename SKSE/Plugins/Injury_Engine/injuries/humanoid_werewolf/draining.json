@@ -1,0 +1,93 @@
+{
+  "_note": "Life drain on werewolves and werebears: the beast's fierce heat and vigour pulled out through the fur. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull as a red thread of life is drawn out through the fur. {name} snarls and shakes.",
+        ", the life torn from a body already chilled. {name} sways, the fur dull.",
+        ", and the drain bites deep. {name}'s great limbs tremble and slacken.",
+        ", and it is too much. The last of the beast's vigour is pulled out; {name} sags to the ground."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the eyes a little dull.",
+        "{name}'s head: the eyes dull, the muzzle slack.",
+        "{name}'s head: the eyes dim, the hide clinging to the skull."
+      ],
+      "body": [
+        "{name}'s body: the fur lies flat.",
+        "{name}'s body: dull fur, the muscle slack.",
+        "{name}'s body: withered under lank fur."
+      ],
+      "arm": [
+        "{name}'s {part}: a little weak.",
+        "{name}'s {part}: slack, claws twitching.",
+        "{name}'s {part}: shrunken, hanging limp."
+      ],
+      "leg": [
+        "{name}'s {part}: a little weak.",
+        "{name}'s {part}: trembling.",
+        "{name}'s {part}: shrunken, buckling."
+      ],
+      "tail": [
+        "{name}'s {part}: drooping.",
+        "{name}'s {part}: limp.",
+        "{name}'s {part}: lank and still."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} snorts, cross.",
+        "{name} is dazed and slow.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} feels a chill.",
+        "{name} is drained and heavy.",
+        "{name} is empty."
+      ],
+      "arm": [
+        "{name}'s {part} swings slower.",
+        "{name}'s {part} is weak.",
+        "{name}'s {part} hangs useless."
+      ],
+      "leg": [
+        "{name}'s {part} drags.",
+        "{name}'s {part} trembles.",
+        "{name}'s {part} gives way."
+      ],
+      "tail": [
+        "{name}'s {part} droops.",
+        "{name}'s {part} hangs.",
+        "{name}'s {part} is still."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last life out of {name}; the eyes go dull and the great beast topples, cold and withered.",
+        "{name} lets out a weak whine as the red thread pulls away; the body slumps and lies still."
+      ],
+      "body": [
+        "the drain empties {name}'s great body; the fur goes lank and grey and {name} crashes down, a withered husk.",
+        "all of {name}'s vigour flows out in a red stream; the beast shrinks and falls."
+      ],
+      "arm": [
+        "the withering runs from {name}'s {part} into the chest; {name} slumps.",
+        "{name}'s {part} shrivels and the drain takes the rest; {name} drops."
+      ],
+      "leg": [
+        "{name}'s {part} withers and buckles; the drain takes the rest.",
+        "the drain climbs from {name}'s {part}; {name} sprawls, cold."
+      ],
+      "tail": [
+        "the drain pulls the life up {name}'s {part}; {name} sags and dies.",
+        "{name}'s {part} goes limp and the cold spreads; {name} collapses."
+      ]
+    }
+  }
+}

@@ -114,6 +114,29 @@ Weapon types: `OneHandSword`, `TwoHandSword`, `OneHandAxe`, `TwoHandAxe`, `OneHa
 
 A rule that names a weapon always beats the weapon-type rules, in or out of combat. `priority` between named rules only matters if two files name the same weapon. If your plugin isn't loaded, the rule is simply inactive, so the JSON is safe to ship.
 
+## Spells from other mods
+
+A damage spell is classified by its magic effects (MGEF), not by the spell record. Each effect that damages Health is tried against the magic rules in priority order, and the first match wins:
+
+| Rule | Matches | Shipped use |
+|------|---------|-------------|
+| `"effect_file": "MySpells.esp", "effect_id": "0x812"` | this exact magic effect | `draining`: Vampiric Drain (Skyrim.esm `0x0F5B57`) |
+| `"absorb": true` | any Absorb archetype effect on Health | `draining`: Absorb Health staves, enchantments, Vampire Lord drain |
+| `"effect_keywords": ["MyMod_MagicBlood"]` | the effect has any of these keyword EditorIDs | `blood_magic`: `Injury_Engine_BloodMagic`, `MagicBloodMagic` |
+| `"resist": "ResistPoison"` | the effect's resist value | `burning` / `freezing` / `shocking` / `poisoning` |
+
+A Health damage effect that no rule names reads as `generic`. It never falls back to the weapon in the caster's other hand or to a punch.
+
+**Blood magic for your spells.** `blood_magic` ships with no vanilla spell. Either add the keyword `Injury_Engine_BloodMagic` (any keyword with that EditorID, made in your own plugin) to your spell's magic effect, or ship your own source file with an `effect_file` rule. The keyword needs no file from you.
+
+The same form ID rules apply as for weapons (file-local ID as a `0x` string). To see what an effect offers, cast it on someone and look in `Injury_Engine.log` for (one line per victim and effect every ten seconds):
+
+```text
+health effect: victim 0009F361 caster 00000014 effect 000F5B57 archetype:4 resist:none detrimental:true hostile:true keywords:[...] -> draining
+```
+
+`archetype:4` is Absorb, and the keywords list is what `effect_keywords` can match.
+
 ## Which key produces which text
 
 | Key | Where the LLM sees it |
@@ -182,8 +205,8 @@ To write text for them instead, the block goes under your source ID in `humanoid
 
 ## Limits
 
-- At most 32 sources load in total. Injury_Engine uses 19, and a `both` file counts as two.
+- At most 32 sources load in total. Injury_Engine uses 25 (counting `falling` twice, since a `both` file counts as two).
 - Rules name weapon records. A special arrow can't have its own text, because the bow is what the hit reports.
 - A weapon's fire, frost or shock enchantment may be classified as `burning`, `freezing` or `shocking` rather than as your source. This has not been tested for custom weapons.
 - The only shipped named-weapon rule is Diary of Mine's slap in `slapping.json`, a working example of the format.
-- An effect rule (`effect_file` / `effect_id`) works for torture sources only. A real-damage spell is classified by its resist type.
+- A spell's effect rule (`effect_file` / `effect_id`, `effect_keywords`, `absorb`, `resist`) is matched on the magic effect, not on the spell record (see "Spells from other mods").

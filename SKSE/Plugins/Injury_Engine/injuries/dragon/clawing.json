@@ -1,0 +1,93 @@
+{
+  "_note": "Vampire lord claw wounds on dragons: great talons raking across scales and wing membranes. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons screeching across the scales. {name} roars and lashes back.",
+        ", the claws ripping between loosened scales. Hot dark blood runs.",
+        ", and the talons tear deep into the scaled flesh. {name} reels, blood spraying.",
+        ", and it is too much. The claws rip {name} open; {name} crashes down."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: scratched scales.",
+        "{name}'s head: scales torn, blood running.",
+        "{name}'s head: torn open, scales hanging."
+      ],
+      "body": [
+        "{name}'s body: scratched scales.",
+        "{name}'s body: deep rakes between scales, hot blood running.",
+        "{name}'s body: laid open, scales peeled away."
+      ],
+      "wing": [
+        "{name}'s {part}: a tear.",
+        "{name}'s {part}: long rents in the membrane.",
+        "{name}'s {part}: shredded."
+      ],
+      "leg": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: deep rakes.",
+        "{name}'s {part}: torn to the bone."
+      ],
+      "tail": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: deep rakes.",
+        "{name}'s {part}: torn open."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} roars.",
+        "{name} is furious.",
+        "{name} is reeling."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} is slowed.",
+        "{name} is staggering."
+      ],
+      "wing": [
+        "{name}'s {part} sting.",
+        "{name}'s {part} beat unevenly.",
+        "{name}'s {part} cannot fly."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} limps.",
+        "{name}'s {part} won't hold."
+      ],
+      "tail": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} drags.",
+        "{name}'s {part} is limp."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws rake across {name}'s eyes and throat; hot blood gushes and {name} crashes down.",
+        "a great talon tears {name}'s face open to the skull; {name} roars once and dies."
+      ],
+      "body": [
+        "the claws rip {name}'s belly open between the scales; the guts spill out and {name} collapses.",
+        "a brutal swipe tears {name}'s chest open; {name} topples in a spray of hot blood."
+      ],
+      "wing": [
+        "the claws shred {name}'s {part} and the body beneath; {name} plunges and dies.",
+        "the talons rip {name}'s {part} apart; {name} crashes down and bleeds out."
+      ],
+      "leg": [
+        "the claws tear {name}'s {part} open to the bone; {name} collapses and bleeds out.",
+        "a swipe shears through {name}'s {part}; {name} topples, dead."
+      ],
+      "tail": [
+        "the claws rip {name}'s {part} and on up the flank; {name} crashes down.",
+        "the talons tear {name}'s {part} half off; {name} bleeds out."
+      ]
+    }
+  }
+}

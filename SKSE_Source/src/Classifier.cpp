@@ -62,6 +62,10 @@ namespace Classifier
         // victim -> latest real health-damage spell effect, from AddTarget: a spell's damage that comes without a
         // usable hit event while the caster's hands are empty must not read as an unarmed hit (a punch).
         std::unordered_map<RE::FormID, MagicSeen> g_realMagic;
+        std::unordered_map<std::uint64_t, double> g_effectLog;  // (victim << 32 | MGEF) -> last "health effect" log line
+        // MagicScope: the source of the value modifier tick running on this thread (-2 none) and its caster
+        thread_local int t_scopeSource = -2;
+        thread_local RE::FormID t_scopeCaster = 0;
         std::unordered_map<RE::FormID, double> g_quiet;  // victim -> last QuietMarker cast
         std::unordered_map<RE::FormID, double> g_buff;  // actor -> last max-health buff change (a fortify ending)
         // Running max-health buffs (target form id << 16 | active effect unique id), recorded from the apply event so
@@ -133,6 +137,8 @@ namespace Classifier
                 return "ResistFrost";
             case RE::ActorValue::kResistShock:
                 return "ResistShock";
+            case RE::ActorValue::kPoisonResist:
+                return "ResistPoison";
             default:
                 return {};
             }
@@ -241,7 +247,24 @@ namespace Classifier
             return -2;
         }
 
-        int ResistHealthSourceOf(const RE::EffectSetting* mgef)
+        // An effect that takes Health as damage: a value modifier, dual value modifier or absorb on Health that is not
+        // a Recover effect (those only move max health: a buff change, not a wound).
+        bool DamagesHealth(const RE::EffectSetting* mgef)
+        {
+            using Archetype = RE::EffectArchetypes::ArchetypeID;
+            if (!mgef || mgef->data.primaryAV != RE::ActorValue::kHealth || mgef->data.flags.all(RE::EffectSetting::EffectSettingData::Flag::kRecover)) {
+                return false;
+            }
+            const auto archetype = mgef->GetArchetype();
+            if (archetype == Archetype::kAbsorb) {
+                return true;
+            }
+            return (archetype == Archetype::kValueModifier || archetype == Archetype::kDualValueModifier) && mgef->IsDetrimental();
+        }
+
+        // Health source of a real MGEF by the magic rules (effect form, absorb, effect keyword, resist), in priority
+        // order; a Health damage effect no rule names is generic. -2 = not a Health damage effect, or a torture one.
+        int HealthSourceOf(const RE::EffectSetting* mgef)
         {
             if (!mgef) {
                 return -2;
@@ -249,17 +272,40 @@ namespace Classifier
             if (TortureSourceOf(mgef) >= 0) {
                 return -2;
             }
+            const bool absorb = mgef->GetArchetype() == RE::EffectArchetypes::ArchetypeID::kAbsorb && mgef->data.primaryAV == RE::ActorValue::kHealth;
             const auto resist = ResistName(mgef);
-            if (resist.empty()) {
-                return -2;
-            }
             for (const auto& rule : InjuryConfig::ClassifyRules()) {
-                if (rule.hasEffect || rule.resist != resist) {
+                if (InjuryConfig::IsTorture(rule.source)) {
                     continue;
                 }
-                return rule.source;
+                if (rule.hasEffect) {
+                    if (EffectMatchesRule(mgef, rule)) {
+                        return rule.source;
+                    }
+                    continue;
+                }
+                if (rule.absorb) {
+                    if (absorb) {
+                        return rule.source;
+                    }
+                    continue;
+                }
+                if (!rule.effectKeywords.empty()) {
+                    for (const auto& keyword : rule.effectKeywords) {
+                        if (mgef->HasKeywordString(keyword.c_str())) {
+                            return rule.source;
+                        }
+                    }
+                    continue;
+                }
+                if (!rule.resist.empty() && !resist.empty() && rule.resist == resist) {
+                    return rule.source;
+                }
             }
-            return InjuryConfig::GenericIndex();
+            if (!resist.empty() || DamagesHealth(mgef)) {
+                return InjuryConfig::GenericIndex();
+            }
+            return -2;
         }
 
         bool Npc(RE::Actor* actor)
@@ -278,6 +324,14 @@ namespace Classifier
             }
             if (rule.npc == 0 && npc) {
                 return false;
+            }
+            if (!rule.attackerRaces.empty()) {
+                const auto* race = attacker ? attacker->GetRace() : nullptr;
+                const char* edid = race ? race->GetFormEditorID() : nullptr;
+                if (!edid || !*edid ||
+                    std::ranges::none_of(rule.attackerRaces, [&](const std::string& name) { return InjuryConfig::IEquals(name, edid); })) {
+                    return false;
+                }
             }
             const bool combat = attacker && attacker->IsInCombat();
             if (rule.combat == 1 && !combat) {
@@ -368,18 +422,21 @@ namespace Classifier
             return {};
         }
 
-        // Torture "Torture" MGEF first, else health resist match, else -2.
+        // Torture "Torture" MGEF first, else the health magic rules, else -2.
         int EffectSource(const RE::EffectSetting* mgef)
         {
             if (const int torture = TortureSourceOf(mgef); torture >= 0) {
                 return torture;
             }
-            return ResistHealthSourceOf(mgef);
+            return HealthSourceOf(mgef);
         }
 
+        // A spell's source: a torture effect wins; else the first effect a magic rule names; else generic when any
+        // effect damages Health (an unknown damage spell must not fall to the weapon in the other hand or to fists).
         Match MatchMagic(const RE::MagicItem* item)
         {
             Match deferred{};
+            const int generic = InjuryConfig::GenericIndex();
             for (const auto* effect : item->effects) {
                 if (!effect || !effect->baseEffect) {
                     continue;
@@ -388,11 +445,12 @@ namespace Classifier
                 if (const int torture = TortureSourceOf(mgef); torture >= 0) {
                     return { torture, false };
                 }
-                if (deferred.source == -2) {
-                    const int health = ResistHealthSourceOf(mgef);
-                    if (health != -2) {
-                        deferred = { health, false };
-                    }
+                const int health = HealthSourceOf(mgef);
+                if (health == -2) {
+                    continue;
+                }
+                if (deferred.source == -2 || (deferred.source == generic && health != generic)) {
+                    deferred = { health, false };
                 }
             }
             return deferred;
@@ -1063,12 +1121,39 @@ namespace Classifier
         // only an effect that touches Health is real health-damage magic (a resist-tagged Stamina / Magicka drain is not)
         const auto* base = effect->baseEffect;
         const bool touchesHealth = base && (base->data.primaryAV == RE::ActorValue::kHealth || base->data.secondaryAV == RE::ActorValue::kHealth);
-        if (const int health = touchesHealth ? ResistHealthSourceOf(base) : -1; health >= 0 && caster) {
-            std::lock_guard lock(g_lock);
-            if (g_realMagic.size() > 512) {
-                g_realMagic.clear();
+        if (const int health = touchesHealth ? HealthSourceOf(base) : -1; health >= 0 && caster) {
+            bool describe = false;
+            {
+                std::lock_guard lock(g_lock);
+                if (g_realMagic.size() > 512) {
+                    g_realMagic.clear();
+                }
+                const double now = NowSeconds();
+                g_realMagic[victim->GetFormID()] = { health, caster->GetFormID(), now };
+                // one line per victim and effect every 10 s: the MGEF facts the magic rules can match on
+                if (g_effectLog.size() > 512) {
+                    g_effectLog.clear();
+                }
+                double& last = g_effectLog[(static_cast<std::uint64_t>(victim->GetFormID()) << 32) | base->GetFormID()];
+                if (now - last >= 10.0) {
+                    last = now;
+                    describe = true;
+                }
             }
-            g_realMagic[victim->GetFormID()] = { health, caster->GetFormID(), NowSeconds() };
+            if (describe) {
+                std::string keywords;
+                for (std::uint32_t i = 0; i < base->numKeywords; ++i) {
+                    const auto* keyword = base->keywords ? base->keywords[i] : nullptr;
+                    const char* edid = keyword ? keyword->GetFormEditorID() : nullptr;
+                    if (edid && *edid) {
+                        keywords += keywords.empty() ? edid : std::string(",") + edid;
+                    }
+                }
+                const auto resist = ResistName(base);
+                SKSE::log::info("health effect: victim {:08X} caster {:08X} effect {:08X} archetype:{} resist:{} detrimental:{} hostile:{} keywords:[{}] -> {}",
+                    victim->GetFormID(), caster->GetFormID(), base->GetFormID(), static_cast<int>(base->GetArchetype()),
+                    resist.empty() ? std::string_view("none") : resist, base->IsDetrimental(), base->IsHostile(), keywords, IdOf(health));
+            }
         }
         if (const int index = TortureIndexOf(effect->baseEffect); index >= 0) {
             std::lock_guard lock(g_lock);
@@ -1080,6 +1165,23 @@ namespace Classifier
                 SKSE::log::info("torture effect: victim {:08X} source {}", victimId, IdOf(index));
             }
         }
+    }
+
+    int HealthSourceOfEffect(const RE::EffectSetting* mgef)
+    {
+        return HealthSourceOf(mgef);
+    }
+
+    MagicScope::MagicScope(int source, RE::FormID caster) : previousSource(t_scopeSource), previousCaster(t_scopeCaster)
+    {
+        t_scopeSource = source;
+        t_scopeCaster = caster;
+    }
+
+    MagicScope::~MagicScope()
+    {
+        t_scopeSource = previousSource;
+        t_scopeCaster = previousCaster;
     }
 
     int TortureSourceOfEffect(const RE::EffectSetting* mgef)
@@ -1124,6 +1226,11 @@ namespace Classifier
             }
             return hit.source;
         };
+        // a value modifier tick on this thread (drain, poison, a burning spell): its own effect names the damage
+        if (t_scopeSource >= 0 && (!attacker || !t_scopeCaster || attacker->GetFormID() == t_scopeCaster)) {
+            SKSE::log::debug("classify {:08X}: effect tick by {:08X} -> {}", victim->GetFormID(), t_scopeCaster, IdOf(t_scopeSource));
+            return take({ t_scopeSource, false }, false);
+        }
         RE::FormID sourceId = 0;
         RE::ObjectRefHandle cause;
         bool bash = false;

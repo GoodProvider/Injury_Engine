@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on spriggans: great talons tearing bark and wood. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons tearing the bark. {name} rustles angrily.",
+        ", the claws gouging wood. Sap weeps.",
+        ", and the talons tear deep. Splinters fly and {name} reels.",
+        ", and it is too much. The claws rip {name} apart; {name} collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: scratched bark.",
+        "{name}'s head: gouged, sap weeping.",
+        "{name}'s head: torn open."
+      ],
+      "body": [
+        "{name}'s body: scratched bark.",
+        "{name}'s body: deep gouges, sap weeping.",
+        "{name}'s body: torn open, splintered."
+      ],
+      "arm": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: gouged.",
+        "{name}'s {part}: torn apart."
+      ],
+      "leg": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: gouged.",
+        "{name}'s {part}: torn apart."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} is enraged.",
+        "{name} falters.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} slows.",
+        "{name} staggers."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws tear {name}'s head apart; the glow dies and {name} falls.",
+        "a talon splits {name}'s head; {name} topples."
+      ],
+      "body": [
+        "the claws rip {name}'s body open; splinters and sap spill and {name} collapses.",
+        "a swipe splits {name}'s trunk; {name} falls."
+      ],
+      "arm": [
+        "the claws tear {name}'s {part} off; {name} collapses.",
+        "the talons rip {name}'s {part} apart; {name} falls."
+      ],
+      "leg": [
+        "the claws tear {name}'s {part} apart; {name} topples.",
+        "a swipe shatters {name}'s {part}; {name} falls."
+      ]
+    }
+  }
+}

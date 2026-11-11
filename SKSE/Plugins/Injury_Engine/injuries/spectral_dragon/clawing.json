@@ -1,0 +1,93 @@
+{
+  "_note": "Vampire lord claw wounds on spectral dragons: great talons tearing rents in the glowing form. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons tearing through the light. {name} flickers.",
+        ", the claws ripping rents in the form. Light leaks out.",
+        ", and the talons tear deep. {name} wavers, light pouring out.",
+        ", and it is too much. The claws tear {name} apart; the form dissolves."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a thin rent.",
+        "{name}'s head: torn, light leaking.",
+        "{name}'s head: torn open, light pouring."
+      ],
+      "body": [
+        "{name}'s body: a thin rent.",
+        "{name}'s body: long rents, light leaking.",
+        "{name}'s body: torn open, light pouring."
+      ],
+      "wing": [
+        "{name}'s {part}: a rent.",
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: shredded."
+      ],
+      "leg": [
+        "{name}'s {part}: a rent.",
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: shredded."
+      ],
+      "tail": [
+        "{name}'s {part}: a rent.",
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: shredded."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} roars.",
+        "{name} flickers.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} presses on.",
+        "{name} wavers.",
+        "{name} is coming apart."
+      ],
+      "wing": [
+        "{name}'s {part} beat.",
+        "{name}'s {part} waver.",
+        "{name}'s {part} fail."
+      ],
+      "leg": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} wavers.",
+        "{name}'s {part} fails."
+      ],
+      "tail": [
+        "{name}'s {part} lashes.",
+        "{name}'s {part} wavers.",
+        "{name}'s {part} fails."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws tear {name}'s head apart; the light bursts out and {name} dissolves.",
+        "a talon rips through {name}'s head; the form fades."
+      ],
+      "body": [
+        "the claws rip {name}'s body apart; the light pours out and {name} vanishes.",
+        "a swipe tears {name} in two; both halves fade."
+      ],
+      "wing": [
+        "the claws shred {name}'s {part}; {name} dissolves.",
+        "the talons rip {name}'s {part} away; {name} fades."
+      ],
+      "leg": [
+        "the claws tear {name}'s {part} apart; {name} dissolves.",
+        "a swipe shreds {name}'s {part}; {name} fades."
+      ],
+      "tail": [
+        "the claws tear {name}'s {part} apart; {name} dissolves.",
+        "a swipe shreds {name}'s {part}; {name} fades."
+      ]
+    }
+  }
+}

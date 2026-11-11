@@ -1,0 +1,65 @@
+{
+  "_note": "Life drain on netch and seekers: the life pulled out through the rubbery or papery hide; the body deflates and the tentacles hang. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull through the hide. {name} shudders.",
+        ", the life drawn from a body already sagging. The tentacles droop.",
+        ", and the drain bites deep. {name} sinks, the hide wrinkling.",
+        ", and it is too much. The last life leaves {name}; the body deflates and drops."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a little dull.",
+        "{name}'s head: sagging.",
+        "{name}'s head: shrivelled."
+      ],
+      "body": [
+        "{name}'s body: a little slack.",
+        "{name}'s body: sagging, the hide wrinkled.",
+        "{name}'s body: deflated and grey."
+      ],
+      "tentacle": [
+        "{name}'s {part}: slower.",
+        "{name}'s {part}: drooping.",
+        "{name}'s {part}: hanging limp."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} slows.",
+        "{name} drifts lower.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} slows.",
+        "{name} sinks.",
+        "{name} is empty."
+      ],
+      "tentacle": [
+        "{name}'s {part} slow.",
+        "{name}'s {part} droop.",
+        "{name}'s {part} hang."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last life out of {name}; the body sags and drops to the ground.",
+        "{name} shudders as the red thread pulls away and sinks, dead."
+      ],
+      "body": [
+        "the drain empties {name}; the body deflates and falls, a grey husk.",
+        "all life flows out of {name}; {name} sinks and lies still."
+      ],
+      "tentacle": [
+        "the withering runs from {name}'s {part} into the body; {name} drops.",
+        "{name}'s {part} shrivel and the drain takes the rest."
+      ]
+    }
+  }
+}

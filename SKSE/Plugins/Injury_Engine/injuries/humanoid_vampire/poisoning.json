@@ -1,0 +1,93 @@
+{
+  "_note": "Poison on vampire lords: the dead blood resists poison; it only burns and blackens before the body throws it off, and only a strong dose takes hold. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison burning into the grey skin. {name} hisses, unimpressed.",
+        ", the venom blackening the dark blood around the wound. {name} snarls, slowed.",
+        ", and the poison spreads through the dark blood. {name} retches black and staggers.",
+        ", and it is too much. The poison overwhelms even the dead blood; {name} convulses and falls."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: a dark burn.",
+        "{name}'s face: black veins under the grey skin.",
+        "{name}'s face: black-veined, black froth at the fangs."
+      ],
+      "body": [
+        "{name}'s {part}: a dark burn.",
+        "{name}'s {part}: black veins spreading.",
+        "{name}'s {part}: black-veined and blistered."
+      ],
+      "arm": [
+        "{name}'s {part}: a dark burn.",
+        "{name}'s {part}: black-veined, twitching.",
+        "{name}'s {part}: locked in a cramp."
+      ],
+      "leg": [
+        "{name}'s {part}: a dark burn.",
+        "{name}'s {part}: black-veined, twitching.",
+        "{name}'s {part}: locked in a cramp."
+      ],
+      "wing": [
+        "{name}'s {part}: a dark burn.",
+        "{name}'s {part}: black-veined.",
+        "{name}'s {part}: cramping."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} sneers.",
+        "{name} is dizzy and furious.",
+        "{name} is reeling, retching black."
+      ],
+      "body": [
+        "{name} shrugs it off.",
+        "{name} is slowed.",
+        "{name} is convulsing."
+      ],
+      "arm": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} cramps.",
+        "{name}'s {part} locks."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} cramps.",
+        "{name}'s {part} locks."
+      ],
+      "wing": [
+        "{name}'s {part} sting.",
+        "{name}'s {part} cramp.",
+        "{name}'s {part} spasm."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison reaches {name}'s brain; the red eyes roll, black froth pours from the fangs and {name} falls rigid.",
+        "{name} chokes on black bile and crumples."
+      ],
+      "body": [
+        "the poison overwhelms {name}'s dead blood; {name} convulses and falls.",
+        "{name} retches black and collapses, twitching."
+      ],
+      "arm": [
+        "the black veins race from {name}'s {part}; {name} seizes and topples.",
+        "the poison spreads from {name}'s {part}; {name} convulses and dies."
+      ],
+      "leg": [
+        "the poison climbs from {name}'s {part}; {name} falls and thrashes until still.",
+        "{name}'s {part} locks and the poison takes the rest."
+      ],
+      "wing": [
+        "{name}'s {part} lock in spasm; {name} drops and dies convulsing.",
+        "the poison spreads from {name}'s {part}; {name} falls."
+      ]
+    }
+  }
+}

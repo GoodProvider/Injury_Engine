@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on trolls and lurkers: venom fights the beast's fast healing; dark veins, frothing and retching. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison stinging into the hide. {name} growls, the skin around it swelling.",
+        ", the venom seeping into flesh already sick with it. Dark veins spread under the hide and {name} retches, slavering.",
+        ", and the poison floods {name}'s great body. {name} staggers, frothing, the wounds weeping instead of healing.",
+        ", and it is too much. The venom seizes {name}'s heart; {name} convulses and crashes down, froth on the jaws."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a swollen welt, the eyes watering.",
+        "{name}'s head: dark veins under the hide, froth at the mouth, the eyes bloodshot.",
+        "{name}'s head: swollen and black-veined, frothing, the eyes rolling. A sour stench of sickness rises from it."
+      ],
+      "body": [
+        "{name}'s body: a swollen, angry welt on the hide.",
+        "{name}'s body: dark veins spreading under the hide, the wounds weeping instead of closing.",
+        "{name}'s body: bloated and black-veined, the hide blistering and weeping foul fluid."
+      ],
+      "arm": [
+        "{name}'s {part}: swollen around the sting.",
+        "{name}'s {part}: dark-veined and twitching.",
+        "{name}'s {part}: black and bloated, locked in a cramp."
+      ],
+      "leg": [
+        "{name}'s {part}: swollen around the sting.",
+        "{name}'s {part}: dark-veined and twitching.",
+        "{name}'s {part}: black and bloated, locked in a cramp."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} snorts and shakes the head.",
+        "{name} is sick and dizzy, slavering and retching.",
+        "{name} is reeling, choking and frothing."
+      ],
+      "body": [
+        "{name} is queasy and angry.",
+        "{name} cramps and heaves, sweating.",
+        "{name} is convulsing, the fast healing failing."
+      ],
+      "arm": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} cramps and twitches.",
+        "{name}'s {part} is locked in cramps."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} cramps and shakes.",
+        "{name}'s {part} seizes and will not hold."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison reaches {name}'s brain; {name} thrashes and howls, froth pouring from the jaws, and goes rigid and still.",
+        "{name}'s throat swells shut from the venom; {name} claws at it, choking, and crashes down."
+      ],
+      "body": [
+        "the venom stops {name}'s great heart; {name} vomits black bile, convulses and falls, the hide blistered and black-veined.",
+        "{name} heaves and retches, cramps tearing through the massive body, and collapses, twitching until the poison wins."
+      ],
+      "arm": [
+        "the black veins race from {name}'s {part} to the heart; {name} seizes and topples, frothing.",
+        "{name}'s {part} swells black and the poison floods the rest; {name} collapses in convulsions."
+      ],
+      "leg": [
+        "the poison climbs from {name}'s {part}; {name}'s legs fold and {name} thrashes in the dirt until still.",
+        "{name}'s {part} blackens and the venom spreads; {name} falls shuddering, froth on the jaws."
+      ]
+    }
+  }
+}

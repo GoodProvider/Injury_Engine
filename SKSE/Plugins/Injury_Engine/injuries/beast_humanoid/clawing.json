@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on trolls and lurkers: great talons raking through thick hide, coarse fur or scale. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the great talons scraping across the thick hide. {name} roars and lashes back.",
+        ", the claws ripping across hide already torn. Strips of flesh part and dark blood runs.",
+        ", and the talons carve deep across the torn hide. {name} reels, dark blood spraying.",
+        ", and it is too much. The claws tear {name} open in long, ragged furrows; {name} sways and crashes down."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: thin rakes across the hide.",
+        "{name}'s head: deep claw furrows across the face, dark blood running.",
+        "{name}'s head: torn open in long furrows to the bone, hide hanging in strips."
+      ],
+      "body": [
+        "{name}'s body: shallow rakes through the fur or scales.",
+        "{name}'s body: long, deep claw furrows across the hide, dark blood soaking the fur.",
+        "{name}'s body: laid open in broad furrows, hide peeled back in strips over the ribs."
+      ],
+      "arm": [
+        "{name}'s {part}: shallow rakes.",
+        "{name}'s {part}: deep claw furrows, dark blood running.",
+        "{name}'s {part}: slashed to the bone, useless."
+      ],
+      "leg": [
+        "{name}'s {part}: shallow rakes.",
+        "{name}'s {part}: deep claw furrows, dark blood running.",
+        "{name}'s {part}: slashed to the bone, buckling."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} snarls, enraged.",
+        "{name} is hurt and furious, swinging wildly.",
+        "{name} is reeling and half blind."
+      ],
+      "body": [
+        "{name} shrugs it off.",
+        "{name} is slowed and wary.",
+        "{name} is staggering and close to falling."
+      ],
+      "arm": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} is weak.",
+        "{name}'s {part} hangs useless."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} limps.",
+        "{name}'s {part} will not hold."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws rake across {name}'s face and throat, tearing it open; dark blood gushes and {name} crashes down.",
+        "a great talon carves {name}'s skull open in deep furrows; {name} staggers blindly and falls dead."
+      ],
+      "body": [
+        "the claws rake {name}'s belly open in long slashes; the guts spill out and {name} sinks down, roaring, until still.",
+        "a brutal swipe carves {name}'s chest open from shoulder to hip; {name} topples in a spray of dark blood."
+      ],
+      "arm": [
+        "the claws tear through {name}'s {part} and rip it half away; dark blood gushes and {name} falls.",
+        "the talons slash {name}'s {part} to the bone and on across the chest; {name} spins and crashes down."
+      ],
+      "leg": [
+        "the claws carve {name}'s {part} open to the bone; {name} goes down and bleeds out in the dirt.",
+        "a swipe of talons shears through {name}'s {part}; a second tears across the back and {name} dies where it falls."
+      ]
+    }
+  }
+}

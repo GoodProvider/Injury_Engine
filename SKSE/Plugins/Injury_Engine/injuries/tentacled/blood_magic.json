@@ -1,0 +1,65 @@
+{
+  "_note": "Blood magic on netch and seekers: the thin fluid inside boiling and forcing out. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a pressure as the fluid stirs. {name} twitches.",
+        ", the fluid boiling up. It seeps from the hide.",
+        ", and the fluid seethes. {name} jerks like a puppet.",
+        ", and it is too much. {name}'s fluid bursts through the hide; {name} drops."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: twitching.",
+        "{name}'s head: fluid seeping.",
+        "{name}'s head: fluid pouring."
+      ],
+      "body": [
+        "{name}'s body: warm.",
+        "{name}'s body: fluid seeping through the hide.",
+        "{name}'s body: fluid bursting through the hide."
+      ],
+      "tentacle": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} twitches.",
+        "{name} is frantic.",
+        "{name} is helpless."
+      ],
+      "body": [
+        "{name} is uneasy.",
+        "{name} jerks.",
+        "{name} is helpless."
+      ],
+      "tentacle": [
+        "{name}'s {part} twitch.",
+        "{name}'s {part} jerk.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "{name}'s fluid boils and bursts out; {name} drops.",
+        "the magic wrenches {name} and the hide splits; {name} falls."
+      ],
+      "body": [
+        "{name}'s fluid boils until the hide bursts; {name} collapses.",
+        "{name} jerks like a puppet as fluid forces out, then drops."
+      ],
+      "tentacle": [
+        "the fluid bursts from {name}'s {part}; {name} falls.",
+        "{name}'s {part} jerk as the fluid bursts; {name} dies."
+      ]
+    }
+  }
+}

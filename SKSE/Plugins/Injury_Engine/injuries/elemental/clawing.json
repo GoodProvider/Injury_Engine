@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on atronachs, gargoyles and ash guardians: great talons gouging fire, ice or stone. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons gouging the elemental body. {name} flares.",
+        ", the claws tearing chunks away. Light leaks out.",
+        ", and the talons rip deep. {name} reels, pieces falling.",
+        ", and it is too much. The claws tear {name} apart; the form collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: gouged.",
+        "{name}'s head: deep gouges, light leaking.",
+        "{name}'s head: torn open."
+      ],
+      "body": [
+        "{name}'s core: gouged.",
+        "{name}'s core: deep gouges, force leaking.",
+        "{name}'s core: torn open."
+      ],
+      "arm": [
+        "{name}'s {part}: gouged.",
+        "{name}'s {part}: deep gouges.",
+        "{name}'s {part}: torn apart."
+      ],
+      "lower": [
+        "{name}'s {part}: gouged.",
+        "{name}'s {part}: deep gouges.",
+        "{name}'s {part}: torn apart."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} is enraged.",
+        "{name} flickers.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} presses on.",
+        "{name} slows.",
+        "{name} is breaking apart."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ],
+      "lower": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} wavers.",
+        "{name}'s {part} fails."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws tear {name}'s head apart; the light bursts out and {name} collapses.",
+        "a talon splits {name}'s head; the form crumbles."
+      ],
+      "body": [
+        "the claws rip {name}'s core open; the binding force bursts out and {name} collapses.",
+        "a swipe tears {name}'s core apart; the form falls."
+      ],
+      "arm": [
+        "the claws tear {name}'s {part} off and into the core; {name} collapses.",
+        "the talons rip {name}'s {part} apart; {name} falls."
+      ],
+      "lower": [
+        "the claws tear {name}'s {part} apart; {name} collapses.",
+        "a swipe shatters {name}'s {part}; {name} falls apart."
+      ]
+    }
+  }
+}

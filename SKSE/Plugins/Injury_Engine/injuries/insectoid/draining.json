@@ -1,0 +1,65 @@
+{
+  "_note": "Life drain on spiders and chaurus: the life pulled out through the chitin; the ichor slows and the legs curl. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull through the chitin. {name} chitters and slows.",
+        ", the life drawn from a body already sluggish. The legs twitch weakly.",
+        ", and the drain bites deep. {name}'s legs tremble and begin to curl.",
+        ", and it is too much. The last life leaves {name}; the legs curl up and {name} goes still."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the eyes a little dull.",
+        "{name}'s head: the eyes clouded, the mandibles slack.",
+        "{name}'s head: the eyes dull, the mandibles hanging."
+      ],
+      "body": [
+        "{name}'s carapace: a little duller.",
+        "{name}'s carapace: dull and grey, the body shrunken.",
+        "{name}'s carapace: ashen, the body shrivelled inside."
+      ],
+      "leg": [
+        "{name}'s {part}: slower.",
+        "{name}'s {part}: twitching weakly.",
+        "{name}'s {part}: curling up."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} slows.",
+        "{name} is sluggish.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} slows.",
+        "{name} is drained.",
+        "{name} is empty."
+      ],
+      "leg": [
+        "{name}'s {part} drag.",
+        "{name}'s {part} tremble.",
+        "{name}'s {part} fold."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last life out of {name}; the eyes dull and the legs curl up.",
+        "{name}'s mandibles go slack as the red thread pulls away; {name} settles, dead."
+      ],
+      "body": [
+        "the drain empties {name}; the carapace turns ashen and the legs curl inward.",
+        "all life flows out of {name}; the body shrivels and lies still."
+      ],
+      "leg": [
+        "{name}'s {part} curl and the drain takes the rest; {name} tips over, legs folded.",
+        "the drain climbs from {name}'s {part}; {name} curls up and dies."
+      ]
+    }
+  }
+}

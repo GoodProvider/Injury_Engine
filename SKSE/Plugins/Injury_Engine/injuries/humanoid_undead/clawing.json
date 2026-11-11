@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on draugr, skeletons and dragon priests: great talons tearing dry flesh and scoring old bone. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons tearing dry flesh. Dust puffs out; {name} rasps.",
+        ", the claws ripping leathery skin. Bone shows.",
+        ", and the talons carve to the bone. {name} reels.",
+        ", and it is too much. The claws tear {name} apart; the corpse collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: dry skin torn.",
+        "{name}'s face: torn to the bone.",
+        "{name}'s face: torn from the skull."
+      ],
+      "body": [
+        "{name}'s back: dry skin torn.",
+        "{name}'s back: long rakes to the ribs.",
+        "{name}'s back: torn open, ribs bare."
+      ],
+      "arm": [
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: torn to the bone.",
+        "{name}'s {part}: shredded."
+      ],
+      "leg": [
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: torn to the bone.",
+        "{name}'s {part}: shredded."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} rasps.",
+        "{name} is enraged.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} slows.",
+        "{name} staggers."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} limps.",
+        "{name}'s {part} fails."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws rip {name}'s face from the skull; the eye-light dies.",
+        "a talon cracks {name}'s skull; the corpse falls."
+      ],
+      "body": [
+        "the claws tear {name}'s body open; dust and dry flesh spill and {name} collapses.",
+        "a swipe rips through {name}'s ribs; the corpse falls apart."
+      ],
+      "arm": [
+        "the claws tear {name}'s {part} off; {name} collapses.",
+        "the talons rip {name}'s {part} apart; {name} falls."
+      ],
+      "leg": [
+        "the claws tear {name}'s {part} to the bone; {name} collapses.",
+        "a swipe shears through {name}'s {part}; {name} falls."
+      ]
+    }
+  }
+}

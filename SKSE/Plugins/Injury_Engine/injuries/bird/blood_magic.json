@@ -1,0 +1,79 @@
+{
+  "_note": "Blood magic on birds: the small body's bright blood boiling and bursting. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a hot pressure as the blood stirs. {name} jerks, feathers bristling.",
+        ", the blood boiling up again. {name} jerks like a puppet, blood beading at the beak.",
+        ", and the blood seethes inside {name}. Blood seeps through the feathers and {name} shrieks.",
+        ", and it is too much. {name}'s blood boils and bursts through the skin; {name} convulses and drops."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a drop of blood at the beak.",
+        "{name}'s head: blood at the beak and eyes.",
+        "{name}'s head: blood pouring from beak and eyes."
+      ],
+      "body": [
+        "{name}'s body: the skin flushed under the feathers.",
+        "{name}'s body: blood beading through the feathers.",
+        "{name}'s body: feathers soaked red, the skin split from within."
+      ],
+      "wing": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking on their own, blood in the feathers.",
+        "{name}'s {part}: split and bleeding, flapping wildly."
+      ],
+      "leg": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking, blood beading.",
+        "{name}'s {part}: split and bleeding, kicking on its own."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shakes the head.",
+        "{name} is frantic.",
+        "{name} is in agony."
+      ],
+      "body": [
+        "{name} trembles.",
+        "{name} jerks helplessly.",
+        "{name} is helpless as the blood twists."
+      ],
+      "wing": [
+        "{name}'s {part} twitch.",
+        "{name}'s {part} jerk.",
+        "{name}'s {part} will not obey."
+      ],
+      "leg": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} will not obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "{name}'s blood boils in the small skull; blood bursts from the eyes and beak and {name} drops.",
+        "the blood magic wrenches {name}'s head back and the vessels burst; {name} falls dead."
+      ],
+      "body": [
+        "{name}'s blood boils until the heart bursts; {name} falls, feathers soaked red.",
+        "{name} jerks like a puppet as blood forces out through the skin, then drops limp."
+      ],
+      "wing": [
+        "{name}'s {part} burst in a red mist; {name} tumbles down, emptied.",
+        "{name}'s {part} jerk wildly as the blood tears them open; {name} dies twitching."
+      ],
+      "leg": [
+        "the blood bursts from {name}'s {part}; {name} topples and bleeds out.",
+        "{name}'s {part} jerks as the vessels burst; {name} dies in a pool of bright blood."
+      ]
+    }
+  }
+}

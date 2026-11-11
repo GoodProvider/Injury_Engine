@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on four-legged animals: venom spreading; frothing, staggering and cramping. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison stinging into the hide. {name} yelps.",
+        ", the venom spreading. {name} slavers and staggers.",
+        ", and the poison floods {name}. {name} froths, legs shaking.",
+        ", and it is too much. The venom stops {name}'s heart; {name} convulses and falls."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: watering eyes.",
+        "{name}'s head: froth at the mouth.",
+        "{name}'s head: frothing, the eyes rolling."
+      ],
+      "body": [
+        "{name}'s back: a swollen sting.",
+        "{name}'s back: dark veins under the skin, swelling.",
+        "{name}'s back: bloated and dark."
+      ],
+      "leg": [
+        "{name}'s {part}: swollen.",
+        "{name}'s {part}: cramping.",
+        "{name}'s {part}: rigid."
+      ],
+      "tail": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: cramping.",
+        "{name}'s {part}: rigid."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shakes the head.",
+        "{name} is dizzy.",
+        "{name} is fitting."
+      ],
+      "body": [
+        "{name} is uneasy.",
+        "{name} heaves.",
+        "{name} convulses."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} cramps.",
+        "{name}'s {part} locks."
+      ],
+      "tail": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} cramps.",
+        "{name}'s {part} locks."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison reaches {name}'s brain; {name} fits and froths, then goes still.",
+        "{name}'s throat swells shut; {name} chokes and collapses."
+      ],
+      "body": [
+        "the venom stops {name}'s heart; {name} convulses and falls.",
+        "{name} vomits and collapses, twitching."
+      ],
+      "leg": [
+        "{name}'s {part} locks and the poison takes the rest; {name} topples.",
+        "the venom climbs from {name}'s {part}; {name} convulses."
+      ],
+      "tail": [
+        "the poison climbs from {name}'s {part}; {name} convulses and dies.",
+        "{name}'s {part} locks rigid and {name} falls."
+      ]
+    }
+  }
+}

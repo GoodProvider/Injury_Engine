@@ -1,0 +1,93 @@
+{
+  "_note": "Poison on spectral dragons: there is nothing to poison; the venom passes through the light. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison passing through the light. {name} doesn't notice.",
+        ", the venom clouding the glow. {name} flickers.",
+        ", and the poison taints the light. {name} wavers.",
+        ", and it is too much. The taint unravels the form; {name} fades."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a dim cloud.",
+        "{name}'s head: the light tainted.",
+        "{name}'s head: sickly and wavering."
+      ],
+      "body": [
+        "{name}'s body: a dim cloud.",
+        "{name}'s body: tainted light.",
+        "{name}'s body: sickly and wavering."
+      ],
+      "wing": [
+        "{name}'s {part}: clouded.",
+        "{name}'s {part}: tainted.",
+        "{name}'s {part}: wavering."
+      ],
+      "leg": [
+        "{name}'s {part}: clouded.",
+        "{name}'s {part}: tainted.",
+        "{name}'s {part}: wavering."
+      ],
+      "tail": [
+        "{name}'s {part}: clouded.",
+        "{name}'s {part}: tainted.",
+        "{name}'s {part}: wavering."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} ignores it.",
+        "{name} wavers."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} flickers.",
+        "{name} wavers."
+      ],
+      "wing": [
+        "{name}'s {part} beat.",
+        "{name}'s {part} flicker.",
+        "{name}'s {part} waver."
+      ],
+      "leg": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} flickers.",
+        "{name}'s {part} wavers."
+      ],
+      "tail": [
+        "{name}'s {part} lashes.",
+        "{name}'s {part} flickers.",
+        "{name}'s {part} wavers."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the taint unravels {name}'s head; the form dissolves.",
+        "{name}'s light sickens and fades."
+      ],
+      "body": [
+        "the taint spreads through {name}'s light; {name} dissolves into mist.",
+        "{name}'s form sickens and fades away."
+      ],
+      "wing": [
+        "{name}'s {part} unravel and the rest follows.",
+        "the taint spreads from {name}'s {part}; {name} fades."
+      ],
+      "leg": [
+        "{name}'s {part} unravels; {name} dissolves.",
+        "the taint spreads from {name}'s {part}; {name} fades."
+      ],
+      "tail": [
+        "{name}'s {part} unravels; {name} dissolves.",
+        "the taint spreads from {name}'s {part}; {name} fades."
+      ]
+    }
+  }
+}

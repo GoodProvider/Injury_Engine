@@ -1,0 +1,205 @@
+{
+  "id": "poisoning",
+  "title": "Poison",
+  "model": "health",
+  "requires": "",
+  "classify": [
+    {
+      "priority": 42,
+      "resist": "ResistPoison"
+    }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Poisoning",
+    "feels_intro": "How the poison in {name} feels right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: flushed and sweating, a faint greenish tinge around {his} lips.",
+        "{name}'s face: sickly grey-green and slick with cold sweat, dark veins creeping along {his} jaw and temples, the eyes bloodshot. A sour, bitter smell is on {his} breath.",
+        "{name}'s face: mottled green and black, veins swollen and dark under the skin, lips blue and flecked with froth, pupils huge. A rank, bitter stench of sickness and vomit clings to {him}."
+      ],
+      "body": [
+        "{name}'s back: a small angry mark where the poison went in, the skin hot and reddened around it.",
+        "{name}'s back: dark green-black veins spreading out from the poisoned spot, the skin clammy and swollen. A bitter chemical smell rises from it.",
+        "{name}'s back: blackened veins branching across the whole torso, the flesh swollen, blistered and weeping. {name} reeks of sweat, bile and rot."
+      ],
+      "arm": [
+        "{name}'s {part}: a red, swollen mark, hot to the touch.",
+        "{name}'s {part}: swollen and discoloured, dark veins creeping up toward the shoulder, the fingers twitching.",
+        "{name}'s {part}: black-veined and bloated, the skin blistering and weeping foul fluid; the hand is clenched in a cramp."
+      ],
+      "leg": [
+        "{name}'s {part}: a red, swollen mark, hot to the touch.",
+        "{name}'s {part}: swollen and discoloured, dark veins climbing toward the hip, the muscle twitching.",
+        "{name}'s {part}: black-veined and bloated, the flesh blistering and weeping; the leg is locked in a cramp."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} feels hot, queasy and a little dizzy. {name} swallows hard and wipes {his} brow.",
+        "{name} feels the poison throbbing in {his} skull; {his} vision blurs, {his} mouth tastes of metal and {he} keeps retching. {name} slurs {his} words.",
+        "{name} feels {his} head pounding and the world spinning, {his} throat closing and {his} tongue thick. {name} can barely speak, retching and gasping."
+      ],
+      "body": [
+        "{name} feels a burning sting and a sick, churning stomach. {name} is uneasy and pale.",
+        "{name} feels cramps knotting {his} belly and chest and cold sweat pouring off {him}; {he} gags. {name} hunches over, shaking.",
+        "{name} feels the poison in every vein; {his} heart races and stumbles, {his} gut heaves and {his} muscles seize. {name} is convulsing and terrified."
+      ],
+      "arm": [
+        "{name}'s {part} stings and tingles. {name} rubs at it.",
+        "{name}'s {part} burns and cramps, the fingers twitching and weak. {name} holds it close.",
+        "{name}'s {part} is locked in agonising cramps and numb at the fingertips. {name} cannot use it."
+      ],
+      "leg": [
+        "{name}'s {part} stings and tingles. {name} favours it slightly.",
+        "{name}'s {part} burns and cramps and shakes under {his} weight. {name} limps, sweating.",
+        "{name}'s {part} is seized in agonising cramps and will not bear weight. {name} collapses when {he} tries to stand."
+      ]
+    }
+  },
+  "narration": {
+    "form": "poison",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is poisoned",
+      "verb_many": " are poisoned",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", a burning sting as the poison seeps into the flesh. {name} winces, skin flushing hot around it.",
+        ", the poison seeping into flesh already sick with it. Dark veins spread under {name}'s skin; {name} gags and sweats, swaying.",
+        ", and the venom floods through {name}'s veins. {name} doubles over retching, muscles knotting in cramps, face turning grey-green.",
+        ", and it is too much. The poison takes hold of {name}'s heart; {name} convulses, froth on {name}'s lips, and sinks down choking."
+      ]
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    },
+    "session": {
+      "hit": {
+        "start": "poisons {target}",
+        "start_many": "poison {target}",
+        "again": "keeps the poison working on {target}",
+        "again_many": "keep the poison working on {target}"
+      },
+      "no_attacker_hit": {
+        "start": "is poisoned",
+        "again": "is poisoned again and again"
+      },
+      "hit_noun": "dose"
+    }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the poison reaches {name}'s brain; {name}'s eyes roll back, blood trickles from the nose, and {name} thrashes in a fit, jaw locked and froth bubbling at the lips, until the body goes rigid and still.",
+        "{name}'s throat swells shut from the poison; {name} claws at it, face going purple and black-veined, and dies choking, lips blue and wet with froth and vomit."
+      ],
+      "body": [
+        "the poison stops {name}'s heart; {name} clutches at the chest, vomits black bile, and falls convulsing, limbs jerking until they finally stiffen and lie still.",
+        "{name}'s gut and lungs fill with the venom; {name} retches blood and bile, doubles over in cramps and drops, twitching, the bitter stench of poison and vomit rising from the body."
+      ],
+      "arm": [
+        "the black veins race from {name}'s {part} to the heart; {name} seizes, arm locked rigid, and collapses foaming at the mouth, shaking until the poison has done its work.",
+        "the poison swells {name}'s {part} black and bloated and floods the body; {name} vomits, convulses, and dies on the ground, fingers clawed in a final cramp."
+      ],
+      "leg": [
+        "the poison climbs from {name}'s {part} through the body; {name}'s legs give way, {name} retches and thrashes in the dirt, and the convulsions stop only when {name}'s heart does.",
+        "{name}'s {part} turns black and bloated as the venom spreads; {name} falls gasping, skin grey-green and slick, and dies shuddering, froth on the lips."
+      ]
+    },
+    "soil": [
+      "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the blood.",
+      "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
+  }
+}

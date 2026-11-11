@@ -1,0 +1,93 @@
+{
+  "_note": "Life drain on rotting dragons: no warm life, only the Soul Cairn's cold power; the drain pulls it out and the rotten hide withers. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull at the grave-magic that holds the body together. {name} hisses, the eye-light flickering.",
+        ", the drain sapping magic already thin. Rotten hide shrivels and grave ooze stops flowing.",
+        ", and the drain bites deep. {name}'s body sags, bones shifting loose under the withered hide.",
+        ", and it is too much. The last cold power is pulled out of {name}; the rotting body crashes down and lies still."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the eye-light flickers.",
+        "{name}'s head: the eye-light dim, the rotten hide shrivelled tight on the skull.",
+        "{name}'s head: the eye-light nearly gone, the hide dry as parchment."
+      ],
+      "body": [
+        "{name}'s body: the rot a little drier.",
+        "{name}'s body: hide shrivelled, the ooze dried to crust.",
+        "{name}'s body: withered to a husk over loose bones."
+      ],
+      "wing": [
+        "{name}'s {part}: rattling.",
+        "{name}'s {part}: shrivelled and slack.",
+        "{name}'s {part}: hanging in dry tatters."
+      ],
+      "leg": [
+        "{name}'s {part}: a little weak.",
+        "{name}'s {part}: shrivelled, trembling.",
+        "{name}'s {part}: withered, buckling."
+      ],
+      "tail": [
+        "{name}'s {part}: slower.",
+        "{name}'s {part}: dragging.",
+        "{name}'s {part}: limp and withered."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} hisses.",
+        "{name} falters, the voice thinning.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} drags on.",
+        "{name} sags.",
+        "{name} is coming apart."
+      ],
+      "wing": [
+        "{name}'s {part} beat slower.",
+        "{name}'s {part} barely lift.",
+        "{name}'s {part} cannot fly."
+      ],
+      "leg": [
+        "{name}'s {part} drags.",
+        "{name}'s {part} trembles.",
+        "{name}'s {part} gives way."
+      ],
+      "tail": [
+        "{name}'s {part} slows.",
+        "{name}'s {part} drags.",
+        "{name}'s {part} is still."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last grave-magic out of {name}'s skull; the eye-light dies and the rotting body crashes down, still at last.",
+        "{name}'s eye-light gutters out as the cold power flows away; the great corpse sags and falls."
+      ],
+      "body": [
+        "the drain empties {name}'s rotting body; the hide shrivels onto the bones and {name} collapses in a dry heap.",
+        "all of {name}'s cold power flows out; the corpse withers and falls."
+      ],
+      "wing": [
+        "the withering runs from {name}'s {part} into the body; {name} plunges and lies still.",
+        "{name}'s {part} crumble to dry tatters and the drain takes the rest; {name} falls."
+      ],
+      "leg": [
+        "{name}'s {part} withers and buckles; the drain takes the rest.",
+        "the drain climbs from {name}'s {part}; {name} sprawls, lifeless."
+      ],
+      "tail": [
+        "the drain pulls the magic up {name}'s {part}; {name} collapses.",
+        "{name}'s {part} withers and the rest follows."
+      ]
+    }
+  }
+}

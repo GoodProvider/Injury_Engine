@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on slaughterfish: great talons slicing scales and fins. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons slicing across the scales. {name} jerks away.",
+        ", the claws ripping through scales. Watery blood clouds out.",
+        ", and the talons carve deep. {name} thrashes in a red cloud.",
+        ", and it is too much. The claws rip {name} open; {name} rolls over."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: scratched.",
+        "{name}'s head: gashed, blood clouding.",
+        "{name}'s head: torn open."
+      ],
+      "body": [
+        "{name}'s body: scales torn.",
+        "{name}'s body: deep rakes, blood clouding.",
+        "{name}'s body: torn open."
+      ],
+      "fin": [
+        "{name}'s {part}: nicked.",
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: shredded."
+      ],
+      "tail": [
+        "{name}'s {part}: nicked.",
+        "{name}'s {part}: torn.",
+        "{name}'s {part}: shredded."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} jerks.",
+        "{name} is frantic.",
+        "{name} is reeling."
+      ],
+      "body": [
+        "{name} flinches.",
+        "{name} thrashes.",
+        "{name} is failing."
+      ],
+      "fin": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} flutters.",
+        "{name}'s {part} won't steer."
+      ],
+      "tail": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} is weak.",
+        "{name}'s {part} won't push."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws rip {name}'s head open; {name} rolls over in a red cloud.",
+        "a talon tears through {name}'s gills; {name} drifts, dead."
+      ],
+      "body": [
+        "the claws rip {name}'s belly open; guts spill and {name} sinks.",
+        "a swipe slices {name} nearly in two; {name} floats in a red cloud."
+      ],
+      "fin": [
+        "the claws shred {name}'s {part} and the body with it; {name} dies.",
+        "the talons rip {name}'s {part} away; {name} bleeds out."
+      ],
+      "tail": [
+        "the claws shear off {name}'s {part}; {name} spins and dies.",
+        "a swipe rips {name}'s {part} away; {name} sinks."
+      ]
+    }
+  }
+}

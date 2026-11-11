@@ -1,0 +1,93 @@
+{
+  "_note": "Blood magic on rotting dragons: no blood, only thick grave ooze; the magic stirs it and drives it out. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the magic stirring the thick grave ooze. {name} twitches.",
+        ", the ooze churning. It seeps from the rotten hide and {name} jerks.",
+        ", and the ooze seethes. {name}'s body jerks like a puppet.",
+        ", and it is too much. The ooze bursts through the rot; {name} collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: ooze at the nostrils.",
+        "{name}'s head: ooze seeping from the eyes.",
+        "{name}'s head: ooze pouring from every opening."
+      ],
+      "body": [
+        "{name}'s body: twitching.",
+        "{name}'s body: ooze seeping.",
+        "{name}'s body: ooze bursting through the hide."
+      ],
+      "wing": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ],
+      "leg": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ],
+      "tail": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} falters.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} jerks.",
+        "{name} is helpless."
+      ],
+      "wing": [
+        "{name}'s {part} twitch.",
+        "{name}'s {part} jerk.",
+        "{name}'s {part} won't obey."
+      ],
+      "leg": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "tail": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the ooze bursts from {name}'s skull; the eye-light dies.",
+        "the magic wrenches {name}'s head back; ooze pours out and the corpse falls."
+      ],
+      "body": [
+        "the ooze bursts through {name}'s hide; the corpse collapses.",
+        "{name} jerks like a puppet, ooze pouring, then crashes down."
+      ],
+      "wing": [
+        "the ooze bursts from {name}'s {part}; {name} plunges.",
+        "{name}'s {part} jerk apart; {name} falls."
+      ],
+      "leg": [
+        "the ooze bursts from {name}'s {part}; {name} collapses.",
+        "{name}'s {part} jerks apart; {name} falls."
+      ],
+      "tail": [
+        "the ooze bursts from {name}'s {part}; {name} collapses.",
+        "{name}'s {part} jerks apart; {name} falls."
+      ]
+    }
+  }
+}

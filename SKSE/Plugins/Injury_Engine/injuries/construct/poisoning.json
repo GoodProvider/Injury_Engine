@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on dwemer constructs: poison has nothing to sicken; it only pits and stains the metal and fouls the oil. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison spattering the metal and hissing. {name} keeps coming, unbothered.",
+        ", the venom eating at the seals. Oil weeps from a seam and {name} grinds a little.",
+        ", and the corrosive poison fouls the oil. {name} stutters, gears grinding.",
+        ", and it is too much. The poison has eaten through the seals; oil pours out and {name} seizes."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a green stain on the metal.",
+        "{name}'s head: pitted metal, a lens clouded.",
+        "{name}'s head: corroded and pitted, oil weeping from the seams."
+      ],
+      "body": [
+        "{name}'s chassis: a green stain.",
+        "{name}'s chassis: pitted plating, oil weeping from a seam.",
+        "{name}'s chassis: corroded seams, black oil pouring out."
+      ],
+      "limb": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: pitted, the joint gritty.",
+        "{name}'s {part}: corroded, the joint grinding."
+      ],
+      "core": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: pitted, steam leaking.",
+        "{name}'s {part}: corroded, steam and oil pouring out."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name}'s sight is clouded.",
+        "{name} lurches, sight failing."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} grinds as it moves.",
+        "{name} stutters and stalls."
+      ],
+      "limb": [
+        "{name}'s {part} works.",
+        "{name}'s {part} grinds.",
+        "{name}'s {part} seizes."
+      ],
+      "core": [
+        "{name}'s {part} hums on.",
+        "{name}'s {part} hisses.",
+        "{name}'s {part} sputters."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison eats through {name}'s lens into the head; sparks spit and {name} collapses in a clatter.",
+        "corrosion splits {name}'s head plate; the light dies and {name} falls."
+      ],
+      "body": [
+        "the poison eats through {name}'s seals; oil pours out, the gears seize and {name} grinds to a stop.",
+        "the fouled oil chokes {name}'s workings; {name} shudders and goes still."
+      ],
+      "limb": [
+        "{name}'s {part} seizes with corrosion and {name} topples, grinding.",
+        "the poison eats through {name}'s {part}; {name} lurches and crashes down."
+      ],
+      "core": [
+        "the poison eats into {name}'s {part}; steam bursts out and {name} slumps, silent.",
+        "{name}'s {part} corrodes through; the light flickers out and {name} stops."
+      ]
+    }
+  }
+}

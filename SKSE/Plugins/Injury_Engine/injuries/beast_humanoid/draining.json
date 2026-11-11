@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on trolls and lurkers: the warmth and brute vigour pulled out of thick hide; the wounds stop knitting. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull as a red thread of life is dragged out through the hide. {name} grunts and shakes the shaggy head, slowing.",
+        ", the life torn out of a body already chilled and sluggish. {name} sways, the great chest heaving, the hide greying.",
+        ", and the drain bites deep. {name}'s massive limbs tremble and slacken, the hide hanging loose and grey.",
+        ", and it is too much. The last of {name}'s brute strength is pulled out; {name} sags to the ground like an emptied sack."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the face a shade paler, the eyes a little dull.",
+        "{name}'s head: grey and drawn, the eyes sunken and dull, the jaw slack.",
+        "{name}'s head: withered and grey, the hide clinging to the skull, the eyes dim and empty."
+      ],
+      "body": [
+        "{name}'s body: the hide cool and pale where the life was drawn out.",
+        "{name}'s body: the hide grey and slack, the great muscles shrunken, the wounds no longer knitting.",
+        "{name}'s body: withered, the hide hanging loose over the ribs, cold and lifeless."
+      ],
+      "arm": [
+        "{name}'s {part}: pale and a little weak.",
+        "{name}'s {part}: grey and slack, the claws twitching feebly.",
+        "{name}'s {part}: shrunken and grey, hanging limp."
+      ],
+      "leg": [
+        "{name}'s {part}: pale and a little weak.",
+        "{name}'s {part}: grey and slack, trembling under the great weight.",
+        "{name}'s {part}: shrunken and grey, folding under {name}."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shakes the head, sluggish and cross.",
+        "{name} is dazed and slow, the snarls weak.",
+        "{name} is fading, barely able to lift the head."
+      ],
+      "body": [
+        "{name} feels cold and slows.",
+        "{name} is drained and heavy, the wounds no longer closing.",
+        "{name} is empty and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} swings slower.",
+        "{name}'s {part} is weak and heavy.",
+        "{name}'s {part} hangs useless."
+      ],
+      "leg": [
+        "{name}'s {part} drags a little.",
+        "{name}'s {part} trembles under {name}.",
+        "{name}'s {part} gives way."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last life out through {name}'s face; the hide greys and shrinks onto the skull, the eyes go dull, and {name} topples, cold and withered.",
+        "{name}'s head sags as the crimson thread draws out the final warmth; the great body slumps and lies still, grey and shrunken."
+      ],
+      "body": [
+        "the drain empties {name}'s great body until the heart stops; the hide hangs loose and grey over the ribs and {name} crashes down, a withered husk.",
+        "all of {name}'s brute vigour flows out in a red stream; the massive frame shrinks and {name} falls, cold before it settles."
+      ],
+      "arm": [
+        "the withering runs up {name}'s {part} into the chest; {name} slumps, the claws curled and grey.",
+        "{name}'s {part} shrivels to hide and bone and the drain pulls on until {name} drops, empty."
+      ],
+      "leg": [
+        "{name}'s {part} withers and buckles; the drain takes the rest and {name} sprawls, grey and still.",
+        "the drain pulls the life up out of {name}'s {part} until the heart gives out; {name} falls in a shrunken heap."
+      ]
+    }
+  }
+}

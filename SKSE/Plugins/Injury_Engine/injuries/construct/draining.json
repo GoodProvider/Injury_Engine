@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on dwemer constructs: no life to take; the drain pulls at the soul-gem power, the inner light dims and the steam weakens. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull at the machine's power. {name}'s inner light flickers and the hiss of steam falters.",
+        ", the drain sapping power already low. Gears slow, the steam thins and {name}'s light dims.",
+        ", and the drain bites deep into the core. {name} grinds and stutters, the light guttering.",
+        ", and it is too much. The last power is pulled out of {name}; the light dies and {name} winds down."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the lens flickers.",
+        "{name}'s head: the lens dim and stuttering.",
+        "{name}'s head: the lens almost dark."
+      ],
+      "body": [
+        "{name}'s chassis: the hum a little lower.",
+        "{name}'s chassis: the steam thin, the gears sluggish.",
+        "{name}'s chassis: barely ticking, the metal cooling."
+      ],
+      "limb": [
+        "{name}'s {part}: moves a little slower.",
+        "{name}'s {part}: slow and grinding.",
+        "{name}'s {part}: barely moving."
+      ],
+      "core": [
+        "{name}'s {part}: the glow flickers.",
+        "{name}'s {part}: the glow dim and uneven.",
+        "{name}'s {part}: the glow guttering out."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} tracks targets a little slower.",
+        "{name} stutters and loses track.",
+        "{name} is barely aware."
+      ],
+      "body": [
+        "{name} hums on.",
+        "{name} slows, steam sputtering.",
+        "{name} is winding down."
+      ],
+      "limb": [
+        "{name}'s {part} works.",
+        "{name}'s {part} lags.",
+        "{name}'s {part} stalls."
+      ],
+      "core": [
+        "{name}'s {part} flickers.",
+        "{name}'s {part} sputters.",
+        "{name}'s {part} is failing."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last power out through {name}'s head; the lens fades to black and {name} slumps with a long hiss of steam.",
+        "{name}'s light gutters and dies as the red thread pulls away; the machine grinds to a stop."
+      ],
+      "body": [
+        "the drain empties {name}'s soul-gem; the gears slow, the steam stops and {name} settles with a final clank.",
+        "all of {name}'s power flows out in a stream of light; {name} shudders and goes dark."
+      ],
+      "limb": [
+        "the drain runs up {name}'s {part} into the core; {name} freezes mid-motion and goes dark.",
+        "{name}'s {part} goes limp and the drain takes the rest; {name} topples, silent."
+      ],
+      "core": [
+        "the drain pulls the glow out of {name}'s {part}; it fades to black and {name} collapses, ticking as it cools.",
+        "{name}'s {part} dims and dies; {name} winds down with a last grinding groan."
+      ]
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on dwemer constructs: great talons screeching across bronze plating. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons screeching across the plating. {name} rocks and keeps coming.",
+        ", the claws gouging dented metal. A seam splits and oil sprays.",
+        ", and the talons tear through the plating. Gears shriek and steam bursts out.",
+        ", and it is too much. The claws rip {name} open; {name} seizes in a shower of sparks."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: bright scratches.",
+        "{name}'s head: deep gouges, a lens cracked.",
+        "{name}'s head: torn open, sparks spitting."
+      ],
+      "body": [
+        "{name}'s chassis: bright scratches.",
+        "{name}'s chassis: deep gouges, oil weeping.",
+        "{name}'s chassis: torn open, gears exposed, steam venting."
+      ],
+      "limb": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: gouged, the joint grinding.",
+        "{name}'s {part}: torn open, twitching."
+      ],
+      "core": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: gouged, steam hissing.",
+        "{name}'s {part}: torn open, light flickering."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} is relentless.",
+        "{name} tracks jerkily.",
+        "{name} lurches, blind."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} grinds.",
+        "{name} shudders and stalls."
+      ],
+      "limb": [
+        "{name}'s {part} works.",
+        "{name}'s {part} grinds.",
+        "{name}'s {part} is jammed."
+      ],
+      "core": [
+        "{name}'s {part} hums on.",
+        "{name}'s {part} hisses.",
+        "{name}'s {part} is failing."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws rip {name}'s head plate away; sparks burst, the light dies and {name} crashes down.",
+        "a talon punches through {name}'s lens; {name} jerks and falls silent."
+      ],
+      "body": [
+        "the claws tear {name}'s chassis open; gears spill out, steam roars and {name} collapses.",
+        "a brutal swipe rips through {name}'s plating; {name} grinds to a stop, oil pouring out."
+      ],
+      "limb": [
+        "the claws tear {name}'s {part} off; {name} spins, seizes and topples.",
+        "the talons rip through {name}'s {part} into the body; {name} crashes down."
+      ],
+      "core": [
+        "the claws rip into {name}'s {part}; steam blasts out and {name} goes dark.",
+        "a talon cracks {name}'s {part} open; the light flares and dies."
+      ]
+    }
+  }
+}

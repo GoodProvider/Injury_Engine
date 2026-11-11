@@ -306,7 +306,8 @@ namespace
     // reports a change already made). A "Torture" effect, or any Health effect on a "Torture" spell, never
     // touches Health: the tick becomes torture points (OnDamage, whose TakeHealth keeps the floor). The dual
     // variant (frost / shock) still drains its second value (Stamina / Magicka) here.
-    template <bool Dual>
+    // Tag only gives each hooked vtable its own `func` (1: AbsorbEffect, which inherits the plain call).
+    template <bool Dual, int Tag = 0>
     struct ModifyEffectActorValue
     {
         static void thunk(RE::ValueModifierEffect* a_this, RE::Actor* a_actor, float a_value, RE::ActorValue a_av)
@@ -335,6 +336,13 @@ namespace
                     SKSE::log::debug("[hook] effect{} victim:{:08X} effect:{:08X} value:{:.3f} recover: buff change", Dual ? " (dual)" : "",
                         a_actor->GetFormID(), mgef->GetFormID(), a_value);
                     BuffScope scope;
+                    return func(a_this, a_actor, a_value, a_av);
+                }
+                // A real Health damage tick (Vampiric Drain, poison, a burning spell): the damage it causes below is
+                // classified by this effect, not by the weapon in the caster's other hand.
+                if (const int health = Classifier::HealthSourceOfEffect(mgef); health >= 0) {
+                    const auto caster = a_this->GetCasterActor();
+                    Classifier::MagicScope scope(health, caster ? caster->GetFormID() : 0);
                     return func(a_this, a_actor, a_value, a_av);
                 }
                 return func(a_this, a_actor, a_value, a_av);
@@ -472,7 +480,11 @@ void Install_Hooks()
     ModifyEffectActorValue<false>::func = valueModifier.write_vfunc(kModifyEffectActorValueIdx, ModifyEffectActorValue<false>::thunk);
     REL::Relocation<std::uintptr_t> dualValueModifier{ RE::VTABLE_DualValueModifierEffect[0] };
     ModifyEffectActorValue<true>::func = dualValueModifier.write_vfunc(kModifyEffectActorValueIdx, ModifyEffectActorValue<true>::thunk);
-    SKSE::log::info("ValueModifierEffect::ModifyActorValue hooks installed (plain and dual{})", REL::Module::IsVR() ? ", VR: unverified" : "");
+    // Absorb Health / Vampiric Drain: AbsorbEffect has its own vtable (same ModifyActorValue), so its target tick is
+    // classified by its effect (draining) too
+    REL::Relocation<std::uintptr_t> absorb{ RE::VTABLE_AbsorbEffect[0] };
+    ModifyEffectActorValue<false, 1>::func = absorb.write_vfunc(kModifyEffectActorValueIdx, ModifyEffectActorValue<false, 1>::thunk);
+    SKSE::log::info("ValueModifierEffect::ModifyActorValue hooks installed (plain, dual and absorb{})", REL::Module::IsVR() ? ", VR: unverified" : "");
 
     // One allocation for both call hooks: a second AllocTrampoline that SKSE's pool can't serve makes CommonLib create
     // a new trampoline and free the first one, under a write_call already made.

@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on atronachs, gargoyles and ash guardians: the binding force pulled out; fire dims, ice dulls, sparks fade, stone cools. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull at the binding force. {name}'s glow dims for a moment.",
+        ", the drain sapping force already thin. The fire gutters, the frost dulls, the sparks thin.",
+        ", and the drain bites deep. {name}'s form wavers and pieces sag.",
+        ", and it is too much. The binding force is pulled out; {name} collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the glow dims.",
+        "{name}'s head: the glow low and flickering.",
+        "{name}'s head: nearly dark."
+      ],
+      "body": [
+        "{name}'s core: a little dimmer.",
+        "{name}'s core: dim and wavering.",
+        "{name}'s core: guttering out."
+      ],
+      "arm": [
+        "{name}'s {part}: dimmer.",
+        "{name}'s {part}: wavering.",
+        "{name}'s {part}: falling apart."
+      ],
+      "lower": [
+        "{name}'s {part}: dimmer.",
+        "{name}'s {part}: wavering.",
+        "{name}'s {part}: falling apart."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} is undeterred.",
+        "{name} falters.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} presses on.",
+        "{name} weakens.",
+        "{name} is coming apart."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ],
+      "lower": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} wavers.",
+        "{name}'s {part} fails."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the binding force out of {name}'s head; the light dies and {name} collapses into cinders, shards or stone.",
+        "{name}'s glow gutters out; the form falls apart."
+      ],
+      "body": [
+        "the drain empties {name}'s core; the form crumbles into a cold heap.",
+        "all of {name}'s force flows out; {name} collapses."
+      ],
+      "arm": [
+        "the drain runs from {name}'s {part} into the core; {name} falls apart.",
+        "{name}'s {part} crumbles and the rest follows."
+      ],
+      "lower": [
+        "{name}'s {part} crumbles; {name} collapses.",
+        "the drain climbs from {name}'s {part}; {name} falls apart."
+      ]
+    }
+  }
+}

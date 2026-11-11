@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on birds: the small body's warmth pulled out, feathers dull and the heart fluttering. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull as a thin red thread of life is drawn out. {name} ruffles, the bright eye dimming.",
+        ", the life torn from a body already chilled. {name} sways, feathers dulling, the wings drooping.",
+        ", and the drain bites deep. {name}'s heart flutters wildly and the feathers lie flat and lifeless.",
+        ", and it is too much. The last warmth leaves {name}; {name} topples, a small grey bundle."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the eye a little dull.",
+        "{name}'s head: the eye dim and half-closed, the beak gaping.",
+        "{name}'s head: the eye glazed and sunken, the head lolling."
+      ],
+      "body": [
+        "{name}'s body: the feathers fluffed against a chill.",
+        "{name}'s body: feathers dull and lank, the body shrunken.",
+        "{name}'s body: withered and cold under lifeless feathers."
+      ],
+      "wing": [
+        "{name}'s {part}: a little droop.",
+        "{name}'s {part}: drooping and slack.",
+        "{name}'s {part}: hanging limp and grey."
+      ],
+      "leg": [
+        "{name}'s {part}: a little unsteady.",
+        "{name}'s {part}: shaking, the toes slack.",
+        "{name}'s {part}: shrivelled and limp."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} blinks slowly.",
+        "{name} is dazed, the head bobbing.",
+        "{name} is fading, barely conscious."
+      ],
+      "body": [
+        "{name} puffs up against the chill.",
+        "{name} huddles, the heart racing.",
+        "{name} is empty and cold, the heart failing."
+      ],
+      "wing": [
+        "{name}'s {part} beat slower.",
+        "{name}'s {part} barely lift.",
+        "{name}'s {part} will not move."
+      ],
+      "leg": [
+        "{name}'s {part} wobbles.",
+        "{name}'s {part} shakes.",
+        "{name}'s {part} folds."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain draws the last life out of {name}; the eye glazes, the head drops, and {name} falls, a cold bundle of dull feathers.",
+        "{name}'s tiny heart stops as the red thread pulls away; {name} tumbles, feathers lifeless."
+      ],
+      "body": [
+        "the drain empties {name}'s small body; it shrinks under the feathers and drops, cold and weightless.",
+        "{name}'s warmth flows out in a crimson stream and {name} falls still, the feathers grey and flat."
+      ],
+      "wing": [
+        "the withering spreads from {name}'s {part} into the body; {name} spins down and lies still.",
+        "{name}'s {part} goes limp and grey and the drain takes the rest; {name} drops from the air, dead."
+      ],
+      "leg": [
+        "{name}'s {part} withers and the drain pulls on until the heart stops; {name} keels over.",
+        "the cold climbs from {name}'s {part} to the heart; {name} falls, a shrunken grey bundle."
+      ]
+    }
+  }
+}

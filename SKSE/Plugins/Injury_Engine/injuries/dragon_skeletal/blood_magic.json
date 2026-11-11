@@ -1,0 +1,93 @@
+{
+  "_note": "Blood magic on skeletal dragons: no blood at all; the magic finds nothing but dust and the binding spell. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the magic groping for blood and finding none. {name} twitches.",
+        ", the magic tugging at the binding instead. The bones jerk.",
+        ", and the magic wrenches at the binding. {name} jerks like a puppet.",
+        ", and it is too much. The binding tears; {name} collapses into bones."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s skull: twitching.",
+        "{name}'s skull: jerking, dust spilling.",
+        "{name}'s skull: the eye-light flickering wildly."
+      ],
+      "body": [
+        "{name}'s ribs: twitching.",
+        "{name}'s ribs: jerking.",
+        "{name}'s ribs: jerking apart."
+      ],
+      "wing": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking apart."
+      ],
+      "leg": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking apart."
+      ],
+      "tail": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking apart."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} falters.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} jerks.",
+        "{name} is coming apart."
+      ],
+      "wing": [
+        "{name}'s {part} twitch.",
+        "{name}'s {part} jerk.",
+        "{name}'s {part} won't obey."
+      ],
+      "leg": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "tail": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the magic tears the binding out of {name}'s skull; the bones collapse.",
+        "{name}'s skull jerks back and the eye-light dies."
+      ],
+      "body": [
+        "the magic wrenches {name}'s binding apart; the bones scatter.",
+        "{name} jerks like a puppet, then falls apart."
+      ],
+      "wing": [
+        "{name}'s {part} jerk apart and the rest follows.",
+        "the magic tears {name}'s {part} loose; {name} collapses."
+      ],
+      "leg": [
+        "{name}'s {part} jerks apart; {name} collapses.",
+        "the magic tears {name}'s {part} loose; the bones scatter."
+      ],
+      "tail": [
+        "{name}'s {part} jerks apart; the rest follows.",
+        "the magic tears {name}'s {part} loose; {name} collapses."
+      ]
+    }
+  }
+}

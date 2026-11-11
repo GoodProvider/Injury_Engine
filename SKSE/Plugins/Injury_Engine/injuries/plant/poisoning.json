@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on spriggans: poison as blight; leaves blacken, sap turns foul. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison soaking into the bark. {name} rustles angrily.",
+        ", the venom spreading like blight. Leaves blacken.",
+        ", and the blight floods {name}. Sap turns black and foul.",
+        ", and it is too much. The blight rots {name} from inside; {name} collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a leaf blackening.",
+        "{name}'s head: leaves black and curling.",
+        "{name}'s head: rotted black, the glow sickly."
+      ],
+      "body": [
+        "{name}'s body: a dark stain.",
+        "{name}'s body: black blight spreading, foul sap weeping.",
+        "{name}'s body: rotting, black sap pouring."
+      ],
+      "arm": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: blighted.",
+        "{name}'s {part}: rotting."
+      ],
+      "leg": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: blighted.",
+        "{name}'s {part}: rotting."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} rustles.",
+        "{name} wilts.",
+        "{name} is sickening."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} sags.",
+        "{name} is rotting."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the blight rots {name}'s head; the glow dies and {name} falls.",
+        "{name}'s leaves blacken and drop; {name} topples."
+      ],
+      "body": [
+        "the poison rots {name} from inside; black sap pours out and {name} collapses.",
+        "{name} sags as the blight takes the heartwood, and falls."
+      ],
+      "arm": [
+        "{name}'s {part} rots and the blight takes the rest.",
+        "the poison spreads from {name}'s {part}; {name} collapses."
+      ],
+      "leg": [
+        "{name}'s {part} rots through; {name} topples.",
+        "the blight climbs from {name}'s {part}; {name} falls."
+      ]
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "_note": "Blood magic on trolls and lurkers: dark blood boiling and twisting under thick hide. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a hot pressure as the dark blood stirs under the hide. {name} grunts, a trickle of blood at the nose.",
+        ", the blood already disturbed boiling up again. Vessels burst under the hide and {name} jerks.",
+        ", and the blood seethes inside {name}. The great body jerks like a puppet, blood seeping from the pores.",
+        ", and it is too much. {name}'s blood boils and tears through the hide from inside; {name} convulses and crashes down."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a trickle of dark blood from the nose.",
+        "{name}'s head: blood running from the eyes and nose.",
+        "{name}'s head: swollen, dark blood pouring from eyes, ears and nose."
+      ],
+      "body": [
+        "{name}'s body: the hide flushed and blotched.",
+        "{name}'s body: dark bruises swelling under the hide, blood beading from it.",
+        "{name}'s body: the hide split from within, dark blood seeping everywhere."
+      ],
+      "arm": [
+        "{name}'s {part}: flushed and twitching.",
+        "{name}'s {part}: swollen and bleeding through the hide.",
+        "{name}'s {part}: split from within, jerking on its own."
+      ],
+      "leg": [
+        "{name}'s {part}: flushed and twitching.",
+        "{name}'s {part}: swollen and bleeding through the hide.",
+        "{name}'s {part}: split from within, jerking and buckling."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shakes the head, uneasy.",
+        "{name} roars in pain, the sight swimming red.",
+        "{name} is in agony, blind with blood."
+      ],
+      "body": [
+        "{name} shivers.",
+        "{name} hunches, the heart pounding.",
+        "{name} is helpless as the blood twists inside."
+      ],
+      "arm": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks against {name}'s will.",
+        "{name}'s {part} moves only as the blood commands."
+      ],
+      "leg": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks and stumbles.",
+        "{name}'s {part} will not obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "{name}'s blood boils in the skull; dark blood bursts from the eyes and ears and {name} drops, jerking.",
+        "the blood magic wrenches {name}'s head back as blood fountains from the nose and mouth; {name} falls dead."
+      ],
+      "body": [
+        "{name}'s blood boils in the chest until the great heart bursts; blood sprays from the jaws and {name} collapses.",
+        "{name}'s massive body jerks upright like a puppet, the hide splitting as blood forces its way out, then drops limp."
+      ],
+      "arm": [
+        "the blood in {name}'s {part} bursts through the hide in a red mist; the rest follows and {name} falls, emptied.",
+        "{name}'s {part} jerks up as the blood tears it open; {name} roars and dies twitching."
+      ],
+      "leg": [
+        "the blood in {name}'s {part} splits the hide from within; {name} is wrenched down and bleeds out.",
+        "{name}'s legs jerk and buckle as the vessels burst; {name} dies in a pool of dark blood."
+      ]
+    }
+  }
+}

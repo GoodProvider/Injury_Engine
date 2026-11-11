@@ -95,6 +95,18 @@ namespace InjuryConfig
                     r.keyword = rule.value("keyword", "");
                     r.withoutKeyword = rule.value("without_keyword", "");
                     r.resist = rule.value("resist", "");
+                    r.absorb = rule.value("absorb", false);
+                    const auto strings = [&](const char* key, std::vector<std::string>& out) {
+                        if (const auto list = rule.find(key); list != rule.end() && list->is_array()) {
+                            for (const auto& name : *list) {
+                                if (name.is_string()) {
+                                    out.push_back(name.get<std::string>());
+                                }
+                            }
+                        }
+                    };
+                    strings("effect_keywords", r.effectKeywords);
+                    strings("attacker_races", r.attackerRaces);
                     r.effectFile = rule.value("effect_file", "");
                     r.effectId = FormIdOf(rule, "effect_id");
                     r.hasEffect = r.effectId != 0 && !r.effectFile.empty();

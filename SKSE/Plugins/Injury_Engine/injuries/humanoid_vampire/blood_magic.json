@@ -1,0 +1,93 @@
+{
+  "_note": "Blood magic on vampire lords: blood magic on a creature made of stolen blood; the dark blood boils and turns against its master. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a hot pressure as the dark blood stirs. {name} hisses, startled.",
+        ", the blood boiling up again. Dark blood seeps from the grey skin and {name} jerks.",
+        ", and the blood seethes and twists. {name} jerks like a puppet, snarling.",
+        ", and it is too much. {name}'s stolen blood tears out through the grey skin; {name} convulses and falls."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: dark blood at the nostrils.",
+        "{name}'s face: dark blood from the eyes.",
+        "{name}'s face: dark blood pouring from eyes, fangs and nostrils."
+      ],
+      "body": [
+        "{name}'s {part}: flushed dark.",
+        "{name}'s {part}: dark blood seeping, steaming.",
+        "{name}'s {part}: split from within, blood pouring."
+      ],
+      "arm": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking on its own."
+      ],
+      "leg": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking on its own."
+      ],
+      "wing": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: bursting."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} hisses.",
+        "{name} snarls in pain.",
+        "{name} is blind with blood."
+      ],
+      "body": [
+        "{name} is uneasy.",
+        "{name} jerks.",
+        "{name} is helpless as the blood rebels."
+      ],
+      "arm": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "leg": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "wing": [
+        "{name}'s {part} twitch.",
+        "{name}'s {part} jerk.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "{name}'s blood boils in the skull; it bursts from the eyes and {name} crumples.",
+        "the magic wrenches {name}'s head back as blood fountains from the fangs; {name} dies."
+      ],
+      "body": [
+        "{name}'s stolen blood boils and tears out through the skin; {name} collapses in a steaming pool.",
+        "{name} jerks like a puppet as the blood forces out, then falls."
+      ],
+      "arm": [
+        "the blood bursts from {name}'s {part}; {name} falls, emptied.",
+        "{name}'s {part} jerks as the blood tears it; {name} dies."
+      ],
+      "leg": [
+        "the blood bursts from {name}'s {part}; {name} bleeds out.",
+        "{name}'s {part} jerks as the vessels burst; {name} dies."
+      ],
+      "wing": [
+        "{name}'s {part} burst in a red mist; {name} drops.",
+        "{name}'s {part} jerk as the blood tears them; {name} falls."
+      ]
+    }
+  }
+}

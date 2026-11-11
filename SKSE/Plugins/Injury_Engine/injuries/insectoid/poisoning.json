@@ -1,0 +1,65 @@
+{
+  "_note": "Poison on spiders and chaurus: venomous themselves, they shrug off weak poison; strong poison makes the legs twitch and the ichor foam. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison stinging between the plates. {name} chitters, unbothered.",
+        ", the venom spreading. {name}'s legs twitch out of rhythm.",
+        ", and the poison floods {name}. Ichor foams at the joints and {name} staggers.",
+        ", and it is too much. {name} convulses, legs jerking, and flips over."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the mandibles working.",
+        "{name}'s head: foam at the mandibles.",
+        "{name}'s head: foaming, the eyes clouded."
+      ],
+      "body": [
+        "{name}'s carapace: a stain at a joint.",
+        "{name}'s carapace: ichor foaming at the joints.",
+        "{name}'s carapace: discoloured, foul ichor leaking."
+      ],
+      "leg": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking out of rhythm.",
+        "{name}'s {part}: rigid."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} is confused.",
+        "{name} is fitting."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} twitches.",
+        "{name} convulses."
+      ],
+      "leg": [
+        "{name}'s {part} twitch.",
+        "{name}'s {part} jerk.",
+        "{name}'s {part} lock."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison reaches {name}'s head; {name} foams and fits, then lies still.",
+        "{name} foams at the mandibles and flips over, legs twitching until still."
+      ],
+      "body": [
+        "the venom overwhelms {name}; {name} jerks and settles, legs curling.",
+        "{name} convulses and flips, foul ichor leaking."
+      ],
+      "leg": [
+        "{name}'s {part} lock rigid and {name} topples, twitching until still.",
+        "the poison climbs from {name}'s {part}; {name} flips and dies."
+      ]
+    }
+  }
+}

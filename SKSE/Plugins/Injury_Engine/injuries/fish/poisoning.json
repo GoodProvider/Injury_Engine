@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on slaughterfish: venom in the gills; gasping and thrashing. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison stinging between the scales. {name} jerks.",
+        ", the venom spreading. {name}'s gills flare and flutter.",
+        ", and the poison floods {name}. {name} thrashes wildly.",
+        ", and it is too much. {name} convulses and rolls belly up."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the gills flaring.",
+        "{name}'s head: the gills dark and fluttering.",
+        "{name}'s head: the gills black, the mouth gaping."
+      ],
+      "body": [
+        "{name}'s body: a swollen sting.",
+        "{name}'s body: dark streaks under the scales.",
+        "{name}'s body: bloated and dark."
+      ],
+      "fin": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: cramping.",
+        "{name}'s {part}: rigid."
+      ],
+      "tail": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: cramping.",
+        "{name}'s {part}: rigid."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} gapes.",
+        "{name} is gasping.",
+        "{name} is suffocating."
+      ],
+      "body": [
+        "{name} is uneasy.",
+        "{name} thrashes.",
+        "{name} convulses."
+      ],
+      "fin": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} cramps.",
+        "{name}'s {part} locks."
+      ],
+      "tail": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} cramps.",
+        "{name}'s {part} locks."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison chokes {name}'s gills; {name} gapes and thrashes, then floats still.",
+        "{name}'s gills turn black and {name} rolls over, dead."
+      ],
+      "body": [
+        "the venom stops {name}'s heart; {name} convulses and floats belly up.",
+        "{name} thrashes wildly, then stiffens and drifts."
+      ],
+      "fin": [
+        "{name}'s {part} locks and the poison takes the rest; {name} rolls over.",
+        "the venom spreads from {name}'s {part}; {name} convulses and dies."
+      ],
+      "tail": [
+        "{name}'s {part} locks rigid; {name} spins and dies.",
+        "the poison climbs from {name}'s {part}; {name} floats still."
+      ]
+    }
+  }
+}

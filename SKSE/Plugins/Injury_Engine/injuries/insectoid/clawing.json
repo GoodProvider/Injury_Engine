@@ -1,0 +1,65 @@
+{
+  "_note": "Vampire lord claw wounds on spiders and chaurus: great talons cracking chitin and tearing legs. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons scraping across the chitin. {name} hisses and rears.",
+        ", the claws cracking plates. Ichor oozes out.",
+        ", and the talons split the carapace. Ichor sprays and {name} reels.",
+        ", and it is too much. The claws tear {name} apart; {name} collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: scratched.",
+        "{name}'s head: cracked, ichor oozing.",
+        "{name}'s head: split open."
+      ],
+      "body": [
+        "{name}'s carapace: scratched.",
+        "{name}'s carapace: cracked, ichor oozing.",
+        "{name}'s carapace: split open, the soft body showing."
+      ],
+      "leg": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: cracked.",
+        "{name}'s {part}: torn off."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} hisses.",
+        "{name} is hurt.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} slows.",
+        "{name} is collapsing."
+      ],
+      "leg": [
+        "{name}'s {part} work.",
+        "{name}'s {part} limp.",
+        "{name}'s {part} fail."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws split {name}'s head; {name} collapses, legs curling.",
+        "a talon punches through {name}'s eyes; {name} goes still."
+      ],
+      "body": [
+        "the claws tear {name}'s carapace open; ichor and innards spill and {name} collapses.",
+        "a swipe splits {name} in two; {name} twitches and dies."
+      ],
+      "leg": [
+        "the claws shear off {name}'s {part} and rake the body open; {name} dies.",
+        "{name}'s {part} are torn away; {name} sinks, ichor pouring."
+      ]
+    }
+  }
+}

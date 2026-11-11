@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on draugr, skeletons and dragon priests: dead flesh cannot be poisoned; the venom only hisses in the rot. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison hissing on dry flesh. {name} pays it no mind.",
+        ", the venom eating into dead flesh. The skin blackens and flakes.",
+        ", and the poison eats deep. Dead flesh sloughs away from the bone.",
+        ", and it is too much. The poison has eaten through what held {name} together; the corpse collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: a hissing stain.",
+        "{name}'s face: blackened and flaking.",
+        "{name}'s face: flesh sloughing from the skull."
+      ],
+      "body": [
+        "{name}'s back: a stain.",
+        "{name}'s back: blackened and flaking.",
+        "{name}'s back: flesh sloughing off the ribs."
+      ],
+      "arm": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: blackened.",
+        "{name}'s {part}: sloughing."
+      ],
+      "leg": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: blackened.",
+        "{name}'s {part}: sloughing."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} ignores it.",
+        "{name} falters."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} keeps coming.",
+        "{name} sags."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison eats through {name}'s skull; the eye-light dies and the corpse collapses.",
+        "{name}'s face sloughs to bone; {name} falls still."
+      ],
+      "body": [
+        "the poison eats through {name}'s body; it collapses in a reeking heap.",
+        "{name}'s flesh sloughs away and the bones fall."
+      ],
+      "arm": [
+        "{name}'s {part} sloughs away and the rest follows.",
+        "the poison eats through {name}'s {part}; {name} falls."
+      ],
+      "leg": [
+        "{name}'s {part} gives way; {name} collapses.",
+        "the poison eats through {name}'s {part}; the corpse falls."
+      ]
+    }
+  }
+}

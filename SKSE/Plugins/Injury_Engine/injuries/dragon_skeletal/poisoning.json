@@ -1,0 +1,93 @@
+{
+  "_note": "Poison on skeletal dragons: no flesh to poison; the venom only hisses on old bone. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison spattering the bones and hissing. {name} doesn't notice.",
+        ", the venom etching the bone. {name} rattles on.",
+        ", and the poison eats into the joints. {name} creaks.",
+        ", and it is too much. The poison has eaten through the joints; {name} sags apart."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s skull: a stain.",
+        "{name}'s skull: etched and pitted.",
+        "{name}'s skull: pitted and crumbling."
+      ],
+      "body": [
+        "{name}'s ribs: stained.",
+        "{name}'s ribs: etched.",
+        "{name}'s ribs: crumbling."
+      ],
+      "wing": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: etched.",
+        "{name}'s {part}: crumbling."
+      ],
+      "leg": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: etched.",
+        "{name}'s {part}: crumbling."
+      ],
+      "tail": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: etched.",
+        "{name}'s {part}: crumbling."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} ignores it.",
+        "{name} falters."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} creaks.",
+        "{name} sags."
+      ],
+      "wing": [
+        "{name}'s {part} work.",
+        "{name}'s {part} creak.",
+        "{name}'s {part} sag."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} creaks.",
+        "{name}'s {part} sags."
+      ],
+      "tail": [
+        "{name}'s {part} works.",
+        "{name}'s {part} creaks.",
+        "{name}'s {part} sags."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison eats through {name}'s skull; the eye-light dies and the bones collapse.",
+        "{name}'s skull crumbles; the skeleton falls apart."
+      ],
+      "body": [
+        "the poison eats through {name}'s joints; the skeleton collapses.",
+        "{name}'s ribs crumble and the rest falls."
+      ],
+      "wing": [
+        "{name}'s {part} crumble and the rest falls apart.",
+        "the poison eats through {name}'s {part}; {name} collapses."
+      ],
+      "leg": [
+        "{name}'s {part} crumbles; {name} collapses.",
+        "the poison eats through {name}'s {part}; the bones scatter."
+      ],
+      "tail": [
+        "{name}'s {part} crumbles and the rest follows.",
+        "the poison eats through {name}'s {part}; {name} falls apart."
+      ]
+    }
+  }
+}

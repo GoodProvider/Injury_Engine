@@ -1223,6 +1223,230 @@
           ]
         }
       }
+    },
+    "draining": {
+      "looks": {
+        "nipple": [
+          "{name}'s nipples: pale and puckered, the breast cool and pallid.",
+          "{name}'s nipples: grey and shrunken, the breast slack and cold, dark veins showing under the skin.",
+          "{name}'s nipples: withered and grey, the breast shrunken and papery, cold as stone."
+        ],
+        "vulva": [
+          "{name}'s pussy: pale and cool, the lips drained of colour.",
+          "{name}'s pussy: grey and slack, the lips bloodless and cold.",
+          "{name}'s pussy: withered and grey, the flesh shrunken and lifeless, cold as stone."
+        ],
+        "penis": [
+          "{name}'s penis: pale, shrunken and cool.",
+          "{name}'s penis: grey and shrivelled, bloodless and cold.",
+          "{name}'s penis: withered and grey, shrunken to nothing, cold as stone."
+        ],
+        "lips": [
+          "{name}'s lips: pale and a little blue.",
+          "{name}'s lips: bloodless and bluish-grey, dry and cracked.",
+          "{name}'s lips: grey and shrivelled back from the teeth, cold and lifeless."
+        ],
+        "anus": [
+          "{name}'s ass hole: pale and cool.",
+          "{name}'s ass hole: grey and slack, the skin cold and clammy.",
+          "{name}'s ass hole: withered and grey, the flesh shrunken and lifeless."
+        ]
+      },
+      "feels": {
+        "nipple": [
+          "{name}'s chest feels cold and tingling. {name} folds {his} arms.",
+          "{name}'s chest feels hollow and numb. {name} hugs {reflexive}, shivering.",
+          "{name}'s chest feels dead and empty. {name} can barely draw breath."
+        ],
+        "vulva": [
+          "{name}'s pussy feels cool and numb. {name} shifts uneasily.",
+          "{name}'s pussy feels cold and dead. {name} presses {his} thighs together, shivering.",
+          "{name}'s pussy feels lifeless and empty. {name} is frightened and numb."
+        ],
+        "penis": [
+          "{name}'s penis feels cool and numb. {name} shifts uneasily.",
+          "{name}'s penis feels cold and dead. {name} hunches, shivering.",
+          "{name}'s penis feels lifeless and empty. {name} is frightened and numb."
+        ],
+        "lips": [
+          "{name}'s lips feel cold and tingling. {name} licks them.",
+          "{name}'s lips feel numb and {his} words come slowly. {name} speaks faintly.",
+          "{name}'s lips feel dead; {name} can barely shape a word."
+        ],
+        "anus": [
+          "{name}'s ass hole feels cool and numb. {name} shifts uneasily.",
+          "{name}'s ass hole feels cold and dead. {name} moves stiffly, shivering.",
+          "{name}'s ass hole feels lifeless. {name} is frightened and numb."
+        ]
+      }
+    },
+    "poisoning": {
+      "looks": {
+        "nipple": [
+          "{name}'s nipples: one red and swollen, hot to the touch.",
+          "{name}'s nipples: swollen and discoloured, dark veins spreading across the breast.",
+          "{name}'s nipples: black-veined and bloated, the breast blistered and weeping. A bitter stench rises from it."
+        ],
+        "vulva": [
+          "{name}'s pussy: red and swollen, hot to the touch.",
+          "{name}'s pussy: swollen and discoloured, dark veins spreading along {his} thighs.",
+          "{name}'s pussy: black-veined and bloated, blistered and weeping. A bitter stench rises from it."
+        ],
+        "penis": [
+          "{name}'s penis: red and swollen, hot to the touch.",
+          "{name}'s penis: swollen and discoloured, dark veins spreading.",
+          "{name}'s penis: black-veined and bloated, blistered and weeping. A bitter stench rises from it."
+        ],
+        "lips": [
+          "{name}'s lips: flushed, a faint greenish tinge at the corners.",
+          "{name}'s lips: grey-green and swollen, flecked with spit.",
+          "{name}'s lips: blue-black and swollen, froth at the corners, a bitter stench on the breath."
+        ],
+        "anus": [
+          "{name}'s ass hole: red and swollen, hot to the touch.",
+          "{name}'s ass hole: swollen and discoloured, dark veins spreading.",
+          "{name}'s ass hole: black-veined and bloated, blistered and weeping. A bitter stench rises from it."
+        ]
+      },
+      "feels": {
+        "nipple": [
+          "{name}'s nipple burns and stings. {name} covers {his} chest.",
+          "{name}'s chest burns and cramps. {name} hunches, sweating.",
+          "{name}'s chest is seized with burning cramps. {name} gasps and shakes."
+        ],
+        "vulva": [
+          "{name}'s pussy burns and stings. {name} presses {his} thighs together.",
+          "{name}'s pussy burns and cramps. {name} walks bent and stiff, sweating.",
+          "{name}'s pussy is searing agony and {his} belly cramps. {name} is doubled over."
+        ],
+        "penis": [
+          "{name}'s penis burns and stings. {name} hunches.",
+          "{name}'s penis burns and cramps. {name} walks bent and stiff, sweating.",
+          "{name}'s penis is searing agony and {his} belly cramps. {name} is doubled over."
+        ],
+        "lips": [
+          "{name}'s lips tingle and taste bitter. {name} keeps swallowing.",
+          "{name}'s lips are numb and swollen. {name} slurs {his} words.",
+          "{name}'s mouth is numb and {his} throat tight. {name} can barely speak, retching."
+        ],
+        "anus": [
+          "{name}'s ass hole burns and stings. {name} clenches.",
+          "{name}'s ass hole burns and {his} gut cramps. {name} refuses to sit.",
+          "{name}'s ass hole is searing agony and {his} bowels knot. {name} can barely move."
+        ]
+      }
+    },
+    "clawing": {
+      "looks": {
+        "nipple": [
+          "{name}'s nipples: thin parallel scratches across the breast.",
+          "{name}'s nipples: deep claw rakes across the breast, one nipple torn, bleeding freely.",
+          "{name}'s nipples: the breast slashed open in long furrows, a nipple torn away, blood pouring."
+        ],
+        "vulva": [
+          "{name}'s pussy: thin parallel scratches along the lips.",
+          "{name}'s pussy: deep claw rakes torn through the lips, bleeding down {his} thighs.",
+          "{name}'s pussy: slashed open in ragged furrows, flesh hanging in strips, blood pouring."
+        ],
+        "penis": [
+          "{name}'s penis: thin parallel scratches along the shaft.",
+          "{name}'s penis: deep claw rakes torn along the shaft, bleeding freely.",
+          "{name}'s penis: slashed open in ragged furrows, flesh hanging in strips, blood pouring."
+        ],
+        "lips": [
+          "{name}'s lips: a thin scratch across them.",
+          "{name}'s lips: torn by a claw, swollen and bleeding.",
+          "{name}'s lips: ripped open in a ragged furrow to the gums, blood pouring down {his} chin."
+        ],
+        "anus": [
+          "{name}'s ass hole: thin parallel scratches across {his} cheeks.",
+          "{name}'s ass hole: deep claw rakes across {his} cheeks and between them, bleeding.",
+          "{name}'s ass hole: slashed open in ragged furrows, flesh hanging in strips, blood pouring."
+        ]
+      },
+      "feels": {
+        "nipple": [
+          "{name}'s chest stings along the scratches. {name} covers it.",
+          "{name}'s chest burns along the rakes with each breath. {name} hunches, guarding it.",
+          "{name}'s chest is tearing agony. {name} is in shock, clutching it."
+        ],
+        "vulva": [
+          "{name}'s pussy stings. {name} presses {his} thighs together.",
+          "{name}'s pussy burns and throbs. {name} walks bent and stiff.",
+          "{name}'s pussy is tearing agony. {name} is doubled over and cannot walk."
+        ],
+        "penis": [
+          "{name}'s penis stings. {name} hunches.",
+          "{name}'s penis burns and throbs. {name} walks bent and stiff.",
+          "{name}'s penis is tearing agony. {name} is doubled over and cannot walk."
+        ],
+        "lips": [
+          "{name}'s lip stings. {name} speaks carefully.",
+          "{name}'s lips throb with every word. {name} speaks thickly.",
+          "{name}'s mouth is tearing agony. {name} can barely speak, choking on blood."
+        ],
+        "anus": [
+          "{name}'s ass hole stings. {name} walks stiffly.",
+          "{name}'s ass hole burns and throbs. {name} refuses to sit.",
+          "{name}'s ass hole is tearing agony. {name} can barely move."
+        ]
+      }
+    },
+    "blood_magic": {
+      "looks": {
+        "nipple": [
+          "{name}'s nipples: flushed dark and swollen.",
+          "{name}'s nipples: purple and engorged, blood beading from them.",
+          "{name}'s nipples: blackened with burst vessels, blood seeping from them steadily."
+        ],
+        "vulva": [
+          "{name}'s pussy: flushed dark and swollen.",
+          "{name}'s pussy: purple and engorged, blood beading through the skin.",
+          "{name}'s pussy: blackened with burst vessels, blood seeping down {his} thighs."
+        ],
+        "penis": [
+          "{name}'s penis: flushed dark and swollen.",
+          "{name}'s penis: purple and engorged, blood beading through the skin.",
+          "{name}'s penis: blackened with burst vessels, blood seeping from it steadily."
+        ],
+        "lips": [
+          "{name}'s lips: flushed dark red.",
+          "{name}'s lips: swollen purple, blood beading at the corners.",
+          "{name}'s lips: split from within, blood running from {his} mouth."
+        ],
+        "anus": [
+          "{name}'s ass hole: flushed dark and swollen.",
+          "{name}'s ass hole: purple and engorged, blood beading.",
+          "{name}'s ass hole: blackened with burst vessels, blood seeping down {his} thighs."
+        ]
+      },
+      "feels": {
+        "nipple": [
+          "{name}'s nipples throb hot with {his} pulse. {name} covers {his} chest.",
+          "{name}'s nipples burn as if about to burst. {name} hunches, gasping.",
+          "{name}'s chest is searing agony from the boiling blood. {name} shakes, helpless."
+        ],
+        "vulva": [
+          "{name}'s pussy throbs hot with {his} pulse. {name} presses {his} thighs together.",
+          "{name}'s pussy burns as if about to burst. {name} doubles over.",
+          "{name}'s pussy is searing agony from the boiling blood. {name} shakes, helpless."
+        ],
+        "penis": [
+          "{name}'s penis throbs hot with {his} pulse. {name} hunches.",
+          "{name}'s penis burns as if about to burst. {name} doubles over.",
+          "{name}'s penis is searing agony from the boiling blood. {name} shakes, helpless."
+        ],
+        "lips": [
+          "{name}'s lips throb hot. {name} tastes iron.",
+          "{name}'s mouth fills with the taste of blood. {name} speaks thickly.",
+          "{name}'s mouth is full of blood. {name} chokes on {his} words."
+        ],
+        "anus": [
+          "{name}'s ass hole throbs hot with {his} pulse. {name} clenches.",
+          "{name}'s ass hole burns as if about to burst. {name} refuses to sit.",
+          "{name}'s ass hole is searing agony from the boiling blood. {name} can barely move."
+        ]
+      }
     }
   }
 }

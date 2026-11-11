@@ -1,0 +1,207 @@
+{
+  "id": "draining",
+  "title": "Life Drain",
+  "model": "health",
+  "requires": "",
+  "classify": [
+    {
+      "priority": 45,
+      "effect_file": "Skyrim.esm",
+      "effect_id": "0x0F5B57"
+    },
+    {
+      "priority": 44,
+      "absorb": true
+    }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Drained Life",
+    "feels_intro": "How {name}'s drained life force feels right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: pale and drawn, faint grey shadows under {his} eyes where the warmth was pulled out of {him}.",
+        "{name}'s face: ashen and hollow-cheeked, lips bloodless and bluish, the veins at {his} temples dark and sunken. The skin is cold to the touch.",
+        "{name}'s face: grey as a corpse, the skin papery and clinging to the bone, eyes dull and sunken deep in dark rings. A faint chill hangs about {him}."
+      ],
+      "body": [
+        "{name}'s back: the skin is pale and cool, gooseflesh standing up where the life was drawn out.",
+        "{name}'s back: grey, clammy skin with dark veins showing through, the flesh oddly slack. {name} shivers without cold.",
+        "{name}'s back: withered and grey, the skin thin and loose over the ribs and spine as if years had been taken. {name} is cold as stone."
+      ],
+      "arm": [
+        "{name}'s {part}: pale and cool, the fingers a little numb and slow.",
+        "{name}'s {part}: grey and clammy, dark veins standing out, the muscle slack and trembling.",
+        "{name}'s {part}: withered and grey, the skin hanging loose on the bone, the hand curled and nerveless."
+      ],
+      "leg": [
+        "{name}'s {part}: pale and cool, a little heavy and numb.",
+        "{name}'s {part}: grey and clammy, dark veins showing, the muscle trembling under {his} weight.",
+        "{name}'s {part}: withered and grey, the flesh shrunken to the bone; it barely holds {him} up."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} feels light-headed and chilled, as if {he} had stood up too fast. {name} blinks and steadies {reflexive}.",
+        "{name} feels dizzy and hollow, the world dimming at the edges and {his} thoughts slow. {name} is frightened and speaks faintly.",
+        "{name} feels the life ebbing out of {him}; {his} sight swims and darkens and {his} heart flutters weakly. {name} can barely keep {his} eyes open or form words."
+      ],
+      "body": [
+        "{name} feels a cold, tired ache spreading through {his} chest. {name} is uneasy and short of breath.",
+        "{name} feels drained and hollow inside, cold to the core, every breath an effort. {name} sways and hugs {reflexive}.",
+        "{name} feels empty, as if {his} warmth and strength have been poured out of {him}; {his} heart stumbles. {name} is close to fainting and terrified."
+      ],
+      "arm": [
+        "{name}'s {part} feels weak and tingling. {name} flexes the fingers to wake them.",
+        "{name}'s {part} feels cold and leaden, the grip failing. {name} lets it hang.",
+        "{name}'s {part} feels dead and numb, too weak to lift. {name} cannot hold anything."
+      ],
+      "leg": [
+        "{name}'s {part} feels weak and shaky. {name} shifts {his} weight carefully.",
+        "{name}'s {part} feels cold and leaden and trembles under {him}. {name} moves slowly, unsteady.",
+        "{name}'s {part} feels dead and numb and will not bear {him}. {name} sinks down and cannot rise."
+      ]
+    }
+  },
+  "narration": {
+    "form": "draining magic",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is drained",
+      "verb_many": " are drained",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", a cold pull as a thin red stream of life is drawn out through the skin. {name} shivers and the colour fades from {name}'s face.",
+        ", the life torn out of flesh already grey and chilled. {name} sways, breath catching, as warmth and strength flow away in a crimson thread.",
+        ", and the drain bites deep into what little is left. {name}'s skin turns ashen and slack, {name}'s knees buckle and the light in {name}'s eyes dims.",
+        ", and it is too much. The last warmth is pulled out of {name}; {name} goes grey and hollow, sagging like an empty sack, breath barely stirring."
+      ]
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    },
+    "session": {
+      "hit": {
+        "start": "drains the life out of {target}",
+        "start_many": "drain the life out of {target}",
+        "again": "keeps drawing the life out of {target}",
+        "again_many": "keep drawing the life out of {target}"
+      },
+      "no_attacker_hit": {
+        "start": "is drained by {form}",
+        "again": "is drained again and again"
+      },
+      "hit_noun": "drain"
+    }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the last of {name}'s life is pulled out through the face in a crimson stream; the cheeks sink, the lips shrivel back from the teeth and the eyes dry and sink into the skull. {name} sags, a grey, withered husk, cold before it touches the ground.",
+        "the drain tears the life from {name} until the skin of the face turns grey and papery and cracks like old parchment; {name}'s eyes roll up, dull and empty, and {name} crumples without a sound."
+      ],
+      "body": [
+        "the drain draws the life out of {name}'s chest until the heart stutters and stops; the body shrinks inside the clothes, ribs standing out under grey, sunken skin. {name} falls as a dry, cold husk.",
+        "the crimson stream pours out of {name}'s body until nothing is left; the flesh withers and slackens, the skin turns ashen and loose, and {name} folds to the ground, light as a bundle of sticks."
+      ],
+      "arm": [
+        "the drain pulls the life out through {name}'s {part} and the withering spreads up the shoulder and across the chest; {name}'s hand curls into a grey claw and {name} collapses, shrunken and cold.",
+        "{name}'s {part} shrivels to grey skin and bone as the last life is drawn out; the cold races inward to the heart and {name} drops, eyes empty and staring."
+      ],
+      "leg": [
+        "the drain draws the life out of {name}'s {part} and the grey withering climbs through the body; {name} sinks to {name}'s knees, then falls, a shrunken, cold husk.",
+        "{name}'s {part} withers to bone and slack skin and the drain pulls on until {name}'s heart gives out; {name} slumps, ashen and hollow, all warmth gone."
+      ]
+    },
+    "soil": [],
+    "soil_chance": 0.0
+  }
+}

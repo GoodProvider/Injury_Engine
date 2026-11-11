@@ -23,7 +23,11 @@ a file that fails to parse is skipped and named there.
 | `slashing`, `piercing`, `bludgeoning` | model `health`: physical weapon hits | blades / daggers / maces, hammers, staves, fists and bow bashes |
 | `arrow` | model `health`: bow and crossbow shots | arrows and bolts (`narration.session` words the hit as a shot) |
 | `burning`, `freezing`, `shocking` | model `health`: spell and enchantment damage | magic effects by resist type (fire, frost, shock) |
+| `draining` | model `health`: life drained away | Vampiric Drain (Skyrim.esm MGEF 0x0F5B57) and every Absorb Health effect (archetype Absorb: staves, enchantments, Vampire Lord drain) |
+| `poisoning` | model `health`: poison | every Health damage effect with resist ResistPoison: poison spells, weapon poisons, creature venom |
+| `blood_magic` | model `health`: hemomancy | no vanilla spell; spells from mods whose magic effect carries keyword `Injury_Engine_BloodMagic` or `MagicBloodMagic` (add your own with `effect_keywords` / `effect_file`) |
 | `mauling` | model `health` | unarmed attacks by creatures (non-NPC attackers) |
+| `clawing` | model `health`: monstrous claws | unarmed attacks by a Vampire Lord (`attacker_races` DLC1VampireBeastRace), before mauling |
 | `falling` | model `both`: torture "Falls and Scrapes" + health "Fall Injuries" (source `falling_real`) | torture: `External_Injure(..., "falling", ..., torture = True)` (SkyrimNet_Leashed ragdoll pulls); health: landing damage (no hit, no attacker, still falling) |
 | `leash_dragging` | model `torture`; **shipped by SkyrimNet_Leashed**, not this mod (see "Injury types from other mods") | SkyrimNet_Leashed, each second a knocked-down actor is dragged |
 | `drowning` | model `health`: lands on the **lungs** only | drowning damage (no hit, no attacker, under water without Water Breathing) |
@@ -127,8 +131,16 @@ classify           (optional) how incoming damage picks this source. Highest `pr
                                     OneHandDagger, Bow, Crossbow, OneHandMace, Staff, HandToHandMelee
                    keyword          the weapon must have this keyword (WeapTypeWarhammer on a two-hand axe)
                    without_keyword  the weapon must not have this keyword
-                   resist           ResistFire, ResistFrost or ResistShock (health spell damage)
-                   effect_file / effect_id   this exact magic effect is the torture spell (local form id, hex string)
+                   resist           ResistFire, ResistFrost, ResistShock or ResistPoison (health spell damage)
+                   effect_file / effect_id   this exact magic effect is this source (local form id, hex string): the
+                                    torture spells, or a health source (draining: Vampiric Drain 0x0F5B57)
+                   absorb           true: an Absorb archetype effect on Health (Absorb Health, Vampire Lord drain)
+                   effect_keywords  the magic effect carries any of these keyword EditorIDs (blood_magic)
+                                    Magic rules (effect form, absorb, effect_keywords, resist) are tried in priority
+                                    order on each effect; a Health damage effect none of them names is generic, never
+                                    the weapon in the caster's other hand or a punch
+                   attacker_races   (with unarmed) the attacker's race EditorID is one of these (clawing:
+                                    DLC1VampireBeastRace, priority 75 over mauling's 70)
                    ignore_weapon_file / ignore_weapon_id   this weapon is not injury damage (the padded whip)
                    weapon_file / weapon_id   this exact weapon is this source, in or out of combat, before its weapon
                                     type (slapping: DiaryOfMine.esm 0x404724 "Slap with hand", a OneHandSword); a

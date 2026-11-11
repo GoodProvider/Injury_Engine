@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on birds: great talons tearing through feathers and thin skin. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons tearing through feathers. {name} shrieks and flaps away.",
+        ", the claws ripping across torn skin. Feathers fly and bright blood runs.",
+        ", and the talons carve deep. {name} tumbles, feathers and blood scattering.",
+        ", and it is too much. The claws tear {name} apart; {name} drops in a burst of feathers."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a scratch, a few feathers torn.",
+        "{name}'s head: deep scratches, bright blood on the feathers.",
+        "{name}'s head: torn open to the bone, an eye gone."
+      ],
+      "body": [
+        "{name}'s body: feathers torn out.",
+        "{name}'s body: deep rakes, bright blood matting the feathers.",
+        "{name}'s body: torn open, flesh and feathers hanging."
+      ],
+      "wing": [
+        "{name}'s {part}: a few feathers torn.",
+        "{name}'s {part}: deep rakes, feathers missing.",
+        "{name}'s {part}: torn and broken, hanging."
+      ],
+      "leg": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: gashed and bleeding.",
+        "{name}'s {part}: torn to the bone."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shrieks.",
+        "{name} is frightened and frantic.",
+        "{name} is in shock."
+      ],
+      "body": [
+        "{name} flinches.",
+        "{name} is hurt and frantic.",
+        "{name} is collapsing."
+      ],
+      "wing": [
+        "{name}'s {part} sting.",
+        "{name}'s {part} flap unevenly.",
+        "{name}'s {part} cannot fly."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} limps.",
+        "{name}'s {part} gives way."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "a talon tears {name}'s head half off; {name} drops in a spray of blood and feathers.",
+        "the claws rake across {name}'s head and neck; {name} flaps once and falls dead."
+      ],
+      "body": [
+        "the claws rip {name}'s body open; feathers and blood burst out and {name} falls in pieces.",
+        "a swipe tears through {name}'s breast; {name} tumbles, dead before landing."
+      ],
+      "wing": [
+        "the talons rip {name}'s {part} away; {name} spins down and dies in the dirt.",
+        "the claws shred {name}'s {part} and the body with it; {name} falls in a burst of feathers."
+      ],
+      "leg": [
+        "the claws tear {name}'s {part} away and rake the belly open; {name} dies flapping.",
+        "a swipe shears through {name}'s {part}; {name} topples and bleeds out."
+      ]
+    }
+  }
+}

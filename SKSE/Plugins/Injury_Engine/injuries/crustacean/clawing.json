@@ -1,0 +1,79 @@
+{
+  "_note": "Vampire lord claw wounds on mudcrabs: great talons scraping and cracking the shell. Overrides the clawing source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the talons scraping across the shell. {name} clacks and snaps back.",
+        ", the claws cracking the shell. Pale fluid seeps out.",
+        ", and the talons split the shell. Pale fluid sprays and {name} reels.",
+        ", and it is too much. The claws tear {name}'s shell apart; {name} collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: scratched.",
+        "{name}'s head: cracked, fluid seeping.",
+        "{name}'s head: torn open, an eyestalk gone."
+      ],
+      "body": [
+        "{name}'s shell: scratched.",
+        "{name}'s shell: cracked, pale fluid seeping.",
+        "{name}'s shell: split open, the soft body showing."
+      ],
+      "claw": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: cracked.",
+        "{name}'s {part}: torn half off."
+      ],
+      "leg": [
+        "{name}'s {part}: scratched.",
+        "{name}'s {part}: cracked.",
+        "{name}'s {part}: torn away."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} snaps.",
+        "{name} is hurt.",
+        "{name} is reeling."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} slows.",
+        "{name} is collapsing."
+      ],
+      "claw": [
+        "{name}'s {part} works.",
+        "{name}'s {part} is weak.",
+        "{name}'s {part} hangs."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} limps.",
+        "{name}'s {part} is gone."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the claws rip {name}'s head open; {name} sinks, legs twitching.",
+        "a talon punches through {name}'s head; {name} goes still."
+      ],
+      "body": [
+        "the claws tear {name}'s shell open; the soft body spills out and {name} collapses.",
+        "a swipe splits {name}'s shell in two; pale fluid pours and {name} lies still."
+      ],
+      "claw": [
+        "the claws rip {name}'s {part} off and tear into the body; {name} collapses.",
+        "{name}'s {part} is torn away; {name} bleeds out pale fluid and dies."
+      ],
+      "leg": [
+        "the claws shear off {name}'s {part} and rake the shell open; {name} tips over, dead.",
+        "{name}'s {part} is torn away; {name} sinks and dies."
+      ]
+    }
+  }
+}

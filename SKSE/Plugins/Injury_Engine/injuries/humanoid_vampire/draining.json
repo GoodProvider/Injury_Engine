@@ -1,0 +1,93 @@
+{
+  "_note": "Life drain on vampire lords: the stolen blood that fills them is pulled back out; the grey skin shrinks and the hunger flares. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull as a thread of stolen blood is drawn back out through the grey skin. {name} hisses, startled.",
+        ", the drain pulling at blood already thin. The leathery skin shrinks tight and {name}'s eyes flare with hunger.",
+        ", and the drain bites deep. {name} sags, wings drooping, the red eyes dimming.",
+        ", and it is too much. The last stolen blood is pulled out of {name}; the vampire lord sags into a grey, withered husk."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: the grey skin a little tighter.",
+        "{name}'s face: the skin shrunken onto the skull, the fangs bared, the red eyes fevered with thirst.",
+        "{name}'s face: withered to a grey mask, the eyes dull embers."
+      ],
+      "body": [
+        "{name}'s {part}: the grey skin cool.",
+        "{name}'s {part}: the skin shrunken over corded muscle, the wounds dry.",
+        "{name}'s {part}: withered, ribs standing out under papery grey skin."
+      ],
+      "arm": [
+        "{name}'s {part}: a little slower.",
+        "{name}'s {part}: shrunken, the claws trembling.",
+        "{name}'s {part}: withered, hanging limp."
+      ],
+      "leg": [
+        "{name}'s {part}: a little slower.",
+        "{name}'s {part}: shrunken, trembling.",
+        "{name}'s {part}: withered, buckling."
+      ],
+      "wing": [
+        "{name}'s {part}: a little slack.",
+        "{name}'s {part}: drooping, the membrane dry.",
+        "{name}'s {part}: shrivelled and limp."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} hisses, more insulted than hurt.",
+        "{name} is ravenous, the composure slipping.",
+        "{name} is desperate with thirst, close to fading."
+      ],
+      "body": [
+        "{name} feels a chill and a sharpening thirst.",
+        "{name} is hollow and hungry, drifting lower.",
+        "{name} is empty, feral with hunger and afraid."
+      ],
+      "arm": [
+        "{name}'s {part} flexes slower.",
+        "{name}'s {part} is weak.",
+        "{name}'s {part} won't lift."
+      ],
+      "leg": [
+        "{name}'s {part} drags.",
+        "{name}'s {part} trembles.",
+        "{name}'s {part} gives way."
+      ],
+      "wing": [
+        "{name}'s {part} beat slower.",
+        "{name}'s {part} barely lift.",
+        "{name}'s {part} cannot hold {name} aloft."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last stolen blood out of {name}; the face withers to a grey mask, the red eyes go dark and the vampire lord crumples.",
+        "{name}'s fangs bare in a final hiss as the blood is drawn away; the body shrinks and falls, a withered husk."
+      ],
+      "body": [
+        "the drain empties {name} of every stolen drop; the grey skin shrinks onto the bones and {name} collapses, light as dry leaves.",
+        "all the blood {name} ever drank flows out in a red stream; the vampire lord withers and falls."
+      ],
+      "arm": [
+        "the withering runs from {name}'s {part} into the chest; {name} sags, claws curled.",
+        "{name}'s {part} shrivels and the drain takes the rest; {name} falls."
+      ],
+      "leg": [
+        "{name}'s {part} withers and buckles; the drain takes the rest.",
+        "the drain climbs from {name}'s {part} to the heart; {name} crumples."
+      ],
+      "wing": [
+        "the withering spreads from {name}'s {part} into the body; {name} drops and lies still.",
+        "{name}'s {part} shrivel to dry tatters and the drain takes the rest."
+      ]
+    }
+  }
+}

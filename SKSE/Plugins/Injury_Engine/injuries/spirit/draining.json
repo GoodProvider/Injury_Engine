@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on wisps, wraiths and ghosts: a body of spirit and mist; the drain pulls the essence away and the form frays. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull as threads of essence are drawn out. {name} flickers and keens.",
+        ", the drain pulling at essence already thin. The form frays at the edges.",
+        ", and the drain bites deep. {name} wavers, barely there.",
+        ", and it is too much. The last essence is pulled out of {name}; the form disperses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the glow flickers.",
+        "{name}'s head: thin and fraying.",
+        "{name}'s head: barely visible."
+      ],
+      "body": [
+        "{name}'s core: dimmer.",
+        "{name}'s core: thin and fraying.",
+        "{name}'s core: fading."
+      ],
+      "arm": [
+        "{name}'s {part}: flickering.",
+        "{name}'s {part}: fraying.",
+        "{name}'s {part}: fading away."
+      ],
+      "trail": [
+        "{name}'s {part}: flickering.",
+        "{name}'s {part}: fraying.",
+        "{name}'s {part}: fading away."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} keens.",
+        "{name} wavers.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} drifts on.",
+        "{name} wavers.",
+        "{name} is disappearing."
+      ],
+      "arm": [
+        "{name}'s {part} reaches.",
+        "{name}'s {part} wavers.",
+        "{name}'s {part} fades."
+      ],
+      "trail": [
+        "{name}'s {part} drifts.",
+        "{name}'s {part} wavers.",
+        "{name}'s {part} fades."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last essence out of {name}; the form flickers and disperses with a fading wail.",
+        "{name}'s glow gutters out; the shape dissolves into cold mist."
+      ],
+      "body": [
+        "the drain empties {name}; the form frays to nothing and is gone.",
+        "all of {name}'s essence flows out in a stream; {name} vanishes."
+      ],
+      "arm": [
+        "the fading spreads from {name}'s {part}; {name} disperses.",
+        "{name}'s {part} frays away and the rest follows."
+      ],
+      "trail": [
+        "{name}'s {part} frays away and the rest follows.",
+        "the drain climbs from {name}'s {part}; {name} disperses."
+      ]
+    }
+  }
+}

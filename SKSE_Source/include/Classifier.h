@@ -19,6 +19,24 @@ namespace Classifier
     int TortureSourceOfEffect(const RE::EffectSetting* mgef);
     int TortureSourceOfSpell(const RE::MagicItem* item);
 
+    // Health source of a real (not torture) MGEF that damages Health: effect form, absorb, effect keyword or resist
+    // rule, else generic. -2 = not a Health damage effect (or a torture one).
+    int HealthSourceOfEffect(const RE::EffectSetting* mgef);
+
+    // While alive, Classify on this thread names `source` for damage by `caster` (or with no attacker): a value
+    // modifier tick classified by its own effect, not by the weapon in the caster's other hand.
+    struct MagicScope
+    {
+        MagicScope(int source, RE::FormID caster);
+        ~MagicScope();
+        MagicScope(const MagicScope&) = delete;
+        MagicScope& operator=(const MagicScope&) = delete;
+
+    private:
+        int previousSource;
+        RE::FormID previousCaster;
+    };
+
     // Source index for damage to `victim` from `attacker` (may be null); -1 = ignore (a Torture Padded Whip hit,
     // or nothing to classify into). When `physicalMelee` is non-null, set true for weapon / fist / unarmed-body
     // hits (one torture wound per HandleHealthDamage call); false for spell ticks and active torture effects.

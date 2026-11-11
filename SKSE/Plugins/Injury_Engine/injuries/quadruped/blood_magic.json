@@ -1,0 +1,79 @@
+{
+  "_note": "Blood magic on four-legged animals: the blood boiling under the coat. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a hot pressure as the blood stirs. {name} yelps, blood at the nose.",
+        ", the blood boiling up. Vessels burst and {name} jerks.",
+        ", and the blood seethes. {name} jerks like a puppet.",
+        ", and it is too much. {name}'s blood bursts through the hide; {name} convulses and falls."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: blood at the nose.",
+        "{name}'s head: blood from eyes and nose.",
+        "{name}'s head: blood pouring from eyes, ears and mouth."
+      ],
+      "body": [
+        "{name}'s back: hot.",
+        "{name}'s back: blood beading through the coat.",
+        "{name}'s back: hide split from within, blood pouring."
+      ],
+      "leg": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: kicking on its own."
+      ],
+      "tail": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: lashing on its own."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shakes the head.",
+        "{name} whimpers.",
+        "{name} is in agony."
+      ],
+      "body": [
+        "{name} is uneasy.",
+        "{name} jerks.",
+        "{name} is helpless."
+      ],
+      "leg": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "tail": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "{name}'s blood boils in the skull; blood bursts from the eyes and {name} drops.",
+        "the magic wrenches {name}'s head back as blood fountains from the mouth; {name} dies."
+      ],
+      "body": [
+        "{name}'s blood boils until the heart bursts; {name} collapses.",
+        "{name} jerks like a puppet as blood forces out through the hide, then drops."
+      ],
+      "leg": [
+        "the blood bursts from {name}'s {part}; {name} bleeds out.",
+        "{name}'s {part} jerks as the vessels burst; {name} dies."
+      ],
+      "tail": [
+        "the blood bursts from {name}'s {part}; {name} bleeds out.",
+        "{name}'s {part} lashes as the vessels burst; {name} dies."
+      ]
+    }
+  }
+}

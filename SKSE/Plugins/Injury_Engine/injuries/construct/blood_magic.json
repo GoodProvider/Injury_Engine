@@ -1,0 +1,79 @@
+{
+  "_note": "Blood magic on dwemer constructs: there is no blood; the magic seizes the oil and boils it in the pipes. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the magic groping for blood and finding oil. {name} twitches, a thin hiss of steam escaping.",
+        ", the oil seething in the pipes. A seam splits and hot oil sprays; {name} jerks.",
+        ", and the oil boils through the workings. {name} jerks like a puppet, steam and oil bursting out.",
+        ", and it is too much. The boiling oil bursts {name}'s pipes; {name} seizes in a cloud of steam."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a thin hiss.",
+        "{name}'s head: hot oil weeping from a seam.",
+        "{name}'s head: seams burst, boiling oil pouring."
+      ],
+      "body": [
+        "{name}'s chassis: warm to the touch.",
+        "{name}'s chassis: hot oil spraying from a split seam.",
+        "{name}'s chassis: pipes burst, boiling oil and steam pouring out."
+      ],
+      "limb": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking, oil weeping.",
+        "{name}'s {part}: jerking wildly, oil pouring."
+      ],
+      "core": [
+        "{name}'s {part}: hissing.",
+        "{name}'s {part}: rattling, steam leaking.",
+        "{name}'s {part}: boiling over."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} stutters.",
+        "{name} lurches."
+      ],
+      "body": [
+        "{name} hums on.",
+        "{name} jerks against its course.",
+        "{name} is out of control."
+      ],
+      "limb": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} moves on its own."
+      ],
+      "core": [
+        "{name}'s {part} hisses.",
+        "{name}'s {part} rattles.",
+        "{name}'s {part} is overloading."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the boiling oil bursts {name}'s head plate; steam and oil spray and {name} collapses.",
+        "{name}'s head jerks back as the oil boils over; the light dies."
+      ],
+      "body": [
+        "the oil boils until {name}'s pipes burst; steam roars out and {name} collapses.",
+        "{name} jerks like a puppet, oil spraying from every seam, then crashes down."
+      ],
+      "limb": [
+        "the oil bursts out of {name}'s {part}; {name} seizes and topples.",
+        "{name}'s {part} jerks wildly as the oil boils; {name} falls in a hissing heap."
+      ],
+      "core": [
+        "{name}'s {part} boils over and bursts; the light dies and {name} goes still.",
+        "the boiling oil cracks {name}'s {part}; steam blasts out and {name} stops."
+      ]
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on spriggans: the green life pulled out; leaves wither, sap dries and the glow fades. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull at the green life. Leaves curl and {name}'s glow flickers.",
+        ", the life drawn from wood already drying. Leaves brown and fall.",
+        ", and the drain bites deep. Sap stops flowing and the bark cracks dry.",
+        ", and it is too much. The last green life is pulled out of {name}; the glow dies and {name} falls, dry and dead."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the leaves curling.",
+        "{name}'s head: leaves brown and falling, the glow dim.",
+        "{name}'s head: bare and dry, the glow nearly out."
+      ],
+      "body": [
+        "{name}'s body: the moss a little paler.",
+        "{name}'s body: bark drying and cracking, sap gone.",
+        "{name}'s body: grey, dead wood, splitting."
+      ],
+      "arm": [
+        "{name}'s {part}: leaves curling.",
+        "{name}'s {part}: brittle, leaves falling.",
+        "{name}'s {part}: dead and splitting."
+      ],
+      "leg": [
+        "{name}'s {part}: leaves curling.",
+        "{name}'s {part}: brittle.",
+        "{name}'s {part}: dead and splitting."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} rustles, uneasy.",
+        "{name} wilts.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} slows.",
+        "{name} sags.",
+        "{name} is dying."
+      ],
+      "arm": [
+        "{name}'s {part} slows.",
+        "{name}'s {part} creaks.",
+        "{name}'s {part} won't bend."
+      ],
+      "leg": [
+        "{name}'s {part} slows.",
+        "{name}'s {part} creaks.",
+        "{name}'s {part} won't bend."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last green life out of {name}; the glow dies and the leaves fall, and {name} topples like a dead tree.",
+        "{name}'s glow gutters as the life flows away; the body dries and falls."
+      ],
+      "body": [
+        "the drain empties {name}; the bark goes grey and dry and {name} collapses in a heap of dead wood.",
+        "all of {name}'s green life flows out; {name} withers and falls."
+      ],
+      "arm": [
+        "the withering runs from {name}'s {part}; {name} dries and falls.",
+        "{name}'s {part} splits dry and the drain takes the rest."
+      ],
+      "leg": [
+        "{name}'s {part} dries and splits; {name} topples.",
+        "the drain climbs from {name}'s {part}; {name} falls, dead wood."
+      ]
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "_note": "Blood magic on draugr, skeletons and dragon priests: no blood, only dust and dark sludge; the magic stirs it and drives it out. Overrides the blood_magic source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the magic groping for blood and finding dust and sludge. {name} twitches.",
+        ", the sludge churning in the dry veins. It oozes out and {name} jerks.",
+        ", and the sludge seethes. {name} jerks like a puppet.",
+        ", and it is too much. The sludge bursts through the dry flesh; {name} collapses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: twitching.",
+        "{name}'s face: dark sludge oozing from the eyes.",
+        "{name}'s face: sludge pouring from every opening."
+      ],
+      "body": [
+        "{name}'s back: twitching.",
+        "{name}'s back: sludge oozing.",
+        "{name}'s back: sludge bursting through the flesh."
+      ],
+      "arm": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ],
+      "leg": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: jerking.",
+        "{name}'s {part}: jerking wildly."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} falters.",
+        "{name} reels."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} jerks.",
+        "{name} is helpless."
+      ],
+      "arm": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ],
+      "leg": [
+        "{name}'s {part} twitches.",
+        "{name}'s {part} jerks.",
+        "{name}'s {part} won't obey."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the sludge bursts from {name}'s skull; the eye-light dies.",
+        "the magic wrenches {name}'s head back; sludge pours out and the corpse falls."
+      ],
+      "body": [
+        "the sludge bursts through {name}'s flesh; the corpse collapses.",
+        "{name} jerks like a puppet, dust and sludge pouring, then falls apart."
+      ],
+      "arm": [
+        "the sludge bursts from {name}'s {part}; {name} collapses.",
+        "{name}'s {part} jerks apart; {name} falls."
+      ],
+      "leg": [
+        "the sludge bursts from {name}'s {part}; {name} collapses.",
+        "{name}'s {part} jerks apart; {name} falls."
+      ]
+    }
+  }
+}

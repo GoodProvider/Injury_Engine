@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on four-legged animals: the warmth and life pulled out through the coat; the animal shivers, weakens and sinks. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull as a red thread of life is drawn out through the coat. {name} flinches and shivers.",
+        ", the life torn from a body already chilled. {name} sways, the head drooping.",
+        ", and the drain bites deep. {name}'s legs tremble and the coat goes dull.",
+        ", and it is too much. The last warmth leaves {name}; {name} sinks down and goes still."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: the eyes a little dull.",
+        "{name}'s head: the eyes dull and half-closed.",
+        "{name}'s head: the eyes glazed, the head hanging."
+      ],
+      "body": [
+        "{name}'s back: the coat bristling against a chill.",
+        "{name}'s back: the coat dull, the flanks hollow.",
+        "{name}'s back: withered, ribs showing under a lank coat."
+      ],
+      "leg": [
+        "{name}'s {part}: a little unsteady.",
+        "{name}'s {part}: trembling.",
+        "{name}'s {part}: folding."
+      ],
+      "tail": [
+        "{name}'s {part}: drooping.",
+        "{name}'s {part}: limp.",
+        "{name}'s {part}: lank and still."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shakes the head.",
+        "{name} is dazed.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} shivers.",
+        "{name} is weak and cold.",
+        "{name} is empty."
+      ],
+      "leg": [
+        "{name}'s {part} wobbles.",
+        "{name}'s {part} trembles.",
+        "{name}'s {part} gives way."
+      ],
+      "tail": [
+        "{name}'s {part} droops.",
+        "{name}'s {part} hangs.",
+        "{name}'s {part} is still."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last life out of {name}; the eyes glaze and {name} sinks to the ground, cold and withered.",
+        "{name} lets out a faint whimper as the red thread pulls away and lies still."
+      ],
+      "body": [
+        "the drain empties {name}; the flanks sink and {name} folds to the ground, a withered husk.",
+        "all of {name}'s warmth flows out; {name} collapses, cold."
+      ],
+      "leg": [
+        "{name}'s {part} withers and folds; the drain takes the rest and {name} lies still.",
+        "the drain climbs from {name}'s {part} to the heart; {name} sinks."
+      ],
+      "tail": [
+        "the drain pulls the life up {name}'s {part}; {name} sinks and dies.",
+        "{name}'s {part} goes limp and the cold spreads; {name} lies still."
+      ]
+    }
+  }
+}

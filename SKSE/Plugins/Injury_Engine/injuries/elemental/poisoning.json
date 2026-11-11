@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on atronachs, gargoyles and ash guardians: there is nothing to poison; the venom burns off, freezes or flakes away. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison hissing off {name}. {name} pays it no mind.",
+        ", the venom clinging and staining. {name} presses on.",
+        ", and the poison eats into the cracks. Pieces flake away.",
+        ", and it is too much. The poison has eaten into the binding; {name} falls apart."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a stain.",
+        "{name}'s head: stained and pitted.",
+        "{name}'s head: pitted and flaking."
+      ],
+      "body": [
+        "{name}'s core: a stain.",
+        "{name}'s core: pitted.",
+        "{name}'s core: flaking."
+      ],
+      "arm": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: pitted.",
+        "{name}'s {part}: flaking."
+      ],
+      "lower": [
+        "{name}'s {part}: stained.",
+        "{name}'s {part}: pitted.",
+        "{name}'s {part}: flaking."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} ignores it.",
+        "{name} flickers."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} presses on.",
+        "{name} weakens."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} works.",
+        "{name}'s {part} weakens."
+      ],
+      "lower": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} holds.",
+        "{name}'s {part} weakens."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison eats into {name}'s head; the light flares and {name} collapses.",
+        "{name}'s head flakes away; the form falls apart."
+      ],
+      "body": [
+        "the poison eats into {name}'s core; the binding breaks and {name} collapses.",
+        "{name}'s core flakes apart; the form falls."
+      ],
+      "arm": [
+        "{name}'s {part} flakes away and the rest follows.",
+        "the poison eats through {name}'s {part}; {name} collapses."
+      ],
+      "lower": [
+        "{name}'s {part} flakes away; {name} collapses.",
+        "the poison eats through {name}'s {part}; {name} falls apart."
+      ]
+    }
+  }
+}

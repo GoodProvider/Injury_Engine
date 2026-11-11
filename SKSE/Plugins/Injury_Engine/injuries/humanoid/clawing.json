@@ -1,0 +1,208 @@
+{
+  "id": "clawing",
+  "title": "Claw Wounds",
+  "model": "health",
+  "requires": "",
+  "classify": [
+    {
+      "priority": 75,
+      "unarmed": true,
+      "attacker_races": [
+        "DLC1VampireBeastRace"
+      ]
+    }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Claw Wounds",
+    "feels_intro": "How {name}'s claw wounds feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: a set of thin, parallel scratches across {his} cheek, beading blood.",
+        "{name}'s face: deep parallel rakes from brow to jaw where great talons swiped across it, flesh parted in strips and bleeding freely. It smells of blood.",
+        "{name}'s face: torn open in long, ragged furrows down to the bone, one strip of skin hanging loose, blood streaming over {his} neck. The iron stench of blood is thick around {him}."
+      ],
+      "body": [
+        "{name}'s back: thin parallel scratches through the clothing, beading blood.",
+        "{name}'s back: long, deep claw rakes across the back, clothing slashed to ribbons and soaked dark with blood. A coppery smell of blood rises from {him}.",
+        "{name}'s back: laid open in broad, parallel furrows from shoulder to hip, flesh peeled back in strips over the ribs, blood pouring. {name} reeks of blood."
+      ],
+      "arm": [
+        "{name}'s {part}: thin parallel scratches, bleeding lightly.",
+        "{name}'s {part}: deep claw rakes across the muscle, the flesh parted in strips, blood running to the fingers.",
+        "{name}'s {part}: slashed to the bone in long talon furrows, muscle hanging in strips; the arm is useless."
+      ],
+      "leg": [
+        "{name}'s {part}: thin parallel scratches, bleeding lightly.",
+        "{name}'s {part}: deep claw rakes down the thigh, trousers slashed and blood running into {his} boot.",
+        "{name}'s {part}: slashed to the bone in long talon furrows, flesh hanging in strips; the leg buckles under any weight."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings along the scratches. {name} is startled and wary, eyes darting.",
+        "{name}'s face burns and throbs along the deep rakes. {name} is frightened, breathing hard and flinching from any movement.",
+        "{name}'s face is blinding, tearing agony. {name} is in shock, gasping or sobbing, barely able to talk."
+      ],
+      "body": [
+        "{name}'s back stings along the scratches. {name} is tense and keeps {his} distance.",
+        "{name}'s back burns in long lines of fire with every breath. {name} moves stiffly, frightened.",
+        "{name}'s back is tearing agony from shoulder to hip. {name} is in shock and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} stings. {name} guards it.",
+        "{name}'s {part} burns and throbs and the grip is weak. {name} cradles it.",
+        "{name}'s {part} is shrieking agony and will not work. {name} holds it away, in shock."
+      ],
+      "leg": [
+        "{name}'s {part} stings with each step. {name} is quick to flinch.",
+        "{name}'s {part} burns and throbs along the rakes. {name} limps, frightened.",
+        "{name}'s {part} is shrieking agony and will not take weight. {name} falls or needs support."
+      ]
+    }
+  },
+  "narration": {
+    "form": "monstrous claws",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is raked by claws",
+      "verb_many": " are raked by claws",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " as {attacker} swipes",
+      "by_none": "",
+      "levels": [
+        ", the great talons slicing across the skin in a fast swipe. {name} cries out and stumbles back, thin lines of blood welling.",
+        ", the claws ripping across wounds already open. Flesh parts in long strips and {name} screams as blood runs freely.",
+        ", and the talons tear deep across the torn flesh, a brutal backhand swipe. {name} is flung off balance, blood spraying, the pain sickening.",
+        ", and it is too much. The claws carve through {name} in long, ragged furrows; {name} reels, ashen, and crumples in a spreading pool of blood."
+      ]
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    },
+    "session": {
+      "hit": {
+        "start": "rakes {target} with monstrous claws",
+        "start_many": "rake {target} with monstrous claws",
+        "again": "swipes again and again at {target}",
+        "again_many": "swipe again and again at {target}"
+      },
+      "no_attacker_hit": {
+        "start": "is raked by {form}",
+        "again": "is raked again and again"
+      },
+      "hit_noun": "swipe"
+    }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the great claws swipe across {name}'s face and throat, carving deep parallel furrows through skin, muscle and windpipe; blood sprays in a hot fan and {name} drops, the head half torn from the neck.",
+        "a monstrous talon rakes across {name}'s skull and peels the scalp and face away in strips; {name} reels blind, screaming, and falls dead in the thick reek of blood."
+      ],
+      "body": [
+        "the claws rake across {name}'s belly and open it in long, parallel slashes; the guts spill out in steaming loops and {name} sinks to the ground clutching at them, screaming, until the screams fade.",
+        "a brutal swipe of great talons carves {name}'s chest open from shoulder to hip, the ribs laid bare and splintered; {name} is flung aside like a doll and lands dead in a red spray."
+      ],
+      "arm": [
+        "the claws tear through {name}'s {part} at the shoulder and rip it half away, leaving it hanging by strips of muscle as blood gushes; {name} screams and falls, bleeding out in seconds.",
+        "the talons slash {name}'s {part} to the bone and carry on across the chest; {name} spins with the blow and crashes down dead in a pool of blood."
+      ],
+      "leg": [
+        "the claws carve {name}'s {part} open from hip to knee, severing the great vessel; blood fountains out and {name} goes down screaming, bleeding out where {name} falls.",
+        "a swipe of great talons shears through {name}'s {part} and drops {name} to the ground; a second rake tears across the back and {name} dies in the dirt, flesh hanging in strips."
+      ]
+    },
+    "soil": [
+      "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the blood.",
+      "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
+  }
+}

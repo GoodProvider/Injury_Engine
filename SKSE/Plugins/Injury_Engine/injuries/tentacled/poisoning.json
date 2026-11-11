@@ -1,0 +1,65 @@
+{
+  "_note": "Poison on netch and seekers: venom through thin fluid; the hide blotches and the tentacles spasm. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison stinging into the hide. {name} shudders.",
+        ", the venom spreading. Dark blotches bloom on the hide.",
+        ", and the poison floods {name}. The tentacles spasm.",
+        ", and it is too much. {name} convulses and drops."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a blotch.",
+        "{name}'s head: dark blotches.",
+        "{name}'s head: blackened."
+      ],
+      "body": [
+        "{name}'s body: a swollen blotch.",
+        "{name}'s body: dark blotches spreading.",
+        "{name}'s body: blackened and leaking."
+      ],
+      "tentacle": [
+        "{name}'s {part}: twitching.",
+        "{name}'s {part}: spasming.",
+        "{name}'s {part}: rigid."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} shudders.",
+        "{name} drifts unsteadily.",
+        "{name} is fitting."
+      ],
+      "body": [
+        "{name} is uneasy.",
+        "{name} sags.",
+        "{name} convulses."
+      ],
+      "tentacle": [
+        "{name}'s {part} twitch.",
+        "{name}'s {part} spasm.",
+        "{name}'s {part} lock."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the poison reaches {name}'s head; {name} convulses and drops.",
+        "{name} blackens and sinks, twitching."
+      ],
+      "body": [
+        "the venom overwhelms {name}; {name} convulses and falls.",
+        "{name} leaks dark fluid and drops, dead."
+      ],
+      "tentacle": [
+        "{name}'s {part} lock and the poison takes the rest; {name} falls.",
+        "the poison spreads from {name}'s {part}; {name} convulses and dies."
+      ]
+    }
+  }
+}

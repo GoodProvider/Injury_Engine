@@ -1,0 +1,79 @@
+{
+  "_note": "Life drain on draugr, skeletons and dragon priests: no warm life, only the necromantic power that animates them; the drain pulls it out and the dry flesh crumbles. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull at the dark power that moves the dead body. The eye-light flickers and {name} rasps.",
+        ", the drain sapping power already thin. Dry flesh shrivels tighter and dust spills from the joints.",
+        ", and the drain bites deep. {name} sags and stumbles, the eye-light guttering.",
+        ", and it is too much. The last animating power is pulled out of {name}; the body falls, an ordinary corpse at last."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: the eye-light flickers.",
+        "{name}'s face: the eye-light dim, the dry skin shrivelled tight on the skull. Dust trickles from {him}.",
+        "{name}'s face: the eye-light nearly out, the face crumbling to dust."
+      ],
+      "body": [
+        "{name}'s back: the dry flesh a little tighter.",
+        "{name}'s back: shrivelled flesh cracking, dust spilling.",
+        "{name}'s back: crumbling, bones showing through powder."
+      ],
+      "arm": [
+        "{name}'s {part}: slower.",
+        "{name}'s {part}: shrivelled, dust trickling.",
+        "{name}'s {part}: crumbling."
+      ],
+      "leg": [
+        "{name}'s {part}: slower.",
+        "{name}'s {part}: shrivelled, unsteady.",
+        "{name}'s {part}: crumbling, buckling."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} rasps, undeterred.",
+        "{name} falters, the eye-light wavering.",
+        "{name} is fading, barely moving."
+      ],
+      "body": [
+        "{name} keeps coming.",
+        "{name} sags and slows.",
+        "{name} is coming apart."
+      ],
+      "arm": [
+        "{name}'s {part} works.",
+        "{name}'s {part} slows.",
+        "{name}'s {part} fails."
+      ],
+      "leg": [
+        "{name}'s {part} drags.",
+        "{name}'s {part} trembles.",
+        "{name}'s {part} gives way."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the last dark power out of {name}'s skull; the eye-light snuffs out and the body collapses in a dry heap.",
+        "{name}'s eye-light gutters and dies as the red thread pulls away; the corpse crumples."
+      ],
+      "body": [
+        "the drain empties {name}; the dry flesh crumbles to dust over the bones and {name} collapses.",
+        "the animating power flows out of {name}; the body falls apart."
+      ],
+      "arm": [
+        "the withering runs from {name}'s {part} into the body; {name} collapses, dust spilling.",
+        "{name}'s {part} crumbles and the drain takes the rest."
+      ],
+      "leg": [
+        "{name}'s {part} crumbles; {name} collapses in a dry heap.",
+        "the drain climbs from {name}'s {part}; the corpse falls still."
+      ]
+    }
+  }
+}

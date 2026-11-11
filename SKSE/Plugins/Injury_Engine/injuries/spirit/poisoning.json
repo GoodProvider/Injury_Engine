@@ -1,0 +1,79 @@
+{
+  "_note": "Poison on wisps, wraiths and ghosts: there is nothing to poison; the venom passes through the mist. Overrides the poisoning source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the poison passing through the mist. {name} doesn't notice.",
+        ", the venom clouding the glow. {name} flickers.",
+        ", and the poison taints the essence. {name} wavers.",
+        ", and it is too much. The taint unravels the form; {name} disperses."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a dim cloud.",
+        "{name}'s head: tainted glow.",
+        "{name}'s head: sickly and wavering."
+      ],
+      "body": [
+        "{name}'s core: a dim cloud.",
+        "{name}'s core: tainted glow.",
+        "{name}'s core: sickly and wavering."
+      ],
+      "arm": [
+        "{name}'s {part}: clouded.",
+        "{name}'s {part}: tainted.",
+        "{name}'s {part}: wavering."
+      ],
+      "trail": [
+        "{name}'s {part}: clouded.",
+        "{name}'s {part}: tainted.",
+        "{name}'s {part}: wavering."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} ignores it.",
+        "{name} ignores it.",
+        "{name} wavers."
+      ],
+      "body": [
+        "{name} ignores it.",
+        "{name} flickers.",
+        "{name} wavers."
+      ],
+      "arm": [
+        "{name}'s {part} reaches.",
+        "{name}'s {part} flickers.",
+        "{name}'s {part} wavers."
+      ],
+      "trail": [
+        "{name}'s {part} drifts.",
+        "{name}'s {part} flickers.",
+        "{name}'s {part} wavers."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the taint unravels {name}'s head; the form disperses.",
+        "{name}'s glow sickens and fades."
+      ],
+      "body": [
+        "the taint spreads through {name}; {name} disperses into mist.",
+        "{name}'s form sickens and fades away."
+      ],
+      "arm": [
+        "{name}'s {part} unravels and the rest follows.",
+        "the taint spreads from {name}'s {part}; {name} fades."
+      ],
+      "trail": [
+        "{name}'s {part} unravels; {name} disperses.",
+        "the taint spreads from {name}'s {part}; {name} fades."
+      ]
+    }
+  }
+}

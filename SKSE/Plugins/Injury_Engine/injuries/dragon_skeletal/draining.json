@@ -1,0 +1,93 @@
+{
+  "_note": "Life drain on skeletal dragons: no life, only the binding magic; the drain pulls it out and the bones loosen. Overrides the draining source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", a cold pull at the binding magic. {name}'s eye-light flickers.",
+        ", the drain sapping magic already thin. The bones rattle loose.",
+        ", and the drain bites deep. {name}'s bones sag and the eye-light gutters.",
+        ", and it is too much. The binding magic is pulled out; {name} collapses into bones."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s skull: the eye-light flickers.",
+        "{name}'s skull: the eye-light dim.",
+        "{name}'s skull: the eye-light nearly out."
+      ],
+      "body": [
+        "{name}'s ribs: rattling.",
+        "{name}'s ribs: loose, the binding thin.",
+        "{name}'s ribs: sagging apart."
+      ],
+      "wing": [
+        "{name}'s {part}: rattling.",
+        "{name}'s {part}: loose.",
+        "{name}'s {part}: falling apart."
+      ],
+      "leg": [
+        "{name}'s {part}: rattling.",
+        "{name}'s {part}: loose.",
+        "{name}'s {part}: buckling."
+      ],
+      "tail": [
+        "{name}'s {part}: rattling.",
+        "{name}'s {part}: loose.",
+        "{name}'s {part}: falling apart."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} hisses.",
+        "{name} falters.",
+        "{name} is fading."
+      ],
+      "body": [
+        "{name} rattles on.",
+        "{name} sags.",
+        "{name} is coming apart."
+      ],
+      "wing": [
+        "{name}'s {part} rattle.",
+        "{name}'s {part} sag.",
+        "{name}'s {part} fall apart."
+      ],
+      "leg": [
+        "{name}'s {part} rattles.",
+        "{name}'s {part} sags.",
+        "{name}'s {part} gives way."
+      ],
+      "tail": [
+        "{name}'s {part} rattles.",
+        "{name}'s {part} sags.",
+        "{name}'s {part} drops."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the drain pulls the binding magic out of {name}'s skull; the eye-light dies and the bones collapse in a heap.",
+        "{name}'s eye-light gutters out and the skeleton falls apart."
+      ],
+      "body": [
+        "the drain empties {name}'s binding magic; the ribs fall apart and {name} collapses.",
+        "the magic flows out of {name}; the bones scatter."
+      ],
+      "wing": [
+        "the drain runs from {name}'s {part} into the body; the bones fall apart.",
+        "{name}'s {part} drop away and the rest follows."
+      ],
+      "leg": [
+        "{name}'s {part} falls apart and the rest collapses.",
+        "the drain climbs from {name}'s {part}; {name} crumbles."
+      ],
+      "tail": [
+        "the drain pulls the magic up {name}'s {part}; the bones fall apart.",
+        "{name}'s {part} scatters and the rest follows."
+      ]
+    }
+  }
+}

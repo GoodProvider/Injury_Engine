@@ -1,0 +1,208 @@
+{
+  "id": "blood_magic",
+  "title": "Blood Magic",
+  "model": "health",
+  "requires": "",
+  "classify": [
+    {
+      "priority": 46,
+      "effect_keywords": [
+        "Injury_Engine_BloodMagic",
+        "MagicBloodMagic"
+      ]
+    }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Blood Magic",
+    "feels_intro": "How the blood magic in {name} feels right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: flushed dark red, a thin trickle of blood from one nostril.",
+        "{name}'s face: blotched purple with burst vessels, blood running from {his} nose and the corners of {his} eyes. The air around {him} smells of hot iron.",
+        "{name}'s face: swollen and darkly mottled, blood weeping from {his} eyes, ears and nose, the whites of {his} eyes filled red. A thick stench of hot blood surrounds {him}."
+      ],
+      "body": [
+        "{name}'s back: the skin flushed and blotched with tiny red spots where the blood was stirred.",
+        "{name}'s back: bruised purple and swollen with blood boiling under the skin, a red sheen of sweat and blood beading from the pores. It smells of hot iron.",
+        "{name}'s back: dark, swollen bruises and split skin where blood burst through from inside, blood seeping from every pore and soaking {his} clothing. {name} reeks of blood."
+      ],
+      "arm": [
+        "{name}'s {part}: flushed and spotted with burst vessels.",
+        "{name}'s {part}: swollen and purple, the veins standing out hot and dark, blood beading through the skin.",
+        "{name}'s {part}: blackened with bruising, the skin split from within and bleeding; the limb twitches against {his} will."
+      ],
+      "leg": [
+        "{name}'s {part}: flushed and spotted with burst vessels.",
+        "{name}'s {part}: swollen and purple, the veins hot and dark, blood beading through the skin.",
+        "{name}'s {part}: blackened with bruising, the skin split from within and bleeding; the leg jerks and buckles on its own."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name} feels {his} pulse hammering in {his} skull and a hot pressure behind {his} eyes. {name} is uneasy and keeps wiping {his} nose.",
+        "{name} feels {his} blood seething in {his} head, {his} sight swimming red. {name} is frightened and speaks through gritted teeth.",
+        "{name} feels as if {his} skull will burst from the boiling blood. {name} is in terror and agony, barely able to see or speak."
+      ],
+      "body": [
+        "{name} feels a hot, crawling wrongness in {his} veins. {name} shivers and hugs {reflexive}.",
+        "{name} feels {his} blood burning and pulling inside {him}, {his} heart pounding out of rhythm. {name} hunches over, gasping.",
+        "{name} feels {his} blood boiling and twisting in {his} body as if it belonged to someone else. {name} is in shock, shaking and helpless."
+      ],
+      "arm": [
+        "{name}'s {part} feels hot and twitchy. {name} clenches the fist.",
+        "{name}'s {part} burns from within and jerks against {his} will. {name} holds it down.",
+        "{name}'s {part} is searing agony and moves only as the blood commands. {name} cannot control it."
+      ],
+      "leg": [
+        "{name}'s {part} feels hot and twitchy. {name} shifts uneasily.",
+        "{name}'s {part} burns from within and jerks under {him}. {name} stumbles.",
+        "{name}'s {part} is searing agony and will not obey. {name} falls when it gives way."
+      ]
+    }
+  },
+  "narration": {
+    "form": "blood magic",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is seized by blood magic",
+      "verb_many": " are seized by blood magic",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " as {attacker} twists {name}'s blood",
+      "by_none": "",
+      "levels": [
+        ", a sudden hot pressure as the blood stirs beneath the skin. {name} gasps, flushing dark red, a trickle of blood at the nose.",
+        ", the blood already disturbed now boiling up again. Vessels burst under {name}'s skin and {name} jerks, blood running from {name}'s eyes.",
+        ", and the blood seethes and twists inside {name}. {name}'s body jerks like a puppet, blood seeping from the pores, and {name} screams.",
+        ", and it is too much. {name}'s blood boils and tears through the flesh from inside; {name} convulses, bleeding from every opening, and collapses."
+      ]
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    },
+    "session": {
+      "hit": {
+        "start": "twists the blood inside {target}",
+        "start_many": "twist the blood inside {target}",
+        "again": "keeps boiling the blood inside {target}",
+        "again_many": "keep boiling the blood inside {target}"
+      },
+      "no_attacker_hit": {
+        "start": "is seized by {form}",
+        "again": "is seized by blood magic again and again"
+      },
+      "hit_noun": "pull"
+    }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "{name}'s blood boils in the skull; the eyes fill red and burst, blood pours from the ears, nose and mouth, and {name} drops in a jerking heap, the face a swollen purple mask.",
+        "the blood magic wrenches {name}'s head back as blood fountains from the eyes and nose; the vessels in {name}'s neck split open from within and {name} falls dead in a spreading red pool."
+      ],
+      "body": [
+        "{name}'s blood boils in the chest until the heart bursts; blood sprays from {name}'s mouth and seeps through the skin all over, and {name} collapses, the body slick and steaming red.",
+        "the blood inside {name} is twisted like rope; {name}'s body jerks upright like a puppet on strings, skin splitting as blood forces its way out, then drops limp and dead."
+      ],
+      "arm": [
+        "the blood in {name}'s {part} boils and bursts out through the skin in a red mist; the magic pulls the rest of {name}'s blood after it, and {name} falls pale and empty in a pool of it.",
+        "{name}'s {part} jerks up against {name}'s will as the blood tears it open from within; {name} screams, bleeding from every pore, and dies twitching."
+      ],
+      "leg": [
+        "the blood in {name}'s {part} boils and splits the flesh from inside; {name} is wrenched to the ground and bleeds out through a hundred tiny wounds.",
+        "{name}'s legs jerk and buckle like a puppet's as the blood magic seizes them; the vessels burst one after another and {name} dies in a widening red pool."
+      ]
+    },
+    "soil": [
+      "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the blood.",
+      "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
+  }
+}
