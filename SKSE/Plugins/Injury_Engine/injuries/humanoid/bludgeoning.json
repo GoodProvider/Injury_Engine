@@ -5,6 +5,7 @@
   "requires": "",
   "classify": [
     { "priority": 55, "weapon_types": ["TwoHandAxe"], "keyword": "WeapTypeWarhammer" },
+    { "priority": 60, "weapon_types": ["Bow", "Crossbow"], "bash": true },
     { "priority": 50, "weapon_types": ["OneHandMace", "Staff", "HandToHandMelee"] },
     { "priority": 40, "unarmed": true, "npc": true, "combat": true }
   ],

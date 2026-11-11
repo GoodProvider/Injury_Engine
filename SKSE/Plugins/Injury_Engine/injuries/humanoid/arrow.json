@@ -1,0 +1,209 @@
+{
+  "id": "arrow",
+  "title": "Arrow Wounds",
+  "model": "health",
+  "requires": "",
+  "classify": [
+    {
+      "priority": 60,
+      "weapon_types": [
+        "Bow",
+        "Crossbow"
+      ],
+      "bash": false
+    }
+  ],
+  "damage_max": 20,
+  "thresholds": {
+    "medium": 4,
+    "severe": 11
+  },
+  "health_link": {
+    "wound_share": 0.9,
+    "floor": 0.1,
+    "bleedout_below": 0.15
+  },
+  "regions": [
+    "head",
+    "body",
+    "arm",
+    "leg"
+  ],
+  "parts": [
+    {
+      "name": "face",
+      "region": "head"
+    },
+    {
+      "name": "left arm",
+      "region": "arm"
+    },
+    {
+      "name": "right arm",
+      "region": "arm"
+    },
+    {
+      "name": "back",
+      "region": "body"
+    },
+    {
+      "name": "left leg",
+      "region": "leg"
+    },
+    {
+      "name": "right leg",
+      "region": "leg"
+    }
+  ],
+  "stages": [
+    "light",
+    "medium",
+    "severe"
+  ],
+  "text": {
+    "looks_heading": "### Arrow Wounds",
+    "feels_intro": "How {name}'s arrow wounds feel right now; let this shape {his} tone, posture and movement:",
+    "feels_outro": "Answer must be creative and different, repetition will be punished.",
+    "looks": {
+      "head": [
+        "{name}'s face: an arrow has grazed {his} cheek or brow, leaving a thin, bleeding furrow.",
+        "{name}'s face: a deep, round arrow wound near the cheekbone, ragged where the shaft was torn out; blood has run down {his} jaw and the skin around it is swelling. It smells of fresh blood.",
+        "{name}'s face: an arrowhead is still buried in the bone, the broken shaft jutting from {his} cheek or brow; blood streams down {his} face and {he} is deathly pale. The thick iron smell of blood surrounds {him}."
+      ],
+      "body": [
+        "{name}'s back: an arrow has nicked {him}, a small torn hole weeping a thin line of blood.",
+        "{name}'s back: a round, deep arrow wound in the torso, the shaft snapped off short or pulled out; dark blood soaks {his} clothing around it. The coppery smell of blood seeps from it.",
+        "{name}'s back: an arrow is sunk deep between the ribs, fletching still quivering with each breath; blood pulses around the shaft and {his} breathing is wet and shallow. {name} smells of blood, heavy and metallic."
+      ],
+      "arm": [
+        "{name}'s {part}: an arrow has scored the skin, a shallow, bleeding gash.",
+        "{name}'s {part}: an arrow wound through the muscle, a torn hole where the shaft went in, blood running steadily down to the hand. A coppery tang of blood rises from it.",
+        "{name}'s {part}: an arrow is driven clean through the arm, the head out one side and the fletching out the other; blood pours and the limb hangs useless. The smell of fresh blood is strong around {him}."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has grazed the thigh or calf, a shallow, bleeding score.",
+        "{name}'s {part}: a deep arrow wound in the thigh, the shaft broken off or torn out, blood running down into {his} boot. It gives off the metallic tang of blood.",
+        "{name}'s {part}: an arrow is buried deep in the thigh, the broken shaft grinding against the bone; the leg buckles under any weight. The air around {him} is thick with the smell of blood."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings sharply along the graze. {name} is startled and wary, touching it and flinching at the blood.",
+        "{name}'s face throbs hot and deep where the arrow went in. {name} is shaken and angry, keeping {his} head low and still.",
+        "{name}'s face is blinding pain around the arrowhead lodged in the bone; {he} is sick and dizzy. {name} is terrified and can hardly speak."
+      ],
+      "body": [
+        "{name}'s back stings sharply where the arrow nicked it, catching on every breath. {name} is tense and watchful.",
+        "{name}'s back throbs deep inside around the arrow wound and every breath stabs. {name} breathes shallowly and moves stiffly.",
+        "{name}'s back is a deep, spreading agony around the buried shaft; every movement drags it through flesh and breath is short and wet. {name} is frightened and close to collapse."
+      ],
+      "arm": [
+        "{name}'s {part} stings along the graze. {name} protects it and flexes the hand to test it.",
+        "{name}'s {part} throbs hard around the arrow wound and goes weak when gripping. {name} cradles it.",
+        "{name}'s {part} is burning agony around the shaft through it and will not respond. {name} is in shock and cannot grip anything."
+      ],
+      "leg": [
+        "{name}'s {part} stings with each step where the arrow grazed it. {name} is wary, testing the weight.",
+        "{name}'s {part} throbs deep around the arrow wound and stabs when loaded. {name} limps and winces.",
+        "{name}'s {part} is excruciating; the arrowhead grinds in the muscle and the leg buckles when {he} tries to stand. {name} is panicked and needs help to move."
+      ]
+    }
+  },
+  "narration": {
+    "form": "an arrow",
+    "list": {
+      "and": " and ",
+      "comma": ", ",
+      "fallback": "body"
+    },
+    "hit": {
+      "lead": "{name}'s {parts}{verb}{times}{by}",
+      "verb_one": " is struck by an arrow",
+      "verb_many": " are struck by arrows",
+      "times": {
+        "two": " twice",
+        "several": " several times",
+        "many": " again and again"
+      },
+      "by_attacker": " shot by {attacker}",
+      "by_none": "",
+      "levels": [
+        ", the point punching in with a hard thud. The shaft quivers in the flesh and {name} gasps as the pain blooms hot around it.",
+        ", the arrowhead tearing in beside a wound that is already bleeding. {name} staggers, the fletching jerking with each breath, and the pain flares sharp and nauseating.",
+        ", and the arrow sinks deep into the torn flesh. Blood runs freely around the shaft and {name} chokes on a cry. The smell of blood is suddenly thick.",
+        ", and it is too much. The arrow drives deep and the shock is crushing and cold; {name} goes ashen, {name}'s breath rattles and {name}'s knees give."
+      ]
+    },
+    "heal_events": {
+      "nouns": {
+        "magic": "magic",
+        "spell": "spell",
+        "staff": "staff",
+        "potion": "potion"
+      },
+      "progress": {
+        "low": "just beginning to heal",
+        "mid": "about half way healed",
+        "high": "mostly healed"
+      },
+      "start": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}, beginning to heal {own} wounds and pain.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light, beginning to heal {own} wounds and pain."
+      },
+      "start_unhurt": {
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. With no wounds to mend, it simply washes over {obj}, warm and soothing.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. With no wounds to mend, it simply feels warm and soothing."
+      },
+      "pain_gone": {
+        "none": "The pain from {name}'s injuries is gone, but the healing continues.",
+        "source": "The warm light of {owner_lc} {noun} has taken the pain from {own} injuries, but the healing continues."
+      },
+      "full": {
+        "none": "{name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "caster_casts": "{caster} casts a warm yellow swirling light around {who}. {name}'s injuries are now fully healed, leaving {name} without pain or blemish.",
+        "other": "{owner} {noun} surrounds {obj} in a warm yellow swirling light. {name}'s injuries are now fully healed, leaving {name} without pain or blemish."
+      },
+      "stopped": "The warm light of {owner_lc} {noun} fades before the healing is done; {own} injuries are {progress}."
+    },
+    "session": {
+      "hit": {
+        "start": "shoots {form} into {target}",
+        "start_many": "shoot arrows into {target}",
+        "again": "shoots arrow after arrow into {target}",
+        "again_many": "shoot arrow after arrow into {target}"
+      },
+      "no_attacker_hit": {
+        "start": "is struck by {form}",
+        "again": "is struck by arrow after arrow"
+      },
+      "hit_noun": "arrow"
+    }
+  },
+  "death": {
+    "lead": "{attacker} kills {name} with {form}: ",
+    "lead_none": "{name} dies from {form}: ",
+    "regions": {
+      "head": [
+        "the arrow takes {name} in the eye and buries itself deep in the skull, the fletching jutting from the ruined socket. {name}'s head snaps back, the body stiffens and falls, blood and clear fluid running down {name}'s cheek.",
+        "the arrow punches through {name}'s throat and out the back of the neck; blood bubbles around the shaft and from {name}'s mouth with every failing breath. {name} claws at the arrow, choking on the iron taste, and dies in a wet, rattling gasp."
+      ],
+      "body": [
+        "the arrow drives between {name}'s ribs and into the heart, the shaft standing out of the chest; blood spurts around it and froths pink at {name}'s lips. {name} stares down at it, gasping, and folds to the ground as the hot smell of blood spreads.",
+        "the arrow sinks to the fletching in {name}'s back and pierces the lungs; {name} pitches forward, coughing red, and drowns slowly in {name}'s own blood until the last wet breath rattles out."
+      ],
+      "arm": [
+        "the arrow tears through {name}'s {part} and opens the great vessel inside; blood jets out around the shaft in bright spurts with every heartbeat. {name} clutches at it, screaming, until {name}'s grip slackens and {name} slumps dead in a red pool.",
+        "the arrow pins {name}'s {part} at the shoulder and drives on into the chest; the arm hangs useless while blood pours from both holes. {name} falls gasping, {name}'s cries thinning to whimpers as the coppery smell of blood fills the air."
+      ],
+      "leg": [
+        "the arrow buries itself in {name}'s {part} and cuts the great vessel in the thigh; blood spurts around the shaft in a hot fountain and pools fast beneath {name}. {name} collapses screaming, then turns pale and shaking, and bleeds out in the thick iron reek of {name}'s own blood.",
+        "the arrow takes {name} high in the {part} at the groin; dark blood floods {name}'s clothing and runs over the ground. {name} crawls a little way, dragging the shaft, and dies there in a widening red pool that smells of blood and fear-sweat."
+      ]
+    },
+    "soil": [
+      "As {name}'s body goes slack, the stink of {name}'s shit and piss mixes with the blood.",
+      "In death {name}'s bowels and bladder let go, and the stench of shit and piss joins the smell of blood."
+    ],
+    "soil_chance": 0.4
+  }
+}

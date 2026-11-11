@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on wisps, wraiths and ghosts: arrows pass through the form, tearing rents of light. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the arrow passing through with a cold ripple. The glow flickers where it went and {name} lets out a thin, eerie wail.",
+        ", the arrow tearing through where the shape is already torn. The rent widens and cold light streams out; {name} shrieks.",
+        ", and the arrow rips deep through the form. Mist and light pour out and {name} wavers violently, keening.",
+        ", and it is too much. {name} sinks low, the shape dimming and fraying around the holes the arrows left."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a faint ripple where an arrow passed through.",
+        "{name}'s head: a rent where arrows tore through; cold light leaks from it.",
+        "{name}'s head: torn apart by arrows; the shape barely holds, flickering."
+      ],
+      "body": [
+        "{name}'s core: a faint ripple where an arrow passed.",
+        "{name}'s core: rents torn by arrows; light and mist seep out.",
+        "{name}'s core: shredded by arrows; light streams out and the form thins."
+      ],
+      "arm": [
+        "{name}'s {part}: a ripple where an arrow passed.",
+        "{name}'s {part}: torn by arrows, trailing mist.",
+        "{name}'s {part}: frayed into wisps by arrows."
+      ],
+      "trail": [
+        "{name}'s {part}: a ripple where an arrow passed.",
+        "{name}'s {part}: torn by arrows.",
+        "{name}'s {part}: shredded by arrows, fading."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head barely notices; {name} is cold and hostile.",
+        "{name}'s head is torn; {name} is agitated and keening.",
+        "{name}'s head is fading; {name} is erratic, close to dispersing."
+      ],
+      "body": [
+        "{name}'s core holds.",
+        "{name}'s core leaks light; {name} wavers.",
+        "{name}'s core is failing; {name} is close to fading away."
+      ],
+      "arm": [
+        "{name}'s {part} reaches on.",
+        "{name}'s {part} is weakened.",
+        "{name}'s {part} is fading."
+      ],
+      "trail": [
+        "{name}'s {part} flows on.",
+        "{name}'s {part} thins; {name} drifts slower.",
+        "{name}'s {part} is fading; {name} sinks."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow passes through {name}'s head and the shape tears apart; {name} lets out a fading wail and disperses into cold mist.",
+        "the arrow rips through {name}'s head; the light gutters out and {name} is gone."
+      ],
+      "body": [
+        "the arrow tears through {name}'s core; light bursts out and {name} unravels into drifting motes.",
+        "one more arrow passes through {name}'s failing core and the form gives way; {name} fades with a last keening sigh."
+      ],
+      "arm": [
+        "the arrow tears through {name}'s {part} into the core; {name} flickers and disperses.",
+        "the arrow rips through {name}'s {part}; the rent spreads and {name} fades."
+      ],
+      "trail": [
+        "the arrow shreds {name}'s {part}; the shape thins and {name} dissolves.",
+        "the arrow tears through {name}'s {part}; {name} sinks and fades away."
+      ]
+    }
+  }
+}

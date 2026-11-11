@@ -1,0 +1,5 @@
+    866386 2026-11-10 22:24:58 C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\SKSE\Injury_Engine.log
+    984360 2026-11-10 22:24:49 C:\Users\bhuff\OneDrive\Documents\my games\Skyrim Special Edition\Logs\Script\Papyrus.0.log
+    423659 2026-11-10 22:24:49 C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\conversation_log.log
+   1104693 2026-11-10 22:24:49 C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\openrouter_input.log
+    491154 2026-11-10 22:24:50 C:\Skyrim\dev\overwrite\SKSE\Plugins\SkyrimNet\logs\openrouter_output.log

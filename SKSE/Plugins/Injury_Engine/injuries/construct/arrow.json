@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on dwemer machines: arrows glance off plating or wedge in seams, oil and steam. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the arrowhead ringing off the metal and wedging in a seam. {name} jerks and keeps coming.",
+        ", the point punching into plating that is already dented. A seam splits around the shaft and oil sprays as steam hisses out; {name} lurches, gears shrieking.",
+        ", and the arrow drives into the damaged machinery. Gears jam, oil gushes and steam bursts out in a scalding cloud; {name} shudders violently.",
+        ", and it is too much. {name} seizes with a grinding shriek of metal, arrows jutting from the seams, steam pouring out, and slumps, the inner light stuttering."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has scratched the metal, a bright scrape.",
+        "{name}'s head: an arrow is wedged in a seam of the head, oil weeping around it; a lens flickers.",
+        "{name}'s head: an arrow has punched through a lens; the head plate is split and sparks spit from it."
+      ],
+      "body": [
+        "{name}'s chassis: an arrow has glanced off, leaving a scratch.",
+        "{name}'s chassis: an arrow is wedged in a plate seam, oil weeping and a thin hiss of steam escaping.",
+        "{name}'s chassis: arrows jut from split seams; oil streams out and steam vents in bursts."
+      ],
+      "limb": [
+        "{name}'s {part}: an arrow has scraped the plating.",
+        "{name}'s {part}: an arrow is jammed in a joint; it moves with a grinding click.",
+        "{name}'s {part}: an arrow has jammed the joint solid; the limb twitches uselessly."
+      ],
+      "core": [
+        "{name}'s {part}: an arrow has scratched the housing.",
+        "{name}'s {part}: an arrow is wedged in the core housing; steam hisses out around it.",
+        "{name}'s {part}: an arrow has pierced the core; scalding steam pours from it and the inner light flickers."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head registers nothing; {name} is relentless.",
+        "{name}'s head is damaged; {name} tracks targets jerkily.",
+        "{name}'s head is failing; {name} lurches and loses its target."
+      ],
+      "body": [
+        "{name}'s chassis ignores it.",
+        "{name}'s chassis leaks; {name} moves with a grinding stutter.",
+        "{name}'s chassis is breaking down; {name} shudders and stalls."
+      ],
+      "limb": [
+        "{name}'s {part} works.",
+        "{name}'s {part} grinds; {name} strikes slower.",
+        "{name}'s {part} is jammed; {name} drags it."
+      ],
+      "core": [
+        "{name}'s {part} hums on.",
+        "{name}'s {part} hisses; {name} loses power in bursts.",
+        "{name}'s {part} is failing; {name} sputters toward shutdown."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow punches through {name}'s lens deep into the head; sparks burst, the light dies and {name} crashes down in a clatter of metal.",
+        "the arrow splits {name}'s head plate; something inside snaps, and {name} jerks, seizes and falls silent."
+      ],
+      "body": [
+        "the arrow drives through a split seam deep into {name}'s chassis; gears shriek and jam, steam bursts out and {name} collapses in a heap of hissing metal.",
+        "one more arrow wedges into {name}'s ruptured chassis and the machinery gives way; {name} grinds to a stop, oil pouring out."
+      ],
+      "limb": [
+        "the arrow jams {name}'s {part} and drives on into the body; {name} spins, seizes and topples, steam venting.",
+        "the arrow tears through the joint of {name}'s {part}; {name} lurches, overbalances and crashes down, the light fading."
+      ],
+      "core": [
+        "the arrow pierces {name}'s {part}; scalding steam blasts out, the inner light flares and dies, and {name} slumps, ticking as it cools.",
+        "the arrow cracks {name}'s {part} open; steam roars out and {name} shudders to a stop, silent at last."
+      ]
+    }
+  }
+}

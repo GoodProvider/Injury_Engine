@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on spriggans: shafts sunk into bark and wood, amber sap. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point thunking into the bark like into a tree. Bark splinters away and {name} creaks and hisses.",
+        ", the arrowhead splitting bark that is already split. The wood cracks wider around the shaft and sap runs; {name} lets out a rustling shriek.",
+        ", and the arrow splinters deep into the wood. Sap gushes and leaves shower down; {name} thrashes, creaking.",
+        ", and it is too much. {name} sags with a groan of splitting wood, arrows standing from the bark, sap pooling at the roots."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: an arrow has scraped the bark, a pale gouge.",
+        "{name}'s face: an arrow is lodged in the wooden face, sap weeping around it; the glow behind it flickers.",
+        "{name}'s face: an arrow is driven deep into the split wood of the face; sap runs freely and the inner glow gutters."
+      ],
+      "body": [
+        "{name}'s back: an arrow sticks in the bark like a dart in a tree.",
+        "{name}'s back: an arrow is sunk into the wood, amber sap running around the shaft.",
+        "{name}'s back: arrows bristle from the cracked trunk of the body; sap pours and leaves drop away."
+      ],
+      "arm": [
+        "{name}'s {part}: an arrow has gouged the bark.",
+        "{name}'s {part}: an arrow is stuck in the branch of the arm, sap dripping.",
+        "{name}'s {part}: an arrow has split the arm; it hangs cracked, weeping sap."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has scraped the root-like leg.",
+        "{name}'s {part}: an arrow is lodged in the leg, sap running down.",
+        "{name}'s {part}: an arrow has split the leg; it creaks and bends under {him}."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face barely notices; {name} is wrathful and watchful.",
+        "{name}'s face is wounded around the shaft; {name} is enraged, calling the forest.",
+        "{name}'s face is failing; {name} reels, the glow faltering."
+      ],
+      "body": [
+        "{name}'s back ignores the shaft.",
+        "{name}'s back weeps sap; {name} moves stiffly.",
+        "{name}'s body is splitting apart; {name} sways, creaking."
+      ],
+      "arm": [
+        "{name}'s {part} works on.",
+        "{name}'s {part} creaks; {name} strikes slower.",
+        "{name}'s {part} is useless; {name} fights with the other."
+      ],
+      "leg": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} creaks; {name} moves stiffly.",
+        "{name}'s {part} buckles; {name} staggers."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow splits {name}'s face deep into the wood; the inner glow goes out and {name} topples with a crack of breaking branches.",
+        "the arrow drives through {name}'s head; sap spurts, leaves fall in a shower and {name} crumples into a heap of bark and root."
+      ],
+      "body": [
+        "the arrow splits {name}'s trunk wide; sap gushes out and {name} groans like a falling tree and comes apart.",
+        "one more arrow sinks into {name}'s cracked body and the wood gives way; {name} collapses into splintered bark and wilting leaves."
+      ],
+      "arm": [
+        "the arrow tears through {name}'s {part} into the trunk; {name} creaks, sways and falls apart, sap pooling.",
+        "the arrow splits {name}'s {part} at the shoulder and on into the body; {name} sags and goes still."
+      ],
+      "leg": [
+        "the arrow splits {name}'s {part}; {name} topples and breaks apart on the ground, sap running.",
+        "the arrow cracks {name}'s {part} through; {name} falls and the glow fades from the wood."
+      ]
+    }
+  }
+}

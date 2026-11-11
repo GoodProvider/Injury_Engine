@@ -1,0 +1,93 @@
+{
+  "_note": "Arrow wounds on werewolves and werebears: shafts buried in fur and heavy muscle, often snapped off. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point punching through the fur into the hide. The shaft quivers there and {name} snarls and recoils, hackles up.",
+        ", the arrowhead tearing into hide that is already torn. Blood wells around the shaft under the matted fur and {name} howls. The smell of blood and wet fur thickens.",
+        ", and the arrow bites deep into the bleeding wound. Blood soaks the fur in dark streams; {name} roars, snaps at the shaft and staggers. The stench of blood and musk is overwhelming.",
+        ", and it is too much. {name} drops to all fours, arrows bristling from the fur, the howl fading to a ragged whine."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s muzzle: an arrow has grazed the snout, a thin line of blood in the fur.",
+        "{name}'s muzzle: an arrow wound near the jaw, the shaft snapped off short, blood dripping over the fangs. The smell of blood and wet fur hangs around {him}.",
+        "{name}'s muzzle: an arrowhead is lodged in the bone of the skull, the broken shaft jutting out; one eye is swollen shut and blood streams down the snout."
+      ],
+      "body": [
+        "{name}'s back: an arrow sticks shallowly from the thick fur, a little blood matting it.",
+        "{name}'s back: an arrow is buried in the heavy muscle, the shaft snapped off; blood soaks the fur around it.",
+        "{name}'s back: several arrows bristle from the back, blood running in dark streams through the fur; {his} breath is wet and laboured."
+      ],
+      "arm": [
+        "{name}'s {part}: an arrow has scored the fur.",
+        "{name}'s {part}: an arrow is lodged in the thick forearm, blood dripping from the claws.",
+        "{name}'s {part}: an arrow is driven through the arm; the limb hangs, blood soaking the fur."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has grazed the haunch.",
+        "{name}'s {part}: an arrow is buried in the haunch, blood running down the fur.",
+        "{name}'s {part}: an arrow is sunk to the fletching in the thigh; the leg buckles under {him}."
+      ],
+      "tail": [
+        "{name}'s {part}: an arrow has clipped the fur.",
+        "{name}'s {part}: an arrow is stuck through the tail, which hangs bloody.",
+        "{name}'s {part}: an arrow has pinned the tail through the bone; it hangs limp and bleeding."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s muzzle stings; {he} snorts and shakes {his} head, enraged.",
+        "{name}'s muzzle throbs around the broken shaft; {he} snarls and paws at it.",
+        "{name}'s skull is blinding pain around the buried arrowhead; {he} is frenzied and half-blind."
+      ],
+      "body": [
+        "{name}'s back stings under the fur; it only feeds {his} rage.",
+        "{name}'s back throbs around the shaft with every lunge; {he} grows wary.",
+        "{name}'s back is a deep agony around the arrows; {he} is weakening, panting hard."
+      ],
+      "arm": [
+        "{name}'s {part} stings; {he} flexes the claws.",
+        "{name}'s {part} throbs around the arrow and swipes weaker.",
+        "{name}'s {part} is useless; {he} fights with the other."
+      ],
+      "leg": [
+        "{name}'s {part} stings with each bound.",
+        "{name}'s {part} throbs around the arrow; {he} favours it.",
+        "{name}'s {part} gives way; {he} lurches and limps."
+      ],
+      "tail": [
+        "{name}'s {part} stings; it lashes angrily.",
+        "{name}'s {part} throbs; {he} keeps it low.",
+        "{name}'s {part} hangs dead; {he} snaps at the pain."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow takes {name} in the eye and buries itself deep in the skull; {name} rears with a last choked howl and crashes down, blood running through the fur of the muzzle.",
+        "the arrow punches through {name}'s throat; blood pours through the thick fur and {name} claws at the shaft, gurgling, until the great body goes still."
+      ],
+      "body": [
+        "the arrow drives between {name}'s ribs into the heart; {name} lurches, blood bursting through the fur, and falls heavily, the snarl fading.",
+        "the arrow sinks deep into {name}'s back and pierces the lungs; {name} drops to all fours, coughing blood, and slumps in a widening red pool."
+      ],
+      "arm": [
+        "the arrow opens the great vessel in {name}'s {part}; blood jets through the fur and {name} sways, howling, until {name} topples and is still.",
+        "the arrow tears through {name}'s {part} into the chest; {name} staggers and crashes down, blood soaking the fur."
+      ],
+      "leg": [
+        "the arrow cuts the great vessel in {name}'s {part}; blood fountains through the fur and {name} collapses, panting, and bleeds out.",
+        "the arrow takes {name} high in the {part}; {name} falls, crawls a little way and dies in a pool of blood."
+      ],
+      "tail": [
+        "the arrow pierces {name}'s {part} and drives on into the spine at its root; {name}'s legs give out and {name} dies with a ragged whine.",
+        "the arrow takes {name} at the root of the {part} and deep into the belly; {name} sinks down, bleeding heavily, and goes still."
+      ]
+    }
+  }
+}

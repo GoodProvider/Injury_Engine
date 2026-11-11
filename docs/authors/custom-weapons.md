@@ -29,8 +29,9 @@ Maybe not. With no file of your own, weapons are classified by their weapon type
 | Weapon type | Injury source |
 |-------------|---------------|
 | Sword, one-handed axe, two-handed axe | `slashing` |
-| Dagger, bow, crossbow | `piercing` |
-| Mace, staff, warhammer | `bludgeoning` |
+| Dagger | `piercing` |
+| Bow, crossbow (a shot) | `arrow` |
+| Mace, staff, warhammer, a bash with a bow or crossbow | `bludgeoning` |
 
 Your weapon only needs a file if it should read differently from those, such as a scythe, a thorned lash or a saw blade.
 

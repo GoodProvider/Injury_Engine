@@ -32,6 +32,7 @@ namespace Classifier
             RE::FormID source = 0;  // weapon or spell
             RE::ObjectRefHandle cause;  // attacker / caster
             double when = 0.0;
+            bool bash = false;  // TESHitEvent kBashAttack: a bow shove, not an arrow
         };
 
         struct TortureSeen
@@ -332,7 +333,7 @@ namespace Classifier
             return source >= 0 && InjuryConfig::IsTorture(source);
         }
 
-        Match MatchWeapon(const RE::TESObjectWEAP* weapon, RE::Actor* attacker)
+        Match MatchWeapon(const RE::TESObjectWEAP* weapon, RE::Actor* attacker, bool bash = false)
         {
             if (IsIgnoredId(weapon->GetFormID())) {
                 return { -1, false };
@@ -350,6 +351,10 @@ namespace Classifier
             const auto type = weapon->GetWeaponType();
             for (const auto& rule : InjuryConfig::ClassifyRules()) {
                 if (!WeaponTypeListed(rule, type)) {
+                    continue;
+                }
+                // bow / crossbow: the arrow, or a bash with the bow (bludgeoning)
+                if ((rule.bash == 1 && !bash) || (rule.bash == 0 && bash)) {
                     continue;
                 }
                 if (!rule.keyword.empty() && !weapon->HasKeywordString(rule.keyword.c_str())) {
@@ -431,13 +436,13 @@ namespace Classifier
             return it->second.caster == attacker->GetFormID() ? it->second.source : -2;
         }
 
-        Match ClassifyForm(RE::TESForm* form, RE::Actor* attacker)
+        Match ClassifyForm(RE::TESForm* form, RE::Actor* attacker, bool bash = false)
         {
             if (!form) {
                 return {};
             }
             if (const auto* weapon = form->As<RE::TESObjectWEAP>()) {
-                return MatchWeapon(weapon, attacker);
+                return MatchWeapon(weapon, attacker, bash);
             }
             if (const auto* magic = form->As<RE::MagicItem>()) {
                 return MatchMagic(magic);
@@ -671,9 +676,11 @@ namespace Classifier
                     const bool whip = torture < 0 && IsIgnoredWeapon(event->source);
                     // a torture weapon (DOM's slap): calm only, the spell-tick cache below stays spells only
                     const bool tortureWeapon = torture < 0 && IsTortureWeaponId(event->source);
-                    SKSE::log::debug("hit event target:{:08X} source:{:08X} cause:{:08X} torture:{} whip:{} torture weapon:{}",
-                        event->target->GetFormID(), event->source, event->cause ? event->cause->GetFormID() : 0, IdOf(torture), whip,
-                        tortureWeapon);
+                    // Only the bash flag: an arrow that hits an actor reports no projectile in its hit event either.
+                    const bool bash = event->flags.any(RE::TESHitEvent::Flag::kBashAttack);
+                    SKSE::log::debug("hit event target:{:08X} source:{:08X} cause:{:08X} projectile:{:08X} bash:{} torture:{} whip:{} torture weapon:{}",
+                        event->target->GetFormID(), event->source, event->cause ? event->cause->GetFormID() : 0, event->projectile, bash,
+                        IdOf(torture), whip, tortureWeapon);
                     std::lock_guard lock(g_lock);
                     if ((torture >= 0 || whip || tortureWeapon) && event->cause && event->target->Is(RE::FormType::ActorCharacter)) {
                         NoteCalmLocked(event->target->GetFormID(), event->cause->GetFormID(), NowSeconds());
@@ -682,7 +689,7 @@ namespace Classifier
                         g_recent.clear();
                     }
                     g_recent[event->target->GetFormID()] = { event->source, event->cause ? event->cause->GetHandle() : RE::ObjectRefHandle{},
-                        NowSeconds() };
+                        NowSeconds(), bash };
                     if (torture >= 0) {
                         NoteTortureLocked(event->target->GetFormID(), torture);
                     }
@@ -1119,11 +1126,13 @@ namespace Classifier
         };
         RE::FormID sourceId = 0;
         RE::ObjectRefHandle cause;
+        bool bash = false;
         {
             std::lock_guard lock(g_lock);
             if (const auto it = g_recent.find(victim->GetFormID()); it != g_recent.end() && NowSeconds() - it->second.when <= kHitWindow) {
                 sourceId = it->second.source;
                 cause = it->second.cause;
+                bash = it->second.bash;
             }
         }
         const RE::FormID victimId = victim->GetFormID();
@@ -1146,12 +1155,12 @@ namespace Classifier
             auto causeRef = cause.get();
             auto* hitter = attacker ? attacker : causeRef ? causeRef->As<RE::Actor>() : nullptr;
             auto* form = RE::TESForm::LookupByID(sourceId);
-            const Match hit = ClassifyForm(form, hitter);
+            const Match hit = ClassifyForm(form, hitter, bash);
             if (hit.source == -1) {
                 whipEvent = true;
                 sourceId = 0;
             } else if (hit.source != -2) {
-                SKSE::log::debug("classify {:08X}: hit event form {:08X} -> {}", victimId, sourceId, IdOf(hit.source));
+                SKSE::log::debug("classify {:08X}: hit event form {:08X}{} -> {}", victimId, sourceId, bash ? " (bash)" : "", IdOf(hit.source));
                 return take(hit, form && form->IsWeapon());
             }
             if (const int active = ClassifyActiveTorture(victim); active != -2) {
@@ -1238,7 +1247,7 @@ namespace Classifier
         return take({ InjuryConfig::GenericIndex(), false }, false);
     }
 
-    int ClassifyMelee(RE::Actor* victim, RE::Actor* attacker, const RE::TESObjectWEAP* weapon, bool* unarmedForm)
+    int ClassifyMelee(RE::Actor* victim, RE::Actor* attacker, const RE::TESObjectWEAP* weapon, bool bash, bool* unarmedForm)
     {
         if (unarmedForm) {
             *unarmedForm = false;
@@ -1248,12 +1257,13 @@ namespace Classifier
         }
         // The hit's own weapon: the whip -> -1, fists -> the unarmed rule, any other weapon -> its weapon rule. A live
         // spell effect or an older hit event never replaces it.
-        const Match hit = weapon ? MatchWeapon(weapon, attacker) : MatchUnarmed(attacker);
+        // arrows pass through this handler too: a bow or crossbow is a bash only when the HitData says so
+        const Match hit = weapon ? MatchWeapon(weapon, attacker, bash) : MatchUnarmed(attacker);
         if (unarmedForm) {
             *unarmedForm = hit.unarmed;
         }
-        SKSE::log::debug("classify {:08X}: melee hit weapon {:08X} attacker {:08X} -> {}", victim->GetFormID(), weapon ? weapon->GetFormID() : 0,
-            attacker ? attacker->GetFormID() : 0, IdOf(hit.source));
+        SKSE::log::debug("classify {:08X}: melee hit weapon {:08X} attacker {:08X}{} -> {}", victim->GetFormID(), weapon ? weapon->GetFormID() : 0,
+            attacker ? attacker->GetFormID() : 0, bash ? " (bash)" : "", IdOf(hit.source));
         return hit.source;
     }
 

@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on birds and cliff racers: feathers scattered, a wing pinned. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point punching through the feathers. Feathers fly and {name} shrieks and flaps.",
+        ", the arrowhead tearing in where the feathers are already bloody. More blood spills and {name} screeches.",
+        ", and the arrow drives deep. Blood spatters around the shaft and {name} flaps wildly, shrieking.",
+        ", and it is too much. {name} drops, wings spread, the arrow standing from the body, twitching."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has grazed it, a few feathers torn away.",
+        "{name}'s head: an arrow wound near the eye, feathers matted with blood.",
+        "{name}'s head: an arrow has split the skull; one eye is gone and blood streams down the beak."
+      ],
+      "body": [
+        "{name}'s body: an arrow has clipped it, feathers scattered.",
+        "{name}'s body: an arrow is lodged in the breast, feathers soaked in blood around the shaft.",
+        "{name}'s body: an arrow is driven through the body; blood drips steadily from the shaft."
+      ],
+      "wing": [
+        "{name}'s {part}: an arrow has torn out a few flight feathers.",
+        "{name}'s {part}: an arrow has punched through the wing and stuck there.",
+        "{name}'s {part}: an arrow has broken the wing bone; it hangs, the shaft still through it."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has nicked a leg.",
+        "{name}'s {part}: an arrow wound in the thigh, bleeding.",
+        "{name}'s {part}: an arrow has broken a leg; it dangles."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head stings; {name} jerks it, startled.",
+        "{name}'s head throbs; {name} is frantic.",
+        "{name}'s head is blinding pain; {name} flutters blindly."
+      ],
+      "body": [
+        "{name}'s body stings; {name} flaps in alarm.",
+        "{name}'s body throbs around the shaft; {name} flies lower, laboured.",
+        "{name}'s body is agony; {name} can barely stay up."
+      ],
+      "wing": [
+        "{name}'s {part} stings; {name} flies on.",
+        "{name}'s {part} drags; {name} flies crooked.",
+        "{name}'s {part} is useless; {name} cannot fly."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} throbs; {name} will not perch on it.",
+        "{name}'s {part} is useless; {name} hops and topples."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow pierces {name}'s head; {name} drops like a stone and lies still, feathers drifting down after.",
+        "the arrow takes {name} through the neck; {name} tumbles, wings beating once, and is still."
+      ],
+      "body": [
+        "the arrow skewers {name} through the breast; {name} folds and falls, the shaft standing from the feathers.",
+        "the arrow drives through {name}'s body; {name} spirals down and hits the ground in a burst of feathers."
+      ],
+      "wing": [
+        "the arrow shatters {name}'s {part} and pierces the body behind it; {name} spins down out of the air and lies broken.",
+        "the arrow pins {name}'s {part} to the body; {name} falls, flapping one wing, and goes still."
+      ],
+      "leg": [
+        "the arrow tears through {name}'s {part} into the belly; {name} flutters down and dies, twitching.",
+        "the arrow takes {name} low through the body; {name} falls and does not rise."
+      ]
+    }
+  }
+}

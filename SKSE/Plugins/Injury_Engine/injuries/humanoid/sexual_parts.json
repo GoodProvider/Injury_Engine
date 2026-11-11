@@ -237,6 +237,62 @@
         ]
       }
     },
+    "arrow": {
+      "looks": {
+        "nipple": [
+          "{name}'s nipples: an arrow has grazed beside one, a thin, bleeding score across the breast.",
+          "{name}'s nipples: an arrow has torn through one, a ragged hole bleeding steadily down {his} chest. It smells of blood.",
+          "{name}'s nipples: an arrow is buried deep in the breast beside the nipple, the shaft jutting out, the flesh swollen and pouring blood. The smell of blood is strong."
+        ],
+        "vulva": [
+          "{name}'s pussy: an arrow has grazed one of the lips, a thin line welling blood.",
+          "{name}'s pussy: an arrow has torn through the lips, a ragged hole bleeding steadily down {his} thighs. It smells of blood.",
+          "{name}'s pussy: an arrow is lodged deep in the swollen flesh, the shaft jutting out, blood pouring down {his} thighs. The smell of blood is strong."
+        ],
+        "penis": [
+          "{name}'s penis: an arrow has grazed the shaft, a thin line welling blood.",
+          "{name}'s penis: an arrow has torn through the shaft, bleeding steadily down {his} thighs. It smells of blood.",
+          "{name}'s penis: an arrow has pinned it, the shaft jutting out of the swollen flesh, blood pouring. The smell of blood is strong."
+        ],
+        "lips": [
+          "{name}'s lips: an arrow has grazed them, a split welling blood.",
+          "{name}'s lips: an arrow has torn through the lip, swollen, blood dripping from the mouth. It smells of blood.",
+          "{name}'s lips: an arrow has ripped through the lips into the mouth, teeth broken, blood pouring down {his} chin. The smell of blood is strong."
+        ],
+        "anus": [
+          "{name}'s ass hole: an arrow has grazed between {his} cheeks, a trickle of blood running down.",
+          "{name}'s ass hole: an arrow has torn in beside it, a ragged hole bleeding steadily down {his} thighs. It smells of blood.",
+          "{name}'s ass hole: an arrow is buried deep between {his} cheeks, the shaft jutting out, blood pouring. The smell of blood is strong."
+        ]
+      },
+      "feels": {
+        "nipple": [
+          "{name}'s nipple stings sharply along the graze. {name} is startled and covers {his} chest.",
+          "{name}'s nipple throbs with a deep, tearing pain at every breath. {name} hunches, guarding it.",
+          "{name}'s chest is a deep agony around the buried shaft with every heartbeat. {name} is in shock, clutching {his} chest."
+        ],
+        "vulva": [
+          "{name}'s pussy stings sharply along the graze. {name} gasps and presses {his} thighs together.",
+          "{name}'s pussy throbs with a deep, tearing pain. {name} is frightened and walks bent and stiff.",
+          "{name}'s pussy is a deep agony around the lodged arrow. {name} is in shock, doubled over and unable to walk."
+        ],
+        "penis": [
+          "{name}'s penis stings sharply along the graze. {name} gasps and hunches over.",
+          "{name}'s penis throbs with a deep, tearing pain. {name} is frightened and walks bent and stiff.",
+          "{name}'s penis is a deep agony around the lodged arrow. {name} is in shock, doubled over and unable to walk."
+        ],
+        "lips": [
+          "{name}'s lip stings along the split. {name} speaks carefully.",
+          "{name}'s lips throb and every word pulls at the torn flesh. {name} speaks thickly.",
+          "{name}'s mouth is a deep, tearing agony. {name} can barely speak, choking on blood."
+        ],
+        "anus": [
+          "{name}'s ass hole stings sharply along the graze. {name} clenches and walks stiffly.",
+          "{name}'s ass hole throbs with a deep, tearing pain. {name} refuses to sit.",
+          "{name}'s ass hole is a deep agony around the lodged arrow. {name} is in shock and can barely move."
+        ]
+      }
+    },
     "bludgeoning": {
       "looks": {
         "nipple": [

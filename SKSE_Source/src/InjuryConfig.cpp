@@ -107,6 +107,7 @@ namespace InjuryConfig
                     r.unarmed = rule.value("unarmed", false);
                     r.npc = TriBool(rule, "npc");
                     r.combat = TriBool(rule, "combat");
+                    r.bash = TriBool(rule, "bash");
                     r.falling = rule.value("falling", false);
                     r.minDrop = rule.value("min_drop", -1.0f);
                     r.drowning = rule.value("drowning", false);

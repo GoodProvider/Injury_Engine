@@ -1,0 +1,65 @@
+{
+  "_note": "Arrow wounds on netch and seekers: shafts sunk in soft, floating hide, fluid leaking. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point sinking into the soft hide with a wet pop. {name} pulses and recoils, the shaft bobbing.",
+        ", the arrowhead tearing in where the hide is already torn. Fluid spills down the shaft and {name} lets out a deep, hollow moan.",
+        ", and the arrow rips the wound wide. Fluid gushes and {name} spins and thrashes, tentacles whipping.",
+        ", and it is too much. {name} sinks low, arrows hanging from the hide, leaking and limp, tentacles trailing on the ground."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s hood: an arrow has nicked the rim, a thin trickle of fluid.",
+        "{name}'s hood: an arrow is stuck through the hood, fluid dripping from the hole.",
+        "{name}'s hood: arrows have torn the hood into ragged flaps that sag and leak."
+      ],
+      "body": [
+        "{name}'s body: an arrow sticks shallowly from the hide.",
+        "{name}'s body: an arrow is sunk deep in the bloated body, fluid seeping around the shaft.",
+        "{name}'s body: arrows bristle from the sagging body; fluid drains steadily from the holes."
+      ],
+      "tentacle": [
+        "{name}'s {part}: an arrow has grazed a tentacle.",
+        "{name}'s {part}: an arrow has pierced a tentacle, which curls and drips.",
+        "{name}'s {part}: arrows have torn several tentacles; they hang limp and leaking."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s hood twitches; {name} drifts on.",
+        "{name}'s hood is hurt; {name} sways and pulses agitatedly.",
+        "{name}'s hood is ruined; {name} wobbles, losing height."
+      ],
+      "body": [
+        "{name}'s body ripples around the shaft; {name} keeps floating.",
+        "{name}'s body leaks; {name} sinks a little and turns, agitated.",
+        "{name}'s body is draining; {name} sags toward the ground."
+      ],
+      "tentacle": [
+        "{name}'s {part} still lash.",
+        "{name}'s {part} curl in; {name} strikes less often.",
+        "{name}'s {part} drag uselessly."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow tears through {name}'s hood into the body below; {name} lets out a long, hollow moan and sinks to the ground, deflating.",
+        "the arrow splits {name}'s hood; fluid pours out and {name} drops, tentacles sprawling."
+      ],
+      "body": [
+        "the arrow bursts {name}'s body; fluid gushes out and {name} sags and falls, collapsing like an empty sack.",
+        "one more arrow sinks into {name}'s body and it gives way; {name} drifts down and lies leaking and still."
+      ],
+      "tentacle": [
+        "the arrow tears through {name}'s {part} into the body; {name} shudders and sinks, tentacles going limp.",
+        "the arrow pins {name}'s {part} to the body; {name} spins, leaking, and drops."
+      ]
+    }
+  }
+}

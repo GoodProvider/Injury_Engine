@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Wounds / narration
+- Arrows have their own injury type: new health source `arrow` (`injuries/humanoid/arrow.json`, "Arrow Wounds") claims bow and crossbow hits, so they are narrated as shots ("Dwimm shoots an arrow into the draugr hitting ...", `narration.session`) with arrow looks, feels and death lines instead of dagger stabs. `piercing` keeps daggers only.
+- Every creature group has its own arrow text (`injuries/<group>/arrow.json`): draugr, vampire lord, werewolves, trolls, animals, birds, insects, mudcrabs, fish, netch, spriggans, Dwarven machines, atronachs, spirits and all four dragon groups. Humanoid sexual parts have `text.arrow`.
+- A bash with a bow or crossbow is `bludgeoning` (new classify key `bash`; the hit sink reads the `TESHitEvent` kBashAttack flag, the melee `ProcessHitData` hook the `HitData` kBash / kTimedBash flags; arrows on actors carry no projectile and pass through the melee hook, so neither counts as a bash).
+
 ## [0.2.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.0) — since [0.1.6](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.1.6)
 
 0.1.7 was never released; its overlay move to Magelight UI ships here.

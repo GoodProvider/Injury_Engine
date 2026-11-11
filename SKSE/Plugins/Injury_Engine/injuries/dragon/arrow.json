@@ -1,0 +1,93 @@
+{
+  "_note": "Arrow wounds on dragons: arrows between scales, through wing membrane, in the hot-blooded flesh beneath. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the arrowhead cracking between the scales. A few scales fly loose and {name} snarls, smoke curling from the nostrils.",
+        ", the point driving in where the scales are already broken. The hide splits around the shaft and hot blood runs; {name} roars in pain and rage.",
+        ", and the arrow sinks deep into the open wound. Dark blood gushes in steaming torrents and {name} bellows, thrashing, wings beating wildly. The air reeks of blood.",
+        ", and it is too much. {name} crashes to the ground with a shudder that shakes the earth, arrows bristling from the scales, blood spreading in a vast pool."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has chipped a scale near the brow.",
+        "{name}'s head: an arrow is lodged between the scales of the jaw, hot blood dripping from it.",
+        "{name}'s head: an arrow is buried near an eye, which is swollen shut; blood streams over the scales."
+      ],
+      "body": [
+        "{name}'s {part}: an arrow is stuck shallowly between the scales.",
+        "{name}'s {part}: arrows are lodged between the scales, hot blood running down from them.",
+        "{name}'s {part}: arrows bristle from the cracked scales; blood pours and steams."
+      ],
+      "wing": [
+        "{name}'s {part}: an arrow has punched a hole in the membrane.",
+        "{name}'s {part}: arrows have torn ragged holes in the membrane, one lodged in a strut.",
+        "{name}'s {part}: the membrane is shredded by arrows and a strut is split; the wing hangs."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow is stuck shallowly near the claws.",
+        "{name}'s {part}: an arrow is lodged in the leg, blood running down.",
+        "{name}'s {part}: an arrow is sunk deep in the joint; the leg drags."
+      ],
+      "tail": [
+        "{name}'s {part}: an arrow is stuck shallowly in the scales.",
+        "{name}'s {part}: arrows are lodged in the tail, which bleeds.",
+        "{name}'s {part}: arrows bristle from the tail; it drags, bleeding heavily."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head stings; {name} is contemptuous.",
+        "{name}'s head throbs around the arrow; {name} is furious.",
+        "{name}'s head is agony; {name} is half-blind and savage."
+      ],
+      "body": [
+        "{name}'s {part} pricks; {name} ignores it.",
+        "{name}'s {part} burns around the arrows; {name} is enraged.",
+        "{name}'s {part} is deep agony; {name} is weakening, breath ragged."
+      ],
+      "wing": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} catches less air; {name} flies heavily.",
+        "{name}'s {part} is useless; {name} is grounded and furious."
+      ],
+      "leg": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} throbs; {name} favours it.",
+        "{name}'s {part} fails; {name} lurches."
+      ],
+      "tail": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} throbs; it lashes slower.",
+        "{name}'s {part} drags uselessly."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow takes {name} in the eye and drives deep into the skull; {name} rears with a last thunderous roar and crashes down, blood running over the scales.",
+        "the arrow punches into {name}'s open jaws and through the roof of the mouth; fire dies in the throat and {name} topples with a ground-shaking crash."
+      ],
+      "body": [
+        "the arrow sinks between the cracked scales of {name}'s {part} deep into the heart; {name} shudders, blood gushing, and crashes to the earth.",
+        "one more arrow drives deep into {name}'s {part} and the great body gives; {name} sprawls, wings spread, blood spreading in a steaming pool."
+      ],
+      "wing": [
+        "arrows tear {name}'s {part} apart and one drives on into the body; {name} spirals down out of the sky and smashes into the ground.",
+        "the arrow splits the root of {name}'s {part} and pierces the chest behind it; {name} crashes down and does not rise."
+      ],
+      "leg": [
+        "the arrow cuts the great vessel in {name}'s {part}; blood spurts in torrents and {name} collapses and bleeds out, growling lower.",
+        "the arrow drives through {name}'s {part} into the belly; {name} staggers and falls with a crash."
+      ],
+      "tail": [
+        "the arrow sinks into the root of {name}'s {part} and deep into the spine; {name}'s hindquarters give way and {name} dies with a fading roar.",
+        "the arrow takes {name} above the {part} into the belly; {name} sinks down, bleeding heavily, and lies still."
+      ]
+    }
+  }
+}

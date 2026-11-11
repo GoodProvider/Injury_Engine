@@ -1,0 +1,93 @@
+{
+  "_note": "Arrow wounds on skeletal dragons: arrows rattle between bones, chip and wedge in them. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the arrowhead clacking off bone. Bone chips fly and {name} jerks, jaws snapping.",
+        ", the point wedging into bone that is already cracked. The crack widens with a loud snap and {name} lets out a hollow, rasping roar.",
+        ", and the arrow smashes the cracked bone apart. Splinters scatter and the binding glow flares; {name} thrashes, frame rattling.",
+        ", and it is too much. {name} crashes down in a clattering heap of bone and arrows, the glow in the sockets dimming."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has chipped the skull.",
+        "{name}'s head: an arrow is wedged in a crack in the skull; a faint glow leaks around it.",
+        "{name}'s head: an arrow is driven through an eye socket; the skull is split and the glow flickers."
+      ],
+      "body": [
+        "{name}'s {part}: an arrow has chipped a bone.",
+        "{name}'s {part}: arrows are wedged between the bones; a rib is cracked.",
+        "{name}'s {part}: arrows have shattered bones; the frame sags around them."
+      ],
+      "wing": [
+        "{name}'s {part}: an arrow has chipped a strut.",
+        "{name}'s {part}: an arrow is wedged in a cracked strut.",
+        "{name}'s {part}: struts are splintered by arrows; the wing dangles."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has chipped the bone.",
+        "{name}'s {part}: an arrow is wedged in a cracked joint.",
+        "{name}'s {part}: an arrow has shattered the joint; {he} drags the leg."
+      ],
+      "tail": [
+        "{name}'s {part}: an arrow has chipped a vertebra.",
+        "{name}'s {part}: arrows are wedged between cracked vertebrae.",
+        "{name}'s {part}: arrows have broken the tail into rattling bones."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head barely registers it; {he} is cold and relentless.",
+        "{name}'s head is weakened; {he} moves with a jerky, furious hunger.",
+        "{name}'s head is failing; the binding falters and {he} is erratic."
+      ],
+      "body": [
+        "{name}'s {part} pays it no mind.",
+        "{name}'s {part} grinds and rattles.",
+        "{name}'s {part} is coming apart; {he} lurches."
+      ],
+      "wing": [
+        "{name}'s {part} creaks but works.",
+        "{name}'s {part} will not spread fully.",
+        "{name}'s {part} is useless; {he} is grounded."
+      ],
+      "leg": [
+        "{name}'s {part} clicks oddly.",
+        "{name}'s {part} grinds; {he} lurches.",
+        "{name}'s {part} fails; {he} staggers."
+      ],
+      "tail": [
+        "{name}'s {part} rattles.",
+        "{name}'s {part} sags.",
+        "{name}'s {part} drags."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow punches through {name}'s eye socket and splits the skull; the glow snuffs out and the whole frame collapses in a clattering heap.",
+        "the arrow cracks {name}'s skull in two; the binding magic fails and the bones fall apart and roll across the ground."
+      ],
+      "body": [
+        "the arrow shatters the bones of {name}'s {part}; the frame cannot hold and {name} comes apart, bones raining down.",
+        "one more arrow cracks {name}'s {part} and the binding gives; the skeleton falls in on itself."
+      ],
+      "wing": [
+        "the arrow shatters {name}'s {part} at the root; {name} lurches and the bones spill apart as the glow dies.",
+        "arrows splinter {name}'s {part}; {name} crashes down and breaks into loose bones."
+      ],
+      "leg": [
+        "the arrow shatters {name}'s {part}; {name} pitches forward and breaks apart, the skull rolling free.",
+        "the arrow snaps {name}'s {part} at the joint; {name} topples and the bones scatter."
+      ],
+      "tail": [
+        "the arrow splits the spine at the root of {name}'s {part}; the frame sags apart and the glow dies.",
+        "the arrow cracks {name}'s spine above the {part}; the skeleton collapses in a heap."
+      ]
+    }
+  }
+}

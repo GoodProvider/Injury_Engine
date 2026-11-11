@@ -1,0 +1,93 @@
+{
+  "_note": "Arrow wounds on the Spectral Dragon: arrows pass through the glowing shape, tearing rents of light. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the arrow passing into the glow with a cold ripple. The light flickers where it went and {name} lets out an echoing snarl.",
+        ", the arrow tearing through light that is already torn. The rent widens and motes of light pour out; {name} roars, the sound distant and hollow.",
+        ", and the arrow rips deep through the shape. It blurs and gutters, streaming light, and {name} thrashes, shrieking.",
+        ", and it is too much. {name} sinks down, the glow dimming and the outline breaking apart around the arrows' passage."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: a faint ripple where an arrow passed.",
+        "{name}'s head: a rent torn by arrows, light leaking out.",
+        "{name}'s head: torn by arrows, the outline flickering."
+      ],
+      "body": [
+        "{name}'s {part}: a faint ripple where an arrow passed.",
+        "{name}'s {part}: rents torn by arrows, light streaming out.",
+        "{name}'s {part}: shredded by arrows, the shape thin and wavering."
+      ],
+      "wing": [
+        "{name}'s {part}: a ripple where an arrow passed.",
+        "{name}'s {part}: torn by arrows, trailing light.",
+        "{name}'s {part}: shredded by arrows, barely visible."
+      ],
+      "leg": [
+        "{name}'s {part}: a ripple where an arrow passed.",
+        "{name}'s {part}: torn by arrows.",
+        "{name}'s {part}: fading where the arrows tore it."
+      ],
+      "tail": [
+        "{name}'s {part}: a ripple where an arrow passed.",
+        "{name}'s {part}: torn by arrows.",
+        "{name}'s {part}: frayed into light by arrows."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head barely notices.",
+        "{name}'s head flickers; {name} is enraged.",
+        "{name}'s head is fading; {name} wavers."
+      ],
+      "body": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} leaks light; {name} weakens.",
+        "{name}'s {part} is fading; {name} is close to dispersing."
+      ],
+      "wing": [
+        "{name}'s {part} beats on.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fails."
+      ],
+      "leg": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fades."
+      ],
+      "tail": [
+        "{name}'s {part} sweeps on.",
+        "{name}'s {part} weakens.",
+        "{name}'s {part} fades."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow passes through {name}'s head and the outline tears apart; {name} fades with a distant, echoing roar.",
+        "the arrow rips through {name}'s head; the glow gutters out and the dragon shape dissolves."
+      ],
+      "body": [
+        "the arrow tears through {name}'s {part}; the light bursts outward and {name} unravels into drifting motes.",
+        "one more arrow passes through {name}'s failing {part} and the shape gives way; {name} fades."
+      ],
+      "wing": [
+        "the arrow shreds {name}'s {part}; the rent spreads through the whole shape and {name} dissolves.",
+        "arrows tear {name}'s {part} apart; {name} sinks and fades."
+      ],
+      "leg": [
+        "the arrow tears through {name}'s {part}; {name} sinks and the outline breaks apart.",
+        "the arrow rips {name}'s {part} away in light; {name} fades."
+      ],
+      "tail": [
+        "the arrow shreds {name}'s {part}; the shape frays and {name} is gone.",
+        "the arrow tears through {name}'s {part}; {name} dims and disperses."
+      ]
+    }
+  }
+}

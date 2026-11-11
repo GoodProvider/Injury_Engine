@@ -20,7 +20,8 @@ a file that fails to parse is skipped and named there.
 | `pinching`, `slapping`, `pulling` | model `torture` | Torture_Target `pinch` / `slap` / `pull`, `External_Torture` |
 | `punching` | model `torture` | Torture_Target `punch`, unarmed NPC / player hits while the attacker is out of combat |
 | `fire`, `frost`, `shock` | model `torture` | the spells Torture Flames / Frostbite / Sparks (Injury_Engine.esp; vanilla spells are real damage) |
-| `slashing`, `piercing`, `bludgeoning` | model `health`: physical weapon hits | blades / daggers, arrows / bolts, maces / hammers / staves / fists |
+| `slashing`, `piercing`, `bludgeoning` | model `health`: physical weapon hits | blades / daggers / maces, hammers, staves, fists and bow bashes |
+| `arrow` | model `health`: bow and crossbow shots | arrows and bolts (`narration.session` words the hit as a shot) |
 | `burning`, `freezing`, `shocking` | model `health`: spell and enchantment damage | magic effects by resist type (fire, frost, shock) |
 | `mauling` | model `health` | unarmed attacks by creatures (non-NPC attackers) |
 | `falling` | model `both`: torture "Falls and Scrapes" + health "Fall Injuries" (source `falling_real`) | torture: `External_Injure(..., "falling", ..., torture = True)` (SkyrimNet_Leashed ragdoll pulls); health: landing damage (no hit, no attacker, still falling) |
@@ -132,6 +133,9 @@ classify           (optional) how incoming damage picks this source. Highest `pr
                    weapon_file / weapon_id   this exact weapon is this source, in or out of combat, before its weapon
                                     type (slapping: DiaryOfMine.esm 0x404724 "Slap with hand", a OneHandSword); a
                                     plugin that is not loaded leaves the rule inactive
+                   bash             true: only a bash (the game's bash flag on the hit event or the
+                                    melee hit data), false: never a bash (a bow shot), omitted: either.
+                                    arrow.json claims Bow / Crossbow with false, bludgeoning.json with true
                    unarmed          true: no weapon, or the fist weapon. npc / combat are true, false, or omitted (either)
                    falling          true: landing damage (no hit, no attacker, still falling)
                    drowning         true: damage with no hit and no attacker while under water (engine underwater

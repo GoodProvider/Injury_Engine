@@ -392,7 +392,8 @@ namespace
                 bool unarmedForm = false;
                 // the swing that connected (a_hit.weapon, null = fists), not what Classify guesses from equipped gear
                 // and recent events: a live torture spell effect must not turn a punch into a spell tick
-                const int source = Classifier::ClassifyMelee(a_victim, attacker, a_hit.weapon, &unarmedForm);
+                const int source = Classifier::ClassifyMelee(a_victim, attacker, a_hit.weapon,
+                    a_hit.flags.any(RE::HitData::Flag::kBash, RE::HitData::Flag::kTimedBash), &unarmedForm);
                 if (source >= 0 && InjuryConfig::IsTorture(source)) {
                     const float damage = a_hit.totalDamage;
                     Classifier::MarkQuiet(a_victim);

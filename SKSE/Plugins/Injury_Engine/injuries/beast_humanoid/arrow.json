@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on trolls and lurkers: shafts in thick hide that the beast often tears out and keeps coming. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point sinking into the thick hide. {name} roars, swats at the shaft and swings back.",
+        ", the arrowhead tearing in where the hide is already torn. Dark blood spills down the shaft and {name} bellows in pain and fury.",
+        ", and the arrow sinks deep into the open wound. Blood gushes around the shaft and {name} howls, thrashing wildly. The air reeks of blood and beast.",
+        ", and it is too much. {name} crashes to the ground, arrows bristling from the heavy body, blood spreading beneath."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: an arrow has grazed the thick hide, a shallow, bleeding score.",
+        "{name}'s face: an arrow wound near the brow, torn ragged where {he} ripped the shaft out; blood runs freely. A rank, coppery smell clings to {him}.",
+        "{name}'s face: an arrowhead is buried in the heavy skull, the broken shaft jutting out; one eye is swollen shut and blood streams down."
+      ],
+      "body": [
+        "{name}'s back: an arrow sticks shallowly from the hide.",
+        "{name}'s back: an arrow is buried deep in the hide, dark blood running around the shaft.",
+        "{name}'s back: arrows bristle from the back and blood pours from the wounds; {his} breathing is wet and heavy."
+      ],
+      "arm": [
+        "{name}'s {part}: an arrow has scored the hide.",
+        "{name}'s {part}: an arrow is lodged in the long arm, blood dripping from the claws.",
+        "{name}'s {part}: an arrow is driven through the arm; it hangs, pouring blood."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has grazed the thick leg.",
+        "{name}'s {part}: an arrow is buried in the thigh, blood running down.",
+        "{name}'s {part}: an arrow is sunk deep in the thigh; the leg buckles under the heavy body."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings; {he} roars in fury.",
+        "{name}'s face throbs where the arrow went in; {he} is enraged and reckless.",
+        "{name}'s skull is blinding pain around the arrowhead; {he} is half-blind and frenzied."
+      ],
+      "body": [
+        "{name}'s back stings; it only enrages {him}.",
+        "{name}'s back throbs around the shaft; {he} grows wary of the archer.",
+        "{name}'s body is a deep agony around the arrows; {he} weakens, breath heaving."
+      ],
+      "arm": [
+        "{name}'s {part} stings; {he} swings on.",
+        "{name}'s {part} throbs around the arrow and swings weaker.",
+        "{name}'s {part} is useless; {he} lurches one-armed."
+      ],
+      "leg": [
+        "{name}'s {part} stings with each stride.",
+        "{name}'s {part} throbs around the arrow; {he} limps.",
+        "{name}'s {part} gives way; {he} drags it."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow takes {name} in the eye and sinks deep into the skull; {name} rears with a last bellow and crashes down, blood spilling over the face.",
+        "the arrow punches through {name}'s throat; blood pours around the shaft and {name} clutches at it, gurgling, until the heavy body topples."
+      ],
+      "body": [
+        "the arrow drives deep between {name}'s ribs into the heart; {name} lurches, blood bursting from the wound, and falls with a thud that shakes the ground.",
+        "the arrow sinks deep into {name}'s back and pierces the lungs; {name} drops, coughing blood, and goes still in a spreading pool."
+      ],
+      "arm": [
+        "the arrow opens the great vessel in {name}'s {part}; blood jets out and {name} sways, roaring weaker, until {name} falls and lies still.",
+        "the arrow tears through {name}'s {part} into the chest; {name} staggers, bleeding from both holes, and crashes down."
+      ],
+      "leg": [
+        "the arrow cuts the great vessel in {name}'s {part}; blood fountains and {name} collapses and bleeds out, the roars fading to grunts.",
+        "the arrow takes {name} high in the {part}; {name} falls, crawls a short way and dies in a pool of blood."
+      ]
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on animals: a hunter's arrow in the flank, shoulder or leg. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point punching through the coat into the hide. The shaft quivers there and {name} flinches and jerks away.",
+        ", the arrowhead tearing into hide that is already torn. Blood wells around the shaft and {name} cries out in pain. The smell of blood thickens.",
+        ", and the arrow bites deep into the bleeding wound. Blood runs down {name}'s coat in dark streams and {name} bellows and staggers, eyes rolling.",
+        ", and it is too much. {name}'s legs buckle and {name} sags toward the ground, arrows standing from the coat, the cries fading to ragged breaths."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has grazed the skull, a thin line of blood in the coat.",
+        "{name}'s head: an arrow wound near the jaw or ear, the shaft torn out or broken off, blood dripping from the jaw. The smell of fresh blood hangs around {name}.",
+        "{name}'s head: an arrowhead is lodged in the skull, the shaft jutting out; one eye is shut and blood streams down the face."
+      ],
+      "body": [
+        "{name}'s back: an arrow sticks shallowly from the coat, a little blood matting it.",
+        "{name}'s back: an arrow is buried in the flank, blood running down the coat around the shaft.",
+        "{name}'s back: an arrow is sunk deep behind the shoulder; blood pours from around the shaft and {name}'s breath is wet and laboured."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has grazed the leg.",
+        "{name}'s {part}: an arrow is stuck in the leg, blood running down to the hoof or paw.",
+        "{name}'s {part}: an arrow is driven deep into the leg; it will not take weight."
+      ],
+      "tail": [
+        "{name}'s {part}: an arrow has clipped the tail.",
+        "{name}'s {part}: an arrow is stuck through the tail, which hangs bloody.",
+        "{name}'s {part}: an arrow has broken the tail; it hangs limp and bleeding."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head stings; {name} shakes it, startled.",
+        "{name}'s head throbs around the arrow; {name} is frightened and wild-eyed.",
+        "{name}'s head is blinding pain; {name} is panicked and stumbling."
+      ],
+      "body": [
+        "{name}'s back stings; {name} startles and wants to bolt.",
+        "{name}'s back throbs around the shaft; {name} moves stiffly, frightened.",
+        "{name}'s body is a deep agony around the arrow; {name} is failing, breath heaving."
+      ],
+      "leg": [
+        "{name}'s {part} stings with each step.",
+        "{name}'s {part} throbs around the arrow; {name} limps.",
+        "{name}'s {part} gives way; {name} hobbles on three legs."
+      ],
+      "tail": [
+        "{name}'s {part} stings; it twitches.",
+        "{name}'s {part} throbs; {name} keeps it clamped down.",
+        "{name}'s {part} hangs dead and painful."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow takes {name} in the eye and buries itself deep in the skull; {name} drops on the spot, legs kicking once, then still.",
+        "the arrow punches through {name}'s throat; blood pours around the shaft and {name} stumbles a few steps, choking, and falls."
+      ],
+      "body": [
+        "the arrow drives in behind {name}'s shoulder into the heart; {name} bounds a short way, falters and drops, blood frothing at the mouth.",
+        "the arrow sinks deep into {name}'s flank and pierces the lungs; {name} sags to the ground, coughing blood, and the breathing stops."
+      ],
+      "leg": [
+        "the arrow cuts the great vessel in {name}'s {part}; blood spurts and pools, and {name} lies down and bleeds out, breathing slower.",
+        "the arrow drives through {name}'s {part} into the body; {name} collapses, struggles to rise, and dies there."
+      ],
+      "tail": [
+        "the arrow takes {name} at the root of the {part} and deep into the spine; the hind legs give and {name} dies, crying weakly.",
+        "the arrow pierces {name} above the {part} and into the belly; {name} sinks down, bleeding, and goes still."
+      ]
+    }
+  }
+}

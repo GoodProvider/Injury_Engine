@@ -117,6 +117,7 @@ namespace InjuryConfig
         bool unarmed = false;
         int npc = -1;
         int combat = -1;
+        int bash = -1;  // 1: only a bash hit (bash flag), 0: never a bash hit (bow / crossbow: the arrow), -1: either
         bool falling = false;
         float minDrop = -1.0f;  // falling: minimum drop in units (-1: half of fJumpFallHeightMin)
         bool drowning = false;

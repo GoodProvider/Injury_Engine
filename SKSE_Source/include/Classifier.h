@@ -31,7 +31,8 @@ namespace Classifier
     // The melee hit that connected (ProcessHitData): classified from the hit's own weapon (null = fists) only, so a
     // live "Torture" spell effect or a sword in the other hand can't replace a punch or a whip swing. -1 = the
     // Torture Padded Whip, -2 = no rule.
-    int ClassifyMelee(RE::Actor* victim, RE::Actor* attacker, const RE::TESObjectWEAP* weapon, bool* unarmedForm = nullptr);
+    int ClassifyMelee(RE::Actor* victim, RE::Actor* attacker, const RE::TESObjectWEAP* weapon, bool bash = false,
+        bool* unarmedForm = nullptr);
 
     // Under-water state of an actor (drowning classification and the always-on drowning probe in Hooks.cpp).
     struct DrownSignals

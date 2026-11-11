@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on mudcrabs: shafts wedged in the shell, pale fluid. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point cracking into the shell with a sharp snap. The shaft sticks fast and {name} clacks and scuttles back.",
+        ", the arrowhead wedging into shell that is already cracked. It splits further and pale fluid seeps around the shaft; {name} snaps wildly.",
+        ", and the arrow punches through the broken shell. Fluid spurts and {name} thrashes, legs scrabbling.",
+        ", and it is too much. {name} sinks flat, arrows standing from the shell, legs curling, fluid pooling beneath."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s eyes: an arrow has scraped past an eyestalk.",
+        "{name}'s eyes: an arrow has broken one eyestalk, which droops.",
+        "{name}'s eyes: an arrow has snapped both eyestalks; fluid seeps from the stumps."
+      ],
+      "body": [
+        "{name}'s {part}: an arrow has chipped the shell.",
+        "{name}'s {part}: an arrow is wedged in a crack in the shell, pale fluid seeping around it.",
+        "{name}'s {part}: arrows have punched through the shell, which is split wide and leaking."
+      ],
+      "claw": [
+        "{name}'s {part}: an arrow has scratched the claw.",
+        "{name}'s {part}: an arrow is stuck in the claw joint; it opens slowly.",
+        "{name}'s {part}: an arrow has shattered the claw; it hangs useless."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has nicked a leg.",
+        "{name}'s {part}: an arrow has broken a leg, which drags.",
+        "{name}'s {part}: arrows have broken several legs; {name} lists to one side."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s eyes twitch; {name} clacks angrily.",
+        "{name}'s eyes are hurt; {name} snaps at nothing.",
+        "{name}'s eyes are gone; {name} flails blindly."
+      ],
+      "body": [
+        "{name}'s {part} shrugs off the scrape.",
+        "{name}'s {part} leaks; {name} backs away.",
+        "{name}'s {part} is broken; {name} barely moves."
+      ],
+      "claw": [
+        "{name}'s {part} still snaps.",
+        "{name}'s {part} closes weakly.",
+        "{name}'s {part} will not move."
+      ],
+      "leg": [
+        "{name}'s {part} works.",
+        "{name}'s {part} drags; {name} scuttles crooked.",
+        "{name}'s {part} fail; {name} can hardly move."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow punches between {name}'s eyestalks deep into the body; {name} gives a last clack and settles flat, legs curling.",
+        "the arrow pierces {name} just below the eyes; fluid wells out and {name} goes still."
+      ],
+      "body": [
+        "the arrow cracks clean through {name}'s {part}; fluid gushes out and {name} sinks flat, legs folding under.",
+        "the arrow splits {name}'s {part} wide open; {name} twitches and lies still in a spreading pool."
+      ],
+      "claw": [
+        "the arrow shatters {name}'s {part} and drives into the body behind it; {name} flips over, legs twitching, and stops.",
+        "the arrow tears through {name}'s {part} into the shell; {name} slumps, leaking."
+      ],
+      "leg": [
+        "the arrow breaks through {name}'s {part} into the underside; {name} topples and goes still.",
+        "the arrow pierces {name} low through the legs; {name} collapses, legs curling."
+      ]
+    }
+  }
+}

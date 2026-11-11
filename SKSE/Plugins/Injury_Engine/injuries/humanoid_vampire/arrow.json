@@ -1,0 +1,93 @@
+{
+  "_note": "Arrow wounds on the vampire lord form: shafts in grey skin and wing membrane, thick dark blood. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point punching into the grey skin. Dark blood beads around the shaft and {name} hisses and recoils.",
+        ", the arrowhead tearing in where the skin is already torn. Dark blood spills down the shaft and {name} lets out a piercing shriek.",
+        ", and the arrow sinks deep into the open wound. Dark blood gushes, steaming, and {name} screeches, wings flaring.",
+        ", and it is too much. {name} crumples around the arrows, wings spread limp, dark blood pooling beneath."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: an arrow has grazed the grey skin, a thin line of dark blood.",
+        "{name}'s face: an arrow wound in the cheek or brow, torn where the shaft was ripped out; thick dark blood runs over the fangs.",
+        "{name}'s face: an arrowhead is buried in the bone of the brow, the broken shaft jutting out; dark blood streams down the face."
+      ],
+      "body": [
+        "{name}'s back: an arrow has nicked the grey hide, a bead of dark blood.",
+        "{name}'s back: an arrow is lodged deep in the torso, dark blood running thick and slow around it. A cold, metallic smell rises from it.",
+        "{name}'s back: several arrows are buried in the torso; dark blood pours from around the shafts and {his} breath comes wet and rasping."
+      ],
+      "arm": [
+        "{name}'s {part}: an arrow has scored the grey skin.",
+        "{name}'s {part}: an arrow is lodged in the long muscle, dark blood dripping from the claws.",
+        "{name}'s {part}: an arrow is driven clean through; the arm hangs, dark blood pouring from both holes."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has grazed the thigh.",
+        "{name}'s {part}: an arrow is lodged deep in the thigh, dark blood running down to the clawed foot.",
+        "{name}'s {part}: an arrow is buried to the fletching in the thigh; the leg buckles under {him}."
+      ],
+      "wing": [
+        "{name}'s {part}: an arrow has punched a small hole in the membrane.",
+        "{name}'s {part}: arrows have torn ragged holes through the membrane, one still lodged in a wing bone.",
+        "{name}'s {part}: the membrane is shredded by arrows and a wing bone is split around a shaft; the wing hangs useless."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face stings along the graze; {he} is furious and hungry.",
+        "{name}'s face throbs around the arrow wound; {he} snarls, enraged and wary.",
+        "{name}'s face is agony around the buried arrowhead; {he} is dizzy and desperate, close to fleeing into the dark."
+      ],
+      "body": [
+        "{name}'s back stings where the arrow nicked it; {he} is irritated, nothing more.",
+        "{name}'s back throbs deep around the shaft; {he} moves warily, hissing.",
+        "{name}'s body is a deep, spreading agony around the arrows; {he} is weakened and craving blood to heal."
+      ],
+      "arm": [
+        "{name}'s {part} stings; {he} flexes the claws.",
+        "{name}'s {part} throbs around the shaft and grips weakly.",
+        "{name}'s {part} is burning agony and will not close its claws."
+      ],
+      "leg": [
+        "{name}'s {part} stings with each stride.",
+        "{name}'s {part} throbs around the arrow; {he} favours it.",
+        "{name}'s {part} gives way; {he} keeps aloft or crawls."
+      ],
+      "wing": [
+        "{name}'s {part} stings where the arrow passed through.",
+        "{name}'s {part} aches and flutters badly; {he} flies unsteadily.",
+        "{name}'s {part} is useless; {he} cannot fly and is enraged by it."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow takes {name} in the eye and buries itself deep in the skull; {name} lets out a last shriek, then falls, dark blood running over the fangs.",
+        "the arrow punches through {name}'s throat; thick dark blood wells around the shaft and {name} claws at it, choking, until the red eyes go dull."
+      ],
+      "body": [
+        "the arrow drives through {name}'s chest into the heart; dark blood bursts around the shaft and {name} folds, wings collapsing over the body.",
+        "the arrow sinks deep into {name}'s back; {name} arches, shrieking, and crashes down, dark blood pooling beneath the grey body."
+      ],
+      "arm": [
+        "the arrow tears through {name}'s {part} and into the chest; {name} lurches, dark blood pouring from both holes, and falls dead.",
+        "the arrow opens the great vessel in {name}'s {part}; dark blood spurts with every heartbeat until {name} sinks down and is still."
+      ],
+      "leg": [
+        "the arrow cuts the great vessel in {name}'s {part}; dark blood fountains and pools, and {name} collapses and bleeds out, hissing weakly.",
+        "the arrow takes {name} high in the {part}; {name} falls, crawls a little, and dies in a spreading pool of dark blood."
+      ],
+      "wing": [
+        "arrows shred {name}'s {part} and one drives on into the body; {name} spins down out of the air and lies broken and still.",
+        "the arrow splits the root of {name}'s {part} and pierces the chest behind it; {name} crashes to the ground and dark blood spreads beneath."
+      ]
+    }
+  }
+}

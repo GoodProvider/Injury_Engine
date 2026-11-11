@@ -4,7 +4,7 @@
   "model": "health",
   "requires": "",
   "classify": [
-    { "priority": 50, "weapon_types": ["OneHandDagger", "Bow", "Crossbow"] }
+    { "priority": 50, "weapon_types": ["OneHandDagger"] }
   ],
   "damage_max": 20,
   "thresholds": {

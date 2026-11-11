@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on slaughterfish: shafts through scales and fins, blood clouding the water. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point punching through the scales. Scales tear loose and {name} darts back, snapping.",
+        ", the arrowhead tearing in where the scales are already torn. Blood clouds out around the shaft and {name} thrashes.",
+        ", and the arrow drives deep into the wound. Blood billows in a red cloud and {name} spasms violently.",
+        ", and it is too much. {name} rolls onto one side, the shaft standing from the body, fins twitching, blood spreading."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has grazed it, a few scales torn away.",
+        "{name}'s head: an arrow is lodged near the gills, blood trailing.",
+        "{name}'s head: an arrow is driven through the skull behind the eye; blood clouds from it."
+      ],
+      "body": [
+        "{name}'s body: an arrow has scored the scales.",
+        "{name}'s body: an arrow is stuck in the flank, blood trailing from around it.",
+        "{name}'s body: an arrow is driven clean through the body; blood pours out."
+      ],
+      "fin": [
+        "{name}'s {part}: an arrow has nicked a fin.",
+        "{name}'s {part}: an arrow has torn through a fin and stuck there.",
+        "{name}'s {part}: arrows have shredded the fins."
+      ],
+      "tail": [
+        "{name}'s {part}: an arrow has clipped the tail.",
+        "{name}'s {part}: an arrow is stuck through the tail.",
+        "{name}'s {part}: an arrow has broken the tail; it hangs limp."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head stings; {name} snaps harder.",
+        "{name}'s head throbs; {name} darts erratically.",
+        "{name}'s head is failing; {name} drifts, stunned."
+      ],
+      "body": [
+        "{name}'s body stings; {name} circles closer.",
+        "{name}'s body is hurt; {name} swims slower.",
+        "{name}'s body is failing; {name} barely moves."
+      ],
+      "fin": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} drags; {name} swims crooked.",
+        "{name}'s {part} are useless; {name} spins."
+      ],
+      "tail": [
+        "{name}'s {part} stings.",
+        "{name}'s {part} beats weakly.",
+        "{name}'s {part} is useless; {name} drifts."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow punches through {name}'s skull; {name} shudders once and rolls belly-up, blood clouding around the shaft.",
+        "the arrow pierces {name} behind the gills; blood billows and {name} sinks, twitching."
+      ],
+      "body": [
+        "the arrow drives clean through {name}'s body; {name} spasms and turns belly-up in a red cloud.",
+        "the arrow sinks deep into {name}'s flank; {name} thrashes, then goes limp and drifts."
+      ],
+      "fin": [
+        "the arrow tears through {name}'s {part} into the body; {name} spirals and goes still.",
+        "the arrow pins {name}'s {part} to the flank; {name} rolls over, bleeding out."
+      ],
+      "tail": [
+        "the arrow breaks {name}'s {part} and drives into the body; {name} twitches and drifts belly-up.",
+        "the arrow takes {name} through the {part} at its root; {name} sinks, blood trailing."
+      ]
+    }
+  }
+}

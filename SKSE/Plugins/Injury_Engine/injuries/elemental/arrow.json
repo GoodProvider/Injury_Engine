@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on atronachs, gargoyles and ash guardians: arrows burn up in fire, shatter ice, crack stone. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the arrow striking with a flare of light; pieces chip away around the point. {name} flickers and presses on.",
+        ", the arrowhead driving in where the body is already cracked. The crack splits wider and force spills out around the shaft, hissing; {name} lets out a grinding roar.",
+        ", and the arrow breaks deep into the wound. The inner force bursts out in a violent flare and {name} staggers, shape buckling.",
+        ", and it is too much. {name} sags, the glow guttering, pieces crumbling away around the arrows."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has chipped it, a small flicker where it struck.",
+        "{name}'s head: an arrow is lodged in a crack, smouldering, frosted or crackling with sparks; light leaks out.",
+        "{name}'s head: an arrow has split the head; force spills out in flares and the shape barely holds."
+      ],
+      "body": [
+        "{name}'s core: an arrow has chipped it.",
+        "{name}'s core: an arrow is stuck in a crack in the core, the shaft charred, frosted or sparking; force seeps out.",
+        "{name}'s core: arrows have cracked the core deeply; the inner force bleeds out in flares."
+      ],
+      "arm": [
+        "{name}'s {part}: an arrow has chipped the arm.",
+        "{name}'s {part}: an arrow is lodged in a crack in the arm.",
+        "{name}'s {part}: an arrow has broken the arm; it flickers and crumbles."
+      ],
+      "lower": [
+        "{name}'s {part}: an arrow has chipped it.",
+        "{name}'s {part}: an arrow is lodged in a crack; it wavers.",
+        "{name}'s {part}: arrows have broken it; {name} sinks lower."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head barely notices; {name} is relentless.",
+        "{name}'s head flickers; {name} is enraged.",
+        "{name}'s head is failing; {name} wavers, unstable."
+      ],
+      "body": [
+        "{name}'s core holds firm.",
+        "{name}'s core leaks force; {name} slows.",
+        "{name}'s core is failing; {name} is close to breaking apart."
+      ],
+      "arm": [
+        "{name}'s {part} strikes on.",
+        "{name}'s {part} weakens; {name} strikes slower.",
+        "{name}'s {part} is crumbling; {name} fights with the other."
+      ],
+      "lower": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} wavers; {name} moves unsteadily.",
+        "{name}'s {part} fails; {name} sinks and drifts."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow splits {name}'s head; the binding force bursts out in a last flare and {name} collapses into a heap of cinders, shards or stone.",
+        "the arrow drives deep into {name}'s cracked head; the glow snuffs out and {name} crumbles away."
+      ],
+      "body": [
+        "the arrow cracks {name}'s core through; the inner force erupts in a final flare and {name} falls apart.",
+        "one more arrow sinks into {name}'s failing core and the shape gives way; {name} collapses into smoking remains."
+      ],
+      "arm": [
+        "the arrow breaks {name}'s {part} and drives into the core; {name} buckles and crumbles away.",
+        "the arrow shatters {name}'s {part}; the crack runs into the core and {name} falls apart."
+      ],
+      "lower": [
+        "the arrow breaks {name}'s {part}; {name} topples and shatters on the ground, the glow dying.",
+        "the arrow cracks {name}'s {part} through; {name} sinks and crumbles away."
+      ]
+    }
+  }
+}

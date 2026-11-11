@@ -1,0 +1,93 @@
+{
+  "_note": "Arrow wounds on Durnehviir: arrows sunk in rotting hide and old bone, dark ooze. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the arrowhead punching into rotten hide. Loose scales burst away in a puff of grave dust and {name} snarls.",
+        ", the point tearing into hide that is already torn. It rips further and dark ooze spills down the shaft; {name} roars, an echoing, hollow sound.",
+        ", and the arrow cracks into bare bone. Bone splinters and black ooze sprays; {name} shrieks and thrashes, the soul-light flaring.",
+        ", and it is too much. {name} collapses in a heap of bone and rotten hide bristling with arrows, the cold glow in the eyes guttering low."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s head: an arrow has scraped the rotting hide.",
+        "{name}'s head: an arrow is lodged in the decayed jaw, dark ooze seeping around it.",
+        "{name}'s head: an arrow is buried in the bone beside an eye socket; the glow flickers around the shaft."
+      ],
+      "body": [
+        "{name}'s {part}: an arrow is stuck in the rotting hide.",
+        "{name}'s {part}: arrows are sunk in the decaying flesh, dark ooze seeping out.",
+        "{name}'s {part}: arrows bristle from the torn hide and bare bone; ooze drips steadily."
+      ],
+      "wing": [
+        "{name}'s {part}: an arrow has punched through the tattered membrane.",
+        "{name}'s {part}: arrows have torn the membrane further, one lodged in a bone.",
+        "{name}'s {part}: the membrane is in shreds and a bone split by an arrow; the wing hangs."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow is stuck in the hide.",
+        "{name}'s {part}: an arrow is lodged against the bone.",
+        "{name}'s {part}: an arrow has cracked the bone; the leg drags."
+      ],
+      "tail": [
+        "{name}'s {part}: an arrow is stuck in the hide.",
+        "{name}'s {part}: arrows are lodged in the tail.",
+        "{name}'s {part}: arrows have split the tail bones; it drags."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s head ignores it; {name} is cold and ancient.",
+        "{name}'s head is wounded; {name} is wrathful.",
+        "{name}'s head is failing; {name}'s binding wavers."
+      ],
+      "body": [
+        "{name}'s {part} ignores the shaft.",
+        "{name}'s {part} weakens; {name} moves heavily.",
+        "{name}'s {part} is coming apart; {name} lurches."
+      ],
+      "wing": [
+        "{name}'s {part} works.",
+        "{name}'s {part} catches less air.",
+        "{name}'s {part} is useless; {name} is grounded."
+      ],
+      "leg": [
+        "{name}'s {part} holds.",
+        "{name}'s {part} grinds.",
+        "{name}'s {part} fails; {name} drags it."
+      ],
+      "tail": [
+        "{name}'s {part} lashes on.",
+        "{name}'s {part} sags.",
+        "{name}'s {part} drags."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow punches through {name}'s eye socket into the skull; the soul-light snuffs out and {name} collapses in a heap of rot and bone.",
+        "the arrow splits {name}'s skull; the binding fails and the great frame falls apart in grave dust."
+      ],
+      "body": [
+        "the arrow drives deep through {name}'s {part}; the rotten frame gives way and {name} crashes down, black ooze pooling.",
+        "one more arrow sinks into {name}'s {part} and the binding breaks; {name} sags apart in a heap of bone and hide."
+      ],
+      "wing": [
+        "the arrow shatters {name}'s {part} at the root; {name} falls and the frame breaks apart on impact.",
+        "arrows tear {name}'s {part} away; {name} crashes down and the cold glow fades."
+      ],
+      "leg": [
+        "the arrow shatters {name}'s {part}; {name} topples and comes apart in rot and bone.",
+        "the arrow breaks {name}'s {part} at the joint; {name} falls and does not rise."
+      ],
+      "tail": [
+        "the arrow splits the spine at the root of {name}'s {part}; the frame sags apart and the glow dies.",
+        "the arrow cracks {name}'s spine above the {part}; {name} collapses in a heap."
+      ]
+    }
+  }
+}

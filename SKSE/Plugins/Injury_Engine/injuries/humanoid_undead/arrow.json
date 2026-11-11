@@ -1,0 +1,79 @@
+{
+  "_note": "Arrow wounds on draugr, skeletons and dragon priests: shafts sunk in dry, leathery flesh or wedged between old bones; no blood, no breath. Overrides the arrow source over common.json. Schema: ../guide.md (Groups). No numbers in narration.",
+  "narration": {
+    "hit": {
+      "levels": [
+        ", the point punching into dry flesh with a dull thock. Not a drop of blood follows; {name} rasps and keeps coming, the shaft jutting from {name}'s body.",
+        ", the arrowhead driving into flesh that is already split. Old bone cracks around it and grave dust puffs from the wound; {name} lets out a dry, hollow shriek.",
+        ", and the arrow sinks deep among the shafts already lodged there. Bone splinters and dust sprays out; {name} reels, the eye-light flaring and wavering.",
+        ", and it is too much. The arrow cracks through the brittle frame and {name} sags, the cold light in {name}'s eyes flickering low."
+      ]
+    }
+  },
+  "text": {
+    "looks": {
+      "head": [
+        "{name}'s face: an arrow has scored the leathery skin, a dry furrow with no blood.",
+        "{name}'s face: an arrow is lodged in the shrunken cheek or brow, the shaft jutting out; dust trickles from around it. The smell of dust and old rot hangs about {him}.",
+        "{name}'s face: an arrow is sunk deep into the skull through an eye socket, the glow flickering around the shaft; the jaw hangs loose."
+      ],
+      "body": [
+        "{name}'s back: an arrow sticks shallowly from the dried hide, without a drop of blood.",
+        "{name}'s back: several arrows are buried in the leathery torso, one wedged between the ribs; dust and dark ooze seep around them.",
+        "{name}'s back: the torso bristles with arrows, ribs cracked and splintered around the shafts; the frame sags around them."
+      ],
+      "arm": [
+        "{name}'s {part}: an arrow has scraped the withered skin.",
+        "{name}'s {part}: an arrow is stuck through the dry muscle, the shaft rattling against the bone.",
+        "{name}'s {part}: an arrow has split the bone; the arm hangs crooked, the shaft still lodged in it."
+      ],
+      "leg": [
+        "{name}'s {part}: an arrow has grazed the leathery thigh.",
+        "{name}'s {part}: an arrow is buried in the dry thigh, grinding against the bone as {he} walks.",
+        "{name}'s {part}: an arrow has cracked the leg bone through; the leg drags, the shaft scraping the ground."
+      ]
+    },
+    "feels": {
+      "head": [
+        "{name}'s face barely registers the arrow; {he} is cold and relentless.",
+        "{name}'s face is weakened around the lodged shaft; {he} grows erratic and enraged, the eye-light narrowing.",
+        "{name}'s head is failing around the arrow in it; the magic animating {him} falters and {he} lurches, confused and furious."
+      ],
+      "body": [
+        "{name}'s back ignores the shaft; {he} presses on unmoved.",
+        "{name}'s back creaks around the arrows; {his} movements grow stiff and jerky.",
+        "{name}'s body is coming apart around the arrows; {he} staggers, barely holding together."
+      ],
+      "arm": [
+        "{name}'s {part} works as before, the arrow ignored.",
+        "{name}'s {part} grates where the shaft rubs bone; {his} swings are slower.",
+        "{name}'s {part} will not obey; {he} fights one-handed, unrelenting."
+      ],
+      "leg": [
+        "{name}'s {part} carries the arrow without a falter.",
+        "{name}'s {part} grinds around the shaft; {he} lurches when weight lands on it.",
+        "{name}'s {part} fails; {he} drags it, shaft and all."
+      ]
+    }
+  },
+  "death": {
+    "regions": {
+      "head": [
+        "the arrow punches through {name}'s eye socket and out the back of the skull; the cold light snuffs out at once and the body collapses in a dry heap of bone and leather.",
+        "the arrow splits {name}'s skull between the brows; the jaw drops open in a last rasp and the corpse falls still, dust drifting from the wound."
+      ],
+      "body": [
+        "the arrow drives deep through {name}'s ribs and shatters the spine behind them; the binding magic fails and {name} folds to the ground, dust pouring from the cracked chest.",
+        "one more arrow sinks into {name}'s bristling back and the brittle frame gives way; {name} pitches forward and lies still, the eye-light dying."
+      ],
+      "arm": [
+        "the arrow shatters {name}'s {part} at the shoulder and drives on into the chest; {name} lurches, then the light leaves the eyes and the body crumples in a clatter of bone.",
+        "the arrow tears through {name}'s {part} and into the old ribs; {name} sags to the ground, dust spilling from both holes."
+      ],
+      "leg": [
+        "the arrow breaks {name}'s {part} at the hip; {name} topples, and the fall cracks the dried body apart as the cold light fades.",
+        "the arrow splits the bone of {name}'s {part}; {name} crashes down and does not rise again, the glow guttering out."
+      ]
+    }
+  }
+}
