@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.2](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.2) — since [0.2.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.1)
+
+Not yet verified in game (built and packaged only).
+
+### Wounds / healing
+- UBE and other custom vampire races got draugr (humanoid_undead) wound text: playable vampire races carry `ActorTypeUndead`. `races.json` now has a keyword rule `Vampire` + `ActorTypeNPC` -> humanoid before the undead rule, and a new key `race_strip_prefixes` (`["00UBE_"]`): a race whose EditorID starts with one of these texts also matches the `races` entry without it (`00UBE_NordRaceVampire` -> `NordRaceVampire`). Log rule `race (prefix 00ube_)`.
+
+### Docs
+- `injuries/guide.md` (Groups: `race_strip_prefixes`, keyword order), CLAUDE.md (Race groups), KNOWLEDGEBASE.md (vampire races and the undead keyword rule).
+
 ## [0.2.1](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.1) — since [0.2.0](https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.0)
 
 ### Wounds / healing

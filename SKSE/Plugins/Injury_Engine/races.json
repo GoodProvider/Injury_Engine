@@ -1,6 +1,9 @@
 {
-  "_note": "Race -> injury group (injuries/<group>/). Order: actors (actor or actor base form), races (exact EditorID), race_forms (file + form), race_contains (EditorID contains the text, first match wins: keep specific texts before general ones), keywords (all listed race keywords), default_group. A group without an injuries/<group>/ folder uses humanoid (warned once). Thralls keep their living race group. Schema: injuries/guide.md (Groups).",
+  "_note": "Race -> injury group (injuries/<group>/). Order: actors (actor or actor base form), races (exact EditorID; then the EditorID with a race_strip_prefixes prefix removed, e.g. 00UBE_NordRaceVampire -> NordRaceVampire), race_forms (file + form), race_contains (EditorID contains the text, first match wins: keep specific texts before general ones), keywords (all listed race keywords), default_group. A group without an injuries/<group>/ folder uses humanoid (warned once). Thralls keep their living race group. Schema: injuries/guide.md (Groups).",
   "default_group": "humanoid",
+  "race_strip_prefixes": [
+    "00UBE_"
+  ],
   "actors": [
     {
       "name": "Durnehviir (DLC1Durnehviir)",
@@ -690,6 +693,13 @@
         "ActorTypeDwarven"
       ],
       "group": "construct"
+    },
+    {
+      "all": [
+        "Vampire",
+        "ActorTypeNPC"
+      ],
+      "group": "humanoid"
     },
     {
       "all": [

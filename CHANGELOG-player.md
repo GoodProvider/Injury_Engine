@@ -1,3 +1,8 @@
+## 0.2.2
+
+### Wounds
+- UBE and custom vampire races get normal wound text instead of draugr text (untested in game).
+
 ## 0.2.1
 
 ### Wounds

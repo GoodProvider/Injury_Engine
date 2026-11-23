@@ -253,6 +253,10 @@ humanoid_werewolf, humanoid_vampire and insectoid. Not shipped: quadruped_undead
 `race_contains` is a plain case-insensitive substring test: a short text matches inside unrelated EditorIDs ("cat"
 matched `GoblinRaceDuplicate`). Prefer long texts and check every new rule against the `race dump:` lines.
 
+Vampire races of playable races carry `ActorTypeUndead` as well as `ActorTypeNPC` and `Vampire`. The keyword rule
+`Vampire` + `ActorTypeNPC` -> humanoid sits before `ActorTypeUndead` + `ActorTypeNPC` -> humanoid_undead, so unlisted
+vampire races (UBE, follower races) keep humanoid wounds. humanoid_vampire is the Vampire Lord beast form only.
+
 A group folder holds:
 
 ```
@@ -288,7 +292,8 @@ its damage passes through. `classify` rules are read from the humanoid files onl
 ("face" -> "muzzle"), else random. The Papyrus log names parts with `PartNameFor(actor, part)` (the victim's group).
 
 `../races.json` order: `actors` (`{file, id, group}`: an actor or actor base form, e.g. one dragon on a shared race),
-`races` (`{"<group>": [EditorIDs]}`, case-insensitive), `race_forms` (`{file, id, group}`), `race_contains`
+`races` (`{"<group>": [EditorIDs]}`, case-insensitive; a race whose EditorID starts with a `race_strip_prefixes` text is
+also tried without it, so UBE's `00UBE_NordRaceVampire` gets `NordRaceVampire`'s group), `race_forms` (`{file, id, group}`), `race_contains`
 (`{text, group}`: the race EditorID contains the text, first match wins: specific texts before general ones),
 `keywords` (`{all: [race keywords], group}`), `default_group`. With the DLL loaded, `Injury_Engine.log` lists every
 race with its group (`race dump:` lines at game start, `race <id> ... -> <group> (<rule>)` on first use).

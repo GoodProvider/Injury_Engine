@@ -763,6 +763,7 @@ namespace InjuryConfig
             std::string defaultGroup = "humanoid";
             std::vector<FormRule> actors;
             std::vector<std::pair<std::string, std::string>> races;  // EditorID -> group
+            std::vector<std::string> stripPrefixes;                  // lowercased; "00ube_" + EditorID is matched as EditorID
             std::vector<FormRule> raceForms;
             std::vector<ContainsRule> contains;
             std::vector<KeywordRule> keywords;
@@ -819,6 +820,13 @@ namespace InjuryConfig
                         }
                     }
                 }
+                if (const auto p = j.find("race_strip_prefixes"); p != j.end() && p->is_array()) {
+                    for (const auto& prefix : *p) {
+                        if (prefix.is_string() && !prefix.get<std::string>().empty()) {
+                            g_races.stripPrefixes.push_back(Lower(prefix.get<std::string>()));
+                        }
+                    }
+                }
                 if (const auto c = j.find("race_contains"); c != j.end() && c->is_array()) {
                     for (const auto& e : *c) {
                         if (e.is_object() && e.contains("text") && e.contains("group")) {
@@ -845,9 +853,9 @@ namespace InjuryConfig
                         }
                     }
                 }
-                SKSE::log::info("injuries: races.json: {} races, {} race forms, {} contains rules, {} keyword rules, {} actors, default {}",
-                    g_races.races.size(), g_races.raceForms.size(), g_races.contains.size(), g_races.keywords.size(), g_races.actors.size(),
-                    g_races.defaultGroup);
+                SKSE::log::info("injuries: races.json: {} races, {} strip prefixes, {} race forms, {} contains rules, {} keyword rules, {} actors, default {}",
+                    g_races.races.size(), g_races.stripPrefixes.size(), g_races.raceForms.size(), g_races.contains.size(), g_races.keywords.size(),
+                    g_races.actors.size(), g_races.defaultGroup);
             } catch (const std::exception& e) {
                 SKSE::log::error("injuries: races.json skipped: {}", e.what());
             }
@@ -873,11 +881,26 @@ namespace InjuryConfig
         {
             const char* edidRaw = race->GetFormEditorID();
             const std::string edid = Lower(edidRaw ? edidRaw : "");
-            if (!edid.empty()) {
+            const auto exact = [](std::string_view id) -> const std::string* {
                 for (const auto& [name, group] : g_races.races) {
-                    if (name == edid) {
-                        rule = "race";
-                        return group;
+                    if (name == id) {
+                        return &group;
+                    }
+                }
+                return nullptr;
+            };
+            if (!edid.empty()) {
+                if (const auto* group = exact(edid)) {
+                    rule = "race";
+                    return *group;
+                }
+                // A copy of a known race under a mod prefix (UBE: 00UBE_NordRaceVampire) takes that race's group.
+                for (const auto& prefix : g_races.stripPrefixes) {
+                    if (edid.size() > prefix.size() && edid.starts_with(prefix)) {
+                        if (const auto* group = exact(std::string_view(edid).substr(prefix.size()))) {
+                            rule = "race (prefix " + prefix + ")";
+                            return *group;
+                        }
                     }
                 }
             }

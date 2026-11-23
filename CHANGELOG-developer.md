@@ -1,3 +1,11 @@
+https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.2
+
+Race group fix release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and Magelight UI 1.7.1 or later. Not yet verified in game.
+
+- **Custom vampire races are humanoid.** Playable vampire races carry `ActorTypeUndead`; a new `races.json` keyword rule `Vampire` + `ActorTypeNPC` -> humanoid runs before the undead rule, so UBE and other custom vampire races no longer get draugr (humanoid_undead) wound text.
+- **`race_strip_prefixes`.** New `races.json` key (shipped: `["00UBE_"]`): a race whose EditorID starts with a listed prefix also matches the `races` entry without it (`00UBE_NordRaceVampire` -> `NordRaceVampire`). Log rule `race (prefix 00ube_)`; the races.json summary line counts strip prefixes.
+- **Docs.** `injuries/guide.md` (Groups), KNOWLEDGEBASE vampire / race entry.
+
 https://github.com/GoodProvider/Injury_Engine/releases/tag/0.2.1
 
 Arrow and vampire / spell wounds release. Requires SkyrimNet 0.25.0 (Beta 25) or later, SKSE, Address Library, PapyrusUtil SE and Magelight UI 1.7.1 or later.
